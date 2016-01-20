@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="D:/eclipse_xtc/workspace/Reconfigurator/libs/antlr-3.5.2-complete.jar"/>
+	<classpathentry kind="lib" path="D:/eclipse_xtc/workspace/Reconfigurator/libs/hamcrest-core-1.3.jar"/>
+	<classpathentry kind="lib" path="D:/eclipse_xtc/workspace/Reconfigurator/libs/javabdd-1.0b2.jar"/>
+	<classpathentry kind="lib" path="D:/eclipse_xtc/workspace/Reconfigurator/libs/java-cup-11a.jar"/>
+	<classpathentry kind="lib" path="D:/eclipse_xtc/workspace/Reconfigurator/libs/jflex-1.6.1.jar"/>
+	<classpathentry kind="lib" path="D:/eclipse_xtc/workspace/Reconfigurator/libs/junit-4.12.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
