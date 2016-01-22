@@ -1260,7 +1260,8 @@ public class SuperC extends Tool {
    * @param writer The writer.
    * @throws IOException Because it writes to output. 
    */
-  private static void printSource(Node n, PresenceCondition presenceCondition,
+  /*AFLA*/ // made public
+  public static void printSource(Node n, PresenceCondition presenceCondition,
                                   OutputStreamWriter writer)
     throws IOException {
     if (n.isToken()) {

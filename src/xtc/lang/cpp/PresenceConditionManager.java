@@ -41,7 +41,8 @@ import net.sf.javabdd.BDD;
   * @author Paul Gazzillo
   * @version $Revision: 1.6 $
   */
-class PresenceConditionManager {
+/*AFLA*/ //made the PresenceConditionManager public in order to be able to access it from the XTend file
+public class PresenceConditionManager {
 
   /** The BDD factory. */
   private BDDFactory B;
@@ -418,6 +419,11 @@ class PresenceConditionManager {
     return createConfiguration(false, null);
   }
 
+  
+  /*AFLA*/
+  public PresenceCondition newPresenceCondition(boolean value){
+	  return new PresenceCondition(value);
+  }
   
   /** A reference-counted presence condition that automatically cleans up BDD when
     * nothing references it anymore.

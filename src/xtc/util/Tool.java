@@ -21,15 +21,22 @@ package xtc.util;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
 import java.text.DateFormat;
-
+import java.util.ArrayList;
 import java.util.Date;
 
+import itu.Traverse;
+import itu.TxIfdef2If;
+import itu.TxPrintAst;
+import itu.TxPrintCode;
 import xtc.Constants;
-
+import xtc.lang.cpp.PresenceConditionManager;
+import xtc.lang.cpp.PresenceConditionManager.PresenceCondition;
+import xtc.lang.cpp.SuperC;
 import xtc.parser.ParseException;
 
 import xtc.tree.Printer;
@@ -259,7 +266,24 @@ public abstract class Tool {
    * @param node The node.
    */
   public void process(Node node) {
-    // Nothing to do.
+	  //System.out.println("PrintAst");
+	  
+	  Traverse.t(node, new TxPrintAst(), new ArrayList<Node>());
+	  
+	  //Traverse.t(node, new TxIfdef2If(), new ArrayList<Node>());
+
+//	  
+//	  OutputStreamWriter writer = new OutputStreamWriter(System.out);
+//      try {
+//		new SuperC();
+//		SuperC.printSource(node,
+//				new PresenceConditionManager().new PresenceCondition(true),
+//		          writer);
+//		writer.flush();
+//	} catch (IOException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
   }
 
   /**
