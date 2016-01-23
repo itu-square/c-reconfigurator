@@ -248,6 +248,9 @@ public class SuperC extends Tool {
            "Print the parsed AST.").
       bool("printSource", "printSource", false,
            "Print the parsed AST in C source form.").
+      /*AFLA*/ // added saveLayoutTokens
+      bool("saveLayoutTokens", "saveLayoutTokens", false,
+           "Separate setting for preserving layout tokens in the AST.").
       bool("configureAllYes", "configureAllYes", false,
            "Print all tokens of the all yes configuration of the AST.").
       bool("configureAllNo", "configureAllNo", false,
@@ -851,10 +854,12 @@ public class SuperC extends Tool {
       parser = new ForkMergeParser(CParseTables.getInstance(), semanticValues,
                                    actions, initialParsingContext,
                                    preprocessor, presenceConditionManager);
+      /*AFLA*/ // added saveLayoutTokens
       parser.saveLayoutTokens(runtime.test("printSource") 
                               || runtime.test("configureAllYes")
                               || runtime.test("configureAllNo")
-                              || runtime.getString("configFile") != null);
+                              || runtime.getString("configFile") != null
+                              || runtime.test("saveLayoutTokens"));
       parser.setLazyForking(runtime.test("optimizeLazyForking"));
       parser.setSharedReductions(runtime.test("optimizeSharedReductions"));
       parser.setEarlyReduce(runtime.test("optimizeEarlyReduce"));

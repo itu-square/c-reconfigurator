@@ -22,28 +22,28 @@ class TxPrintAst implements Tx {
 
 
 	override tx_start(PresenceConditionManager.PresenceCondition condition, List<Node> ancestors) {
-		System::out.println('''[pc  ]«indent(ancestors, condition)»|- «condition.toString()»'''.toString)
+		println('''[pc  ]«indent(ancestors, condition)»|- «condition.toString()»'''.toString)
 	}
 
 	override tx_end(PresenceConditionManager.PresenceCondition condition, List<Node> ancestors) {
 	}
 
 	override tx_start(Language language, List<Node> ancestors) {
-		System::out.println('''[lang]«indent(ancestors, language)»|- «language.toString()»'''.toString)
+		println('''[lang]«indent(ancestors, language)»|- «language.toString()»'''.toString)
 	}
 
 	override tx_end(Language language, List<Node> ancestors) {
 	}
 
 	override tx_start(GNode node, List<Node> ancestors) {
-		System::out.println('''[gnod]«indent(ancestors, node)»|- «node.name»'''.toString)
+		println('''[gnod]«indent(ancestors, node)»|- «node.name»'''.toString)
 	}
 
 	override tx_end(GNode node, List<Node> ancestors) {
 	}
 
 	override tx_start(Node node, List<Node> ancestors) {
-		System::out.println('''[node]«indent(ancestors, node)»|- «node.toString()»'''.toString)
+		println('''[node]«indent(ancestors, node)»|- «node.toString()»'''.toString)
 	}
 
 	override tx_end(Node node, List<Node> ancestors) {

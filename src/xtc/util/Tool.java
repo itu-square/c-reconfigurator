@@ -269,6 +269,8 @@ public abstract class Tool {
 	  //System.out.println("PrintAst");
 	  
 	  Traverse.t(node, new TxPrintAst(), new ArrayList<Node>());
+	  System.out.println("\n\n");
+	  Traverse.t(node, new TxPrintCode(), new ArrayList<Node>());
 	  
 	  //Traverse.t(node, new TxIfdef2If(), new ArrayList<Node>());
 
