@@ -2,6 +2,9 @@
 
 int main()
 {
+  int x = 0;
+	x++;
+	
   if(X)
   	return 0;
   else

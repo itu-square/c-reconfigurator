@@ -6,8 +6,16 @@ import xtc.tree.GNode
 import xtc.tree.Node
 import java.util.List
 import xtc.lang.cpp.CTag
+import xtc.lang.cpp.PresenceConditionManager
 
-interface Tx {
+abstract class Tx {
+	
+	new(PresenceConditionManager manager) {
+    	this.manager = manager
+  	}
+	
+	protected var PresenceConditionManager manager
+	
 	def PresenceCondition tx_start(PresenceCondition condition, List<Node> ancestors)
 
 	def void tx_end(PresenceCondition condition, List<Node> ancestors)

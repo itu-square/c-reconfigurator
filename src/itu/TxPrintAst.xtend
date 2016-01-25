@@ -7,8 +7,9 @@ import xtc.tree.GNode
 import xtc.tree.Node
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.CTag
+import java.io.PrintStream
 
-class TxPrintAst implements Tx {
+class TxPrintAst extends Tx {
 	private def indent(List<Node> ancestors, Object node) {
 		var ind = ""
 		for(var i = 0; i < ancestors.length; i++) {
@@ -21,11 +22,26 @@ class TxPrintAst implements Tx {
 		}
 		ind
 	}
+	
+	val printHashCode = false
+	def hash(Object o) {
+		if (printHashCode) ''' («o.hashCode»)''' else ""
+	}
+	
+	val printType = true
+	def type(String s) {
+		if (printType) s else ""
+	}
+	
+	private val PrintStream output
 
-	val manager = new PresenceConditionManager
+	new(PresenceConditionManager manager, PrintStream output) {
+		super(manager)
+		this.output = output
+	}
 
 	override PresenceCondition tx_start(PresenceConditionManager.PresenceCondition condition, List<Node> ancestors) {
-		println('''[pc  ]«indent(ancestors, condition)»|- «condition» («condition.hashCode»)''')
+		output.println('''«type("[pc  ]")»«indent(ancestors, condition)»|- «condition»«hash(condition)»''')
 		manager.newPresenceCondition(condition.BDD)
 	}
 
@@ -34,7 +50,7 @@ class TxPrintAst implements Tx {
 	}
 
 	override Language<CTag> tx_start(Language<CTag> language, List<Node> ancestors) {
-		println('''[lang]«indent(ancestors, language)»|- «language» («language.hashCode»)''')
+		output.println('''«type("[lang]")»«indent(ancestors, language)»|- «language»«hash(language)»''')
 		language.copy
 	}
 
@@ -43,7 +59,7 @@ class TxPrintAst implements Tx {
 	}
 
 	override GNode tx_start(GNode node, List<Node> ancestors) {
-		println('''[gnod]«indent(ancestors, node)»|- «node.name» («node.hashCode»)''')
+		output.println('''«type("[gnod]")»«indent(ancestors, node)»|- «node.name»«hash(node)»''')
 		GNode::create(node.name)
 	}
 
@@ -52,7 +68,7 @@ class TxPrintAst implements Tx {
 	}
 
 	override Node tx_start(Node node, List<Node> ancestors) {
-		println('''[node]«indent(ancestors, node)»|- «node» («node.hashCode»)''')
+		output.println('''«type("[node]")»«indent(ancestors, node)»|- «node»«hash(node)»''')
 		GNode::create(node.name)
 	}
 

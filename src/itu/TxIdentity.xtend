@@ -7,9 +7,11 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.lang.cpp.CTag
 import xtc.tree.GNode
 
-class TxIdentity implements Tx {
+class TxIdentity extends Tx {
 	
-	val manager = new PresenceConditionManager
+	new(PresenceConditionManager manager) {
+		super(manager)
+	}
 	
 	override tx_start(PresenceConditionManager.PresenceCondition condition, List<Node> ancestors) {
 		manager.newPresenceCondition(condition.BDD)

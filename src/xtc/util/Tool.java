@@ -18,10 +18,12 @@
  */
 package xtc.util;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintStream;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import itu.Traverse;
+import itu.Tx;
 import itu.TxIdentity;
 import itu.TxIfdef2If;
 import itu.TxPrintAst;
@@ -267,15 +270,83 @@ public abstract class Tool {
    * @param node The node.
    */
   public void process(Node node) {
-	  //System.out.println("PrintAst");
-	  System.out.println("node:");
-	  Object node1 = Traverse.t(node, new TxIdentity(), new ArrayList<Node>());
+//	  System.out.println("process Node Tool");
 	  
-	  Traverse.t(node, new TxPrintAst(), new ArrayList<Node>());
-	  System.out.println("\n\n\n\n");
+	  ByteArrayOutputStream baos = new ByteArrayOutputStream();
+	  PrintStream ps = new PrintStream(baos);
+	  String out1, out2;
+	  Object node1;
 	  
-	  System.out.println("node1:");
-	  Traverse.t(node1, new TxPrintAst(), new ArrayList<Node>());
+	  Tx printCode = new TxPrintCode(presenceConditionManager, ps);
+	  Tx printAst = new TxPrintAst(presenceConditionManager, ps);
+	  Tx identity = new TxIdentity(presenceConditionManager);
+
+	  // Test TxPrintCode and TxPrintAst
+	  Traverse.t(node, printCode, new ArrayList<Node>());
+	  Traverse.t(node, printAst, new ArrayList<Node>());
+	  out1 = baos.toString(); // might need a character encoding
+	  baos.reset();
+	  System.out.print(out1);
+	  
+	  
+	  
+	  // Test that TxPrintCode is identity
+	  node1 = Traverse.t(node, printCode, new ArrayList<Node>());
+	  out1 = baos.toString();
+	  baos.reset();
+	  Traverse.t(node1, printCode, new ArrayList<Node>());
+	  out2 = baos.toString();
+	  baos.reset();
+	  if(out1.equals(out2))
+		  System.out.println("TxPrintCode is identity PASS");
+	  else {
+		  System.out.println("TxPrintCode is identity FAIL");
+//		  System.out.println(out1);
+//		  System.out.println(out2);
+	  }
+	  
+	  // Test that TxPrintAst is identity
+	  node1 = Traverse.t(node, printAst, new ArrayList<Node>());
+	  out1 = baos.toString();
+	  baos.reset();
+	  Traverse.t(node1, printAst, new ArrayList<Node>());
+	  out2 = baos.toString();
+	  baos.reset();
+	  if(out1.equals(out2))
+		  System.out.println("TxPrintAst is identity PASS");
+	  else {
+		  System.out.println("TxPrintAst is identity FAIL");
+//		  System.out.println(out1);
+//		  System.out.println(out2);
+	  }
+	  
+	  // Test that TxIdentity is identity
+	  Traverse.t(node, printAst, new ArrayList<Node>());
+	  out1 = baos.toString();
+	  baos.reset();
+	  node1 = Traverse.t(node, identity, new ArrayList<Node>());
+	  Traverse.t(node1, printAst, new ArrayList<Node>());
+	  out2 = baos.toString();
+	  baos.reset();
+	  if(out1.equals(out2))
+		  System.out.println("TxIdentity is identity PASS");
+	  else {
+		  System.out.println("TxIdentity is identity FAIL");
+//		  System.out.println(out1);
+//		  System.out.println(out2);
+	  }
+	  
+	  
+//	  Traverse.t(node, new TxPrintCode(), new ArrayList<Node>());
+//	  System.out.println("\n\n\n");
+//	  Object node1 = Traverse.t(node, new TxIdentity(), new ArrayList<Node>());
+//	  Object node1 = Traverse.t(node, new TxIfdef2If(presenceConditionManager), new ArrayList<Node>());
+	  
+//	  Traverse.t(node1, new TxPrintCode(), new ArrayList<Node>());
+//	  System.out.println("\n\n\n\n");
+	  
+//	  System.out.println("node1:");
+//	  Traverse.t(node1, new TxPrintAst(), new ArrayList<Node>());
 //	  System.out.println("\n\n");
 //	  Traverse.t(node, new TxPrintCode(), new ArrayList<Node>());
 	  
@@ -365,6 +436,9 @@ public abstract class Tool {
   public void wrapUp() {
     // Nothing to do.
   }
+  
+  /*AFLA*/
+  public PresenceConditionManager presenceConditionManager;
 
   /**
    * Run this tool with the specified command line arguments.  This

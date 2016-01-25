@@ -6,17 +6,26 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import java.util.List
 import xtc.lang.cpp.CTag
+import xtc.lang.cpp.PresenceConditionManager
+import java.io.PrintStream
 
-class TxPrintCode implements Tx {
+class TxPrintCode extends Tx {
 	
 	private var indent = ""
 	
+	private val PrintStream output
+	
+	new(PresenceConditionManager manager, PrintStream output) {
+		super(manager)
+		this.output = output
+	}
+	
 	override PresenceCondition tx_start(PresenceCondition condition, List<Node> ancestors) {
 		if(ancestors.last.head == condition)
-			println('''«indent»#if «condition»''')
+			output.println('''«indent»#if «condition»''')
 		else
-			println('''«indent»#elif «condition»''')
-		condition
+			output.println('''«indent»#elif «condition»''')
+		manager.newPresenceCondition(condition.BDD)
 	}
 
 	override void tx_end(PresenceCondition condition, List<Node> ancestors) {
@@ -26,18 +35,18 @@ class TxPrintCode implements Tx {
 	override Language<CTag> tx_start(Language<CTag> language, List<Node> ancestors) {
 		switch (language.toString) {
 			case ";":
-				println(language)
+				output.println(language)
 			case "{":
-				{ println(language); indent += "  " }
+				{ output.println(language); indent += "  " }
 			case "}":
-				{ indent = indent.substring(2); println(language) }
+				{ indent = indent.substring(2); output.println(language) }
 			case "return": {
-				print(language)
-				if (ancestors.last.length > 2) print(" ")
+				output.print(language)
+				if (ancestors.last.length > 2) output.print(" ")
 			}
-			default: print(language)
+			default: output.print(language)
 		}
-		language
+		language.copy
 	}
 
 	override void tx_end(Language<CTag> language, List<Node> ancestors) {
@@ -46,50 +55,50 @@ class TxPrintCode implements Tx {
 
 	override GNode tx_start(GNode node, List<Node> ancestors) {
 		switch(node.name) {
-			case "TranslationUnit": print("")
-			case "ExternalDeclarationList": print("")
-			case "Conditional": print("")
+			case "TranslationUnit": output.print("")
+			case "ExternalDeclarationList": output.print("")
+			case "Conditional": output.print("")
 			case "Declaration":
-				print(indent)
-			case "DeclaringList": print("")
-			case "FunctionDeclarator": print("")
+				output.print(indent)
+			case "DeclaringList": output.print("")
+			case "FunctionDeclarator": output.print("")
 			case "SimpleDeclarator":
-				print(" ")
-			case "PostfixingFunctionDeclarator": print("")
-			case "FunctionDefinition": print("")
-			case "FunctionPrototype": print("")
-			case "CompoundStatement": print("")
-			case "DeclarationOrStatementList": print("")
+				output.print(" ")
+			case "PostfixingFunctionDeclarator": output.print("")
+			case "FunctionDefinition": output.print("")
+			case "FunctionPrototype": output.print("")
+			case "CompoundStatement": output.print("")
+			case "DeclarationOrStatementList": output.print("")
 			case "InitializerOpt":
-				print(" ")
+				output.print(" ")
 			case "Initializer":
-				print(" ")
+				output.print(" ")
 			case "ExpressionStatement":
-				print(indent)
-			case "Increment": print("")
-			case "PrimaryIdentifier": print("")
+				output.print(indent)
+			case "Increment": output.print("")
+			case "PrimaryIdentifier": output.print("")
 			case "ReturnStatement":
-				print(indent)
-			case "UnaryExpression": print("")
-			case "Unaryoperator": print("")
-			default : println('''[node] «node»''')
+				output.print(indent)
+			case "UnaryExpression": output.print("")
+			case "Unaryoperator": output.print("")
+			default : output.println('''[node] «node»''')
 		}
-		node
+		GNode::create(node.name)
 	}
 
 	override void tx_end(GNode node, List<Node> ancestors) {
 		switch(node.name) {
 			case "Conditional": {
-				println('''«indent»#endif''');
-				if(ancestors.last.name != "Conditional") println
+				output.println('''«indent»#endif''');
+				if(ancestors.last.name != "Conditional") output.println
 				}
-			default : print("")
+			default : output.print("")
 		}
 	}
 
 	override Node tx_start(Node node, List<Node> ancestors) {
-		println('''[node] «node»''')
-		node
+		output.println('''[node] «node»''')
+		GNode::create(node.name)
 	}
 
 	override void tx_end(Node node, List<Node> ancestors) {

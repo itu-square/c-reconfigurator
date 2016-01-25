@@ -460,7 +460,8 @@ public class SuperC extends Tool {
   public Node parse(Reader in, File file) throws IOException, ParseException {
     HeaderFileManager fileManager;
     MacroTable macroTable;
-    PresenceConditionManager presenceConditionManager;
+    /*AFLA*/
+//    PresenceConditionManager presenceConditionManager;
     ExpressionParser expressionParser;
     ConditionEvaluator conditionEvaluator;
     Iterator<Syntax> preprocessor;
