@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import itu.Traverse;
+import itu.TxIdentity;
 import itu.TxIfdef2If;
 import itu.TxPrintAst;
 import itu.TxPrintCode;
@@ -267,10 +268,16 @@ public abstract class Tool {
    */
   public void process(Node node) {
 	  //System.out.println("PrintAst");
+	  System.out.println("node:");
+	  Object node1 = Traverse.t(node, new TxIdentity(), new ArrayList<Node>());
 	  
 	  Traverse.t(node, new TxPrintAst(), new ArrayList<Node>());
-	  System.out.println("\n\n");
-	  Traverse.t(node, new TxPrintCode(), new ArrayList<Node>());
+	  System.out.println("\n\n\n\n");
+	  
+	  System.out.println("node1:");
+	  Traverse.t(node1, new TxPrintAst(), new ArrayList<Node>());
+//	  System.out.println("\n\n");
+//	  Traverse.t(node, new TxPrintCode(), new ArrayList<Node>());
 	  
 	  //Traverse.t(node, new TxIfdef2If(), new ArrayList<Node>());
 

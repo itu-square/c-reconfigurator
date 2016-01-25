@@ -3,25 +3,27 @@ package itu
 import xtc.tree.GNode
 import xtc.tree.Node
 import xtc.lang.cpp.Syntax.Language
-import xtc.lang.cpp.PresenceConditionManager
+import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import java.util.List
+import xtc.lang.cpp.CTag
 
 class TxPrintCode implements Tx {
 	
 	private var indent = ""
 	
-	override tx_start(PresenceConditionManager.PresenceCondition condition, List<Node> ancestors) {
+	override PresenceCondition tx_start(PresenceCondition condition, List<Node> ancestors) {
 		if(ancestors.last.head == condition)
 			println('''«indent»#if «condition»''')
 		else
 			println('''«indent»#elif «condition»''')
+		condition
 	}
 
-	override tx_end(PresenceConditionManager.PresenceCondition condition, List<Node> ancestors) {
+	override void tx_end(PresenceCondition condition, List<Node> ancestors) {
 		
 	}
 
-	override tx_start(Language language, List<Node> ancestors) {
+	override Language<CTag> tx_start(Language<CTag> language, List<Node> ancestors) {
 		switch (language.toString) {
 			case ";":
 				println(language)
@@ -35,12 +37,14 @@ class TxPrintCode implements Tx {
 			}
 			default: print(language)
 		}
+		language
 	}
 
-	override tx_end(Language language, List<Node> ancestors) {
+	override void tx_end(Language<CTag> language, List<Node> ancestors) {
+		
 	}
 
-	override tx_start(GNode node, List<Node> ancestors) {
+	override GNode tx_start(GNode node, List<Node> ancestors) {
 		switch(node.name) {
 			case "TranslationUnit": print("")
 			case "ExternalDeclarationList": print("")
@@ -70,9 +74,10 @@ class TxPrintCode implements Tx {
 			case "Unaryoperator": print("")
 			default : println('''[node] «node»''')
 		}
+		node
 	}
 
-	override tx_end(GNode node, List<Node> ancestors) {
+	override void tx_end(GNode node, List<Node> ancestors) {
 		switch(node.name) {
 			case "Conditional": {
 				println('''«indent»#endif''');
@@ -82,11 +87,13 @@ class TxPrintCode implements Tx {
 		}
 	}
 
-	override tx_start(Node node, List<Node> ancestors) {
+	override Node tx_start(Node node, List<Node> ancestors) {
 		println('''[node] «node»''')
+		node
 	}
 
-	override tx_end(Node node, List<Node> ancestors) {
+	override void tx_end(Node node, List<Node> ancestors) {
+		
 	}
 
 }

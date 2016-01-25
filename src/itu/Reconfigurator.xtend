@@ -17,7 +17,7 @@ class Reconfigurator {
 //			"-showActions",
 //			"-follow-set",
 //			"-printAST",
-			"-printSource",
+//			"-printSource",
 			"-saveLayoutTokens",
 			"-nostdinc",
 //			"-E",

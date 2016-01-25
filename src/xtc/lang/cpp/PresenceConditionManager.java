@@ -421,6 +421,9 @@ public class PresenceConditionManager {
 
   
   /*AFLA*/
+  public PresenceCondition newPresenceCondition(BDD bdd){
+	  return new PresenceCondition(bdd);
+  }
   public PresenceCondition newPresenceCondition(boolean value){
 	  return new PresenceCondition(value);
   }
