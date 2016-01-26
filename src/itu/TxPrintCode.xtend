@@ -1,13 +1,13 @@
 package itu
 
-import xtc.tree.GNode
-import xtc.tree.Node
-import xtc.lang.cpp.Syntax.Language
-import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
+import java.io.PrintStream
 import java.util.List
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager
-import java.io.PrintStream
+import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
+import xtc.lang.cpp.Syntax.Language
+import xtc.tree.GNode
+import xtc.tree.Node
 
 class TxPrintCode extends Tx {
 	
@@ -34,14 +34,16 @@ class TxPrintCode extends Tx {
 
 	override Language<CTag> tx_start(Language<CTag> language, List<Node> ancestors) {
 		switch (language.toString) {
-			case ";":
-				output.println(language)
-			case "{":
-				{ output.println(language); indent += "  " }
-			case "}":
-				{ indent = indent.substring(2); output.println(language) }
+			case ";":		output.println(language)
+			case "{":		{ output.println(language); indent += "  " }
+			case "}":		{ indent = indent.substring(2); output.println(language) }
+			case ")": {
+					output.print(language)
+					if (ancestors.last.name == "SelectionStatement") output.println
+			}		
+			case "else":	output.println(indent + language)
 			case "return": {
-				output.print(language)
+				output.print(indent + language)
 				if (ancestors.last.length > 2) output.print(" ")
 			}
 			default: output.print(language)
@@ -55,35 +57,34 @@ class TxPrintCode extends Tx {
 
 	override GNode tx_start(GNode node, List<Node> ancestors) {
 		switch(node.name) {
-			case "TranslationUnit": output.print("")
-			case "ExternalDeclarationList": output.print("")
-			case "Conditional": output.print("")
-			case "Declaration":
-				output.print(indent)
-			case "DeclaringList": output.print("")
-			case "FunctionDeclarator": output.print("")
-			case "SimpleDeclarator":
-				output.print(" ")
-			case "PostfixingFunctionDeclarator": output.print("")
-			case "FunctionDefinition": output.print("")
-			case "FunctionPrototype": output.print("")
-			case "CompoundStatement": output.print("")
-			case "DeclarationOrStatementList": output.print("")
-			case "InitializerOpt":
-				output.print(" ")
-			case "Initializer":
-				output.print(" ")
-			case "ExpressionStatement":
-				output.print(indent)
-			case "Increment": output.print("")
-			case "PrimaryIdentifier": output.print("")
-			case "ReturnStatement":
-				output.print(indent)
-			case "UnaryExpression": output.print("")
-			case "Unaryoperator": output.print("")
-			default : output.println('''[node] «node»''')
+			case "Declaration":						output.print(indent)
+			case "ExpressionStatement":				output.print(indent)
+			case "ReturnStatement":					output.print(indent)
+			case "SelectionStatement":				output.print(indent)
+			case "SimpleDeclarator":				output.print(" ")
+			case "InitializerOpt":					output.print(" ")
+			case "Initializer":						output.print(" ")
+			
+			case "TranslationUnit":					output.print("")
+			case "ExternalDeclarationList":			output.print("")
+			case "Conditional":						output.print("")
+			case "DeclaringList":					output.print("")
+			case "FunctionDeclarator":				output.print("")
+			case "PostfixingFunctionDeclarator":	output.print("")
+			case "FunctionDefinition":				output.print("")
+			case "FunctionPrototype":				output.print("")
+			case "CompoundStatement":				output.print("")
+			case "DeclarationOrStatementList":		output.print("")
+			case "Increment":						output.print("")
+			case "PrimaryIdentifier":				output.print("")
+			case "UnaryExpression":					output.print("")
+			case "Unaryoperator":					output.print("")
+			default : output.println(node)
 		}
-		GNode::create(node.name)
+		
+		val newNode = GNode::create(node.name)
+		node.forEach[newNode.add(it)]
+		newNode
 	}
 
 	override void tx_end(GNode node, List<Node> ancestors) {
@@ -98,7 +99,9 @@ class TxPrintCode extends Tx {
 
 	override Node tx_start(Node node, List<Node> ancestors) {
 		output.println('''[node] «node»''')
-		GNode::create(node.name)
+		val newNode = GNode::create(node.name)
+		node.forEach[newNode.add(it)]
+		newNode
 	}
 
 	override void tx_end(Node node, List<Node> ancestors) {

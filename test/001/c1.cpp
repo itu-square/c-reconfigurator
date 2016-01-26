@@ -1,7 +1,11 @@
+#include <stdio.h>
+
 #include "c2.h"
 
 int main()
 {
+	
+	printf("sdfsd");
 	int x = 0;
 	x++;
 	

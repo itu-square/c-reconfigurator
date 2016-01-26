@@ -10,13 +10,15 @@ import xtc.lang.cpp.CTag
 class Traverse {
 
 	def static dispatch Node t(GNode node, Tx transformation, List<Node> ancestors) {
-		val newNode = transformation.tx_start(node, ancestors)
-		ancestors.add(node)
-		for (Object n : node) {
+		val tempNode = transformation.tx_start(node, ancestors)
+		val newNode = GNode.create(tempNode.name)
+		
+		ancestors.add(tempNode)
+		for (Object n : tempNode) {
 			newNode.add(t(n, transformation, ancestors))
 		}
-		ancestors.remove(node)
-		transformation.tx_end(node, ancestors)
+		ancestors.remove(tempNode)
+		transformation.tx_end(newNode, ancestors)
 		return newNode
 	}
 

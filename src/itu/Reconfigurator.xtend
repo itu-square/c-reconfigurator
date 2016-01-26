@@ -20,6 +20,7 @@ class Reconfigurator {
 //			"-printSource",
 			"-saveLayoutTokens",
 			"-nostdinc",
+			"-showErrors",
 //			"-E",
 //			"/home/alex/busybox/busybox-1.24.1/scripts/echo.c",
 			"test\\001\\c1.cpp"

@@ -60,7 +60,9 @@ class TxPrintAst extends Tx {
 
 	override GNode tx_start(GNode node, List<Node> ancestors) {
 		output.println('''«type("[gnod]")»«indent(ancestors, node)»|- «node.name»«hash(node)»''')
-		GNode::create(node.name)
+		val newNode = GNode::create(node.name)
+		node.forEach[newNode.add(it)]
+		newNode
 	}
 
 	override void tx_end(GNode node, List<Node> ancestors) {
@@ -69,7 +71,9 @@ class TxPrintAst extends Tx {
 
 	override Node tx_start(Node node, List<Node> ancestors) {
 		output.println('''«type("[node]")»«indent(ancestors, node)»|- «node»«hash(node)»''')
-		GNode::create(node.name)
+		val newNode = GNode::create(node.name)
+		node.forEach[newNode.add(it)]
+		newNode
 	}
 
 	override void tx_end(Node node, List<Node> ancestors) {

@@ -280,6 +280,7 @@ public abstract class Tool {
 	  Tx printCode = new TxPrintCode(presenceConditionManager, ps);
 	  Tx printAst = new TxPrintAst(presenceConditionManager, ps);
 	  Tx identity = new TxIdentity(presenceConditionManager);
+	  Tx ifdef2if = new TxIfdef2If(presenceConditionManager);
 
 	  // Test TxPrintCode and TxPrintAst
 	  Traverse.t(node, printCode, new ArrayList<Node>());
@@ -336,6 +337,13 @@ public abstract class Tool {
 //		  System.out.println(out2);
 	  }
 	  
+	  
+	  // Test Ifdef2If
+	  node1 = Traverse.t(node, ifdef2if, new ArrayList<Node>());
+	  Traverse.t(node1, printCode, new ArrayList<Node>());
+	  out1 = baos.toString();
+	  baos.reset();
+	  System.out.println(out1);
 	  
 //	  Traverse.t(node, new TxPrintCode(), new ArrayList<Node>());
 //	  System.out.println("\n\n\n");

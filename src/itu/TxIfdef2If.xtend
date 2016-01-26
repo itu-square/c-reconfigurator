@@ -7,6 +7,7 @@ import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import java.util.List
 import xtc.lang.cpp.CTag
+import xtc.lang.cpp.Syntax.Text
 
 class TxIfdef2If extends Tx {
 	
@@ -50,12 +51,24 @@ class TxIfdef2If extends Tx {
 //            				case 1: println(manager.variableManager.getName(i))
 //            	        }}
 				var v = (node.get(0) as PresenceCondition).toString
-				println(v.substring(v.indexOf(' ')+1, v.indexOf(')')))
+				
 				val n = GNode::create("SelectionStatement")
+				
+					n.add(new Language<CTag>(CTag.^IF))
+					n.add(new Language<CTag>(CTag.LPAREN))
+					n.add(GNode.create("PrimaryIdentifier", new Text<CTag>(CTag.OCTALconstant, v.substring(v.indexOf(' ')+1, v.indexOf(')')))))
+					n.add(new Language<CTag>(CTag.RPAREN))
+					n.add(node.get(1))
+					n.add(new Language<CTag>(CTag.^ELSE))
+					n.add(node.get(3))
+				
 				n
 			}
-			else
-				GNode::create(node.name)
+			else {
+				val newNode = GNode::create(node.name)
+				node.forEach[newNode.add(it)]
+				newNode
+			}
 	}
 	
 	override void tx_end(GNode node, List<Node> ancestors) {
@@ -63,7 +76,9 @@ class TxIfdef2If extends Tx {
 	}
 	
 	override Node tx_start(Node node, List<Node> ancestors) {
-		GNode::create(node.name)
+		val newNode = GNode::create(node.name)
+		node.forEach[newNode.add(it)]
+		newNode
 	}
 	
 	override void tx_end(Node node, List<Node> ancestors) {

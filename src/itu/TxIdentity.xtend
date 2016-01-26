@@ -30,7 +30,9 @@ class TxIdentity extends Tx {
 	}
 	
 	override tx_start(GNode node, List<Node> ancestors) {
-		GNode::create(node.name)
+		val newNode = GNode::create(node.name)
+		node.forEach[newNode.add(it)]
+		newNode
 	}
 	
 	override tx_end(GNode node, List<Node> ancestors) {
@@ -38,7 +40,9 @@ class TxIdentity extends Tx {
 	}
 	
 	override tx_start(Node node, List<Node> ancestors) {
-		GNode::create(node.name)
+		val newNode = GNode::create(node.name)
+		node.forEach[newNode.add(it)]
+		newNode
 	}
 	
 	override tx_end(Node node, List<Node> ancestors) {
