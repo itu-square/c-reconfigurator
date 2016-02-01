@@ -8,32 +8,33 @@ import xtc.lang.cpp.Syntax.Language
 import java.util.List
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.Syntax.Text
+import java.util.ArrayList
+import java.util.Collection
 
-class TxIfdef2If extends Tx {
+class TxIfdef2If  {
+	
+	// the PresenceConditionManager which was used when building the AST
+	// without this it is not possible to access the variable names in the PresenceConditions
+	protected val PresenceConditionManager manager
+	
+	// a list of all ancestors of the current node
+	// various uses (e.g. indentation)
+	protected val ArrayList<Node> ancestors
 	
 	new(PresenceConditionManager manager) {
-		super(manager)
+		this.manager = manager
+    	this.ancestors = new ArrayList<Node>
 	}
 	
-	override PresenceCondition tx_start(PresenceCondition condition, List<Node> ancestors) {
-//		println('''«condition» («»)''')
-//		condition
+	def dispatch PresenceCondition t(PresenceCondition condition) {
 		manager.newPresenceCondition(condition.BDD)
 	}
-	
-	override void tx_end(PresenceCondition condition, List<Node> ancestors) {
-		
-	}
-	
-	override Language<CTag> tx_start(Language<CTag> language, List<Node> ancestors) {
+
+	def dispatch Language<CTag> t(Language<CTag> language) {
 		language.copy
 	}
 	
-	override void tx_end(Language<CTag> language, List<Node> ancestors) {
-		
-	}
-	
-	override GNode tx_start(GNode node, List<Node> ancestors) {
+	def dispatch GNode t(GNode node) {
 		if(node.name == "Conditional"
 			&& node.size == 4
 			&& (node.get(0) as PresenceCondition).not.toString == (node.get(2) as PresenceCondition).toString
@@ -50,39 +51,37 @@ class TxIfdef2If extends Tx {
 //            				case 0: println("!")
 //            				case 1: println(manager.variableManager.getName(i))
 //            	        }}
-				var v = (node.get(0) as PresenceCondition).toString
+				var defined = (node.get(0) as PresenceCondition).toString
+				var variable = defined.substring(defined.indexOf(' ')+1, defined.indexOf(')'))
 				
-				val n = GNode::create("SelectionStatement")
+				ancestors.add(node)
 				
-					n.add(new Language<CTag>(CTag.^IF))
-					n.add(new Language<CTag>(CTag.LPAREN))
-					n.add(GNode.create("PrimaryIdentifier", new Text<CTag>(CTag.OCTALconstant, v.substring(v.indexOf(' ')+1, v.indexOf(')')))))
-					n.add(new Language<CTag>(CTag.RPAREN))
-					n.add(node.get(1))
-					n.add(new Language<CTag>(CTag.^ELSE))
-					n.add(node.get(3))
+				val newNode = GNode::create("SelectionStatement")
+				newNode.addAll(#[
+					new Language<CTag>(CTag.^IF),
+					new Language<CTag>(CTag.LPAREN),
+					GNode.create("PrimaryIdentifier", new Text<CTag>(CTag.OCTALconstant, variable)),
+					new Language<CTag>(CTag.RPAREN),
+					t(node.get(1)),
+					new Language<CTag>(CTag.^ELSE),
+					t(node.get(3))
+				] as Collection<Object>)
 				
-				n
+				ancestors.remove(node)
+				
+				newNode
 			}
 			else {
+				ancestors.add(node)
+		
 				val newNode = GNode::create(node.name)
-				node.forEach[newNode.add(it)]
+				node.forEach[newNode.add(t(it))]
+				
+				ancestors.remove(node)
+				
 				newNode
 			}
 	}
-	
-	override void tx_end(GNode node, List<Node> ancestors) {
-		
-	}
-	
-	override Node tx_start(Node node, List<Node> ancestors) {
-		val newNode = GNode::create(node.name)
-		node.forEach[newNode.add(it)]
-		newNode
-	}
-	
-	override void tx_end(Node node, List<Node> ancestors) {
-		
-	}
+
 
 }

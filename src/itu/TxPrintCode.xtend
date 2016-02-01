@@ -1,7 +1,6 @@
 package itu
 
-import java.io.PrintStream
-import java.util.List
+import java.util.ArrayList
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
@@ -9,103 +8,119 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.tree.Node
 
-class TxPrintCode extends Tx {
+class TxPrintCode {
 	
+	// the PresenceConditionManager which was used when building the AST
+	// without this it is not possible to access the variable names in the PresenceConditions
+	protected val PresenceConditionManager manager
+	
+	// a list of all ancestors of the current node
+	// various uses (e.g. indentation)
+	protected val ArrayList<Node> ancestors
+	
+	// the indentation prefix; add or remove spaces from it
 	private var indent = ""
 	
-	private val PrintStream output
+	private var last_C_line = ""
+	private var last_line = ""
 	
-	new(PresenceConditionManager manager, PrintStream output) {
-		super(manager)
-		this.output = output
+	// the printing output
+	private var output = new StringBuilder
+	
+	private var firstToken = true
+	
+	new(PresenceConditionManager manager) {
+		this.manager = manager
+    	this.ancestors = new ArrayList<Node>
 	}
 	
-	override PresenceCondition tx_start(PresenceCondition condition, List<Node> ancestors) {
-		if(ancestors.last.head == condition)
-			output.println('''«indent»#if «condition»''')
-		else
-			output.println('''«indent»#elif «condition»''')
-		manager.newPresenceCondition(condition.BDD)
+	def transform(Object o) {
+		indent = ""
+		last_C_line = ""
+		last_line = ""
+		firstToken = true
+		ancestors.clear
+		output = new StringBuilder
+		t(o)
+		output.toString
 	}
-
-	override void tx_end(PresenceCondition condition, List<Node> ancestors) {
+	
+	def print(StringBuilder builder, String string) {
+		builder.append(string)
+	}
+	
+	def println(StringBuilder builder) {
+		builder.append("\n")
+	}
+	
+	def println(StringBuilder builder, String string) {
+		builder.append(string + "\n")
+	}
 		
-	}
-
-	override Language<CTag> tx_start(Language<CTag> language, List<Node> ancestors) {
-		switch (language.toString) {
-			case ";":		output.println(language)
-			case "{":		{ output.println(language); indent += "  " }
-			case "}":		{ indent = indent.substring(2); output.println(language) }
-			case ")": {
-					output.print(language)
-					if (ancestors.last.name == "SelectionStatement") output.println
-			}		
-			case "else":	output.println(indent + language)
-			case "return": {
-				output.print(indent + language)
-				if (ancestors.last.length > 2) output.print(" ")
-			}
-			default: output.print(language)
-		}
-		language.copy
-	}
-
-	override void tx_end(Language<CTag> language, List<Node> ancestors) {
-		
-	}
-
-	override GNode tx_start(GNode node, List<Node> ancestors) {
-		switch(node.name) {
-			case "Declaration":						output.print(indent)
-			case "ExpressionStatement":				output.print(indent)
-			case "ReturnStatement":					output.print(indent)
-			case "SelectionStatement":				output.print(indent)
-			case "SimpleDeclarator":				output.print(" ")
-			case "InitializerOpt":					output.print(" ")
-			case "Initializer":						output.print(" ")
+	def private dispatch void t(PresenceCondition condition) {
+		if(!last_line.empty && !last_line.startsWith("#"))
+			output.println
 			
-			case "TranslationUnit":					output.print("")
-			case "ExternalDeclarationList":			output.print("")
-			case "Conditional":						output.print("")
-			case "DeclaringList":					output.print("")
-			case "FunctionDeclarator":				output.print("")
-			case "PostfixingFunctionDeclarator":	output.print("")
-			case "FunctionDefinition":				output.print("")
-			case "FunctionPrototype":				output.print("")
-			case "CompoundStatement":				output.print("")
-			case "DeclarationOrStatementList":		output.print("")
-			case "Increment":						output.print("")
-			case "PrimaryIdentifier":				output.print("")
-			case "UnaryExpression":					output.print("")
-			case "Unaryoperator":					output.print("")
-			default : output.println(node)
+		if(ancestors.last.head == condition){
+			output.println('''«indent»#if «condition»''')
+			last_line = '''#if «condition»'''
+			}
+			
+		else {
+			output.println('''«indent»#elif «condition»''')
+			last_line = '''#elif «condition»'''
+			}
+	}
+
+	def private dispatch void t(Language<CTag> language) {
+		
+		if(language.toString.equals("}"))
+			indent = indent.substring(4)
+		
+		if(last_line.endsWith(";") || language.toString.equals("{") || last_line.endsWith("}") || last_line.endsWith("{"))
+			output.println
+			
+		if(last_line.startsWith("#") && !last_C_line.endsWith(";") && !last_C_line.endsWith("{") && !last_C_line.endsWith("}")) {
+			output.print(last_C_line.replaceAll(".", " "))
 		}
 		
-		val newNode = GNode::create(node.name)
-		node.forEach[newNode.add(it)]
-		newNode
+		if (last_line.startsWith("#") || last_C_line.endsWith(";") || last_C_line.endsWith("{") || last_C_line.endsWith("}"))
+			output.print(indent)
+		
+		if(firstToken || language.toString.equals(";") || language.toString.equals(")")
+			|| last_C_line.endsWith("(") || last_C_line.endsWith(";")
+			|| language.toString.equals("{") || last_C_line.endsWith("{")
+			|| language.toString.equals("}") || last_C_line.endsWith("}")) {
+			firstToken = false
+		} else {
+			output.print(" ")
+			last_C_line += " "
+		}
+		
+		output.print(language.toString)
+		if(last_C_line.endsWith(";") || last_C_line.endsWith("{") || last_C_line.endsWith("}"))
+			last_C_line = language.toString
+		else
+			last_C_line += language
+		
+		last_line = last_C_line
+		
+		if(language.toString == "{")
+			indent += "    "
 	}
 
-	override void tx_end(GNode node, List<Node> ancestors) {
-		switch(node.name) {
-			case "Conditional": {
-				output.println('''«indent»#endif''');
-				if(ancestors.last.name != "Conditional") output.println
-				}
-			default : output.print("")
+	def private dispatch void t(GNode node) {
+		ancestors.add(node)
+		
+		node.forEach[t(it)]
+		
+		ancestors.remove(node)
+		
+		if(node.name.equals("Conditional")) {
+			if(!last_line.startsWith("#"))
+				output.println
+			output.println('''«indent»#endif''')
+			last_line = "#"
 		}
 	}
-
-	override Node tx_start(Node node, List<Node> ancestors) {
-		output.println('''[node] «node»''')
-		val newNode = GNode::create(node.name)
-		node.forEach[newNode.add(it)]
-		newNode
-	}
-
-	override void tx_end(Node node, List<Node> ancestors) {
-		
-	}
-
 }

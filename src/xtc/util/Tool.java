@@ -21,9 +21,11 @@ package xtc.util;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
@@ -31,12 +33,12 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import itu.Traverse;
-import itu.Tx;
+
 import itu.TxIdentity;
 import itu.TxIfdef2If;
 import itu.TxPrintAst;
 import itu.TxPrintCode;
+import itu.TxRemOnes;
 import xtc.Constants;
 import xtc.lang.cpp.PresenceConditionManager;
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition;
@@ -258,6 +260,17 @@ public abstract class Tool {
   public abstract Node parse(Reader in, File file)
     throws IOException, ParseException;
 
+  private void writeToFile(String text, String file) {
+      try {
+	  	PrintWriter file_output = new PrintWriter(new FileOutputStream(file));
+	  	file_output.write(text);
+	  	file_output.flush();
+	  	file_output.close();
+      } catch (IOException e) {
+    	  System.err.println("Can not recover from the input or output fault");
+	  }
+  }
+  
   /**
    * Process the specified AST node.  This method is only invoked if
    * {@link #parse(Reader,File)} has completed successfuly, has
@@ -272,106 +285,103 @@ public abstract class Tool {
   public void process(Node node) {
 //	  System.out.println("process Node Tool");
 	  
-	  ByteArrayOutputStream baos = new ByteArrayOutputStream();
-	  PrintStream ps = new PrintStream(baos);
 	  String out1, out2;
 	  Object node1;
 	  
-	  Tx printCode = new TxPrintCode(presenceConditionManager, ps);
-	  Tx printAst = new TxPrintAst(presenceConditionManager, ps);
-	  Tx identity = new TxIdentity(presenceConditionManager);
-	  Tx ifdef2if = new TxIfdef2If(presenceConditionManager);
+	  TxPrintCode txPrintCode = new TxPrintCode(presenceConditionManager);
+	  TxPrintAst txPrintAst = new TxPrintAst(presenceConditionManager);
+	  TxIdentity txIdentity = new TxIdentity(presenceConditionManager);
+	  TxRemOnes txRemOnes = new TxRemOnes(presenceConditionManager);
+	  TxIfdef2If txIfdef2If = new TxIfdef2If(presenceConditionManager);
 
-	  // Test TxPrintCode and TxPrintAst
-	  Traverse.t(node, printCode, new ArrayList<Node>());
-	  Traverse.t(node, printAst, new ArrayList<Node>());
-	  out1 = baos.toString(); // might need a character encoding
-	  baos.reset();
-	  System.out.print(out1);
+	  
+	  out1 = txPrintCode.transform(node);
+	  writeToFile(out1, "test\\eb91f1d\\out.c");
+	  
+	  out1 = txPrintCode.transform(txRemOnes.t(node));
+	  writeToFile(out1, "test\\eb91f1d\\rem.c");
 	  
 	  
+	  out1 = txPrintAst.transform(node);
+	  writeToFile(out1, "test\\eb91f1d\\outast.c");
 	  
-	  // Test that TxPrintCode is identity
-	  node1 = Traverse.t(node, printCode, new ArrayList<Node>());
-	  out1 = baos.toString();
-	  baos.reset();
-	  Traverse.t(node1, printCode, new ArrayList<Node>());
-	  out2 = baos.toString();
-	  baos.reset();
-	  if(out1.equals(out2))
-		  System.out.println("TxPrintCode is identity PASS");
-	  else {
-		  System.out.println("TxPrintCode is identity FAIL");
+	  out1 = txPrintAst.transform(txRemOnes.t(node));
+	  writeToFile(out1, "test\\eb91f1d\\remast.c");
+     
+      
+      
+      
+	  
+//	  // Test that TxRemOnes is identity
+//	  txPrintAst.t(node);
+//	  out1 = baos.toString();
+//	  baos.reset();
+//	  node1 = txRemOnes.t(node);
+//	  txPrintAst.t(node1);
+//	  out2 = baos.toString();
+//	  baos.reset();
+//	  if(out1.equals(out2))
+//		  System.out.println("TxRemOnes is identity PASS");
+//	  else {
+//		  System.out.println("TxRemOnes is identity FAIL");
 //		  System.out.println(out1);
 //		  System.out.println(out2);
-	  }
-	  
-	  // Test that TxPrintAst is identity
-	  node1 = Traverse.t(node, printAst, new ArrayList<Node>());
-	  out1 = baos.toString();
-	  baos.reset();
-	  Traverse.t(node1, printAst, new ArrayList<Node>());
-	  out2 = baos.toString();
-	  baos.reset();
-	  if(out1.equals(out2))
-		  System.out.println("TxPrintAst is identity PASS");
-	  else {
-		  System.out.println("TxPrintAst is identity FAIL");
-//		  System.out.println(out1);
-//		  System.out.println(out2);
-	  }
-	  
-	  // Test that TxIdentity is identity
-	  Traverse.t(node, printAst, new ArrayList<Node>());
-	  out1 = baos.toString();
-	  baos.reset();
-	  node1 = Traverse.t(node, identity, new ArrayList<Node>());
-	  Traverse.t(node1, printAst, new ArrayList<Node>());
-	  out2 = baos.toString();
-	  baos.reset();
-	  if(out1.equals(out2))
-		  System.out.println("TxIdentity is identity PASS");
-	  else {
-		  System.out.println("TxIdentity is identity FAIL");
-//		  System.out.println(out1);
-//		  System.out.println(out2);
-	  }
-	  
-	  
-	  // Test Ifdef2If
-	  node1 = Traverse.t(node, ifdef2if, new ArrayList<Node>());
-	  Traverse.t(node1, printCode, new ArrayList<Node>());
-	  out1 = baos.toString();
-	  baos.reset();
-	  System.out.println(out1);
-	  
-//	  Traverse.t(node, new TxPrintCode(), new ArrayList<Node>());
-//	  System.out.println("\n\n\n");
-//	  Object node1 = Traverse.t(node, new TxIdentity(), new ArrayList<Node>());
-//	  Object node1 = Traverse.t(node, new TxIfdef2If(presenceConditionManager), new ArrayList<Node>());
-	  
-//	  Traverse.t(node1, new TxPrintCode(), new ArrayList<Node>());
-//	  System.out.println("\n\n\n\n");
-	  
-//	  System.out.println("node1:");
-//	  Traverse.t(node1, new TxPrintAst(), new ArrayList<Node>());
-//	  System.out.println("\n\n");
-//	  Traverse.t(node, new TxPrintCode(), new ArrayList<Node>());
-	  
-	  //Traverse.t(node, new TxIfdef2If(), new ArrayList<Node>());
-
+//	  }
+      
+//	  // Test that TxPrintCode is identity
+//	  node1 = txPrintCode.t(node);
+//	  out1 = baos.toString();
+//	  baos.reset();
+//	  txPrintCode.t(node1);
+//	  out2 = baos.toString();
+//	  baos.reset();
+//	  if(out1.equals(out2))
+//		  System.out.println("TxPrintCode is identity PASS");
+//	  else {
+//		  System.out.println("TxPrintCode is identity FAIL");
+////		  System.out.println(out1);
+////		  System.out.println(out2);
+//	  }
 //	  
-//	  OutputStreamWriter writer = new OutputStreamWriter(System.out);
-//      try {
-//		new SuperC();
-//		SuperC.printSource(node,
-//				new PresenceConditionManager().new PresenceCondition(true),
-//		          writer);
-//		writer.flush();
-//	} catch (IOException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	}
+//	  // Test that TxPrintAst is identity
+//	  node1 = txPrintAst.t(node);
+//	  out1 = baos.toString();
+//	  baos.reset();
+//	  txPrintAst.t(node1);
+//	  out2 = baos.toString();
+//	  baos.reset();
+//	  if(out1.equals(out2))
+//		  System.out.println("TxPrintAst is identity PASS");
+//	  else {
+//		  System.out.println("TxPrintAst is identity FAIL");
+////		  System.out.println(out1);
+////		  System.out.println(out2);
+//	  }
+//	  
+//	  // Test that TxIdentity is identity
+//	  txPrintAst.t(node);
+//	  out1 = baos.toString();
+//	  baos.reset();
+//	  node1 = txIdentity.t(node);
+//	  txPrintAst.t(node1);
+//	  out2 = baos.toString();
+//	  baos.reset();
+//	  if(out1.equals(out2))
+//		  System.out.println("TxIdentity is identity PASS");
+//	  else {
+//		  System.out.println("TxIdentity is identity FAIL");
+////		  System.out.println(out1);
+////		  System.out.println(out2);
+//	  }
+//	  
+//	  
+//	  // Test Ifdef2If
+//	  node1 = txIfdef2If.t(node);
+//	  txPrintCode.t(node1);
+//	  out1 = baos.toString();
+//	  baos.reset();
+//	  System.out.println(out1);
+	  
   }
 
   /**

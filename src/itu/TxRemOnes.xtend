@@ -9,7 +9,7 @@ import xtc.tree.GNode
 import java.util.ArrayList
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 
-class TxIdentity {
+class TxRemOnes  {
 	
 	// the PresenceConditionManager which was used when building the AST
 	// without this it is not possible to access the variable names in the PresenceConditions
@@ -32,15 +32,29 @@ class TxIdentity {
 		language.copy
 	}
 
-	def dispatch GNode t(GNode node) {
-		ancestors.add(node)
+	def dispatch Node t(Node node) {
+			if(node.name == "Conditional"
+			&& node.size == 2
+			&& node.get(0).toString.equals("1")){
+				
+				ancestors.add(node)
+				
+				val newNode = t(node.get(1)) as Node
+				
+				ancestors.remove(node)
+				
+				newNode
+			}
+			else {
+				ancestors.add(node)
 		
-		val newNode = GNode::create(node.name)
-		node.forEach[newNode.add(t(it))]
-		
-		ancestors.remove(node)
-		
-		newNode
+				val newNode = GNode::create(node.name)
+				node.forEach[newNode.add(t(it))]
+				
+				ancestors.remove(node)
+				
+				newNode
+			}
 	}
 	
 }
