@@ -36,9 +36,12 @@ import java.util.Date;
 
 import itu.TxIdentity;
 import itu.TxIfdef2If;
+import itu.TxMergeSeqI;
 import itu.TxPrintAst;
 import itu.TxPrintCode;
+import itu.TxRemExtras;
 import itu.TxRemOnes;
+import itu.TxSplitConditionals;
 import xtc.Constants;
 import xtc.lang.cpp.PresenceConditionManager;
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition;
@@ -292,25 +295,64 @@ public abstract class Tool {
 	  TxPrintAst txPrintAst = new TxPrintAst(presenceConditionManager);
 	  TxIdentity txIdentity = new TxIdentity(presenceConditionManager);
 	  TxRemOnes txRemOnes = new TxRemOnes(presenceConditionManager);
+	  TxRemExtras txRemExtras = new TxRemExtras(presenceConditionManager);
 	  TxIfdef2If txIfdef2If = new TxIfdef2If(presenceConditionManager);
+	  TxMergeSeqI txMergeSeqI = new TxMergeSeqI(presenceConditionManager);
+	  TxSplitConditionals txSplitConditionals = new TxSplitConditionals(presenceConditionManager);
 
 	  
+	  // test printing the original node
 	  out1 = txPrintCode.transform(node);
 	  writeToFile(out1, "test\\eb91f1d\\out.c");
-	  
-	  out1 = txPrintCode.transform(txRemOnes.t(node));
-	  writeToFile(out1, "test\\eb91f1d\\rem.c");
-	  
 	  
 	  out1 = txPrintAst.transform(node);
 	  writeToFile(out1, "test\\eb91f1d\\outast.c");
 	  
-	  out1 = txPrintAst.transform(txRemOnes.t(node));
+	  
+	  // test TxIdentity
+	  out1 = txPrintAst.transform(node);
+	  out2 = txPrintAst.transform(txIdentity.transform(node));
+	  if(out1.equals(out2))
+		  System.out.println("txIdentity is identity PASS");
+	  else
+		  System.out.println("txIdentity is identity FAIL");
+	  
+	  
+	  // test TxRemOnes
+	  Node remOnes = (Node) txRemOnes.transform(node);
+	  
+	  out1 = txPrintCode.transform(remOnes);
+	  writeToFile(out1, "test\\eb91f1d\\rem.c");
+	  
+	  out1 = txPrintAst.transform(remOnes);
 	  writeToFile(out1, "test\\eb91f1d\\remast.c");
      
+	  
+	  // test TxRemExtras
+	  Node remExtras = (Node) txRemExtras.transform(remOnes);
       
-      
-      
+	  out1 = txPrintCode.transform(remExtras);
+	  writeToFile(out1, "test\\eb91f1d\\rem2.c");
+	  
+	  out1 = txPrintAst.transform(remExtras);
+	  writeToFile(out1, "test\\eb91f1d\\rem2ast.c");
+	  
+	  
+	  // test MergeSeqI
+	  Node merge1 = (Node) txMergeSeqI.transform(remExtras);
+	  out1 = txPrintCode.transform(merge1);
+	  writeToFile(out1, "test\\eb91f1d\\remseq1.c");
+
+	  
+	  // test Ifdef2If
+	  Node split = (Node) txSplitConditionals.transform(merge1);
+	  out1 = txPrintCode.transform(split);
+	  writeToFile(out1, "test\\eb91f1d\\split.c");
+	  
+	  // test Ifdef2If
+	  Node result = (Node) txIfdef2If.transform(split);
+	  out1 = txPrintCode.transform(result);
+	  writeToFile(out1, "test\\eb91f1d\\final.c");
 	  
 //	  // Test that TxRemOnes is identity
 //	  txPrintAst.t(node);

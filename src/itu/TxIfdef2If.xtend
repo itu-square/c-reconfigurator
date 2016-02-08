@@ -26,15 +26,28 @@ class TxIfdef2If  {
     	this.ancestors = new ArrayList<Node>
 	}
 	
-	def dispatch PresenceCondition t(PresenceCondition condition) {
+	def transform(Object o) {
+		ancestors.clear
+		t(o)
+	}
+	
+	def private dispatch PresenceCondition t(PresenceCondition condition) {
 		manager.newPresenceCondition(condition.BDD)
 	}
 
-	def dispatch Language<CTag> t(Language<CTag> language) {
+	def private dispatch Language<CTag> t(Language<CTag> language) {
 		language.copy
 	}
 	
-	def dispatch GNode t(GNode node) {
+	def private dispatch GNode t(GNode node) {
+//		if(node.name == "Conditional"){
+//			println(node)
+//			node.forEach[println("  " + it)]
+//			println
+//			
+//		}
+		
+		
 		if(node.name == "Conditional"
 			&& node.size == 4
 			&& (node.get(0) as PresenceCondition).not.toString == (node.get(2) as PresenceCondition).toString
@@ -51,6 +64,9 @@ class TxIfdef2If  {
 //            				case 0: println("!")
 //            				case 1: println(manager.variableManager.getName(i))
 //            	        }}
+
+
+				
 				var defined = (node.get(0) as PresenceCondition).toString
 				var variable = defined.substring(defined.indexOf(' ')+1, defined.indexOf(')'))
 				

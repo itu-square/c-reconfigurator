@@ -24,15 +24,20 @@ class TxIdentity {
     	this.ancestors = new ArrayList<Node>
 	}
 	
-	def dispatch PresenceCondition t(PresenceCondition condition) {
+	def transform(Object o) {
+		ancestors.clear
+		t(o)
+	}
+	
+	def private dispatch PresenceCondition t(PresenceCondition condition) {
 		manager.newPresenceCondition(condition.BDD)
 	}
 
-	def dispatch Language<CTag> t(Language<CTag> language) {
+	def private dispatch Language<CTag> t(Language<CTag> language) {
 		language.copy
 	}
 
-	def dispatch GNode t(GNode node) {
+	def private dispatch GNode t(GNode node) {
 		ancestors.add(node)
 		
 		val newNode = GNode::create(node.name)
