@@ -42,6 +42,9 @@ import itu.TxPrintCode;
 import itu.TxRemExtras;
 import itu.TxRemOnes;
 import itu.TxSplitConditionals;
+import itu2.BottomUpStrategy;
+import itu2.RemOneRule;
+import itu2.Strategy;
 import xtc.Constants;
 import xtc.lang.cpp.PresenceConditionManager;
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition;
@@ -286,143 +289,119 @@ public abstract class Tool {
    * @param node The node.
    */
   public void process(Node node) {
-//	  System.out.println("process Node Tool");
 	  
-	  String out1, out2;
-	  Object node1;
+	  final Boolean PRINT_HASH_CODE = true;
+	  final Boolean DONT_PRINT_HASH_CODE = false;
 	  
-	  TxPrintCode txPrintCode = new TxPrintCode(presenceConditionManager);
 	  TxPrintAst txPrintAst = new TxPrintAst(presenceConditionManager);
-	  TxIdentity txIdentity = new TxIdentity(presenceConditionManager);
-	  TxRemOnes txRemOnes = new TxRemOnes(presenceConditionManager);
-	  TxRemExtras txRemExtras = new TxRemExtras(presenceConditionManager);
-	  TxIfdef2If txIfdef2If = new TxIfdef2If(presenceConditionManager);
-	  TxMergeSeqI txMergeSeqI = new TxMergeSeqI(presenceConditionManager);
-	  TxSplitConditionals txSplitConditionals = new TxSplitConditionals(presenceConditionManager);
-
+	  TxPrintCode txPrintCode = new TxPrintCode(presenceConditionManager);
+	  String out1, out2;
 	  
-	  // test printing the original node
-	  out1 = txPrintCode.transform(node);
-	  writeToFile(out1, "test\\eb91f1d\\out.c");
+	  // test that the empty BottomUpStrategy is identity
+	  out1 = txPrintAst.transform(node, PRINT_HASH_CODE);
+	  writeToFile(out1, "test\\003\\ast.c");
 	  
-	  out1 = txPrintAst.transform(node);
-	  writeToFile(out1, "test\\eb91f1d\\outast.c");
-	  
-	  
-	  // test TxIdentity
-	  out1 = txPrintAst.transform(node);
-	  out2 = txPrintAst.transform(txIdentity.transform(node));
+	  Strategy bus = new BottomUpStrategy(presenceConditionManager);
+	  Node test = (Node) bus.visit(node);
+	  out2 = txPrintAst.transform(test, PRINT_HASH_CODE);
+	  writeToFile(out2, "test\\003\\ast_id.c");
 	  if(out1.equals(out2))
-		  System.out.println("txIdentity is identity PASS");
+		  System.out.println("the empty BottomUpStrategy is identity PASS");
 	  else
-		  System.out.println("txIdentity is identity FAIL");
+		  System.out.println("the empty BottomUpStrategy is identity FAIL");
+	  System.out.println("\n\n");
+	  
+	  // test RemOneRule
+	  bus.register(new RemOneRule());
+	  test = (Node) bus.visit(node);
+	  out2 = txPrintCode.transform(test);
+	  writeToFile(out2, "test\\003\\remone.c");
+	  out2 = txPrintAst.transform(test, DONT_PRINT_HASH_CODE);
+	  writeToFile(out2, "test\\003\\ast_remone.c"); 
 	  
 	  
-	  // test TxRemOnes
-	  Node remOnes = (Node) txRemOnes.transform(node);
 	  
-	  out1 = txPrintCode.transform(remOnes);
-	  writeToFile(out1, "test\\eb91f1d\\rem.c");
-	  
-	  out1 = txPrintAst.transform(remOnes);
-	  writeToFile(out1, "test\\eb91f1d\\remast.c");
-     
-	  
-	  // test TxRemExtras
-	  Node remExtras = (Node) txRemExtras.transform(remOnes);
-      
-	  out1 = txPrintCode.transform(remExtras);
-	  writeToFile(out1, "test\\eb91f1d\\rem2.c");
-	  
-	  out1 = txPrintAst.transform(remExtras);
-	  writeToFile(out1, "test\\eb91f1d\\rem2ast.c");
-	  
-	  
-	  // test MergeSeqI
-	  Node merge1 = (Node) txMergeSeqI.transform(remExtras);
-	  out1 = txPrintCode.transform(merge1);
-	  writeToFile(out1, "test\\eb91f1d\\remseq1.c");
+//	  out1 = txPrintAst.transform(node);
+//	  writeToFile(out1, "test\\003\\ast.c");
+//	  out1 = txPrintCode.transform(node);
+//	  writeToFile(out1, "test\\003\\out.c");
+//	  
+//	  BottomUpStrategy bus = new BottomUpStrategy(presenceConditionManager);
+//	  Node node1 = (Node) bus.visit(node);
+//	  
+//	  out1 = txPrintAst.transform(node1);
+//	  writeToFile(out1, "test\\003\\ast1.c");
 
 	  
-	  // test Ifdef2If
-	  Node split = (Node) txSplitConditionals.transform(merge1);
-	  out1 = txPrintCode.transform(split);
-	  writeToFile(out1, "test\\eb91f1d\\split.c");
 	  
-	  // test Ifdef2If
-	  Node result = (Node) txIfdef2If.transform(split);
-	  out1 = txPrintCode.transform(result);
-	  writeToFile(out1, "test\\eb91f1d\\final.c");
 	  
-//	  // Test that TxRemOnes is identity
-//	  txPrintAst.t(node);
-//	  out1 = baos.toString();
-//	  baos.reset();
-//	  node1 = txRemOnes.t(node);
-//	  txPrintAst.t(node1);
-//	  out2 = baos.toString();
-//	  baos.reset();
-//	  if(out1.equals(out2))
-//		  System.out.println("TxRemOnes is identity PASS");
-//	  else {
-//		  System.out.println("TxRemOnes is identity FAIL");
-//		  System.out.println(out1);
-//		  System.out.println(out2);
-//	  }
-      
-//	  // Test that TxPrintCode is identity
-//	  node1 = txPrintCode.t(node);
-//	  out1 = baos.toString();
-//	  baos.reset();
-//	  txPrintCode.t(node1);
-//	  out2 = baos.toString();
-//	  baos.reset();
-//	  if(out1.equals(out2))
-//		  System.out.println("TxPrintCode is identity PASS");
-//	  else {
-//		  System.out.println("TxPrintCode is identity FAIL");
-////		  System.out.println(out1);
-////		  System.out.println(out2);
-//	  }
+	  
+	  
+//	  String out1, out2;
+//	  Object node1;
 //	  
-//	  // Test that TxPrintAst is identity
-//	  node1 = txPrintAst.t(node);
-//	  out1 = baos.toString();
-//	  baos.reset();
-//	  txPrintAst.t(node1);
-//	  out2 = baos.toString();
-//	  baos.reset();
-//	  if(out1.equals(out2))
-//		  System.out.println("TxPrintAst is identity PASS");
-//	  else {
-//		  System.out.println("TxPrintAst is identity FAIL");
-////		  System.out.println(out1);
-////		  System.out.println(out2);
-//	  }
+//	  TxPrintCode txPrintCode = new TxPrintCode(presenceConditionManager);
+//	  TxPrintAst txPrintAst = new TxPrintAst(presenceConditionManager);
+//	  TxIdentity txIdentity = new TxIdentity(presenceConditionManager);
+//	  TxRemOnes txRemOnes = new TxRemOnes(presenceConditionManager);
+//	  TxRemExtras txRemExtras = new TxRemExtras(presenceConditionManager);
+//	  TxIfdef2If txIfdef2If = new TxIfdef2If(presenceConditionManager);
+//	  TxMergeSeqI txMergeSeqI = new TxMergeSeqI(presenceConditionManager);
+//	  TxSplitConditionals txSplitConditionals = new TxSplitConditionals(presenceConditionManager);
+//
 //	  
-//	  // Test that TxIdentity is identity
-//	  txPrintAst.t(node);
-//	  out1 = baos.toString();
-//	  baos.reset();
-//	  node1 = txIdentity.t(node);
-//	  txPrintAst.t(node1);
-//	  out2 = baos.toString();
-//	  baos.reset();
-//	  if(out1.equals(out2))
-//		  System.out.println("TxIdentity is identity PASS");
-//	  else {
-//		  System.out.println("TxIdentity is identity FAIL");
-////		  System.out.println(out1);
-////		  System.out.println(out2);
-//	  }
+//	  // test printing the original node
+//	  out1 = txPrintCode.transform(node);
+//	  writeToFile(out1, "test\\eb91f1d\\out.c");
+//	  
+//	  out1 = txPrintAst.transform(node);
+//	  writeToFile(out1, "test\\eb91f1d\\outast.c");
 //	  
 //	  
-//	  // Test Ifdef2If
-//	  node1 = txIfdef2If.t(node);
-//	  txPrintCode.t(node1);
-//	  out1 = baos.toString();
-//	  baos.reset();
-//	  System.out.println(out1);
+//	  // test TxIdentity
+//	  out1 = txPrintAst.transform(node);
+//	  out2 = txPrintAst.transform(txIdentity.transform(node));
+//	  if(out1.equals(out2))
+//		  System.out.println("txIdentity is identity PASS");
+//	  else
+//		  System.out.println("txIdentity is identity FAIL");
+//	  
+//	  
+//	  // test TxRemOnes
+//	  Node remOnes = (Node) txRemOnes.transform(node);
+//	  
+//	  out1 = txPrintCode.transform(remOnes);
+//	  writeToFile(out1, "test\\eb91f1d\\rem.c");
+//	  
+//	  out1 = txPrintAst.transform(remOnes);
+//	  writeToFile(out1, "test\\eb91f1d\\remast.c");
+//     
+//	  
+//	  // test TxRemExtras
+//	  Node remExtras = (Node) txRemExtras.transform(remOnes);
+//      
+//	  out1 = txPrintCode.transform(remExtras);
+//	  writeToFile(out1, "test\\eb91f1d\\rem2.c");
+//	  
+//	  out1 = txPrintAst.transform(remExtras);
+//	  writeToFile(out1, "test\\eb91f1d\\rem2ast.c");
+//	  
+//	  
+//	  // test MergeSeqI
+//	  Node merge1 = (Node) txMergeSeqI.transform(remExtras);
+//	  out1 = txPrintCode.transform(merge1);
+//	  writeToFile(out1, "test\\eb91f1d\\remseq1.c");
+//
+//	  
+//	  // test Ifdef2If
+//	  Node split = (Node) txSplitConditionals.transform(merge1);
+//	  out1 = txPrintCode.transform(split);
+//	  writeToFile(out1, "test\\eb91f1d\\split.c");
+//	  
+//	  // test Ifdef2If
+//	  Node result = (Node) txIfdef2If.transform(split);
+//	  out1 = txPrintCode.transform(result);
+//	  writeToFile(out1, "test\\eb91f1d\\final.c");
 	  
   }
 

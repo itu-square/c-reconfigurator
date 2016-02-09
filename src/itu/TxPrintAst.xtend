@@ -22,7 +22,7 @@ class TxPrintAst {
 	private var output = new StringBuilder
 
 	// setting: enable to print each object's hash code
-	val printHashCode = false
+	var printHashCode = true
 
 	// setting: enable to print each object's type [ pc | lang | gnod ]
 	val printType = false
@@ -33,11 +33,12 @@ class TxPrintAst {
     	this.ancestors = new ArrayList<Node>
 	}
 	
-	def transform(Object o) {
-		ancestors.clear
-		output = new StringBuilder
+	def transform(Object o, Boolean printHashCode) {
+		this.ancestors.clear
+		this.output = new StringBuilder
+		this.printHashCode = printHashCode
 		t(o)
-		output.toString
+		this.output.toString
 	}
 	
 	def print(StringBuilder builder, String string) {

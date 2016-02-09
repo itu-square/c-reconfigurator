@@ -27,9 +27,8 @@ class Reconfigurator {
 //			"-macroTable",
 //			"-E",
 //			"/home/alex/busybox/busybox-1.24.1/scripts/echo.c",
-//			"test\\001\\c1.cpp"
-			"test\\eb91f1d\\in.c"
-//			"/home/alex/test/cpp/c2.cpp",
+			"test\\003\\in.c"
+//			"test\\eb91f1d\\in.c"
 		]
 		
 		
