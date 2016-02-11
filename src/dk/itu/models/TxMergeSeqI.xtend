@@ -1,4 +1,4 @@
-package itu
+package dk.itu.models
 
 import xtc.lang.cpp.PresenceConditionManager
 import xtc.util.Pair
@@ -61,7 +61,7 @@ class TxMergeSeqI {
 	}
 	
 	def private dispatch PresenceCondition t(PresenceCondition condition) {
-		manager.newPresenceCondition(condition.BDD)
+		manager.newPresenceCondition(condition.getBDD)
 	}
 
 	def private dispatch Language<CTag> t(Language<CTag> language) {

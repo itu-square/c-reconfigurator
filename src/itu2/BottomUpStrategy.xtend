@@ -29,7 +29,11 @@ class BottomUpStrategy extends Strategy {
 		if (pair.isEmpty)
 			pair
 		else {
-			var Pair<?> newPair = new Pair(visit(pair.head), visit(pair.tail) as Pair<?>)
+			
+			var Pair<?> newTail = visit(pair.tail) as Pair<?>
+			var Object newHead = visit(pair.head)
+			
+			var Pair<?> newPair = new Pair(newHead, newTail)
 			
 			println('''bus «pair»''')
 			var Pair<?> prev = null

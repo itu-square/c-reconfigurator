@@ -1,4 +1,4 @@
-package itu
+package dk.itu.models
 
 import xtc.lang.cpp.PresenceConditionManager
 import java.util.List
@@ -30,7 +30,7 @@ class TxRemExtras  {
 	}
 	
 	def private dispatch PresenceCondition t(PresenceCondition condition) {
-		manager.newPresenceCondition(condition.BDD)
+		manager.newPresenceCondition(condition.getBDD)
 	}
 
 	def private dispatch Language<CTag> t(Language<CTag> language) {
@@ -70,7 +70,7 @@ class TxRemExtras  {
 //				println
 //				println
 				
-				if(g.BDD.imp(c.BDD).isOne){
+				if(g.getBDD.imp(c.getBDD).isOne){
 					ancestors.add(node)
 					val newNode = t(node.get(1)) as Node
 					ancestors.remove(node)

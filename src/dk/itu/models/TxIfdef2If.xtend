@@ -1,4 +1,4 @@
-package itu
+package dk.itu.models
 
 import xtc.tree.GNode
 import xtc.tree.Node
@@ -32,7 +32,7 @@ class TxIfdef2If  {
 	}
 	
 	def private dispatch PresenceCondition t(PresenceCondition condition) {
-		manager.newPresenceCondition(condition.BDD)
+		manager.newPresenceCondition(condition.getBDD)
 	}
 
 	def private dispatch Language<CTag> t(Language<CTag> language) {

@@ -1,10 +1,24 @@
-package itu
+package dk.itu.models
 
 import xtc.lang.cpp.SuperC
+import dk.itu.models.tests.Test1
+import dk.itu.models.tests.Test
 
 class Reconfigurator {
 	
+	static public var Test test
+	
 	def static void main(String[] args) {
+		run(new Test1("test\\003\\in.c"))
+		
+//		run(new Test2("test\\002\\in.c"))
+		
+		run(new Test1("test\\002\\in.c"))
+	}
+	
+	def static void run(Test test) {
+		
+		Reconfigurator::test = test
 		
 		println("Reconfigurator START")
 		
@@ -22,19 +36,18 @@ class Reconfigurator {
 //			"-printSource",
 			"-saveLayoutTokens",
 			"-nostdinc",
-			"-showErrors",
+			"-showErrors"
 //			"-headerGuards",
 //			"-macroTable",
 //			"-E",
-//			"/home/alex/busybox/busybox-1.24.1/scripts/echo.c",
-//			"test\\003\\in.c"
-			"test\\eb91f1d\\in.c"
 		]
 		
 		
 		var noargs = #[]
 		
-		new SuperC().run(newargs)
+		test.run(newargs)
+		
+		//new SuperC().run(newargs)
 //		new SuperC().process("D:\\temp\\superc\\c1.cpp");
 		
 		println("Reconfigurator END")

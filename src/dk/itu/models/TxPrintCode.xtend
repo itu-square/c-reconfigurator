@@ -1,4 +1,4 @@
-package itu
+package dk.itu.models
 
 import java.util.ArrayList
 import xtc.lang.cpp.CTag

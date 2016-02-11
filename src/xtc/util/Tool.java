@@ -33,15 +33,16 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-
-import itu.TxIdentity;
-import itu.TxIfdef2If;
-import itu.TxMergeSeqI;
-import itu.TxPrintAst;
-import itu.TxPrintCode;
-import itu.TxRemExtras;
-import itu.TxRemOnes;
-import itu.TxSplitConditionals;
+import dk.itu.models.Reconfigurator;
+import dk.itu.models.TxIdentity;
+import dk.itu.models.TxIfdef2If;
+import dk.itu.models.TxMergeSeqI;
+import dk.itu.models.TxPrintAst;
+import dk.itu.models.TxPrintCode;
+import dk.itu.models.TxRemExtras;
+import dk.itu.models.TxRemOnes;
+import dk.itu.models.TxSplitConditionals;
+import dk.itu.models.tests.Test1;
 import itu2.BottomUpStrategy;
 import itu2.MergeSeqI;
 import itu2.RemExtraRule;
@@ -268,17 +269,6 @@ public abstract class Tool {
   public abstract Node parse(Reader in, File file)
     throws IOException, ParseException;
 
-  private void writeToFile(String text, String file) {
-      try {
-	  	PrintWriter file_output = new PrintWriter(new FileOutputStream(file));
-	  	file_output.write(text);
-	  	file_output.flush();
-	  	file_output.close();
-      } catch (IOException e) {
-    	  System.err.println("Can not recover from the input or output fault");
-	  }
-  }
-  
   /**
    * Process the specified AST node.  This method is only invoked if
    * {@link #parse(Reader,File)} has completed successfuly, has
@@ -292,120 +282,7 @@ public abstract class Tool {
    */
   public void process(Node node) {
 	  
-	  final Boolean PRINT_HASH_CODE = true;
-	  final Boolean DONT_PRINT_HASH_CODE = false;
-	  
-	  TxPrintAst txPrintAst = new TxPrintAst(presenceConditionManager);
-	  TxPrintCode txPrintCode = new TxPrintCode(presenceConditionManager);
-	  String out1, out2;
-	  
-	  // test that the empty BottomUpStrategy is identity
-	  out1 = txPrintAst.transform(node, PRINT_HASH_CODE);
-	  writeToFile(out1, "test\\003\\ast.c");
-	  
-	  Strategy bus = new BottomUpStrategy(presenceConditionManager);
-	  Node test = (Node) bus.visit(node);
-	  out2 = txPrintAst.transform(test, PRINT_HASH_CODE);
-	  writeToFile(out2, "test\\003\\ast_id.c");
-	  if(out1.equals(out2))
-		  System.out.println("the empty BottomUpStrategy is identity PASS");
-	  else
-		  System.out.println("the empty BottomUpStrategy is identity FAIL");
-	  System.out.println("\n\n");
-	  
-	  // test RemOneRule
-	  bus.register(new RemOneRule());
-	  bus.register(new RemExtraRule());
-	  bus.register(new MergeSeqI());
-	  test = (Node) bus.visit(node);
-	  out2 = txPrintCode.transform(test);
-	  writeToFile(out2, "test\\003\\final.c");
-	  out2 = txPrintAst.transform(test, DONT_PRINT_HASH_CODE);
-	  writeToFile(out2, "test\\003\\ast_final.c"); 
-	  
-	  
-	  
-//	  out1 = txPrintAst.transform(node);
-//	  writeToFile(out1, "test\\003\\ast.c");
-//	  out1 = txPrintCode.transform(node);
-//	  writeToFile(out1, "test\\003\\out.c");
-//	  
-//	  BottomUpStrategy bus = new BottomUpStrategy(presenceConditionManager);
-//	  Node node1 = (Node) bus.visit(node);
-//	  
-//	  out1 = txPrintAst.transform(node1);
-//	  writeToFile(out1, "test\\003\\ast1.c");
-
-	  
-	  
-	  
-	  
-	  
-//	  String out1, out2;
-//	  Object node1;
-//	  
-//	  TxPrintCode txPrintCode = new TxPrintCode(presenceConditionManager);
-//	  TxPrintAst txPrintAst = new TxPrintAst(presenceConditionManager);
-//	  TxIdentity txIdentity = new TxIdentity(presenceConditionManager);
-//	  TxRemOnes txRemOnes = new TxRemOnes(presenceConditionManager);
-//	  TxRemExtras txRemExtras = new TxRemExtras(presenceConditionManager);
-//	  TxIfdef2If txIfdef2If = new TxIfdef2If(presenceConditionManager);
-//	  TxMergeSeqI txMergeSeqI = new TxMergeSeqI(presenceConditionManager);
-//	  TxSplitConditionals txSplitConditionals = new TxSplitConditionals(presenceConditionManager);
-//
-//	  
-//	  // test printing the original node
-//	  out1 = txPrintCode.transform(node);
-//	  writeToFile(out1, "test\\eb91f1d\\out.c");
-//	  
-//	  out1 = txPrintAst.transform(node);
-//	  writeToFile(out1, "test\\eb91f1d\\outast.c");
-//	  
-//	  
-//	  // test TxIdentity
-//	  out1 = txPrintAst.transform(node);
-//	  out2 = txPrintAst.transform(txIdentity.transform(node));
-//	  if(out1.equals(out2))
-//		  System.out.println("txIdentity is identity PASS");
-//	  else
-//		  System.out.println("txIdentity is identity FAIL");
-//	  
-//	  
-//	  // test TxRemOnes
-//	  Node remOnes = (Node) txRemOnes.transform(node);
-//	  
-//	  out1 = txPrintCode.transform(remOnes);
-//	  writeToFile(out1, "test\\eb91f1d\\rem.c");
-//	  
-//	  out1 = txPrintAst.transform(remOnes);
-//	  writeToFile(out1, "test\\eb91f1d\\remast.c");
-//     
-//	  
-//	  // test TxRemExtras
-//	  Node remExtras = (Node) txRemExtras.transform(remOnes);
-//      
-//	  out1 = txPrintCode.transform(remExtras);
-//	  writeToFile(out1, "test\\eb91f1d\\rem2.c");
-//	  
-//	  out1 = txPrintAst.transform(remExtras);
-//	  writeToFile(out1, "test\\eb91f1d\\rem2ast.c");
-//	  
-//	  
-//	  // test MergeSeqI
-//	  Node merge1 = (Node) txMergeSeqI.transform(remExtras);
-//	  out1 = txPrintCode.transform(merge1);
-//	  writeToFile(out1, "test\\eb91f1d\\remseq1.c");
-//
-//	  
-//	  // test Ifdef2If
-//	  Node split = (Node) txSplitConditionals.transform(merge1);
-//	  out1 = txPrintCode.transform(split);
-//	  writeToFile(out1, "test\\eb91f1d\\split.c");
-//	  
-//	  // test Ifdef2If
-//	  Node result = (Node) txIfdef2If.transform(split);
-//	  out1 = txPrintCode.transform(result);
-//	  writeToFile(out1, "test\\eb91f1d\\final.c");
+	  Reconfigurator.test.transform(node, presenceConditionManager);
 	  
   }
 
