@@ -6,6 +6,7 @@ import xtc.lang.cpp.PresenceConditionManager
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
+import xtc.util.Pair
 
 abstract class Rule {
 	
@@ -26,7 +27,11 @@ abstract class Rule {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 
-	def dispatch GNode transform(GNode node) {
+	def dispatch Pair<?> transform(Pair<?> pair) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+
+	def dispatch Object transform(GNode node) {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 	

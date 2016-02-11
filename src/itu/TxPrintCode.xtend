@@ -66,8 +66,8 @@ class TxPrintCode {
 			last_line = '''#if «condition»'''
 			} else {
 			if(ancestors.last.filter(PresenceCondition).size == 2 && !(ancestors.last.head as PresenceCondition).is(condition)) {
-				output.println("#else")
-				last_line = "#else"
+				output.println('''«indent»#else''')
+				last_line = '''#else'''
 			} else {
 				output.println('''«indent»#elif «condition»''')
 				last_line = '''#elif «condition»'''		

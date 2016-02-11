@@ -1,10 +1,11 @@
 package itu2
 
 import xtc.lang.cpp.CTag
+import xtc.lang.cpp.PresenceConditionManager
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
-import xtc.lang.cpp.PresenceConditionManager
+import xtc.util.Pair
 
 class BottomUpStrategy extends Strategy {
 	
@@ -24,29 +25,46 @@ class BottomUpStrategy extends Strategy {
 		lang
 	}
 	
-	override dispatch GNode visit(GNode node) {
+	override dispatch Pair<?> visit(Pair<?> pair) {
+		if (pair.isEmpty)
+			pair
+		else {
+			var Pair<?> newPair = new Pair(visit(pair.head), visit(pair.tail) as Pair<?>)
+			
+			println('''bus «pair»''')
+			var Pair<?> prev = null
+			while(newPair != prev){
+				prev = newPair
+				for (Rule rule : rules){
+					newPair = rule.transform(newPair) as Pair<?>
+				}
+			}
+			
+			newPair
+		}	
+	}
+	
+	override dispatch Object visit(GNode node) {
 		ancestors.add(node)
 		
-		var newNode = GNode::create(node.name)
-		for (child : node) {
-			newNode.add(visit(child))
-		}
+		var Object newNode = GNode::create(node.name)
+//		for (child : node) {
+//			(newNode as GNode).add(visit(child))
+//		}
+		(newNode as GNode).addAll(visit(node.toPair) as Pair<?>)
 
 		ancestors.remove(node)
 		
 		println('''bus «node»''')
-		
-		var GNode prev = null
-		
+		var Object prev = null
 		while(newNode != prev){
 			prev = newNode
 			for (Rule rule : rules){
-				newNode = rule.transform(prev) as GNode
+				newNode = rule.transform(newNode)
 			}
 		}
 	
 		newNode
-	
 	}
 	
 	

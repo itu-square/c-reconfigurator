@@ -43,6 +43,8 @@ import itu.TxRemExtras;
 import itu.TxRemOnes;
 import itu.TxSplitConditionals;
 import itu2.BottomUpStrategy;
+import itu2.MergeSeqI;
+import itu2.RemExtraRule;
 import itu2.RemOneRule;
 import itu2.Strategy;
 import xtc.Constants;
@@ -313,11 +315,13 @@ public abstract class Tool {
 	  
 	  // test RemOneRule
 	  bus.register(new RemOneRule());
+	  bus.register(new RemExtraRule());
+	  bus.register(new MergeSeqI());
 	  test = (Node) bus.visit(node);
 	  out2 = txPrintCode.transform(test);
-	  writeToFile(out2, "test\\003\\remone.c");
+	  writeToFile(out2, "test\\003\\final.c");
 	  out2 = txPrintAst.transform(test, DONT_PRINT_HASH_CODE);
-	  writeToFile(out2, "test\\003\\ast_remone.c"); 
+	  writeToFile(out2, "test\\003\\ast_final.c"); 
 	  
 	  
 	  

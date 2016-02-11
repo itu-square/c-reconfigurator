@@ -34,7 +34,11 @@ abstract class Strategy {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 	
-	def dispatch GNode visit(GNode node) {
+	def dispatch Pair<?> visit(Pair<?> pair) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+	
+	def dispatch Object visit(GNode node) {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 	
