@@ -1,24 +1,21 @@
-package itu2
+package dk.itu.models.rules
 
 import java.util.ArrayList
 import xtc.lang.cpp.CTag
-import xtc.lang.cpp.PresenceConditionManager
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
 
 abstract class Rule {
-	
-	protected var PresenceConditionManager manager
+
 	protected var ArrayList<GNode> ancestors
-	
-	def init (PresenceConditionManager manager, ArrayList<GNode> ancestors) {
-		this.manager = manager
+
+	def init(ArrayList<GNode> ancestors) {
 		this.ancestors = ancestors
 		this
 	}
-	
+
 	def dispatch PresenceCondition transform(PresenceCondition cond) {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
@@ -34,5 +31,5 @@ abstract class Rule {
 	def dispatch Object transform(GNode node) {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
-	
+
 }

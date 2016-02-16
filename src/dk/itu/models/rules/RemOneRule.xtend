@@ -1,4 +1,4 @@
-package itu2
+package dk.itu.models.rules
 
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition

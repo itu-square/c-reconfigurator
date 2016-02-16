@@ -32,6 +32,9 @@ import java.util.List;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
+
+import dk.itu.models.Reconfigurator;
+
 import java.util.Map;
 import java.util.IdentityHashMap;
 import java.util.HashSet;
@@ -460,8 +463,7 @@ public class SuperC extends Tool {
   public Node parse(Reader in, File file) throws IOException, ParseException {
     HeaderFileManager fileManager;
     MacroTable macroTable;
-    /*AFLA*/
-//    PresenceConditionManager presenceConditionManager;
+    PresenceConditionManager presenceConditionManager;
     ExpressionParser expressionParser;
     ConditionEvaluator conditionEvaluator;
     Iterator<Syntax> preprocessor;
@@ -532,6 +534,11 @@ public class SuperC extends Tool {
       macroTable.restrictPrefix(runtime.getString("TypeChef-x"));
     }
     presenceConditionManager = new PresenceConditionManager();
+    
+    /*AFLA*/ // make the presenceConditionManager accessible
+    Reconfigurator.presenceConditionManager = presenceConditionManager;
+    /*AFLA*/ // end
+    
     if (runtime.test("checkExpressionParser")) {
       expressionParser = ExpressionParser.comparator(presenceConditionManager);
     } else {

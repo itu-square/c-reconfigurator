@@ -18,40 +18,17 @@
  */
 package xtc.util;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.PrintStream;
-import java.io.PrintWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 import dk.itu.models.Reconfigurator;
-import dk.itu.models.TxIdentity;
-import dk.itu.models.TxIfdef2If;
-import dk.itu.models.TxMergeSeqI;
-import dk.itu.models.TxPrintAst;
-import dk.itu.models.TxPrintCode;
-import dk.itu.models.TxRemExtras;
-import dk.itu.models.TxRemOnes;
-import dk.itu.models.TxSplitConditionals;
-import dk.itu.models.tests.Test1;
-import itu2.BottomUpStrategy;
-import itu2.MergeSeqI;
-import itu2.RemExtraRule;
-import itu2.RemOneRule;
-import itu2.Strategy;
 import xtc.Constants;
-import xtc.lang.cpp.PresenceConditionManager;
-import xtc.lang.cpp.PresenceConditionManager.PresenceCondition;
-import xtc.lang.cpp.SuperC;
 import xtc.parser.ParseException;
 
 import xtc.tree.Printer;
@@ -281,9 +258,7 @@ public abstract class Tool {
    * @param node The node.
    */
   public void process(Node node) {
-	  
-	  Reconfigurator.test.transform(node, presenceConditionManager);
-	  
+	  Reconfigurator.test.transform(node);
   }
 
   /**
@@ -356,9 +331,6 @@ public abstract class Tool {
   public void wrapUp() {
     // Nothing to do.
   }
-  
-  /*AFLA*/
-  public PresenceConditionManager presenceConditionManager;
 
   /**
    * Run this tool with the specified command line arguments.  This
