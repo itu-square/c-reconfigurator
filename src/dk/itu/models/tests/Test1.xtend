@@ -18,8 +18,8 @@ class Test1 extends Test {
 		var String out2
 
 		// print the unaltered code and AST
-		writeToFile(node.printCode, '''\\older\\out.c''')
-		writeToFile(node.printAST, '''\\folder\\out.ast''')
+		writeToFile(node.printCode, '''«folder»out.c''')
+		writeToFile(node.printAST, '''«folder»out.ast''')
 
 		// test that the empty BottomUpStrategy is identity
 		out1 = node.printAST(PRINT_HASH_CODE)
@@ -34,18 +34,18 @@ class Test1 extends Test {
 
 		// test RemOneRule
 		bus.register(new RemOneRule)
-		writeToFile(((bus.transform(node) as Node)).printCode, '''\\folder\\out_remone.c''')
+		writeToFile(((bus.transform(node) as Node)).printCode, '''«folder»out_remone.c''')
 
 		// test RemOneRule
 		//  and RemExtraRule
 		bus.register(new RemExtraRule)
-		writeToFile(((bus.transform(node) as Node)).printCode, '''\\folder\\out_remextra.c''')
+		writeToFile(((bus.transform(node) as Node)).printCode, '''«folder»out_remextra.c''')
 		
 		// test RemOneRule
 		//  and RemExtraRule
 		//  and SplitConditionalRule
 		bus.register(new SplitConditionalRule)
-		writeToFile(((bus.transform(node) as Node)).printCode, '''\\folder\\out_split.c''')
+		writeToFile(((bus.transform(node) as Node)).printCode, '''«folder»out_split.c''')
 	}
 
 }
