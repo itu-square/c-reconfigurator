@@ -29,6 +29,11 @@ class PrintCode extends PrintMethod {
 	}
 
 	static def private dispatch void t(PresenceCondition condition) {
+		println (condition)
+		condition.BDD.printSetWithDomains
+		println
+		
+		
 		if (!last_line.empty && !last_line.startsWith("#"))
 			output.println
 
@@ -36,14 +41,14 @@ class PrintCode extends PrintMethod {
 			output.println('''«indent»#if «condition»''')
 			last_line = '''#if «condition»'''
 		} else {
-			if (ancestors.last.filter(PresenceCondition).size == 2 &&
-				!(ancestors.last.head as PresenceCondition).is(condition)) {
-				output.println('''«indent»#else''')
-				last_line = '''#else'''
-			} else {
+//			if (ancestors.last.filter(PresenceCondition).size == 2 &&
+//				!(ancestors.last.head as PresenceCondition).is(condition)) {
+//				output.println('''«indent»#else''')
+//				last_line = '''#else'''
+//			} else {
 				output.println('''«indent»#elif «condition»''')
 				last_line = '''#elif «condition»'''
-			}
+//			}
 		}
 	}
 

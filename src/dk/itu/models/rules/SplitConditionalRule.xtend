@@ -18,17 +18,42 @@ class SplitConditionalRule extends Rule {
 
 	override dispatch Pair<?> transform(Pair<?> pair) {
 		if(pair.head instanceof GNode
-			&& (pair.head as GNode).name == "Conditional") {
-				println('''[size: «pair.size»] [children: «(pair.head as GNode).size»]''')
-				println(pair.head)
-				
+			&& (pair.head as GNode).name == "Conditional"
+			&& (pair.head as GNode).filter(PresenceCondition).size >= 2) {
 				val cond = pair.head as GNode
-				cond.filter(PresenceCondition).forEach[println('''-- «it»''')]
 				
-				println
+//				println('''[size: «pair.size»] [children: «cond.size»]''')
+//				println(pair)
+//				cond.forEach[println('''+ «it»''')]
+//				println
+				
+				var newPair = pair.tail
+				for ( PresenceCondition pc : cond.filter(PresenceCondition).toList.reverseView) {
+					var newNode = GNode::create("Conditional")
+					newNode.setProperty("new", true)
+//					println('''- «pc»''')
+					newNode.add(pc)					
+					for(var index = cond.indexOf(pc)+1;
+						index < cond.size && !(cond.get(index) instanceof PresenceCondition);
+						index++) {
+//							println('''+ «cond.get(index)»''')
+							newNode.add(cond.get(index))
+						}
+					newPair = new Pair(newNode, newPair)
+//					println('''- built''')
+				}
+//				println('''[new size: «newPair.size»]''')
+//				println(newPair)
+//				newPair.forEach[println('''+ «it»''')]
+//				println
+//				println
+//				println
+				
+				newPair
 			}
-		
-		pair
+			else {
+				pair
+			}
 	}
 
 	override dispatch Object transform(GNode node) {

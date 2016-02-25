@@ -6,6 +6,8 @@ import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
+import xtc.tree.Node
+import dk.itu.models.PrintCode
 
 abstract class Rule {
 
@@ -32,4 +34,15 @@ abstract class Rule {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 
+	def Pair<?> toPair(GNode node) {
+		var Pair<?> p = Pair.empty()
+		for (var i = node.size - 1; i >= 0; i--) {
+			p = new Pair(node.get(i), p)
+		}
+		p
+	}
+	
+	def printCode(Node node) {
+		PrintCode::printCode(node)
+	}
 }

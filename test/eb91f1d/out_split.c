@@ -17,7 +17,8 @@ void lockdep_trace_alloc (gfp_t gfp_mask)
 {
     __lockdep_trace_alloc (gfp_mask);
 }
-#else
+#endif
+#if !(defined CONFIG_LOCKDEP) || (defined CONFIG_LOCKDEP) && !(defined CONFIG_TRACE_IRQFLAGS) || (defined CONFIG_LOCKDEP) && (defined CONFIG_TRACE_IRQFLAGS) && !(defined CONFIG_PROVE_LOCKING)
 void lockdep_trace_alloc (gfp_t gfp_mask)
 {
 }
@@ -40,7 +41,8 @@ void kmem_cache_alloc_node_notrace (gfp_t flags)
 {
     __cache_alloc_node (flags);
 }
-#else
+#endif
+#if (defined CONFIG_SLAB) && (defined CONFIG_NUMA) && !(defined CONFIG_KMEMTRACE)
 void kmem_cache_alloc_node_notrace (gfp_t flags)
 {
     kmem_cache_alloc_node (flags);
@@ -76,7 +78,8 @@ void kmem_cache_init (void)
 {
     kmem_cache_create ();
 }
-#else
+#endif
+#if !(defined CONFIG_SLAB)
 void kmem_cache_init (void)
 {
 }
