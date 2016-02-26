@@ -50,17 +50,26 @@ class PrintAST extends PrintMethod {
 	static def type(String s) {
 		if(printType) s else ""
 	}
+	
+	// print properties
+	static def properties(Object o) {
+		var p = "[properties: "
+		if (o instanceof Node)
+			for(property : (o as Node).properties)
+				p += property + " "
+		p + "]"
+	}
 
 	static def private dispatch void t(PresenceCondition condition) {
-		output.println('''«type("[pc  ]")»«indent(condition)»|- «condition»«hash(condition)»''')
+		output.println('''«type("[pc  ]")»«indent(condition)»|- «condition»«hash(condition)»«properties(condition)»''')
 	}
 
 	static def private dispatch void t(Language<CTag> language) {
-		output.println('''«type("[lang]")»«indent(language)»|- «language»«hash(language)»''')
+		output.println('''«type("[lang]")»«indent(language)»|- «language»«hash(language)»«properties(language)»''')
 	}
 
 	static def private dispatch void t(GNode node) {
-		output.println('''«type("[gnod]")»«indent(node)»|- «node.name»«hash(node)»''')
+		output.println('''«type("[gnod]")»«indent(node)»|- «node.name»«hash(node)»«properties(node)»''')
 
 		ancestors.add(node)
 
