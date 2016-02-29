@@ -10,6 +10,7 @@ import dk.itu.models.rules.ConditionPushDownRule
 import dk.itu.models.strategies.TopDownStrategy
 import dk.itu.models.rules.ReconfigureFunctionRule
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
+import dk.itu.models.rules.PC2ExpressionRule
 
 class Test1 extends Test {
 
@@ -55,27 +56,31 @@ class Test1 extends Test {
 
 		var Node funextracted = tdn.transform(normalized) as Node
 		writeToFile(funextracted.printCode, '''«folder»funextracted.c''')
-				
-		println("pcidmap")
-		println
-		println
-		extfRule.pcidmap.keySet.forEach[ pc |
-			println('''«extfRule.pcidmap.get(pc)»   «pc»''')
-		]
-		println
-		println
 		
-		println("fmap")
-		println
-		println
-		for(String function : extfRule.fmap.keySet) {
-			println(function)
-			for (PresenceCondition pc : extfRule.fmap.get(function)) {
-				println("   " + pc)
-				println('''      «function»_«extfRule.pcidmap.get_id(pc)»''')
-			}
-			println
-		}
+		val tdn1 = new TopDownStrategy
+		tdn1.register(new PC2ExpressionRule)
+		tdn1.transform(normalized)
+		
+//		println("pcidmap")
+//		println
+//		println
+//		extfRule.pcidmap.keySet.forEach[ pc |
+//			println('''«extfRule.pcidmap.get(pc)»   «pc»''')
+//		]
+//		println
+//		println
+//		
+//		println("fmap")
+//		println
+//		println
+//		for(String function : extfRule.fmap.keySet) {
+//			println(function)
+//			for (PresenceCondition pc : extfRule.fmap.get(function)) {
+//				println("   " + pc)
+//				println('''      «function»_«extfRule.pcidmap.get_id(pc)»''')
+//			}
+//			println
+//		}
 
 		
 		writeToFile(log.toString, folder + "log.txt")

@@ -10,17 +10,18 @@ import xtc.util.Pair
 class TopDownStrategy extends Strategy {
 
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
-		cond
+		var PresenceCondition newCond = cond
+		for (Rule rule : rules) {
+			newCond = rule.transform(newCond) as PresenceCondition
+		}
+		newCond
 	}
 
 	override dispatch Language<CTag> transform(Language<CTag> lang) {
-		
 		var Language<CTag> newLang = lang
-		
 		for (Rule rule : rules) {
 			newLang = rule.transform(newLang) as Language<CTag>
 		}
-		
 		newLang
 	}
 
