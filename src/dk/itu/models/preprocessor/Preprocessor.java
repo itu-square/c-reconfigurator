@@ -8,8 +8,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
@@ -20,10 +23,10 @@ public class Preprocessor {
 
 	private String defs = ""; // defs are the features (e.g. DEBUG, LOGGING, etc)
 	private ContextManager context = ContextManager.getContext();
-	private HashSet<String> featureTransformedNames;
-	
+	private Map<String, String> mapFeatureAndTransformedFeatureNames;
+
 	private Preprocessor() {
-		featureTransformedNames = new HashSet<String>();
+		mapFeatureAndTransformedFeatureNames = new HashMap<String, String>();
 	}
 
 	public void execute() throws Exception {
@@ -82,11 +85,11 @@ public class Preprocessor {
 					 * MatchResult is unaffected by subsequent operations
 					 */
 					MatchResult result = matcher.toMatchResult();
-					String dir = result.group(1).toLowerCase(); // cpp directives
-					String param = result.group(2); // feature's name
+					String dir = result.group(1).toLowerCase(); // cpp directive
+					String param = result.group(2); // feature expression
 
 					if (Tag.IFDEF.equals(dir) || Tag.IF.equals(dir)) {
-						saveFeatureIntoSet(param);
+						saveFeatureNamesIntoMap(param);
 						
 						//adds ifdef X on the stack
 						context.addDirective(dir + " "
@@ -105,7 +108,7 @@ public class Preprocessor {
 						currentLevel++;
 						continue;
 					} else if (Tag.IFNDEF.equals(dir)) {
-						saveFeatureIntoSet(param);
+						saveFeatureNamesIntoMap(param);
 
 						context.addDirective(dir + " " + param);
 						
@@ -161,15 +164,15 @@ public class Preprocessor {
 
 	}
 		
-	private void writeToFile() throws IOException {
+	private void writeTransformedFeatureNamesToFile() throws IOException {
 		BufferedWriter bw = new BufferedWriter(new FileWriter(context.getDestfile()));
 		
 		// header
 		bw.write("typedef int feature;");
 		bw.newLine();
 		
-		for (String reconfiguredFeature : featureTransformedNames) {
-			bw.write(reconfiguredFeature);
+		for (String reconfiguredFeature : mapFeatureAndTransformedFeatureNames.values()) {
+			bw.write("feature " + reconfiguredFeature + ";");
 			bw.newLine();
 		}
 		
@@ -181,16 +184,17 @@ public class Preprocessor {
 		List<String> features = getFeatureNames(param);
 		
 		for (String featureName : features) {
-			bw.write("feature _reconfigured_"+ featureName +";");
+			bw.write("feature _reconfig_"+ featureName +";");
 			bw.newLine();
 		}
 	}
 	
-	private void saveFeatureIntoSet(String param) {
+	private void saveFeatureNamesIntoMap(String param) {
 		List<String> features = getFeatureNames(param);
 		
 		for (String featureName : features) {
-			featureTransformedNames.add("feature _reconfigured_"+ featureName +";");
+			String transformedFeatureName = "_reconfig_"+ featureName;
+			mapFeatureAndTransformedFeatureNames.put(featureName, transformedFeatureName);
 		}
 	}
 	
@@ -219,11 +223,23 @@ public class Preprocessor {
 	}
 
 	private String removeKeywords(String featureExpression) {
-		return featureExpression.replaceAll("defined|def|ndef|CONFIG_", "");
+		return featureExpression.replaceAll("defined|def|ndef", "");
 	}
 
 	private String removeWhitespace(String featureExpression) {
 		return featureExpression.replaceAll("\\s", "");
+	}
+	
+	public Map<String, String> getMapFeatureAndTransformedFeatureNames() {
+		return mapFeatureAndTransformedFeatureNames;
+	}
+	
+	public Set<String> getOriginalFeatureNames() {
+		return mapFeatureAndTransformedFeatureNames.keySet();
+	}
+	
+	public Collection<String> getTransformedFeatureNames() {
+		return mapFeatureAndTransformedFeatureNames.values();
 	}
 
 	public String getDefs() {
@@ -236,7 +252,7 @@ public class Preprocessor {
 	
 	public static void main(String[] args) {
 		ContextManager manager = ContextManager.getContext();
-		String dirpath = "test/eb91f1d/in.c"; // input
+		String dirpath = "test/eb91f1d/"; //input
 		
 		try {
 			Preprocessor pp = new Preprocessor();
@@ -264,7 +280,7 @@ public class Preprocessor {
 			}
 
 			pp.execute();
-			pp.writeToFile(); // output: REconfig.c w/ all features listed 
+			pp.writeTransformedFeatureNamesToFile(); //output: REconfig.c with all features listed 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
