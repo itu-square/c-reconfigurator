@@ -22,32 +22,18 @@ class SplitConditionalRule extends Rule {
 			&& (pair.head as GNode).filter(PresenceCondition).size >= 2) {
 				val cond = pair.head as GNode
 				
-//				println('''[size: «pair.size»] [children: «cond.size»]''')
-//				println(pair)
-//				cond.forEach[println('''+ «it»''')]
-//				println
-				
 				var newPair = pair.tail
 				for ( PresenceCondition pc : cond.filter(PresenceCondition).toList.reverseView) {
 					var newNode = GNode::create("Conditional")
 					newNode.setProperty("new", true)
-//					println('''- «pc»''')
 					newNode.add(pc)					
 					for(var index = cond.indexOf(pc)+1;
 						index < cond.size && !(cond.get(index) instanceof PresenceCondition);
 						index++) {
-//							println('''+ «cond.get(index)»''')
 							newNode.add(cond.get(index))
 						}
 					newPair = new Pair(newNode, newPair)
-//					println('''- built''')
 				}
-//				println('''[new size: «newPair.size»]''')
-//				println(newPair)
-//				newPair.forEach[println('''+ «it»''')]
-//				println
-//				println
-//				println
 				
 				newPair
 			}

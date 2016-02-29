@@ -1,7 +1,7 @@
 int main()
 {
-#ifdef Y
-#ifdef X
+#ifdef A
+#ifdef B
 	return 0;
 #else
 	return -1;

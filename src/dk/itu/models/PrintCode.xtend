@@ -29,9 +29,9 @@ class PrintCode extends PrintMethod {
 	}
 
 	static def private dispatch void t(PresenceCondition condition) {
-		println (condition)
-		condition.BDD.printSetWithDomains
-		println
+		//log.println (condition)
+		//condition.BDD.printSetWithDomains
+		//log.println
 		
 		
 		if (!last_line.empty && !last_line.startsWith("#"))

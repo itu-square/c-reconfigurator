@@ -12,16 +12,16 @@ abstract class PrintMethod {
 	// the printing output
 	static protected var StringBuilder output
 
-	static def print(StringBuilder builder, String string) {
-		builder.append(string)
+	static def print(StringBuilder builder, Object o) {
+		builder.append(o)
 	}
 
 	static def println(StringBuilder builder) {
 		builder.append("\n")
 	}
 
-	static def println(StringBuilder builder, String string) {
-		builder.append(string + "\n")
+	static def println(StringBuilder builder, Object o) {
+		builder.append(o + "\n")
 	}
 
 }

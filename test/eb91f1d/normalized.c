@@ -35,7 +35,6 @@ void kmem_cache_alloc_node (gfp_t flags)
     __cache_alloc_node (flags);
 }
 #endif
-#if (defined CONFIG_SLAB) && (defined CONFIG_NUMA)
 #if (defined CONFIG_SLAB) && (defined CONFIG_NUMA) && (defined CONFIG_KMEMTRACE)
 void kmem_cache_alloc_node_notrace (gfp_t flags)
 {
@@ -47,7 +46,6 @@ void kmem_cache_alloc_node_notrace (gfp_t flags)
 {
     kmem_cache_alloc_node (flags);
 }
-#endif
 #endif
 #if (defined CONFIG_SLAB) && (defined CONFIG_NUMA)
 static void kmalloc_node (gfp_t gfp_mask)

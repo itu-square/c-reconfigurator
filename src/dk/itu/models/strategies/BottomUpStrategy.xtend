@@ -10,60 +10,51 @@ import xtc.util.Pair
 class BottomUpStrategy extends Strategy {
 
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
-//		println('''bus «cond»''')
-//		manager.newPresenceCondition(cond.BDD)
 		cond
 	}
 
 	override dispatch Language<CTag> transform(Language<CTag> lang) {
-//		println('''bus «lang»''')
-//		lang.copy
 		lang
 	}
 
 	override dispatch Pair<?> transform(Pair<?> pair) {
-		if (pair.isEmpty)
-			pair
-		else {
-
-			var Pair<?> newTail = transform(pair.tail) as Pair<?>
-			var Object newHead = transform(pair.head)
-
-			var Pair<?> newPair = new Pair(newHead, newTail)
-
-//			println('''bus «pair»''')
-			var Pair<?> prev = null
-			while (newPair != prev) {
-				prev = newPair
-				for (Rule rule : rules) {
-					newPair = rule.transform(newPair) as Pair<?>
-				}
-			}
-
-			newPair
+		if (pair.isEmpty) return pair
+		
+		var Pair<?> newTail = transform(pair.tail) as Pair<?>
+		var Object newHead = transform(pair.head)	
+		
+		var Pair<?> newPair = if (!newTail.equals(pair.tail) || !newHead.equals(pair.head))
+			new Pair(newHead, newTail)
+			else pair
+		
+		for (Rule rule : rules) {
+			newPair = rule.transform(newPair) as Pair<?>
 		}
+		
+		newPair
 	}
 
 	override dispatch Object transform(GNode node) {
+		var Object newNode = node
+		
 		ancestors.add(node)
-
-		var Object newNode = GNode::create(node.name)
-//		for (child : node) {
-//			(newNode as GNode).add(transform(child))
-//		}
-		(newNode as GNode).addAll(transform(node.toPair) as Pair<?>)
-
-		ancestors.remove(node)
-
-//		println('''bus «node»''')
-		var Object prev = null
-		while (newNode != prev) {
-			prev = newNode
-			for (Rule rule : rules) {
-				newNode = rule.transform(newNode)
-			}
+		var Pair<?> oldPair = node.toPair
+		var Pair<?> newPair = transform(oldPair) as Pair<?>
+		if(!oldPair.equals(newPair)) {
+			newNode =  GNode::create(node.name)
+			(newNode as GNode).addAll(newPair)
 		}
-
+		ancestors.remove(node)
+		
+		var Object prev = newNode
+		for (Rule rule : rules) {
+			newNode = rule.transform(newNode)
+		}
+		
+		if(!newNode.equals(prev))
+			newNode = transform(newNode)
+		
+		
 		newNode
 	}
 

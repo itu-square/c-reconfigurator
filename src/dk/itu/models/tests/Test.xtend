@@ -9,12 +9,16 @@ import java.util.ArrayList
 import java.util.List
 import xtc.lang.cpp.SuperC
 import xtc.tree.Node
+import java.util.HashMap
+import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 
 abstract class Test {
 	
-	val protected PRINT_HASH_CODE = true
+	protected var StringBuilder log = new StringBuilder
+	
+	protected val PRINT_HASH_CODE = true
 
-	val protected String file
+	protected val String file
 
 	new(String inputFile) {
 		this.file = inputFile
@@ -52,6 +56,22 @@ abstract class Test {
 
 	def printAST(Node node, Boolean printHashCode) {
 		PrintAST::printAST(node, printHashCode)
+	}
+	
+	def print(String text) {
+		log.append(text)
+	}
+	
+	def println(String text) {
+		log.append(text + "\n")
+	}
+
+	def println() {
+		log.append("\n")
+	}
+	
+	static def String get_id (HashMap<PresenceCondition, String> map, PresenceCondition pc) {
+		map.get(map.keySet.findFirst[is(pc)])
 	}
 
 	def void transform(Node node)

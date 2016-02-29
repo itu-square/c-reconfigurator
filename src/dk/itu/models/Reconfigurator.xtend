@@ -18,7 +18,7 @@ class Reconfigurator {
 	
 	def static void main(String[] args) {
 		run(new Test1("test\\eb91f1d\\in.c"))
-//		run(new Test1("test\\003\\in.c"))
+//		run(new Test1("test\\004\\in.c"))
 		
 //		run(new Test1("test\\002\\in.c"))
 	}

@@ -27,7 +27,9 @@ class RemExtraRule extends Rule {
 		if (lastGuard == null) {
 			return Reconfigurator.presenceConditionManager.newPresenceCondition(true)
 		} else {
-			val child = ancestors.get(ancestors.indexOf(lastGuard) + 1)
+			val child = if (ancestors.indexOf(lastGuard) < ancestors.size-1)
+				ancestors.get(ancestors.indexOf(lastGuard) + 1)
+				else node
 			val condition = lastGuard.findLast [
 				it instanceof PresenceCondition && lastGuard.indexOf(it) < lastGuard.indexOf(child)
 			]
@@ -39,6 +41,7 @@ class RemExtraRule extends Rule {
 		if (node.name == "Conditional" && node.size == 2) {
 			val c = (node.get(0) as PresenceCondition)
 			val g = guard(node) as PresenceCondition
+			
 			if (g.getBDD.imp(c.getBDD).isOne) {
 				node.get(1)
 			} else {

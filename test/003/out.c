@@ -1,19 +1,19 @@
 #if 1
 int main ()
 {
-    #if !(defined Y)
-    #if (defined Y)
-    #if (defined Y) && (defined X)
+    #if !(defined A)
+    #if (defined A)
+    #if (defined A) && (defined B)
     return 0;
-    #elif (defined Y) && !(defined X)
+    #elif (defined A) && !(defined B)
     return - 1;
     #endif
     #endif
-    #elif (defined Y)
-    #if (defined Y)
-    #if (defined Y) && (defined X)
+    #elif (defined A)
+    #if (defined A)
+    #if (defined A) && (defined B)
     return 0;
-    #elif (defined Y) && !(defined X)
+    #elif (defined A) && !(defined B)
     return - 1;
     #endif
     #endif
