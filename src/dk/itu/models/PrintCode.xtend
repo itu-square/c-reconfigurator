@@ -72,7 +72,7 @@ class PrintCode extends PrintMethod {
 
 		if (firstToken || language.toString.equals(";") || language.toString.equals(")") || last_C_line.endsWith("(") ||
 			last_C_line.endsWith(";") || language.toString.equals("{") || last_C_line.endsWith("{") ||
-			language.toString.equals("}") || last_C_line.endsWith("}")) {
+			language.toString.equals("}") || last_C_line.endsWith("}") || last_C_line.endsWith("!")) {
 			firstToken = false
 		} else {
 			output.print(" ")

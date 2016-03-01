@@ -6,95 +6,69 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
 import dk.itu.models.Reconfigurator
-import java.io.Writer
-import java.io.IOException
-import java.util.List
 import net.sf.javabdd.BDD
+import xtc.lang.cpp.Syntax.Text
 
 class PC2ExpressionRule extends Rule {
 
-	def void t(BDD bdd) {
-	  val vars = Reconfigurator.presenceConditionManager.variableManager
-      var List allsat;
-      var Boolean firstTerm;
+	def t(BDD bdd) {
+		val vars = Reconfigurator.presenceConditionManager.variableManager
+		
+		// unused yet
+//      if (bdd.isOne()) {
+//        print("1");
+//        return;
+//      } else if (bdd.isZero()) {
+//        print("0");
+//        return;
+//      }
+		
+		var GNode disj;
+		var firstConjunction = true;
+		for (Object o : bdd.allsat()) {
+			if (!firstConjunction) { print(" || "); } 
 
-      if (bdd.isOne()) {
-        print("1");
-        return;
-      } else if (bdd.isZero()) {
-        print("0");
-        return;
-      }
-      
-      allsat = bdd.allsat() as List;
-      
-      firstTerm = true;
-      for (Object o : allsat) {
-        var byte[] sat;
-        var Boolean first;
-        
-        if (! firstTerm) {
-          print(" || ");
-        }
-        
-        firstTerm = false;
-
-        sat = o as byte[];
-        first = true;
-        for (var i = 0; i < sat.length; i++) {
-          if (sat.get(i) >= 0 && ! first) {
-            print(" && ");
-          }
-          switch (sat.get(i)) {
-            case 0 as byte: {
-              print("!")
-              print(vars.getName(i))
-              first = false
-            }
-            case 1 as byte: {
-              print(vars.getName(i))
-              first = false
-            }
-          }
-        }
-      }
+			var byte[] sat = o as byte[];
+			var GNode conj;
+			var Boolean firstTerm = true;
+			for (var i = 0; i < sat.length; i++) {
+				if (sat.get(i) >= 0 && ! firstTerm) { print(" && "); }
+				switch (sat.get(i)) {
+					case 0 as byte: {
+						print("!")
+						var id = vars.getName(i)
+						print(id.substring(9, id.length-1))
+						var term = GNode::create("UnaryExpression",
+							GNode::create("Unaryoperator", new Language<CTag>(CTag.NOT)),
+							GNode::create("PrimaryIdentifier", new Text<CTag>(CTag.IDENTIFIER, id.substring(9, id.length-1))))
+						
+						if(firstTerm) { conj = term }
+						else { conj = GNode::create("LogicalAndExpression", conj, new Language<CTag>(CTag.ANDAND), term) }
+						firstTerm = false
+					}
+					case 1 as byte: {
+						var id = vars.getName(i)
+						print(id.substring(9, id.length-1))if(firstConjunction) { disj = conj }
+						var term = GNode::create("PrimaryIdentifier", new Text<CTag>(CTag.IDENTIFIER, id.substring(9, id.length-1)))
+						if(firstTerm) { conj = term }
+						else { conj = GNode::create("LogicalAndExpression", conj, new Language<CTag>(CTag.ANDAND), term) }
+						firstTerm = false
+					}
+				}
+			}
+			if(firstConjunction) { disj = conj }
+			else { disj = GNode::create("LogicalORExpression", disj, new Language<CTag>(CTag.OROR), conj) }
+        	firstConjunction = false;
+		}
+		
+		disj
     }
 	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
 		println(cond)
-			
-//		val vars = Reconfigurator.presenceConditionManager.variableManager
-//		
-//		val allsat = cond.BDD.allsat()
-//		
-//		val str = new StringBuilder
-//		var firstTerm = true
-//		for (Object o : allsat) {
-//			//
-//			if (!firstTerm) str.append(" || ")
-//			firstTerm = false;
-//			//
-//			val sat = o as byte[]
-//			var firstVar = true
-//			for (var i = 0; i < sat.length; i++) {
-//				if (sat.get(i)>=0 && !firstVar) str.append(" && ")
-//				switch(sat.get(i)) {
-//					case 0 as byte: {
-//						print('''[«i»]«sat.get(i)» is !, ''')
-//						str.append("!")
-//					}
-//					case 1 as byte: {
-//						print('''[«i»]«sat.get(i)» is «vars.getName(i)», ''')
-//						str.append(vars.getName(i))
-//						firstVar = false
-//					}
-//				}	
-//			}	
-//			println
-//		}
-//		println(str)
-		
-		t(cond.BDD)
+		var e = t(cond.BDD)
+		println
+		println(e.printCode)
 		println
 		println
 		cond

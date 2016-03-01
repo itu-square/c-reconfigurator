@@ -30,17 +30,17 @@ static
                                                  )
 {
     #if (defined CONFIG_LOCKDEP) && (defined CONFIG_TRACE_IRQFLAGS) && (defined CONFIG_PROVE_LOCKING)
-    if (! (gfp_mask & ((gfp_t) 0x10u))) return;
+    if (!(gfp_mask & ((gfp_t) 0x10u))) return;
     #endif
     #if (defined CONFIG_LOCKDEP) && (defined CONFIG_TRACE_IRQFLAGS) && (defined CONFIG_PROVE_LOCKING)
-    if (! (gfp_mask & ((gfp_t) 0x80u))) return;
+    if (!(gfp_mask & ((gfp_t) 0x80u))) return;
     #endif
     #if (defined CONFIG_LOCKDEP) && (defined CONFIG_TRACE_IRQFLAGS) && (defined CONFIG_PROVE_LOCKING)
     assert (
     #if (defined CONFIG_LOCKDEP) && (defined CONFIG_TRACE_IRQFLAGS) && (defined CONFIG_PROVE_LOCKING)
-            ! irqs_disabled
+            !irqs_disabled
     #endif
-                           );
+                          );
     #endif
 }
 #endif

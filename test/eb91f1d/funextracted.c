@@ -6,9 +6,9 @@ void local_irq_disable (void)
 }
 static void __lockdep_trace_alloc_V0 (gfp_t gfp_mask)
 {
-    if (! (gfp_mask & ((gfp_t) 0x10u))) return;
-    if (! (gfp_mask & ((gfp_t) 0x80u))) return;
-    assert (! irqs_disabled);
+    if (!(gfp_mask & ((gfp_t) 0x10u))) return;
+    if (!(gfp_mask & ((gfp_t) 0x80u))) return;
+    assert (!irqs_disabled);
 }
 void lockdep_trace_alloc_V0 (gfp_t gfp_mask)
 {

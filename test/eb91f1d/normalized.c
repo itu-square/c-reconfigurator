@@ -7,9 +7,9 @@ void local_irq_disable (void)
 #if (defined CONFIG_LOCKDEP) && (defined CONFIG_TRACE_IRQFLAGS) && (defined CONFIG_PROVE_LOCKING)
 static void __lockdep_trace_alloc (gfp_t gfp_mask)
 {
-    if (! (gfp_mask & ((gfp_t) 0x10u))) return;
-    if (! (gfp_mask & ((gfp_t) 0x80u))) return;
-    assert (! irqs_disabled);
+    if (!(gfp_mask & ((gfp_t) 0x10u))) return;
+    if (!(gfp_mask & ((gfp_t) 0x80u))) return;
+    assert (!irqs_disabled);
 }
 #endif
 #if (defined CONFIG_LOCKDEP) && (defined CONFIG_TRACE_IRQFLAGS) && (defined CONFIG_PROVE_LOCKING)
