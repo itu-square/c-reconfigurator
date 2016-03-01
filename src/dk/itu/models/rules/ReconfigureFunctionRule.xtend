@@ -45,20 +45,6 @@ class ReconfigureFunctionRule extends Rule {
 	override dispatch Pair<?> transform(Pair<?> pair) {
 		pair
 	}
-	
-//	def private PresenceCondition currentPC() {
-//		var pc = Reconfigurator.presenceConditionManager.newPresenceCondition(true)
-//		val guards = ancestors.filter[it.name == "Conditional"]
-//		for(GNode guard : guards){
-//			
-//			val child = ancestors.get(ancestors.indexOf(guard) + 1)
-//			val condition = guard.findLast [
-//				it instanceof PresenceCondition && guard.indexOf(it) < guard.indexOf(child)
-//			]
-//			pc = pc.and(condition as PresenceCondition)
-//		}
-//		pc
-//	}
 
 	override dispatch Object transform(GNode node) {
 		if(node.name.equals("Conditional")
@@ -69,25 +55,20 @@ class ReconfigureFunctionRule extends Rule {
 			val presenceCondition = node.get(0) as PresenceCondition
 			val functionDefinition = node.get(1) as GNode
 			
-//			println(presenceCondition)
-//			println(functionDefinition)
-			
 			pcidmap.put_pcid(presenceCondition, pcidmap.size.toString)
-//			println(pcidmap.get_id(presenceCondition))
 			
 			val functionPrototype = functionDefinition.get(0) as GNode
 			val functionDeclarator = functionPrototype.filter(GNode).findFirst[name.equals("FunctionDeclarator")]
 			val simpleDeclarator = functionDeclarator.get(0) as GNode
 			val functionName = simpleDeclarator.get(0).toString
-			val newName = functionName + "_V" + pcidmap.get_id(node.get(0) as PresenceCondition)
-//			println(newName)
+			val newName = functionName + "_V" + pcidmap.get_id(presenceCondition)
+			
+			fmap.put_function(functionName, presenceCondition)
 			
 			val tdn = new TopDownStrategy
 			tdn.register(new RenameFunctionRule(newName))
+			tdn.register(new RewriteFunctionCallRule(fmap, pcidmap))
 			val newNode = tdn.transform(functionDefinition)
-//			println(newNode)
-			
-//			println
 			
 			newNode
 		}

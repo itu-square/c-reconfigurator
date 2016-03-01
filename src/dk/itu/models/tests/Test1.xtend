@@ -64,18 +64,18 @@ class Test1 extends Test {
 		var Node funextracted = tdn.transform(normalized) as Node
 		writeToFile(funextracted.printCode, '''«folder»funextracted.c''')
 		
-		val tdn1 = new TopDownStrategy
-		tdn1.register(new PC2ExpressionRule)
-		tdn1.transform(normalized)
+//		val tdn1 = new TopDownStrategy
+//		tdn1.register(new PC2ExpressionRule)
+//		tdn1.transform(normalized)
 		
-//		println("pcidmap")
-//		println
-//		println
-//		extfRule.pcidmap.keySet.forEach[ pc |
-//			println('''«extfRule.pcidmap.get(pc)»   «pc»''')
-//		]
-//		println
-//		println
+		println("pcidmap")
+		println
+		println
+		extfRule.pcidmap.keySet.forEach[ pc |
+			println('''«extfRule.pcidmap.get(pc)»   «pc»''')
+		]
+		println
+		println
 //		
 //		println("fmap")
 //		println

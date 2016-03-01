@@ -94,7 +94,11 @@ class PrintCode extends PrintMethod {
 	static def private dispatch void t(GNode node) {
 		ancestors.add(node)
 
-		node.forEach[t(it)]
+//		println('''[DEBUG] node: «node»''')
+		node.forEach[
+//			println('''[DEBUG] «it»: «it.class»''')
+			t(it)
+		]
 
 		ancestors.remove(node)
 

@@ -1,2 +1,15 @@
 PHASE 1 - Normalization
 PHASE 2 - Extract functions
+pcidmap
+
+
+3   (defined CONFIG_SLAB) && (defined CONFIG_NUMA) && (defined CONFIG_KMEMTRACE)
+1   !(defined CONFIG_LOCKDEP) || (defined CONFIG_LOCKDEP) && !(defined CONFIG_TRACE_IRQFLAGS) || (defined CONFIG_LOCKDEP) && (defined CONFIG_TRACE_IRQFLAGS) && !(defined CONFIG_PROVE_LOCKING)
+4   (defined CONFIG_SLAB) && (defined CONFIG_NUMA) && !(defined CONFIG_KMEMTRACE)
+5   (defined CONFIG_SLAB) && !(defined CONFIG_NUMA)
+6   (defined CONFIG_SLAB)
+2   (defined CONFIG_SLAB) && (defined CONFIG_NUMA)
+0   (defined CONFIG_LOCKDEP) && (defined CONFIG_TRACE_IRQFLAGS) && (defined CONFIG_PROVE_LOCKING)
+7   !(defined CONFIG_SLAB)
+
+

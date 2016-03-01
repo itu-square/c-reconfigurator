@@ -1,573 +1,582 @@
-|- TranslationUnit[properties: ]
-   |- ExternalDeclarationList[properties: ]
-      |- Declaration[properties: ]
-      |  |- DeclaringList[properties: ]
-      |  |  |- BasicDeclarationSpecifier[properties: ]
-      |  |  |  |- DeclarationQualifierList[properties: ]
-      |  |  |  |  |- typedef[properties: ]
-      |  |  |  |- int[properties: ]
-      |  |  |- SimpleDeclarator[properties: ]
-      |  |     |- gfp_t[properties: ]
-      |  |- ;[properties: ]
-      |- Declaration[properties: ]
-      |  |- DeclaringList[properties: ]
-      |  |  |- _Bool[properties: ]
-      |  |  |- SimpleDeclarator[properties: ]
-      |  |  |  |- irqs_disabled[properties: ]
-      |  |  |- InitializerOpt[properties: ]
-      |  |     |- =[properties: ]
-      |  |     |- Initializer[properties: ]
-      |  |        |- 0[properties: ]
-      |  |- ;[properties: ]
-      |- FunctionDefinition[properties: ]
-      |  |- FunctionPrototype[properties: ]
-      |  |  |- void[properties: ]
-      |  |  |- FunctionDeclarator[properties: ]
-      |  |     |- SimpleDeclarator[properties: ]
-      |  |     |  |- local_irq_disable[properties: ]
-      |  |     |- PostfixingFunctionDeclarator[properties: ]
-      |  |        |- ([properties: ]
-      |  |        |- ParameterTypeListOpt[properties: ]
-      |  |        |  |- ParameterTypeList[properties: ]
-      |  |        |     |- ParameterList[properties: ]
-      |  |        |        |- ParameterDeclaration[properties: ]
-      |  |        |           |- void[properties: ]
-      |  |        |- )[properties: ]
-      |  |- {[properties: ]
-      |  |- CompoundStatement[properties: ]
-      |  |  |- DeclarationOrStatementList[properties: ]
-      |  |     |- ExpressionStatement[properties: ]
-      |  |        |- AssignmentExpression[properties: ]
-      |  |        |  |- PrimaryIdentifier[properties: ]
-      |  |        |  |  |- irqs_disabled[properties: ]
-      |  |        |  |- AssignmentOperator[properties: ]
-      |  |        |  |  |- =[properties: ]
-      |  |        |  |- 1[properties: ]
-      |  |        |- ;[properties: ]
-      |  |- }[properties: ]
-      |- Conditional[properties: ]
-      |  |- (defined CONFIG_LOCKDEP) && (defined CONFIG_TRACE_IRQFLAGS) && (defined CONFIG_PROVE_LOCKING)[properties: ]
-      |  |- FunctionDefinition[properties: ]
-      |     |- FunctionPrototype[properties: ]
-      |     |  |- BasicDeclarationSpecifier[properties: ]
-      |     |  |  |- DeclarationQualifierList[properties: ]
-      |     |  |  |  |- static[properties: ]
-      |     |  |  |- void[properties: ]
-      |     |  |- FunctionDeclarator[properties: ]
-      |     |     |- SimpleDeclarator[properties: ]
-      |     |     |  |- __lockdep_trace_alloc[properties: ]
-      |     |     |- PostfixingFunctionDeclarator[properties: ]
-      |     |        |- ([properties: ]
-      |     |        |- ParameterTypeListOpt[properties: ]
-      |     |        |  |- ParameterTypeList[properties: ]
-      |     |        |     |- ParameterList[properties: ]
-      |     |        |        |- ParameterDeclaration[properties: ]
-      |     |        |           |- TypedefTypeSpecifier[properties: ]
-      |     |        |           |  |- gfp_t[properties: ]
-      |     |        |           |- SimpleDeclarator[properties: ]
-      |     |        |              |- gfp_mask[properties: ]
-      |     |        |- )[properties: ]
-      |     |- {[properties: ]
-      |     |- CompoundStatement[properties: ]
-      |     |  |- DeclarationOrStatementList[properties: ]
-      |     |     |- SelectionStatement[properties: ]
-      |     |     |  |- if[properties: ]
-      |     |     |  |- ([properties: ]
-      |     |     |  |- UnaryExpression[properties: ]
-      |     |     |  |  |- Unaryoperator[properties: ]
-      |     |     |  |  |  |- ![properties: ]
-      |     |     |  |  |- PrimaryExpression[properties: ]
-      |     |     |  |     |- ([properties: ]
-      |     |     |  |     |- AndExpression[properties: ]
-      |     |     |  |     |  |- PrimaryIdentifier[properties: ]
-      |     |     |  |     |  |  |- gfp_mask[properties: ]
-      |     |     |  |     |  |- &[properties: ]
-      |     |     |  |     |  |- PrimaryExpression[properties: ]
-      |     |     |  |     |     |- ([properties: ]
-      |     |     |  |     |     |- CastExpression[properties: ]
-      |     |     |  |     |     |  |- ([properties: ]
-      |     |     |  |     |     |  |- TypeName[properties: ]
-      |     |     |  |     |     |  |  |- TypedefTypeSpecifier[properties: ]
-      |     |     |  |     |     |  |     |- gfp_t[properties: ]
-      |     |     |  |     |     |  |- )[properties: ]
-      |     |     |  |     |     |  |- 0x10u[properties: ]
-      |     |     |  |     |     |- )[properties: ]
-      |     |     |  |     |- )[properties: ]
-      |     |     |  |- )[properties: ]
-      |     |     |  |- ReturnStatement[properties: ]
-      |     |     |     |- return[properties: ]
-      |     |     |     |- ;[properties: ]
-      |     |     |- SelectionStatement[properties: ]
-      |     |     |  |- if[properties: ]
-      |     |     |  |- ([properties: ]
-      |     |     |  |- UnaryExpression[properties: ]
-      |     |     |  |  |- Unaryoperator[properties: ]
-      |     |     |  |  |  |- ![properties: ]
-      |     |     |  |  |- PrimaryExpression[properties: ]
-      |     |     |  |     |- ([properties: ]
-      |     |     |  |     |- AndExpression[properties: ]
-      |     |     |  |     |  |- PrimaryIdentifier[properties: ]
-      |     |     |  |     |  |  |- gfp_mask[properties: ]
-      |     |     |  |     |  |- &[properties: ]
-      |     |     |  |     |  |- PrimaryExpression[properties: ]
-      |     |     |  |     |     |- ([properties: ]
-      |     |     |  |     |     |- CastExpression[properties: ]
-      |     |     |  |     |     |  |- ([properties: ]
-      |     |     |  |     |     |  |- TypeName[properties: ]
-      |     |     |  |     |     |  |  |- TypedefTypeSpecifier[properties: ]
-      |     |     |  |     |     |  |     |- gfp_t[properties: ]
-      |     |     |  |     |     |  |- )[properties: ]
-      |     |     |  |     |     |  |- 0x80u[properties: ]
-      |     |     |  |     |     |- )[properties: ]
-      |     |     |  |     |- )[properties: ]
-      |     |     |  |- )[properties: ]
-      |     |     |  |- ReturnStatement[properties: ]
-      |     |     |     |- return[properties: ]
-      |     |     |     |- ;[properties: ]
-      |     |     |- ExpressionStatement[properties: ]
-      |     |        |- FunctionCall[properties: ]
-      |     |        |  |- PrimaryIdentifier[properties: ]
-      |     |        |  |  |- assert[properties: ]
-      |     |        |  |- ([properties: ]
-      |     |        |  |- ExpressionList[properties: ]
-      |     |        |  |  |- UnaryExpression[properties: ]
-      |     |        |  |     |- Unaryoperator[properties: ]
-      |     |        |  |     |  |- ![properties: ]
-      |     |        |  |     |- PrimaryIdentifier[properties: ]
-      |     |        |  |        |- irqs_disabled[properties: ]
-      |     |        |  |- )[properties: ]
-      |     |        |- ;[properties: ]
-      |     |- }[properties: ]
-      |- Conditional[properties: new ]
-      |  |- (defined CONFIG_LOCKDEP) && (defined CONFIG_TRACE_IRQFLAGS) && (defined CONFIG_PROVE_LOCKING)[properties: ]
-      |  |- FunctionDefinition[properties: ]
-      |     |- FunctionPrototype[properties: ]
-      |     |  |- void[properties: ]
-      |     |  |- FunctionDeclarator[properties: ]
-      |     |     |- SimpleDeclarator[properties: ]
-      |     |     |  |- lockdep_trace_alloc[properties: ]
-      |     |     |- PostfixingFunctionDeclarator[properties: ]
-      |     |        |- ([properties: ]
-      |     |        |- ParameterTypeListOpt[properties: ]
-      |     |        |  |- ParameterTypeList[properties: ]
-      |     |        |     |- ParameterList[properties: ]
-      |     |        |        |- ParameterDeclaration[properties: ]
-      |     |        |           |- TypedefTypeSpecifier[properties: ]
-      |     |        |           |  |- gfp_t[properties: ]
-      |     |        |           |- SimpleDeclarator[properties: ]
-      |     |        |              |- gfp_mask[properties: ]
-      |     |        |- )[properties: ]
-      |     |- {[properties: ]
-      |     |- CompoundStatement[properties: ]
-      |     |  |- DeclarationOrStatementList[properties: ]
-      |     |     |- ExpressionStatement[properties: ]
-      |     |        |- FunctionCall[properties: ]
-      |     |        |  |- PrimaryIdentifier[properties: ]
-      |     |        |  |  |- __lockdep_trace_alloc[properties: ]
-      |     |        |  |- ([properties: ]
-      |     |        |  |- ExpressionList[properties: ]
-      |     |        |  |  |- PrimaryIdentifier[properties: ]
-      |     |        |  |     |- gfp_mask[properties: ]
-      |     |        |  |- )[properties: ]
-      |     |        |- ;[properties: ]
-      |     |- }[properties: ]
-      |- Conditional[properties: new ]
-      |  |- !(defined CONFIG_LOCKDEP) || (defined CONFIG_LOCKDEP) && !(defined CONFIG_TRACE_IRQFLAGS) || (defined CONFIG_LOCKDEP) && (defined CONFIG_TRACE_IRQFLAGS) && !(defined CONFIG_PROVE_LOCKING)[properties: ]
-      |  |- FunctionDefinition[properties: ]
-      |     |- FunctionPrototype[properties: ]
-      |     |  |- void[properties: ]
-      |     |  |- FunctionDeclarator[properties: ]
-      |     |     |- SimpleDeclarator[properties: ]
-      |     |     |  |- lockdep_trace_alloc[properties: ]
-      |     |     |- PostfixingFunctionDeclarator[properties: ]
-      |     |        |- ([properties: ]
-      |     |        |- ParameterTypeListOpt[properties: ]
-      |     |        |  |- ParameterTypeList[properties: ]
-      |     |        |     |- ParameterList[properties: ]
-      |     |        |        |- ParameterDeclaration[properties: ]
-      |     |        |           |- TypedefTypeSpecifier[properties: ]
-      |     |        |           |  |- gfp_t[properties: ]
-      |     |        |           |- SimpleDeclarator[properties: ]
-      |     |        |              |- gfp_mask[properties: ]
-      |     |        |- )[properties: ]
-      |     |- {[properties: ]
-      |     |- CompoundStatement[properties: ]
-      |     |  |- DeclarationOrStatementList[properties: ]
-      |     |- }[properties: ]
-      |- Conditional[properties: ]
-      |  |- (defined CONFIG_SLAB) && (defined CONFIG_NUMA)[properties: ]
-      |  |- FunctionDefinition[properties: ]
-      |     |- FunctionPrototype[properties: ]
-      |     |  |- void[properties: ]
-      |     |  |- FunctionDeclarator[properties: ]
-      |     |     |- SimpleDeclarator[properties: ]
-      |     |     |  |- __cache_alloc_node[properties: ]
-      |     |     |- PostfixingFunctionDeclarator[properties: ]
-      |     |        |- ([properties: ]
-      |     |        |- ParameterTypeListOpt[properties: ]
-      |     |        |  |- ParameterTypeList[properties: ]
-      |     |        |     |- ParameterList[properties: ]
-      |     |        |        |- ParameterDeclaration[properties: ]
-      |     |        |           |- TypedefTypeSpecifier[properties: ]
-      |     |        |           |  |- gfp_t[properties: ]
-      |     |        |           |- SimpleDeclarator[properties: ]
-      |     |        |              |- flags[properties: ]
-      |     |        |- )[properties: ]
-      |     |- {[properties: ]
-      |     |- CompoundStatement[properties: ]
-      |     |  |- DeclarationOrStatementList[properties: ]
-      |     |     |- ExpressionStatement[properties: ]
-      |     |        |- FunctionCall[properties: ]
-      |     |        |  |- PrimaryIdentifier[properties: ]
-      |     |        |  |  |- lockdep_trace_alloc[properties: ]
-      |     |        |  |- ([properties: ]
-      |     |        |  |- ExpressionList[properties: ]
-      |     |        |  |  |- PrimaryIdentifier[properties: ]
-      |     |        |  |     |- flags[properties: ]
-      |     |        |  |- )[properties: ]
-      |     |        |- ;[properties: ]
-      |     |- }[properties: ]
-      |- Conditional[properties: ]
-      |  |- (defined CONFIG_SLAB) && (defined CONFIG_NUMA)[properties: ]
-      |  |- FunctionDefinition[properties: ]
-      |     |- FunctionPrototype[properties: ]
-      |     |  |- void[properties: ]
-      |     |  |- FunctionDeclarator[properties: ]
-      |     |     |- SimpleDeclarator[properties: ]
-      |     |     |  |- kmem_cache_alloc_node[properties: ]
-      |     |     |- PostfixingFunctionDeclarator[properties: ]
-      |     |        |- ([properties: ]
-      |     |        |- ParameterTypeListOpt[properties: ]
-      |     |        |  |- ParameterTypeList[properties: ]
-      |     |        |     |- ParameterList[properties: ]
-      |     |        |        |- ParameterDeclaration[properties: ]
-      |     |        |           |- TypedefTypeSpecifier[properties: ]
-      |     |        |           |  |- gfp_t[properties: ]
-      |     |        |           |- SimpleDeclarator[properties: ]
-      |     |        |              |- flags[properties: ]
-      |     |        |- )[properties: ]
-      |     |- {[properties: ]
-      |     |- CompoundStatement[properties: ]
-      |     |  |- DeclarationOrStatementList[properties: ]
-      |     |     |- ExpressionStatement[properties: ]
-      |     |        |- FunctionCall[properties: ]
-      |     |        |  |- PrimaryIdentifier[properties: ]
-      |     |        |  |  |- __cache_alloc_node[properties: ]
-      |     |        |  |- ([properties: ]
-      |     |        |  |- ExpressionList[properties: ]
-      |     |        |  |  |- PrimaryIdentifier[properties: ]
-      |     |        |  |     |- flags[properties: ]
-      |     |        |  |- )[properties: ]
-      |     |        |- ;[properties: ]
-      |     |- }[properties: ]
-      |- Conditional[properties: ]
-      |  |- (defined CONFIG_SLAB) && (defined CONFIG_NUMA) && (defined CONFIG_KMEMTRACE)[properties: ]
-      |  |- FunctionDefinition[properties: ]
-      |     |- FunctionPrototype[properties: ]
-      |     |  |- void[properties: ]
-      |     |  |- FunctionDeclarator[properties: ]
-      |     |     |- SimpleDeclarator[properties: ]
-      |     |     |  |- kmem_cache_alloc_node_notrace[properties: ]
-      |     |     |- PostfixingFunctionDeclarator[properties: ]
-      |     |        |- ([properties: ]
-      |     |        |- ParameterTypeListOpt[properties: ]
-      |     |        |  |- ParameterTypeList[properties: ]
-      |     |        |     |- ParameterList[properties: ]
-      |     |        |        |- ParameterDeclaration[properties: ]
-      |     |        |           |- TypedefTypeSpecifier[properties: ]
-      |     |        |           |  |- gfp_t[properties: ]
-      |     |        |           |- SimpleDeclarator[properties: ]
-      |     |        |              |- flags[properties: ]
-      |     |        |- )[properties: ]
-      |     |- {[properties: ]
-      |     |- CompoundStatement[properties: ]
-      |     |  |- DeclarationOrStatementList[properties: ]
-      |     |     |- ExpressionStatement[properties: ]
-      |     |        |- FunctionCall[properties: ]
-      |     |        |  |- PrimaryIdentifier[properties: ]
-      |     |        |  |  |- __cache_alloc_node[properties: ]
-      |     |        |  |- ([properties: ]
-      |     |        |  |- ExpressionList[properties: ]
-      |     |        |  |  |- PrimaryIdentifier[properties: ]
-      |     |        |  |     |- flags[properties: ]
-      |     |        |  |- )[properties: ]
-      |     |        |- ;[properties: ]
-      |     |- }[properties: ]
-      |- Conditional[properties: ]
-      |  |- (defined CONFIG_SLAB) && (defined CONFIG_NUMA) && !(defined CONFIG_KMEMTRACE)[properties: ]
-      |  |- FunctionDefinition[properties: ]
-      |     |- FunctionPrototype[properties: ]
-      |     |  |- void[properties: ]
-      |     |  |- FunctionDeclarator[properties: ]
-      |     |     |- SimpleDeclarator[properties: ]
-      |     |     |  |- kmem_cache_alloc_node_notrace[properties: ]
-      |     |     |- PostfixingFunctionDeclarator[properties: ]
-      |     |        |- ([properties: ]
-      |     |        |- ParameterTypeListOpt[properties: ]
-      |     |        |  |- ParameterTypeList[properties: ]
-      |     |        |     |- ParameterList[properties: ]
-      |     |        |        |- ParameterDeclaration[properties: ]
-      |     |        |           |- TypedefTypeSpecifier[properties: ]
-      |     |        |           |  |- gfp_t[properties: ]
-      |     |        |           |- SimpleDeclarator[properties: ]
-      |     |        |              |- flags[properties: ]
-      |     |        |- )[properties: ]
-      |     |- {[properties: ]
-      |     |- CompoundStatement[properties: ]
-      |     |  |- DeclarationOrStatementList[properties: ]
-      |     |     |- ExpressionStatement[properties: ]
-      |     |        |- FunctionCall[properties: ]
-      |     |        |  |- PrimaryIdentifier[properties: ]
-      |     |        |  |  |- kmem_cache_alloc_node[properties: ]
-      |     |        |  |- ([properties: ]
-      |     |        |  |- ExpressionList[properties: ]
-      |     |        |  |  |- PrimaryIdentifier[properties: ]
-      |     |        |  |     |- flags[properties: ]
-      |     |        |  |- )[properties: ]
-      |     |        |- ;[properties: ]
-      |     |- }[properties: ]
-      |- Conditional[properties: ]
-      |  |- (defined CONFIG_SLAB) && (defined CONFIG_NUMA)[properties: ]
-      |  |- FunctionDefinition[properties: ]
-      |     |- FunctionPrototype[properties: ]
-      |     |  |- BasicDeclarationSpecifier[properties: ]
-      |     |  |  |- DeclarationQualifierList[properties: ]
-      |     |  |  |  |- static[properties: ]
-      |     |  |  |- void[properties: ]
-      |     |  |- FunctionDeclarator[properties: ]
-      |     |     |- SimpleDeclarator[properties: ]
-      |     |     |  |- kmalloc_node[properties: ]
-      |     |     |- PostfixingFunctionDeclarator[properties: ]
-      |     |        |- ([properties: ]
-      |     |        |- ParameterTypeListOpt[properties: ]
-      |     |        |  |- ParameterTypeList[properties: ]
-      |     |        |     |- ParameterList[properties: ]
-      |     |        |        |- ParameterDeclaration[properties: ]
-      |     |        |           |- TypedefTypeSpecifier[properties: ]
-      |     |        |           |  |- gfp_t[properties: ]
-      |     |        |           |- SimpleDeclarator[properties: ]
-      |     |        |              |- gfp_mask[properties: ]
-      |     |        |- )[properties: ]
-      |     |- {[properties: ]
-      |     |- CompoundStatement[properties: ]
-      |     |  |- DeclarationOrStatementList[properties: ]
-      |     |     |- ExpressionStatement[properties: ]
-      |     |        |- FunctionCall[properties: ]
-      |     |        |  |- PrimaryIdentifier[properties: ]
-      |     |        |  |  |- kmem_cache_alloc_node_notrace[properties: ]
-      |     |        |  |- ([properties: ]
-      |     |        |  |- ExpressionList[properties: ]
-      |     |        |  |  |- PrimaryIdentifier[properties: ]
-      |     |        |  |     |- gfp_mask[properties: ]
-      |     |        |  |- )[properties: ]
-      |     |        |- ;[properties: ]
-      |     |- }[properties: ]
-      |- Conditional[properties: ]
-      |  |- (defined CONFIG_SLAB) && !(defined CONFIG_NUMA)[properties: ]
-      |  |- FunctionDefinition[properties: ]
-      |     |- FunctionPrototype[properties: ]
-      |     |  |- void[properties: ]
-      |     |  |- FunctionDeclarator[properties: ]
-      |     |     |- SimpleDeclarator[properties: ]
-      |     |     |  |- kmalloc_node[properties: ]
-      |     |     |- PostfixingFunctionDeclarator[properties: ]
-      |     |        |- ([properties: ]
-      |     |        |- )[properties: ]
-      |     |- {[properties: ]
-      |     |- CompoundStatement[properties: ]
-      |     |  |- DeclarationOrStatementList[properties: ]
-      |     |     |- ReturnStatement[properties: ]
-      |     |        |- return[properties: ]
-      |     |        |- ;[properties: ]
-      |     |- }[properties: ]
-      |- Conditional[properties: ]
-      |  |- (defined CONFIG_SLAB)[properties: ]
-      |  |- FunctionDefinition[properties: ]
-      |     |- FunctionPrototype[properties: ]
-      |     |  |- BasicDeclarationSpecifier[properties: ]
-      |     |  |  |- DeclarationQualifierList[properties: ]
-      |     |  |  |  |- static[properties: ]
-      |     |  |  |- int[properties: ]
-      |     |  |- FunctionDeclarator[properties: ]
-      |     |     |- SimpleDeclarator[properties: ]
-      |     |     |  |- setup_cpu_cache[properties: ]
-      |     |     |- PostfixingFunctionDeclarator[properties: ]
-      |     |        |- ([properties: ]
-      |     |        |- )[properties: ]
-      |     |- {[properties: ]
-      |     |- CompoundStatement[properties: ]
-      |     |  |- DeclarationOrStatementList[properties: ]
-      |     |     |- ExpressionStatement[properties: ]
-      |     |        |- FunctionCall[properties: ]
-      |     |        |  |- PrimaryIdentifier[properties: ]
-      |     |        |  |  |- kmalloc_node[properties: ]
-      |     |        |  |- ([properties: ]
-      |     |        |  |- ExpressionList[properties: ]
-      |     |        |  |  |- PrimaryExpression[properties: ]
-      |     |        |  |     |- ([properties: ]
-      |     |        |  |     |- InclusiveOrExpression[properties: ]
-      |     |        |  |     |  |- InclusiveOrExpression[properties: ]
-      |     |        |  |     |  |  |- PrimaryExpression[properties: ]
-      |     |        |  |     |  |  |  |- ([properties: ]
-      |     |        |  |     |  |  |  |- CastExpression[properties: ]
-      |     |        |  |     |  |  |  |  |- ([properties: ]
-      |     |        |  |     |  |  |  |  |- TypeName[properties: ]
-      |     |        |  |     |  |  |  |  |  |- TypedefTypeSpecifier[properties: ]
-      |     |        |  |     |  |  |  |  |     |- gfp_t[properties: ]
-      |     |        |  |     |  |  |  |  |- )[properties: ]
-      |     |        |  |     |  |  |  |  |- 0x10u[properties: ]
-      |     |        |  |     |  |  |  |- )[properties: ]
-      |     |        |  |     |  |  |- |[properties: ]
-      |     |        |  |     |  |  |- PrimaryExpression[properties: ]
-      |     |        |  |     |  |     |- ([properties: ]
-      |     |        |  |     |  |     |- CastExpression[properties: ]
-      |     |        |  |     |  |     |  |- ([properties: ]
-      |     |        |  |     |  |     |  |- TypeName[properties: ]
-      |     |        |  |     |  |     |  |  |- TypedefTypeSpecifier[properties: ]
-      |     |        |  |     |  |     |  |     |- gfp_t[properties: ]
-      |     |        |  |     |  |     |  |- )[properties: ]
-      |     |        |  |     |  |     |  |- 0x40u[properties: ]
-      |     |        |  |     |  |     |- )[properties: ]
-      |     |        |  |     |  |- |[properties: ]
-      |     |        |  |     |  |- PrimaryExpression[properties: ]
-      |     |        |  |     |     |- ([properties: ]
-      |     |        |  |     |     |- CastExpression[properties: ]
-      |     |        |  |     |     |  |- ([properties: ]
-      |     |        |  |     |     |  |- TypeName[properties: ]
-      |     |        |  |     |     |  |  |- TypedefTypeSpecifier[properties: ]
-      |     |        |  |     |     |  |     |- gfp_t[properties: ]
-      |     |        |  |     |     |  |- )[properties: ]
-      |     |        |  |     |     |  |- 0x80u[properties: ]
-      |     |        |  |     |     |- )[properties: ]
-      |     |        |  |     |- )[properties: ]
-      |     |        |  |- )[properties: ]
-      |     |        |- ;[properties: ]
-      |     |- }[properties: ]
-      |- Conditional[properties: ]
-      |  |- (defined CONFIG_SLAB)[properties: ]
-      |  |- FunctionDefinition[properties: ]
-      |     |- FunctionPrototype[properties: ]
-      |     |  |- void[properties: ]
-      |     |  |- FunctionDeclarator[properties: ]
-      |     |     |- SimpleDeclarator[properties: ]
-      |     |     |  |- kmem_cache_create[properties: ]
-      |     |     |- PostfixingFunctionDeclarator[properties: ]
-      |     |        |- ([properties: ]
-      |     |        |- )[properties: ]
-      |     |- {[properties: ]
-      |     |- CompoundStatement[properties: ]
-      |     |  |- DeclarationOrStatementList[properties: ]
-      |     |     |- ExpressionStatement[properties: ]
-      |     |        |- FunctionCall[properties: ]
-      |     |        |  |- PrimaryIdentifier[properties: ]
-      |     |        |  |  |- setup_cpu_cache[properties: ]
-      |     |        |  |- ([properties: ]
-      |     |        |  |- )[properties: ]
-      |     |        |- ;[properties: ]
-      |     |- }[properties: ]
-      |- Conditional[properties: new ]
-      |  |- (defined CONFIG_SLAB)[properties: ]
-      |  |- FunctionDefinition[properties: ]
-      |     |- FunctionPrototype[properties: ]
-      |     |  |- void[properties: ]
-      |     |  |- FunctionDeclarator[properties: ]
-      |     |     |- SimpleDeclarator[properties: ]
-      |     |     |  |- kmem_cache_init[properties: ]
-      |     |     |- PostfixingFunctionDeclarator[properties: ]
-      |     |        |- ([properties: ]
-      |     |        |- ParameterTypeListOpt[properties: ]
-      |     |        |  |- ParameterTypeList[properties: ]
-      |     |        |     |- ParameterList[properties: ]
-      |     |        |        |- ParameterDeclaration[properties: ]
-      |     |        |           |- void[properties: ]
-      |     |        |- )[properties: ]
-      |     |- {[properties: ]
-      |     |- CompoundStatement[properties: ]
-      |     |  |- DeclarationOrStatementList[properties: ]
-      |     |     |- ExpressionStatement[properties: ]
-      |     |        |- FunctionCall[properties: ]
-      |     |        |  |- PrimaryIdentifier[properties: ]
-      |     |        |  |  |- kmem_cache_create[properties: ]
-      |     |        |  |- ([properties: ]
-      |     |        |  |- )[properties: ]
-      |     |        |- ;[properties: ]
-      |     |- }[properties: ]
-      |- Conditional[properties: new ]
-      |  |- !(defined CONFIG_SLAB)[properties: ]
-      |  |- FunctionDefinition[properties: ]
-      |     |- FunctionPrototype[properties: ]
-      |     |  |- void[properties: ]
-      |     |  |- FunctionDeclarator[properties: ]
-      |     |     |- SimpleDeclarator[properties: ]
-      |     |     |  |- kmem_cache_init[properties: ]
-      |     |     |- PostfixingFunctionDeclarator[properties: ]
-      |     |        |- ([properties: ]
-      |     |        |- ParameterTypeListOpt[properties: ]
-      |     |        |  |- ParameterTypeList[properties: ]
-      |     |        |     |- ParameterList[properties: ]
-      |     |        |        |- ParameterDeclaration[properties: ]
-      |     |        |           |- void[properties: ]
-      |     |        |- )[properties: ]
-      |     |- {[properties: ]
-      |     |- CompoundStatement[properties: ]
-      |     |  |- DeclarationOrStatementList[properties: ]
-      |     |- }[properties: ]
-      |- FunctionDefinition[properties: ]
-      |  |- FunctionPrototype[properties: ]
-      |  |  |- BasicDeclarationSpecifier[properties: ]
-      |  |  |  |- DeclarationQualifierList[properties: ]
-      |  |  |  |  |- static[properties: ]
-      |  |  |  |- void[properties: ]
-      |  |  |- FunctionDeclarator[properties: ]
-      |  |     |- SimpleDeclarator[properties: ]
-      |  |     |  |- mm_init[properties: ]
-      |  |     |- PostfixingFunctionDeclarator[properties: ]
-      |  |        |- ([properties: ]
-      |  |        |- ParameterTypeListOpt[properties: ]
-      |  |        |  |- ParameterTypeList[properties: ]
-      |  |        |     |- ParameterList[properties: ]
-      |  |        |        |- ParameterDeclaration[properties: ]
-      |  |        |           |- void[properties: ]
-      |  |        |- )[properties: ]
-      |  |- {[properties: ]
-      |  |- CompoundStatement[properties: ]
-      |  |  |- DeclarationOrStatementList[properties: ]
-      |  |     |- ExpressionStatement[properties: ]
-      |  |        |- FunctionCall[properties: ]
-      |  |        |  |- PrimaryIdentifier[properties: ]
-      |  |        |  |  |- kmem_cache_init[properties: ]
-      |  |        |  |- ([properties: ]
-      |  |        |  |- )[properties: ]
-      |  |        |- ;[properties: ]
-      |  |- }[properties: ]
-      |- FunctionDefinition[properties: ]
-         |- FunctionPrototype[properties: ]
-         |  |- int[properties: ]
-         |  |- FunctionDeclarator[properties: ]
-         |     |- SimpleDeclarator[properties: ]
-         |     |  |- main[properties: ]
-         |     |- PostfixingFunctionDeclarator[properties: ]
-         |        |- ([properties: ]
-         |        |- )[properties: ]
-         |- {[properties: ]
-         |- CompoundStatement[properties: ]
-         |  |- DeclarationOrStatementList[properties: ]
-         |     |- ExpressionStatement[properties: ]
-         |     |  |- FunctionCall[properties: ]
-         |     |  |  |- PrimaryIdentifier[properties: ]
-         |     |  |  |  |- local_irq_disable[properties: ]
-         |     |  |  |- ([properties: ]
-         |     |  |  |- )[properties: ]
-         |     |  |- ;[properties: ]
-         |     |- ExpressionStatement[properties: ]
-         |     |  |- FunctionCall[properties: ]
-         |     |  |  |- PrimaryIdentifier[properties: ]
-         |     |  |  |  |- mm_init[properties: ]
-         |     |  |  |- ([properties: ]
-         |     |  |  |- )[properties: ]
-         |     |  |- ;[properties: ]
-         |     |- ReturnStatement[properties: ]
-         |        |- return[properties: ]
-         |        |- 0[properties: ]
-         |        |- ;[properties: ]
-         |- }[properties: ]
+|- TranslationUnit
+   |- ExternalDeclarationList
+      |- Declaration
+      |  |- DeclaringList
+      |  |  |- BasicDeclarationSpecifier
+      |  |  |  |- DeclarationQualifierList
+      |  |  |  |  |- xtc.lang.cpp.Syntax.Language<TYPEDEF>typedef  
+      |  |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |  |- SimpleDeclarator
+      |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>gfp_t  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- DeclaringList
+      |  |  |- xtc.lang.cpp.Syntax.Language<_BOOL>_Bool  
+      |  |  |- SimpleDeclarator
+      |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>irqs_disabled  
+      |  |  |- InitializerOpt
+      |  |     |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+      |  |     |- Initializer
+      |  |        |- xtc.lang.cpp.Syntax.Text<OCTALconstant>0  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- FunctionDefinition
+      |  |- FunctionPrototype
+      |  |  |- xtc.lang.cpp.Syntax.Language<VOID>void  
+      |  |  |- FunctionDeclarator
+      |  |     |- SimpleDeclarator
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>local_irq_disable  
+      |  |     |- PostfixingFunctionDeclarator
+      |  |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |  |        |- ParameterTypeListOpt
+      |  |        |  |- ParameterTypeList
+      |  |        |     |- ParameterList
+      |  |        |        |- ParameterDeclaration
+      |  |        |           |- xtc.lang.cpp.Syntax.Language<VOID>void  
+      |  |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |  |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |- CompoundStatement
+      |  |  |- DeclarationOrStatementList
+      |  |     |- ExpressionStatement
+      |  |        |- AssignmentExpression
+      |  |        |  |- PrimaryIdentifier
+      |  |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>irqs_disabled  
+      |  |        |  |- AssignmentOperator
+      |  |        |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+      |  |        |  |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>1  
+      |  |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |- Conditional
+      |  |- (defined CONFIG_LOCKDEP) && (defined CONFIG_TRACE_IRQFLAGS) && (defined CONFIG_PROVE_LOCKING)
+      |  |- FunctionDefinition
+      |     |- FunctionPrototype
+      |     |  |- BasicDeclarationSpecifier
+      |     |  |  |- DeclarationQualifierList
+      |     |  |  |  |- xtc.lang.cpp.Syntax.Language<STATIC>static  
+      |     |  |  |- xtc.lang.cpp.Syntax.Language<VOID>void  
+      |     |  |- FunctionDeclarator
+      |     |     |- SimpleDeclarator
+      |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>__lockdep_trace_alloc  
+      |     |     |- PostfixingFunctionDeclarator
+      |     |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |- ParameterTypeListOpt
+      |     |        |  |- ParameterTypeList
+      |     |        |     |- ParameterList
+      |     |        |        |- ParameterDeclaration
+      |     |        |           |- TypedefTypeSpecifier
+      |     |        |           |  |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>gfp_t  
+      |     |        |           |- SimpleDeclarator
+      |     |        |              |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>gfp_mask  
+      |     |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |     |- CompoundStatement
+      |     |  |- DeclarationOrStatementList
+      |     |     |- SelectionStatement
+      |     |     |  |- xtc.lang.cpp.Syntax.Language<IF>if  
+      |     |     |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |     |  |- UnaryExpression
+      |     |     |  |  |- Unaryoperator
+      |     |     |  |  |  |- xtc.lang.cpp.Syntax.Language<NOT>!  
+      |     |     |  |  |- PrimaryExpression
+      |     |     |  |     |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |     |  |     |- AndExpression
+      |     |     |  |     |  |- PrimaryIdentifier
+      |     |     |  |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>gfp_mask  
+      |     |     |  |     |  |- xtc.lang.cpp.Syntax.Language<AND>&  
+      |     |     |  |     |  |- PrimaryExpression
+      |     |     |  |     |     |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |     |  |     |     |- CastExpression
+      |     |     |  |     |     |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |     |  |     |     |  |- TypeName
+      |     |     |  |     |     |  |  |- TypedefTypeSpecifier
+      |     |     |  |     |     |  |     |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>gfp_t  
+      |     |     |  |     |     |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |     |  |     |     |  |- xtc.lang.cpp.Syntax.Text<HEXconstant>0x10u  
+      |     |     |  |     |     |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |     |  |     |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |     |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |     |  |- ReturnStatement
+      |     |     |     |- xtc.lang.cpp.Syntax.Language<RETURN>return  
+      |     |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |     |     |- SelectionStatement
+      |     |     |  |- xtc.lang.cpp.Syntax.Language<IF>if  
+      |     |     |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |     |  |- UnaryExpression
+      |     |     |  |  |- Unaryoperator
+      |     |     |  |  |  |- xtc.lang.cpp.Syntax.Language<NOT>!  
+      |     |     |  |  |- PrimaryExpression
+      |     |     |  |     |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |     |  |     |- AndExpression
+      |     |     |  |     |  |- PrimaryIdentifier
+      |     |     |  |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>gfp_mask  
+      |     |     |  |     |  |- xtc.lang.cpp.Syntax.Language<AND>&  
+      |     |     |  |     |  |- PrimaryExpression
+      |     |     |  |     |     |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |     |  |     |     |- CastExpression
+      |     |     |  |     |     |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |     |  |     |     |  |- TypeName
+      |     |     |  |     |     |  |  |- TypedefTypeSpecifier
+      |     |     |  |     |     |  |     |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>gfp_t  
+      |     |     |  |     |     |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |     |  |     |     |  |- xtc.lang.cpp.Syntax.Text<HEXconstant>0x80u  
+      |     |     |  |     |     |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |     |  |     |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |     |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |     |  |- ReturnStatement
+      |     |     |     |- xtc.lang.cpp.Syntax.Language<RETURN>return  
+      |     |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |     |     |- ExpressionStatement
+      |     |        |- FunctionCall
+      |     |        |  |- PrimaryIdentifier
+      |     |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>assert  
+      |     |        |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |  |- ExpressionList
+      |     |        |  |  |- UnaryExpression
+      |     |        |  |     |- Unaryoperator
+      |     |        |  |     |  |- xtc.lang.cpp.Syntax.Language<NOT>!  
+      |     |        |  |     |- PrimaryIdentifier
+      |     |        |  |        |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>irqs_disabled  
+      |     |        |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |- Conditional
+      |  |- (defined CONFIG_LOCKDEP) && (defined CONFIG_TRACE_IRQFLAGS) && (defined CONFIG_PROVE_LOCKING)
+      |  |- FunctionDefinition
+      |     |- FunctionPrototype
+      |     |  |- xtc.lang.cpp.Syntax.Language<VOID>void  
+      |     |  |- FunctionDeclarator
+      |     |     |- SimpleDeclarator
+      |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>lockdep_trace_alloc  
+      |     |     |- PostfixingFunctionDeclarator
+      |     |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |- ParameterTypeListOpt
+      |     |        |  |- ParameterTypeList
+      |     |        |     |- ParameterList
+      |     |        |        |- ParameterDeclaration
+      |     |        |           |- TypedefTypeSpecifier
+      |     |        |           |  |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>gfp_t  
+      |     |        |           |- SimpleDeclarator
+      |     |        |              |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>gfp_mask  
+      |     |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |     |- CompoundStatement
+      |     |  |- DeclarationOrStatementList
+      |     |     |- ExpressionStatement
+      |     |        |- FunctionCall
+      |     |        |  |- PrimaryIdentifier
+      |     |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>__lockdep_trace_alloc  
+      |     |        |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |  |- ExpressionList
+      |     |        |  |  |- PrimaryIdentifier
+      |     |        |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>gfp_mask  
+      |     |        |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |- Conditional
+      |  |- !(defined CONFIG_LOCKDEP) || (defined CONFIG_LOCKDEP) && !(defined CONFIG_TRACE_IRQFLAGS) || (defined CONFIG_LOCKDEP) && (defined CONFIG_TRACE_IRQFLAGS) && !(defined CONFIG_PROVE_LOCKING)
+      |  |- FunctionDefinition
+      |     |- FunctionPrototype
+      |     |  |- xtc.lang.cpp.Syntax.Language<VOID>void  
+      |     |  |- FunctionDeclarator
+      |     |     |- SimpleDeclarator
+      |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>lockdep_trace_alloc  
+      |     |     |- PostfixingFunctionDeclarator
+      |     |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |- ParameterTypeListOpt
+      |     |        |  |- ParameterTypeList
+      |     |        |     |- ParameterList
+      |     |        |        |- ParameterDeclaration
+      |     |        |           |- TypedefTypeSpecifier
+      |     |        |           |  |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>gfp_t  
+      |     |        |           |- SimpleDeclarator
+      |     |        |              |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>gfp_mask  
+      |     |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |     |- CompoundStatement
+      |     |  |- DeclarationOrStatementList
+      |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |- Conditional
+      |  |- (defined CONFIG_SLAB) && (defined CONFIG_NUMA)
+      |  |- FunctionDefinition
+      |     |- FunctionPrototype
+      |     |  |- xtc.lang.cpp.Syntax.Language<VOID>void  
+      |     |  |- FunctionDeclarator
+      |     |     |- SimpleDeclarator
+      |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>__cache_alloc_node  
+      |     |     |- PostfixingFunctionDeclarator
+      |     |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |- ParameterTypeListOpt
+      |     |        |  |- ParameterTypeList
+      |     |        |     |- ParameterList
+      |     |        |        |- ParameterDeclaration
+      |     |        |           |- TypedefTypeSpecifier
+      |     |        |           |  |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>gfp_t  
+      |     |        |           |- SimpleDeclarator
+      |     |        |              |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>flags  
+      |     |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |     |- CompoundStatement
+      |     |  |- DeclarationOrStatementList
+      |     |     |- ExpressionStatement
+      |     |        |- FunctionCall
+      |     |        |  |- PrimaryIdentifier
+      |     |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>lockdep_trace_alloc  
+      |     |        |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |  |- ExpressionList
+      |     |        |  |  |- PrimaryIdentifier
+      |     |        |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>flags  
+      |     |        |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |- Conditional
+      |  |- (defined CONFIG_SLAB) && (defined CONFIG_NUMA)
+      |  |- FunctionDefinition
+      |     |- FunctionPrototype
+      |     |  |- xtc.lang.cpp.Syntax.Language<VOID>void  
+      |     |  |- FunctionDeclarator
+      |     |     |- SimpleDeclarator
+      |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>kmem_cache_alloc_node  
+      |     |     |- PostfixingFunctionDeclarator
+      |     |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |- ParameterTypeListOpt
+      |     |        |  |- ParameterTypeList
+      |     |        |     |- ParameterList
+      |     |        |        |- ParameterDeclaration
+      |     |        |           |- TypedefTypeSpecifier
+      |     |        |           |  |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>gfp_t  
+      |     |        |           |- SimpleDeclarator
+      |     |        |              |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>flags  
+      |     |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |     |- CompoundStatement
+      |     |  |- DeclarationOrStatementList
+      |     |     |- ExpressionStatement
+      |     |        |- FunctionCall
+      |     |        |  |- PrimaryIdentifier
+      |     |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>__cache_alloc_node  
+      |     |        |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |  |- ExpressionList
+      |     |        |  |  |- PrimaryIdentifier
+      |     |        |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>flags  
+      |     |        |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |- Conditional
+      |  |- (defined CONFIG_SLAB) && (defined CONFIG_NUMA) && (defined CONFIG_KMEMTRACE)
+      |  |- FunctionDefinition
+      |     |- FunctionPrototype
+      |     |  |- xtc.lang.cpp.Syntax.Language<VOID>void  
+      |     |  |- FunctionDeclarator
+      |     |     |- SimpleDeclarator
+      |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>kmem_cache_alloc_node_notrace  
+      |     |     |- PostfixingFunctionDeclarator
+      |     |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |- ParameterTypeListOpt
+      |     |        |  |- ParameterTypeList
+      |     |        |     |- ParameterList
+      |     |        |        |- ParameterDeclaration
+      |     |        |           |- TypedefTypeSpecifier
+      |     |        |           |  |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>gfp_t  
+      |     |        |           |- SimpleDeclarator
+      |     |        |              |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>flags  
+      |     |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |     |- CompoundStatement
+      |     |  |- DeclarationOrStatementList
+      |     |     |- ExpressionStatement
+      |     |        |- FunctionCall
+      |     |        |  |- PrimaryIdentifier
+      |     |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>__cache_alloc_node  
+      |     |        |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |  |- ExpressionList
+      |     |        |  |  |- PrimaryIdentifier
+      |     |        |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>flags  
+      |     |        |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |- Conditional
+      |  |- (defined CONFIG_SLAB) && (defined CONFIG_NUMA) && !(defined CONFIG_KMEMTRACE)
+      |  |- FunctionDefinition
+      |     |- FunctionPrototype
+      |     |  |- xtc.lang.cpp.Syntax.Language<VOID>void  
+      |     |  |- FunctionDeclarator
+      |     |     |- SimpleDeclarator
+      |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>kmem_cache_alloc_node_notrace  
+      |     |     |- PostfixingFunctionDeclarator
+      |     |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |- ParameterTypeListOpt
+      |     |        |  |- ParameterTypeList
+      |     |        |     |- ParameterList
+      |     |        |        |- ParameterDeclaration
+      |     |        |           |- TypedefTypeSpecifier
+      |     |        |           |  |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>gfp_t  
+      |     |        |           |- SimpleDeclarator
+      |     |        |              |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>flags  
+      |     |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |     |- CompoundStatement
+      |     |  |- DeclarationOrStatementList
+      |     |     |- ExpressionStatement
+      |     |        |- FunctionCall
+      |     |        |  |- PrimaryIdentifier
+      |     |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>kmem_cache_alloc_node  
+      |     |        |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |  |- ExpressionList
+      |     |        |  |  |- PrimaryIdentifier
+      |     |        |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>flags  
+      |     |        |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |- Conditional
+      |  |- (defined CONFIG_SLAB) && (defined CONFIG_NUMA)
+      |  |- FunctionDefinition
+      |     |- FunctionPrototype
+      |     |  |- BasicDeclarationSpecifier
+      |     |  |  |- DeclarationQualifierList
+      |     |  |  |  |- xtc.lang.cpp.Syntax.Language<STATIC>static  
+      |     |  |  |- xtc.lang.cpp.Syntax.Language<VOID>void  
+      |     |  |- FunctionDeclarator
+      |     |     |- SimpleDeclarator
+      |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>kmalloc_node  
+      |     |     |- PostfixingFunctionDeclarator
+      |     |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |- ParameterTypeListOpt
+      |     |        |  |- ParameterTypeList
+      |     |        |     |- ParameterList
+      |     |        |        |- ParameterDeclaration
+      |     |        |           |- TypedefTypeSpecifier
+      |     |        |           |  |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>gfp_t  
+      |     |        |           |- SimpleDeclarator
+      |     |        |              |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>gfp_mask  
+      |     |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |     |- CompoundStatement
+      |     |  |- DeclarationOrStatementList
+      |     |     |- ExpressionStatement
+      |     |        |- FunctionCall
+      |     |        |  |- PrimaryIdentifier
+      |     |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>kmem_cache_alloc_node_notrace  
+      |     |        |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |  |- ExpressionList
+      |     |        |  |  |- PrimaryIdentifier
+      |     |        |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>gfp_mask  
+      |     |        |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |- Conditional
+      |  |- (defined CONFIG_SLAB) && !(defined CONFIG_NUMA)
+      |  |- FunctionDefinition
+      |     |- FunctionPrototype
+      |     |  |- xtc.lang.cpp.Syntax.Language<VOID>void  
+      |     |  |- FunctionDeclarator
+      |     |     |- SimpleDeclarator
+      |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>kmalloc_node  
+      |     |     |- PostfixingFunctionDeclarator
+      |     |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |     |- CompoundStatement
+      |     |  |- DeclarationOrStatementList
+      |     |     |- ReturnStatement
+      |     |        |- xtc.lang.cpp.Syntax.Language<RETURN>return  
+      |     |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |- Conditional
+      |  |- (defined CONFIG_SLAB)
+      |  |- FunctionDefinition
+      |     |- FunctionPrototype
+      |     |  |- BasicDeclarationSpecifier
+      |     |  |  |- DeclarationQualifierList
+      |     |  |  |  |- xtc.lang.cpp.Syntax.Language<STATIC>static  
+      |     |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |     |  |- FunctionDeclarator
+      |     |     |- SimpleDeclarator
+      |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>setup_cpu_cache  
+      |     |     |- PostfixingFunctionDeclarator
+      |     |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |     |- CompoundStatement
+      |     |  |- DeclarationOrStatementList
+      |     |     |- ExpressionStatement
+      |     |        |- FunctionCall
+      |     |        |  |- PrimaryIdentifier
+      |     |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>kmalloc_node  
+      |     |        |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |  |- ExpressionList
+      |     |        |  |  |- PrimaryExpression
+      |     |        |  |     |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |  |     |- InclusiveOrExpression
+      |     |        |  |     |  |- InclusiveOrExpression
+      |     |        |  |     |  |  |- PrimaryExpression
+      |     |        |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |  |     |  |  |  |- CastExpression
+      |     |        |  |     |  |  |  |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |  |     |  |  |  |  |- TypeName
+      |     |        |  |     |  |  |  |  |  |- TypedefTypeSpecifier
+      |     |        |  |     |  |  |  |  |     |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>gfp_t  
+      |     |        |  |     |  |  |  |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |        |  |     |  |  |  |  |- xtc.lang.cpp.Syntax.Text<HEXconstant>0x10u  
+      |     |        |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |        |  |     |  |  |- xtc.lang.cpp.Syntax.Language<PIPE>|  
+      |     |        |  |     |  |  |- PrimaryExpression
+      |     |        |  |     |  |     |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |  |     |  |     |- CastExpression
+      |     |        |  |     |  |     |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |  |     |  |     |  |- TypeName
+      |     |        |  |     |  |     |  |  |- TypedefTypeSpecifier
+      |     |        |  |     |  |     |  |     |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>gfp_t  
+      |     |        |  |     |  |     |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |        |  |     |  |     |  |- xtc.lang.cpp.Syntax.Text<HEXconstant>0x40u  
+      |     |        |  |     |  |     |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |        |  |     |  |- xtc.lang.cpp.Syntax.Language<PIPE>|  
+      |     |        |  |     |  |- PrimaryExpression
+      |     |        |  |     |     |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |  |     |     |- CastExpression
+      |     |        |  |     |     |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |  |     |     |  |- TypeName
+      |     |        |  |     |     |  |  |- TypedefTypeSpecifier
+      |     |        |  |     |     |  |     |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>gfp_t  
+      |     |        |  |     |     |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |        |  |     |     |  |- xtc.lang.cpp.Syntax.Text<HEXconstant>0x80u  
+      |     |        |  |     |     |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |        |  |     |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |        |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |- Conditional
+      |  |- (defined CONFIG_SLAB)
+      |  |- FunctionDefinition
+      |     |- FunctionPrototype
+      |     |  |- xtc.lang.cpp.Syntax.Language<VOID>void  
+      |     |  |- FunctionDeclarator
+      |     |     |- SimpleDeclarator
+      |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>kmem_cache_create  
+      |     |     |- PostfixingFunctionDeclarator
+      |     |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |     |- CompoundStatement
+      |     |  |- DeclarationOrStatementList
+      |     |     |- ExpressionStatement
+      |     |        |- FunctionCall
+      |     |        |  |- PrimaryIdentifier
+      |     |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>setup_cpu_cache  
+      |     |        |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |- Conditional
+      |  |- (defined CONFIG_SLAB)
+      |  |- FunctionDefinition
+      |     |- FunctionPrototype
+      |     |  |- xtc.lang.cpp.Syntax.Language<VOID>void  
+      |     |  |- FunctionDeclarator
+      |     |     |- SimpleDeclarator
+      |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>kmem_cache_init  
+      |     |     |- PostfixingFunctionDeclarator
+      |     |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |- ParameterTypeListOpt
+      |     |        |  |- ParameterTypeList
+      |     |        |     |- ParameterList
+      |     |        |        |- ParameterDeclaration
+      |     |        |           |- xtc.lang.cpp.Syntax.Language<VOID>void  
+      |     |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |     |- CompoundStatement
+      |     |  |- DeclarationOrStatementList
+      |     |     |- ExpressionStatement
+      |     |        |- FunctionCall
+      |     |        |  |- PrimaryIdentifier
+      |     |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>kmem_cache_create  
+      |     |        |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |- Conditional
+      |  |- !(defined CONFIG_SLAB)
+      |  |- FunctionDefinition
+      |     |- FunctionPrototype
+      |     |  |- xtc.lang.cpp.Syntax.Language<VOID>void  
+      |     |  |- FunctionDeclarator
+      |     |     |- SimpleDeclarator
+      |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>kmem_cache_init  
+      |     |     |- PostfixingFunctionDeclarator
+      |     |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |     |        |- ParameterTypeListOpt
+      |     |        |  |- ParameterTypeList
+      |     |        |     |- ParameterList
+      |     |        |        |- ParameterDeclaration
+      |     |        |           |- xtc.lang.cpp.Syntax.Language<VOID>void  
+      |     |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |     |- CompoundStatement
+      |     |  |- DeclarationOrStatementList
+      |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |- FunctionDefinition
+      |  |- FunctionPrototype
+      |  |  |- BasicDeclarationSpecifier
+      |  |  |  |- DeclarationQualifierList
+      |  |  |  |  |- xtc.lang.cpp.Syntax.Language<STATIC>static  
+      |  |  |  |- xtc.lang.cpp.Syntax.Language<VOID>void  
+      |  |  |- FunctionDeclarator
+      |  |     |- SimpleDeclarator
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>mm_init  
+      |  |     |- PostfixingFunctionDeclarator
+      |  |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |  |        |- ParameterTypeListOpt
+      |  |        |  |- ParameterTypeList
+      |  |        |     |- ParameterList
+      |  |        |        |- ParameterDeclaration
+      |  |        |           |- xtc.lang.cpp.Syntax.Language<VOID>void  
+      |  |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |  |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |- CompoundStatement
+      |  |  |- DeclarationOrStatementList
+      |  |     |- ExpressionStatement
+      |  |        |- FunctionCall
+      |  |        |  |- PrimaryIdentifier
+      |  |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>kmem_cache_init  
+      |  |        |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |  |        |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |  |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |- FunctionDefinition
+         |- FunctionPrototype
+         |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+         |  |- FunctionDeclarator
+         |     |- SimpleDeclarator
+         |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>main  
+         |     |- PostfixingFunctionDeclarator
+         |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |- CompoundStatement
+         |  |- DeclarationOrStatementList
+         |     |- ExpressionStatement
+         |     |  |- FunctionCall
+         |     |  |  |- PrimaryIdentifier
+         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>local_irq_disable  
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |- ExpressionStatement
+         |     |  |- FunctionCall
+         |     |  |  |- PrimaryIdentifier
+         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>mm_init  
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |- ReturnStatement
+         |        |- xtc.lang.cpp.Syntax.Language<RETURN>return  
+         |        |- PrimaryExpression
+         |        |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |  |- ConditionalExpression
+         |        |  |  |- PrimaryIdentifier
+         |        |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>_recon_smth  
+         |        |  |  |- xtc.lang.cpp.Syntax.Language<QUESTION>?  
+         |        |  |  |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>1  
+         |        |  |  |- xtc.lang.cpp.Syntax.Language<COLON>:  
+         |        |  |  |- xtc.lang.cpp.Syntax.Text<OCTALconstant>0  
+         |        |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |- xtc.lang.cpp.Syntax.Language<RBRACE>}  

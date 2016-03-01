@@ -232,7 +232,7 @@ int main ()
     mm_init ();
     #endif
     #if 1
-    return 0;
+    return (_recon_smth ? 1 : 0);
     #endif
 }
 #endif

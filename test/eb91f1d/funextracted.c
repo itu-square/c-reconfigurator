@@ -12,30 +12,30 @@ static void __lockdep_trace_alloc_V0 (gfp_t gfp_mask)
 }
 void lockdep_trace_alloc_V0 (gfp_t gfp_mask)
 {
-    __lockdep_trace_alloc (gfp_mask);
+    ((_reconfig_CONFIG_LOCKDEP && _reconfig_CONFIG_TRACE_IRQFLAGS && _reconfig_CONFIG_PROVE_LOCKING) ? __lockdep_trace_alloc_V0 : assert (0));
 }
 void lockdep_trace_alloc_V1 (gfp_t gfp_mask)
 {
 }
 void __cache_alloc_node_V2 (gfp_t flags)
 {
-    lockdep_trace_alloc (flags);
+    ((_reconfig_CONFIG_LOCKDEP && _reconfig_CONFIG_TRACE_IRQFLAGS && _reconfig_CONFIG_PROVE_LOCKING) ? lockdep_trace_alloc_V0 : ((!_reconfig_CONFIG_LOCKDEP || _reconfig_CONFIG_LOCKDEP && !_reconfig_CONFIG_TRACE_IRQFLAGS || _reconfig_CONFIG_LOCKDEP && _reconfig_CONFIG_TRACE_IRQFLAGS && !_reconfig_CONFIG_PROVE_LOCKING) ? lockdep_trace_alloc_V1 : assert (0)));
 }
 void kmem_cache_alloc_node_V2 (gfp_t flags)
 {
-    __cache_alloc_node (flags);
+    ((_reconfig_CONFIG_SLAB && _reconfig_CONFIG_NUMA) ? __cache_alloc_node_V2 : assert (0));
 }
 void kmem_cache_alloc_node_notrace_V3 (gfp_t flags)
 {
-    __cache_alloc_node (flags);
+    ((_reconfig_CONFIG_SLAB && _reconfig_CONFIG_NUMA) ? __cache_alloc_node_V2 : assert (0));
 }
 void kmem_cache_alloc_node_notrace_V4 (gfp_t flags)
 {
-    kmem_cache_alloc_node (flags);
+    ((_reconfig_CONFIG_SLAB && _reconfig_CONFIG_NUMA) ? kmem_cache_alloc_node_V2 : assert (0));
 }
 static void kmalloc_node_V2 (gfp_t gfp_mask)
 {
-    kmem_cache_alloc_node_notrace (gfp_mask);
+    ((_reconfig_CONFIG_SLAB && _reconfig_CONFIG_NUMA && _reconfig_CONFIG_KMEMTRACE) ? kmem_cache_alloc_node_notrace_V3 : ((_reconfig_CONFIG_SLAB && _reconfig_CONFIG_NUMA && !_reconfig_CONFIG_KMEMTRACE) ? kmem_cache_alloc_node_notrace_V4 : assert (0)));
 }
 void kmalloc_node_V5 ()
 {
@@ -43,15 +43,15 @@ void kmalloc_node_V5 ()
 }
 static int setup_cpu_cache_V6 ()
 {
-    kmalloc_node ((((gfp_t) 0x10u) | ((gfp_t) 0x40u) | ((gfp_t) 0x80u)));
+    ((_reconfig_CONFIG_SLAB && _reconfig_CONFIG_NUMA) ? kmalloc_node_V2 : ((_reconfig_CONFIG_SLAB && !_reconfig_CONFIG_NUMA) ? kmalloc_node_V5 : assert (0)));
 }
 void kmem_cache_create_V6 ()
 {
-    setup_cpu_cache ();
+    ((_reconfig_CONFIG_SLAB) ? setup_cpu_cache_V6 : assert (0));
 }
 void kmem_cache_init_V6 (void)
 {
-    kmem_cache_create ();
+    ((_reconfig_CONFIG_SLAB) ? kmem_cache_create_V6 : assert (0));
 }
 void kmem_cache_init_V7 (void)
 {
@@ -64,5 +64,5 @@ int main ()
 {
     local_irq_disable ();
     mm_init ();
-    return 0;
+    return (_recon_smth ? 1 : 0);
 }

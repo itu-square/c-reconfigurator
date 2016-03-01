@@ -90,5 +90,5 @@ int main ()
 {
     local_irq_disable ();
     mm_init ();
-    return 0;
+    return (_recon_smth ? 1 : 0);
 }

@@ -14,6 +14,9 @@ class PrintAST extends PrintMethod {
 
 	// setting: enable to print each object's type [ pc | lang | gnod ]
 	static val printType = false
+	
+	// setting: enable to print each object's properties
+	static val printProps = false
 
 	static def printAST(Object o) {
 		printAST(o, false)
@@ -53,11 +56,14 @@ class PrintAST extends PrintMethod {
 	
 	// print properties
 	static def properties(Object o) {
-		var p = "[properties: "
-		if (o instanceof Node)
+		var String p = ""
+		if (printProps && o instanceof Node) {
+			p += "[properties: "
 			for(property : (o as Node).properties)
 				p += property + " "
-		p + "]"
+			p += "]"
+		}
+		p
 	}
 
 	static def private dispatch void t(PresenceCondition condition) {
@@ -65,7 +71,7 @@ class PrintAST extends PrintMethod {
 	}
 
 	static def private dispatch void t(Language<CTag> language) {
-		output.println('''«type("[lang]")»«indent(language)»|- «language»«hash(language)»«properties(language)»''')
+		output.println('''«type("[lang]")»«indent(language)»|- «language.class.canonicalName»<«language.tag»>«language»  «hash(language)»«properties(language)»''')
 	}
 
 	static def private dispatch void t(GNode node) {
