@@ -25,7 +25,7 @@ public class Preprocessor {
 	private ContextManager context = ContextManager.getContext();
 	private Map<String, String> mapFeatureAndTransformedFeatureNames;
 
-	private Preprocessor() {
+	public Preprocessor() {
 		mapFeatureAndTransformedFeatureNames = new HashMap<String, String>();
 	}
 
@@ -250,13 +250,10 @@ public class Preprocessor {
 		this.defs = defs;
 	}
 	
-	public static void main(String[] args) {
+	public void run(String dirpath) {
 		ContextManager manager = ContextManager.getContext();
-		String dirpath = "test/eb91f1d/"; //input
 		
 		try {
-			Preprocessor pp = new Preprocessor();
-
 			File dir = new File(dirpath);
 			
 			if (dir.isDirectory()) {
@@ -269,7 +266,7 @@ public class Preprocessor {
 						if (filepath.endsWith(".c") || filepath.endsWith(".h")) {
 							manager.setSrcfile(filepath);
 						}
-						pp.execute();
+						execute();
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
@@ -279,10 +276,19 @@ public class Preprocessor {
 				manager.setSrcfile(dirpath);
 			}
 
-			pp.execute();
-			pp.writeTransformedFeatureNamesToFile(); //output: REconfig.c with all features listed 
+			execute();
+			writeTransformedFeatureNamesToFile(); //output: REconfig.c with all features listed 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public static void main(String[] args) {
+		
+		String dirpath = "test/eb91f1d/"; //input
+		
+		Preprocessor pp = new Preprocessor();
+		pp.run(dirpath);
+	
 	}
 }

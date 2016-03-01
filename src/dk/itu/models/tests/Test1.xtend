@@ -11,6 +11,8 @@ import dk.itu.models.strategies.TopDownStrategy
 import dk.itu.models.rules.ReconfigureFunctionRule
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import dk.itu.models.rules.PC2ExpressionRule
+import dk.itu.models.preprocessor.Preprocessor
+import dk.itu.models.Reconfigurator
 
 class Test1 extends Test {
 
@@ -26,6 +28,11 @@ class Test1 extends Test {
         ]
         
         matchingFiles.forEach[delete]
+		
+		// preprocess
+		val Preprocessor pp = new Preprocessor();
+		pp.run(folder);
+		Reconfigurator::transformedFeaturemap = pp.mapFeatureAndTransformedFeatureNames
 		
 		// transform
 
@@ -81,6 +88,7 @@ class Test1 extends Test {
 //			}
 //			println
 //		}
+
 
 		
 		writeToFile(log.toString, folder + "log.txt")

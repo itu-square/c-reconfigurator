@@ -37,10 +37,12 @@ class PC2ExpressionRule extends Rule {
 					case 0 as byte: {
 						print("!")
 						var id = vars.getName(i)
-						print(id.substring(9, id.length-1))
+						id = id.substring(9, id.length-1)
+						id = Reconfigurator.transformedFeaturemap.get(id)
+						print(id)
 						var term = GNode::create("UnaryExpression",
 							GNode::create("Unaryoperator", new Language<CTag>(CTag.NOT)),
-							GNode::create("PrimaryIdentifier", new Text<CTag>(CTag.IDENTIFIER, id.substring(9, id.length-1))))
+							GNode::create("PrimaryIdentifier", new Text<CTag>(CTag.IDENTIFIER, id)))
 						
 						if(firstTerm) { conj = term }
 						else { conj = GNode::create("LogicalAndExpression", conj, new Language<CTag>(CTag.ANDAND), term) }
@@ -48,8 +50,11 @@ class PC2ExpressionRule extends Rule {
 					}
 					case 1 as byte: {
 						var id = vars.getName(i)
-						print(id.substring(9, id.length-1))if(firstConjunction) { disj = conj }
-						var term = GNode::create("PrimaryIdentifier", new Text<CTag>(CTag.IDENTIFIER, id.substring(9, id.length-1)))
+						id = id.substring(9, id.length-1)
+						id = Reconfigurator.transformedFeaturemap.get(id)
+						print(id)
+						var term = GNode::create("PrimaryIdentifier", new Text<CTag>(CTag.IDENTIFIER, id))
+						
 						if(firstTerm) { conj = term }
 						else { conj = GNode::create("LogicalAndExpression", conj, new Language<CTag>(CTag.ANDAND), term) }
 						firstTerm = false
@@ -66,7 +71,7 @@ class PC2ExpressionRule extends Rule {
 	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
 		println(cond)
-		var e = t(cond.BDD)
+		var e = cond.BDD.t
 		println
 		println(e.printCode)
 		println

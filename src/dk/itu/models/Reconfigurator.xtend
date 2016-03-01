@@ -3,13 +3,14 @@ package dk.itu.models
 import dk.itu.models.tests.Test
 import dk.itu.models.tests.Test1
 import xtc.lang.cpp.PresenceConditionManager
+import java.util.Map
 
 class Reconfigurator {
 	
 	// per test settings
 	static public var Test test
 	static public var PresenceConditionManager presenceConditionManager
-	
+	static public var Map<String, String> transformedFeaturemap
 	
 	
 	
