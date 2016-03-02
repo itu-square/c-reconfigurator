@@ -11,6 +11,7 @@ import xtc.lang.cpp.SuperC
 import xtc.tree.Node
 import java.util.HashMap
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
+import java.io.File
 
 abstract class Test {
 	
@@ -43,7 +44,7 @@ abstract class Test {
 	}
 
 	protected def folder() {
-		file.substring(0, file.lastIndexOf('\\') + 1)
+		file.substring(0, file.lastIndexOf(File.separator) + 1)
 	}
 
 	def printCode(Node node) {
