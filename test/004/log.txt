@@ -1,2 +1,0 @@
-PHASE 1 - Normalization
-PHASE 2 - Extract functions

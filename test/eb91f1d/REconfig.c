@@ -1,7 +1,0 @@
-typedef int feature;
-feature _reconfig_CONFIG_SLAB;
-feature _reconfig_CONFIG_NUMA;
-feature _reconfig_CONFIG_LOCKDEP;
-feature _reconfig_CONFIG_PROVE_LOCKING;
-feature _reconfig_CONFIG_TRACE_IRQFLAGS;
-feature _reconfig_CONFIG_KMEMTRACE;
