@@ -113,7 +113,8 @@ class RewriteFunctionCallRule extends Rule {
 		 			pc.BDD.cexp,
 		 			new Language<CTag>(CTag.QUESTION),
 		 			GNode::create("FunctionCall",
-		 				GNode::create("PrimaryIdentifier", new Text(CTag.IDENTIFIER, fname + "_V" + pcidmap.get_id(pc)))),
+		 				GNode::create("PrimaryIdentifier", new Text(CTag.IDENTIFIER, fname + "_V" + pcidmap.get_id(pc))),
+		 				GNode::createFromPair("ExpressionList", args)),
 		 			new Language<CTag>(CTag.COLON),
 		 			exp
 		 			),

@@ -18,7 +18,7 @@ class Test2 extends Test {
 	override transform(Node node) {
 //		println(file)
 		writeToFile(node.printCode, file)
-//		writeToFile(node.printAST, folder + "out.ast")
+		writeToFile(node.printAST, file + ".ast")
 
 		val bus = new BottomUpStrategy()
 		bus.register(new RemOneRule)
