@@ -7,6 +7,7 @@ import java.util.Map
 import org.apache.commons.io.FileUtils
 import xtc.lang.cpp.PresenceConditionManager
 import java.io.File
+import static extension dk.itu.models.Extensions.*
 
 class Reconfigurator {
 	
@@ -40,11 +41,6 @@ class Reconfigurator {
 		
 		println(args)
 		test.run(args)
-	}
-	
-	public static def String relativeTo(String path, String base) {
-		if (path.startsWith(base)) { '''«path.substring(base.length)»''' }
-		else path
 	}
 	
 	def static void reconfigure(File currentFile, (String)=>Test test) {
