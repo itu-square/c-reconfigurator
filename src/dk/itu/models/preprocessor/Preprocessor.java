@@ -29,20 +29,21 @@ public class Preprocessor {
 		mapFeatureAndTransformedFeatureNames = new HashMap<String, String>();
 	}
 
-	public void execute() throws Exception {
-		if (context.getSrcfile() == null || context.getDestfile() == null) {
-			throw new Exception(
-					"Some parameter missed. Make sure that definition list, input and output files are provided.");
-		}
+	public StringBuilder execute() throws Exception {
+//		if (context.getSrcfile() == null || context.getDestfile() == null) {
+//			throw new Exception(
+//					"Some parameter missed. Make sure that definition list, input and output files are provided.");
+//		}
 
 		try {
-			preprocess();
+			return preprocess();
 		} catch (IOException e) {
 			throw new Exception("IO error while preprocessing", e);
 		}
 	}
 
-	private void preprocess() throws IOException {
+	private StringBuilder preprocess() throws IOException {
+		StringBuilder out = new StringBuilder();
 		BufferedReader br = null; // for reading from file
 
 		try {
@@ -80,15 +81,20 @@ public class Preprocessor {
 				/**
 				 * Matches the defined pattern with the current line
 				 */
-				if (matcher.matches()) {
+				if (matcher.matches()) {					
 					/**
 					 * MatchResult is unaffected by subsequent operations
 					 */
 					MatchResult result = matcher.toMatchResult();
-					String dir = result.group(1).toLowerCase(); // cpp directive
+					String dir = result.group(1).toLowerCase().replace(" ", ""); // cpp directive
 					String param = result.group(2); // feature expression
 
-					if (Tag.IFDEF.equals(dir) || Tag.IF.equals(dir)) {
+					if (Tag.INCLUDE.equals(dir)) {
+						out.append("char include[] = \"" + line.replace("\"", "\\\"") + "\";\n");
+					}
+					out.append(line + "\n");
+					
+					if (Tag.IFDEF.equals(dir) || Tag.IF.equals(dir) || Tag.ELIF.equals(dir)) {
 						saveFeatureNamesIntoMap(param);
 						
 						//adds ifdef X on the stack
@@ -139,7 +145,7 @@ public class Preprocessor {
 							System.out
 									.println("#endif encountered without "
 											+ "corresponding #if or #ifdef or #ifndef");
-							return;
+							return null;
 						}
 
 						context.removeTopDirective();
@@ -150,7 +156,9 @@ public class Preprocessor {
 						}
 						continue;
 					}
-				} 
+				} else {
+					out.append(line + "\n");
+				}
 //				if (removeLevel == -1 || currentLevel < removeLevel) {
 //					bw.write(line);
 //					bw.newLine();
@@ -161,7 +169,8 @@ public class Preprocessor {
 				br.close();
 			}
 		}
-
+		
+		return out;
 	}
 		
 	private void writeTransformedFeatureNamesToFile() throws IOException {
@@ -283,12 +292,37 @@ public class Preprocessor {
 		}
 	}
 	
-	public static void main(String[] args) {
-		
-		String dirpath = "test/eb91f1d/"; //input
-		
-		Preprocessor pp = new Preprocessor();
-		pp.run(dirpath);
+
 	
+	public StringBuilder runFile(String filepath) {
+		ContextManager manager = ContextManager.getContext();
+		
+		manager.setSrcfile(filepath);
+		try {
+			return execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
+	
+	public void writeReconfig(String filepath) {
+		ContextManager manager = ContextManager.getContext();
+		
+		manager.setDestfile(filepath);
+		try {
+			writeTransformedFeatureNamesToFile();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+//	public static void main(String[] args) {
+//		
+//		String dirpath = "test/eb91f1d/"; //input
+//		
+//		Preprocessor pp = new Preprocessor();
+//		pp.run(dirpath);
+//	
+//	}
 }
