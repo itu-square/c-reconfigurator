@@ -65,14 +65,25 @@ class ReconfigureFunctionRule extends Rule {
 			
 			fmap.put_function(functionName, presenceCondition)
 			
+			// TODO: without traversal
 			val tdn = new TopDownStrategy
 			tdn.register(new RenameFunctionRule(newName))
-			tdn.register(new RewriteFunctionCallRule(fmap, pcidmap))
 			val newNode = tdn.transform(functionDefinition)
 			
 			newNode
 		}
-		else
+		else if (node.name.equals("FunctionDefinition")
+			&& !ancestors.last.name.equals("Conditional")) {
+				println(''' -- «(node.get(0) as GNode).printCode»''')
+				println(ancestors.last.name)
+				println
+			
+				val tdn = new TopDownStrategy
+				tdn.register(new RewriteFunctionCallRule(fmap, pcidmap))
+				val newNode = tdn.transform(node)
+				
+				newNode
+		} else
 			node
 	}
 

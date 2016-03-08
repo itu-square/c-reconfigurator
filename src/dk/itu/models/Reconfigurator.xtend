@@ -100,6 +100,7 @@ class Reconfigurator {
 		}
 		
 		preprocessor = new Preprocessor
+		Reconfigurator::transformedFeaturemap = preprocessor.mapFeatureAndTransformedFeatureNames
 		
 		reconfigure(Settings::source, [String f | new Test2(f)])
 		

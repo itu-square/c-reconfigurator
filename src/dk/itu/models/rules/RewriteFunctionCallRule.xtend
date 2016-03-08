@@ -130,14 +130,14 @@ class RewriteFunctionCallRule extends Rule {
 		) {
 			val fcall = (node.get(0) as GNode).get(0).toString
 			
-			println('''    [«fmap.size»] «node.printCode»''')
-			println( fmap.get(fcall) )
-			fmap.get(fcall).forEach[
-				println('''      «it.BDD.cexp.printCode»''')
-			]
+//			println('''    [«fmap.size»] «node.printCode»''')
+//			println( fmap.get(fcall) )
+//			fmap.get(fcall).forEach[
+//				println('''      «it.BDD.cexp.printCode»''')
+//			]
 			
-			println(buildExp(fcall, fmap.get(fcall), node.toPair.tail).printCode)
-			println
+//			println(buildExp(fcall, fmap.get(fcall), node.toPair.tail).printCode)
+//			println
 			
 			
 			buildExp(fcall, fmap.get(fcall), node.toPair.tail)
