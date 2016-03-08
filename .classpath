@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="libs/javabdd-1.0b2.jar"/>
 	<classpathentry kind="lib" path="libs/jflex-1.6.1.jar"/>
 	<classpathentry kind="lib" path="libs/junit-4.12.jar"/>
+	<classpathentry kind="lib" path="libs/commons-io-2.4.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
