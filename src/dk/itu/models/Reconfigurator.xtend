@@ -40,7 +40,7 @@ class Reconfigurator {
 		]
 		
 		var newArgs = new ArrayList<String>
-		for (File include : Settings::includes) {
+		for (File include : Settings::includeFiles) {
 			newArgs.addAll(args)
 			newArgs.addAll("-I", include.path) }
 		
@@ -48,8 +48,8 @@ class Reconfigurator {
 	}
 	
 	def static void reconfigure(File currentFile, (String)=>Test test) {
-		val currentRelativePath = currentFile.path.relativeTo(Settings.source.path)
-		val currentTargetPath = Settings::target + currentRelativePath
+		val currentRelativePath = currentFile.path.relativeTo(Settings::sourceFile.path)
+		val currentTargetPath = Settings::targetFile + currentRelativePath
 
 		if(currentFile.isDirectory) {
 			val targetDir = new File(currentTargetPath)
@@ -73,41 +73,64 @@ class Reconfigurator {
 	}
 	
 	def static void main(String[] args) {
+		Settings::captureOutput
 		println("Reconfigurator START")
 		println("-- Models Team : ITU.dk (2016) --")
 		println
 		
-//		if (!Settings::init(args)) return;
+		try {
+//			if (!Settings::init(args)) return;
+	
+//			val String[] testargs = #[
+//				"-source", "D:\\eclipse_xtc_test\\vbdb-linux\\eb91f1d.c",
+//				"-target", "D:\\eclipse_xtc_test\\vbdb-linux-target\\eb91f1d.c",
+//				"-oracle", "D:\\eclipse_xtc_test\\vbdb-linux-oracle\\eb91f1d.c",
+//				"-include", "D:\\eclipse_xtc_test\\vbdb-linux-headers" ]
+//			if (!Settings::init(testargs)) return;
+	
+//			val String[] testargs = #[
+//				"-source", "D:\\eclipse_xtc_test\\linux",
+//				"-target", "D:\\eclipse_xtc_test\\linux-target",
+//				"-oracle", "D:\\eclipse_xtc_test\\linux-oracle",
+//				"-include", "D:\\eclipse_xtc_test\\linux-4.4.4\\include" ]
 
-//		val String[] testargs = #[
-//			"-source", "D:\\eclipse_xtc_test\\vbdb-linux\\eb91f1d.c",
-//			"-target", "D:\\eclipse_xtc_test\\vbdb-linux-target\\eb91f1d.c",
-//			"-oracle", "D:\\eclipse_xtc_test\\vbdb-linux-oracle\\eb91f1d.c",
-//			"-include", "D:\\eclipse_xtc_test\\vbdb-linux-headers" ]
-//		if (!Settings::init(testargs)) return;
 
-		val String[] testargs = #[
-			"-source", "D:\\eclipse_xtc_test\\vbdb-linux",
-			"-target", "D:\\eclipse_xtc_test\\vbdb-linux-target",
-			"-oracle", "D:\\eclipse_xtc_test\\vbdb-linux-oracle",
-			"-include", "D:\\eclipse_xtc_test\\vbdb-linux-headers" ]
-		if (!Settings::init(testargs)) return;
-		
-		if (Settings::target.isDirectory) FileUtils.deleteDirectory(Settings::target)
-		else { 
-			Settings::target.delete
-			Settings::reconfig.delete
+			val String[] testargs = #[
+				"-source", "D:\\eclipse_xtc_test\\test-source",
+				"-target", "D:\\eclipse_xtc_test\\test-target" ]
+			if (!Settings::init(testargs)) throw new Exception("Settings initialization error.");
+			
+			if (Settings::targetFile.isDirectory) {
+				FileUtils.deleteDirectory(Settings::targetFile)
+				Settings::targetFile.mkdir
+				}
+			else { 
+				Settings::targetFile.delete
+				Settings::reconfigFile.delete
+				Settings::targetFile.parentFile.mkdir
+			}
+			
+			preprocessor = new Preprocessor
+			Reconfigurator::transformedFeaturemap = preprocessor.mapFeatureAndTransformedFeatureNames
+			
+			reconfigure(Settings::sourceFile, [String f | new Test2(f)])
+			
+			println('''writing file     .«Settings::reconfigFile.path.relativeTo(Settings::targetFile.path)»''')
+			preprocessor.writeReconfig(Settings::reconfigFile.path)
+		} catch (Exception ex) {
+			print(ex)
 		}
-		
-		preprocessor = new Preprocessor
-		Reconfigurator::transformedFeaturemap = preprocessor.mapFeatureAndTransformedFeatureNames
-		
-		reconfigure(Settings::source, [String f | new Test2(f)])
-		
-		println('''writing file     .«Settings::reconfig.path.relativeTo(Settings.target.path)»''')
-		preprocessor.writeReconfig(Settings::reconfig.path)
-		
+			
+		println
 		println("Reconfigurator DONE")
+		
+		
+		Settings::consoleBAOS.toString.writeToFile(Settings.outputFile.path)
+		
+		Settings::systemOutPS.append(Settings::consoleBAOS.toString)
+		Settings::systemOutPS.flush
+		
+		
 	}
 
 }

@@ -74,10 +74,6 @@ class ReconfigureFunctionRule extends Rule {
 		}
 		else if (node.name.equals("FunctionDefinition")
 			&& !ancestors.last.name.equals("Conditional")) {
-				println(''' -- «(node.get(0) as GNode).printCode»''')
-				println(ancestors.last.name)
-				println
-			
 				val tdn = new TopDownStrategy
 				tdn.register(new RewriteFunctionCallRule(fmap, pcidmap))
 				val newNode = tdn.transform(node)

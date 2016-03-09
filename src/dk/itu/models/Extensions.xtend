@@ -25,4 +25,17 @@ class Extensions {
 			System.err.println("Can not recover from the input or output fault");
 		}
 	}
+	
+	public static def void print(Object o) {
+		System.out.print(o)
+		Settings::systemOutPS.flush
+	}
+	
+	public static def void println(Object o) {
+		print(o + "\n")
+	}
+	
+	public static def void println() {
+		print("\n")
+	}
 }
