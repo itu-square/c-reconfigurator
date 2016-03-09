@@ -40,8 +40,8 @@ class Reconfigurator {
 		]
 		
 		var newArgs = new ArrayList<String>
+		newArgs.addAll(args)
 		for (File include : Settings::includeFiles) {
-			newArgs.addAll(args)
 			newArgs.addAll("-I", include.path) }
 		
 		test.run(newArgs)
