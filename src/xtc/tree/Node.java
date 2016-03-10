@@ -529,10 +529,19 @@ public abstract class Node implements Iterable<Object>, Locatable {
     final int size = size();
     for (int i=0; i<size; i++) {
       Object child = get(i);
-      if (null == o ? null == child : o.equals(child)) return i;
+      if (null == o ? null == child : o == child) return i;
     }
     return -1;
   }
+  
+  public int firstIndexOf(Object o) {
+	 final int size = size();
+	    for (int i=0; i<size; i++) {
+	      Object child = get(i);
+	      if (null == o ? null == child : o.equals(child)) return i;
+	    }
+	    return -1;
+	  }
 
   /**
    * Determine the last index of the specified object.

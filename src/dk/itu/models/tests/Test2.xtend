@@ -8,6 +8,7 @@ import dk.itu.models.rules.SplitConditionalRule
 import dk.itu.models.rules.ConditionPushDownRule
 import dk.itu.models.strategies.TopDownStrategy
 import dk.itu.models.rules.ReconfigureFunctionRule
+import dk.itu.models.rules.RemSequentialMutexConditionalRule
 
 class Test2 extends Test {
 
@@ -17,17 +18,18 @@ class Test2 extends Test {
 
 	override transform(Node node) {
 //		println(file)
-		writeToFile(node.printCode, file)
-		writeToFile(node.printAST, file + ".ast")
+		writeToFile(node.printCode, file + "base.c")
+//		writeToFile(node.printAST, file + ".ast")
 
 		val bus = new BottomUpStrategy()
 		bus.register(new RemOneRule)
 		bus.register(new RemExtraRule)
+		bus.register(new RemSequentialMutexConditionalRule)
 		bus.register(new SplitConditionalRule)
 		bus.register(new ConditionPushDownRule)
 
 		var Node normalized = bus.transform(node) as Node
-		writeToFile(normalized.printCode, file)
+		writeToFile(normalized.printCode, file + "norm.c")
 		
 		//println("PHASE 2 - Extract functions")
 
