@@ -54,8 +54,8 @@ class Settings {
 				default:
 					return true }]
 		
-		reconfigFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + "\\REconfig.c")
-		outputFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + "\\REoutput.txt")
+		reconfigFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REconfig.c")
+		outputFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REoutput.txt")
 		
 		println('''  Source: «sourceFile»''')
 		println('''  Target: «targetFile»''')
