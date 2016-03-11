@@ -17,28 +17,27 @@ class RemSequentialMutexConditionalRule extends Rule {
 	}
 
 	override dispatch Pair<?> transform(Pair<?> pair) {
-		var GNode node
-		var Iterable<PresenceCondition> pcs
-		
+		pair
+	}
+	
+	override dispatch Object transform(GNode node) {
 		if (
-			pair.head instanceof GNode && !(node = pair.head as GNode).equals(null) &&
-			node.name.equals("Conditional") && !(pcs = node.filter(PresenceCondition)).equals(null) &&
-			pcs.size.equals(2) && pcs.get(0).isMutuallyExclusive(pcs.get(1)) ) {
-//				println(node)
-				
+			node.name.equals("Conditional") &&
+			node.filter(PresenceCondition).size.equals(2) &&
+			node.filter(PresenceCondition).get(0).isMutuallyExclusive(node.filter(PresenceCondition).get(1)) ) {
+
 				var pair1 = node.pipe[it | filter[ e | indexOf(e) > indexOf(filter(PresenceCondition).get(0))
 													&& indexOf(e) < indexOf(filter(PresenceCondition).get(1))]].toPair
 				var pair2 = node.pipe[it | filter[ e | indexOf(e) > indexOf(filter(PresenceCondition).get(1))]].toPair
 
 				if(pair1 == pair2){
-					Pair.EMPTY.append(pair1 as Pair<Object>).append(pair.tail as Pair<Object>)
+					GNode::createFromPair(
+						"Conditional",
+						node.filter(PresenceCondition).get(0).or(node.filter(PresenceCondition).get(1)),
+						pair1)
 				} else
-					pair
+					node
 		} else
-			pair
-	}
-	
-	override dispatch Object transform(GNode node) {
-		node
+			node
 	}
 }

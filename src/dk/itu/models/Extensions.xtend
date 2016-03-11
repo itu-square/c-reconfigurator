@@ -15,6 +15,8 @@ import xtc.tree.Node
 import xtc.util.Pair
 
 import static dk.itu.models.Extensions.*
+import java.util.function.Predicate
+import java.util.function.Function
 
 class Extensions {
 	public static def String folder(String filePath) {
@@ -161,5 +163,4 @@ class Extensions {
 	public static def <T,U> U pipe(T it, Function1<? super T, U> f) {
 		f.apply(it)
 	}
-	
 }

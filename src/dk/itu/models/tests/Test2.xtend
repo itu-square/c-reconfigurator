@@ -9,6 +9,7 @@ import dk.itu.models.rules.ConditionPushDownRule
 import dk.itu.models.strategies.TopDownStrategy
 import dk.itu.models.rules.ReconfigureFunctionRule
 import dk.itu.models.rules.RemSequentialMutexConditionalRule
+import dk.itu.models.rules.RemNestedMutexConditionalRule
 
 class Test2 extends Test {
 
@@ -25,6 +26,7 @@ class Test2 extends Test {
 		bus.register(new RemOneRule)
 		bus.register(new RemExtraRule)
 		bus.register(new RemSequentialMutexConditionalRule)
+		bus.register(new RemNestedMutexConditionalRule)
 		bus.register(new SplitConditionalRule)
 		bus.register(new ConditionPushDownRule)
 
