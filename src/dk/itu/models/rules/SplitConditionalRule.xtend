@@ -17,9 +17,10 @@ class SplitConditionalRule extends Rule {
 	}
 
 	override dispatch Pair<?> transform(Pair<?> pair) {
-		if(pair.head instanceof GNode
-			&& (pair.head as GNode).name == "Conditional"
-			&& (pair.head as GNode).filter(PresenceCondition).size >= 2) {
+		if (!pair.empty &&
+			pair.head instanceof GNode &&
+			(pair.head as GNode).name == "Conditional" &&
+			(pair.head as GNode).filter(PresenceCondition).size >= 2) {
 				val cond = pair.head as GNode
 				
 				var newPair = pair.tail
@@ -35,11 +36,9 @@ class SplitConditionalRule extends Rule {
 					newPair = new Pair(newNode, newPair)
 				}
 				
-				newPair
+				return newPair
 			}
-			else {
-				pair
-			}
+		pair
 	}
 
 	override dispatch Object transform(GNode node) {

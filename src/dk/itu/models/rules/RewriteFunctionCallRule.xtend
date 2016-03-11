@@ -10,6 +10,7 @@ import java.util.List
 import xtc.lang.cpp.Syntax.Text
 import net.sf.javabdd.BDD
 import dk.itu.models.Reconfigurator
+import static extension dk.itu.models.Extensions.*
 
 class RewriteFunctionCallRule extends Rule {
 	
