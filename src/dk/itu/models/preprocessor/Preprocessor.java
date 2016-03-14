@@ -207,7 +207,7 @@ public class Preprocessor {
 		}
 	}
 	
-	private List<String> getFeatureNames(String featureExpression) {
+	public List<String> getFeatureNames(String featureExpression) {
 		List<String> featureNames = new ArrayList<String>();
 		
 		featureExpression = removeWhitespace(featureExpression);

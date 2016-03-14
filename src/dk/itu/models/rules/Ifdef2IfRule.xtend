@@ -1,12 +1,17 @@
 package dk.itu.models.rules
 
+import java.util.Collection
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
+import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 import xtc.util.Pair
-import xtc.lang.cpp.Syntax.Text
-import java.util.Collection
+import java.util.HashMap
+import java.util.List
+import dk.itu.models.Reconfigurator
+import static extension dk.itu.models.Extensions.*
+import xtc.tree.Node
 
 class Ifdef2IfRule extends Rule {
 	
@@ -22,48 +27,30 @@ class Ifdef2IfRule extends Rule {
 		pair
 	}
 	
-	override dispatch Object transform(GNode node) {
-		if (node.name == "Conditional" && node.size == 4 &&
-			(node.get(0) as PresenceCondition).not.toString == (node.get(2) as PresenceCondition).toString &&
-			(node.get(0) as PresenceCondition).toString.startsWith("!(defined")) {
-
-			var defined = (node.get(0) as PresenceCondition).toString
-			var variable = defined.substring(defined.indexOf(' ') + 1, defined.indexOf(')'))
-
+	override dispatch Object transform(GNode node) {		
+		if (node.name == "Conditional") {
+			var featureExpr = (node.get(0) as PresenceCondition).toString
+			var featureNames = Reconfigurator.preprocessor.getFeatureNames(featureExpr) as List<String>
+			var variable = featureExpr.substring(featureExpr.indexOf(' ') + 1, featureExpr.indexOf(')'))
+			var transformedFeature = Reconfigurator.transformedFeaturemap.get(variable)
+			
+			//TODO: deal with complex feature expr (e.g. A && (B || C) )
+			if(featureExpr.startsWith("!"))
+				transformedFeature = "!" + transformedFeature
+			
 			ancestors.add(node)
 			
 			val newNode = GNode::create("SelectionStatement")
 			newNode.addAll(#[
 				new Language<CTag>(CTag.^IF),
 				new Language<CTag>(CTag.LPAREN),
-				GNode.create("PrimaryIdentifier", new Text<CTag>(CTag.OCTALconstant, variable)),
+				GNode.create("PrimaryIdentifier", new Text<CTag>(CTag.OCTALconstant, featureExpr)),
 				new Language<CTag>(CTag.RPAREN),
-				node.get(1),
-				new Language<CTag>(CTag.^ELSE),
-				node.get(3)
-			] as Collection<Object>)
-
-			ancestors.remove(node)
+				new Language<CTag>(CTag.LBRACE)
+			] as List<Node>)
+			newNode.addAll(node.toPair.tail)
+			newNode.add(new Language<CTag>(CTag.RBRACE))
 			
-			newNode
-		} else if (node.name == "Conditional" && node.size == 2) {
-				
-			var defined = (node.get(0) as PresenceCondition).toString
-			var variable = defined.substring(defined.indexOf(' ') + 1, defined.indexOf(')'))
-
-			ancestors.add(node)
-
-			val newNode = GNode::create("SelectionStatement")
-			newNode.addAll(#[
-				new Language<CTag>(CTag.^IF),
-				new Language<CTag>(CTag.LPAREN),
-				GNode.create("PrimaryIdentifier", new Text<CTag>(CTag.OCTALconstant, variable)),
-				new Language<CTag>(CTag.RPAREN),
-				new Language<CTag>(CTag.LBRACE),
-				node.get(1),
-				new Language<CTag>(CTag.RBRACE)
-			] as Collection<Object>)
-
 			ancestors.remove(node)
 
 			newNode

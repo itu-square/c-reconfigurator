@@ -61,12 +61,12 @@ class Extensions {
 	}
 	
 	
-	public static def Pair<?> toPair(List<?> node) {
+	public static def Pair<Object> toPair(List<?> node) {
 		node.toPair
 	}
 
-	public static def Pair<?> toPair(Iterable<?> node) {
-		var Pair<?> p = Pair.empty()
+	public static def Pair<Object> toPair(Iterable<?> node) {
+		var Pair<Object> p = Pair.empty()
 		for (var i = node.size - 1; i >= 0; i--) {
 			p = new Pair(node.get(i), p)
 		}

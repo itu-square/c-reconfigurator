@@ -10,6 +10,9 @@ import dk.itu.models.strategies.TopDownStrategy
 import dk.itu.models.rules.ReconfigureFunctionRule
 import dk.itu.models.rules.RemSequentialMutexConditionalRule
 import dk.itu.models.rules.RemNestedMutexConditionalRule
+import dk.itu.models.rules.ReconfigureVariableRule
+import dk.itu.models.rules.Ifdef2IfRule
+import dk.itu.models.Reconfigurator
 
 class Test2 extends Test {
 
@@ -41,6 +44,24 @@ class Test2 extends Test {
 
 		var Node funextracted = tdn.transform(normalized) as Node
 		writeToFile(funextracted.printCode, file)
+		
+		//println("PHASE 3 - Extract variables")
+
+		val extVarRule = new ReconfigureVariableRule
+		tdn.register(extVarRule)
+
+		var Node varextracted = tdn.transform(funextracted) as Node
+		writeToFile(varextracted.printCode, file + "var.c")
+		writeToFile(varextracted.printAST, file + "var.ast")
+		
+		//println("PHASE 4 - Turn the rest ifdefs to ifs")
+		
+		val ifdef2ifRule = new Ifdef2IfRule
+		tdn.register(ifdef2ifRule)
+		var Node ifdefextracted = tdn.transform(varextracted) as Node
+		writeToFile(ifdefextracted.printCode, file)
+		writeToFile(ifdefextracted.printAST, file + ".ast")
+		
 	}
 
 }
