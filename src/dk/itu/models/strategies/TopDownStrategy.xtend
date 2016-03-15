@@ -6,8 +6,9 @@ import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
+import static extension dk.itu.models.Extensions.*
 
-class TopDownStrategy extends Strategy {
+class TopDownStrategy extends AncestorGuaranteedStrategy {
 
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
 		var PresenceCondition newCond = cond
@@ -16,7 +17,7 @@ class TopDownStrategy extends Strategy {
 		}
 		newCond
 	}
-
+	
 	override dispatch Language<CTag> transform(Language<CTag> lang) {
 		var Language<CTag> newLang = lang
 		for (Rule rule : rules) {
@@ -25,44 +26,54 @@ class TopDownStrategy extends Strategy {
 		newLang
 	}
 
-	override dispatch Pair<?> transform(Pair<?> pair) {
-		if (pair.isEmpty) return pair
-		
-		var Pair<?> newPair = pair
-		
-		for (Rule rule : rules) {
-			newPair = rule.transform(newPair) as Pair<?>
+	override dispatch Pair<Object> transform(Pair<Object> pair) {
+		if (!pair.empty) {
+			
+			var Pair<Object> prev
+			var Pair<Object> newPair = pair
+			
+			do {
+				prev = newPair
+				for (Rule rule : rules) {
+					newPair = rule.transform(newPair) as Pair<Object>
+					if (newPair != prev) return newPair
+				}
+			} while (newPair != prev)
+			
+			if(!newPair.empty) {
+				var Object newHead = transform(newPair.head)	
+				var Pair<Object> newTail = transform(newPair.tail) as Pair<Object>
+				newPair = new Pair(newHead, newTail)
+			}
+			
+			return newPair
 		}
 		
-		var Object newHead = transform(newPair.head)	
-		var Pair<?> newTail = transform(newPair.tail) as Pair<?>
-		
-		newPair = if (!newTail.equals(pair.tail) || !newHead.equals(pair.head))
-			new Pair(newHead, newTail)
-			else pair
-		
-		newPair
+		pair
 	}
 
 	override dispatch Object transform(GNode node) {
+		
+		var GNode prev
 		var Object newNode = node
 		
-		var Object prev = newNode
-		for (Rule rule : rules) {
-			newNode = rule.transform(newNode)
-		}
+		do {
+			prev = newNode as GNode
+			for (Rule rule : rules) {
+				newNode = rule.transform(newNode)
+			}
+			
+			if (newNode instanceof GNode) {
+				val ancestor = newNode
+				ancestors.add(ancestor)
+				newNode = GNode::createFromPair(
+					newNode.name,
+					transform(newNode.toPair) as Pair<Object>
+				)
+				ancestors.remove(ancestor)
+			}
 		
-		ancestors.add(node)
-		var Pair<?> oldPair = node.toPair
-		var Pair<?> newPair = transform(oldPair) as Pair<?>
-		if(!oldPair.equals(newPair)) {
-			newNode =  GNode::create(node.name)
-			(newNode as GNode).addAll(newPair)
-		}
-		ancestors.remove(node)
-		
-		if(!newNode.equals(prev))
-			newNode = transform(newNode)
+		} while (newNode != prev)
 		
 		newNode
 	}

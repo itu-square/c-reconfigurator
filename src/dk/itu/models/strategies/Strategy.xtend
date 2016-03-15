@@ -10,16 +10,14 @@ import xtc.util.Pair
 
 abstract class Strategy {
 
-	protected val ArrayList<GNode> ancestors
 	protected val ArrayList<Rule> rules
 
 	new() {
-		this.ancestors = new ArrayList<GNode>
 		this.rules = new ArrayList<Rule>
 	}
 
 	def register(Rule rule) {
-		rules.add(rule.init(ancestors))
+		rules.add(rule.init())
 	}
 
 	def dispatch PresenceCondition transform(PresenceCondition cond) {
@@ -30,20 +28,12 @@ abstract class Strategy {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 
-	def dispatch Pair<?> transform(Pair<?> pair) {
+	def dispatch Pair<Object> transform(Pair<Object> pair) {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
 	}
 
 	def dispatch Object transform(GNode node) {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")
-	}
-
-	def Pair<?> toPair(GNode node) {
-		var Pair<?> p = Pair.empty()
-		for (var i = node.size - 1; i >= 0; i--) {
-			p = new Pair(node.get(i), p)
-		}
-		p
 	}
 
 }

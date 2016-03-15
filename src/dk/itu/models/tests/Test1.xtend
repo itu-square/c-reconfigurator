@@ -91,7 +91,7 @@ class Test1 extends Test {
 
 
 		
-		writeToFile(log.toString, folder + "log.txt")
+//		writeToFile(log.toString, folder + "log.txt")
 		
 	}
 

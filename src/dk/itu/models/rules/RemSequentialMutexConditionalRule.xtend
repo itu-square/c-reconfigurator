@@ -16,28 +16,36 @@ class RemSequentialMutexConditionalRule extends Rule {
 		lang
 	}
 
-	override dispatch Pair<?> transform(Pair<?> pair) {
+	override dispatch Pair<Object> transform(Pair<Object> pair) {
+		if(
+			!pair.empty &&
+			pair.size >= 2 &&
+			
+			(pair.head instanceof GNode) &&
+			(pair.head as GNode).name.equals("Conditional") &&
+			(pair.head as GNode).filter(PresenceCondition).size.equals(1) &&
+			
+			(pair.tail.head instanceof GNode) &&
+			(pair.tail.head as GNode).name.equals("Conditional") &&
+			(pair.tail.head as GNode).filter(PresenceCondition).size.equals(1) &&
+			
+			(pair.head as GNode).filter(PresenceCondition).get(0)
+				.isMutuallyExclusive((pair.tail.head as GNode).filter(PresenceCondition).get(0)) &&
+			(pair.head as GNode).toPair.tail == (pair.tail.head as GNode).toPair.tail
+		) {
+			return new Pair<Object>(
+				GNode::createFromPair(
+					"Conditional",
+					(pair.head as GNode).filter(PresenceCondition).get(0)
+						.or((pair.tail.head as GNode).filter(PresenceCondition).get(0)),
+					(pair.head as GNode).toPair.tail
+				)).append(pair.tail.tail)
+		}
+		
 		pair
 	}
 	
 	override dispatch Object transform(GNode node) {
-		if (
-			node.name.equals("Conditional") &&
-			node.filter(PresenceCondition).size.equals(2) &&
-			node.filter(PresenceCondition).get(0).isMutuallyExclusive(node.filter(PresenceCondition).get(1)) ) {
-
-				var pair1 = node.pipe[it | filter[ e | indexOf(e) > indexOf(filter(PresenceCondition).get(0))
-													&& indexOf(e) < indexOf(filter(PresenceCondition).get(1))]].toPair
-				var pair2 = node.pipe[it | filter[ e | indexOf(e) > indexOf(filter(PresenceCondition).get(1))]].toPair
-
-				if(pair1 == pair2){
-					GNode::createFromPair(
-						"Conditional",
-						node.filter(PresenceCondition).get(0).or(node.filter(PresenceCondition).get(1)),
-						pair1)
-				} else
-					node
-		} else
-			node
+		node
 	}
 }

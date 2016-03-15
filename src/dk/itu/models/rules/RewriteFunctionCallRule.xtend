@@ -96,7 +96,7 @@ class RewriteFunctionCallRule extends Rule {
 		lang
 	}
 
-	override dispatch Pair<?> transform(Pair<?> pair) {
+	override dispatch Pair<Object> transform(Pair<Object> pair) {
 		pair
 	}
 	
@@ -131,17 +131,6 @@ class RewriteFunctionCallRule extends Rule {
 			&& fmap.containsKey((node.get(0) as GNode).get(0).toString)
 		) {
 			val fcall = (node.get(0) as GNode).get(0).toString
-			
-//			println('''    [«fmap.size»] «node.printCode»''')
-//			println( fmap.get(fcall) )
-//			fmap.get(fcall).forEach[
-//				println('''      «it.BDD.cexp.printCode»''')
-//			]
-			
-//			println(buildExp(fcall, fmap.get(fcall), node.toPair.tail).printCode)
-//			println
-			
-			
 			buildExp(fcall, fmap.get(fcall), node.toPair.tail)
 		}
 		else

@@ -3,12 +3,15 @@ package dk.itu.models
 import dk.itu.models.preprocessor.Preprocessor
 import dk.itu.models.tests.Test
 import dk.itu.models.tests.Test2
+import dk.itu.models.tests.Test3
 import java.util.Map
 import org.apache.commons.io.FileUtils
 import xtc.lang.cpp.PresenceConditionManager
 import java.io.File
 import static extension dk.itu.models.Extensions.*
 import java.util.ArrayList
+import java.nio.file.Files
+import java.nio.file.Paths
 
 class Reconfigurator {
 	
@@ -56,18 +59,32 @@ class Reconfigurator {
 			if (!targetDir.exists) {
 				println('''making directory .«currentRelativePath»''')
 				targetDir.mkdirs
+				summaryln('''md                  .«currentRelativePath»''')
 			}
-			currentFile.listFiles.forEach[reconfigure(test)]
+			currentFile.listFiles.filter[isFile].forEach[reconfigure(test)]
+			currentFile.listFiles.filter[isDirectory].forEach[reconfigure(test)]
 		}
 		else {
 			if(currentFile.path.endsWith(".c") || currentFile.path.endsWith(".h")) {
 				println('''processing file  .«currentRelativePath»''')
+				flushConsole
+				Settings::consolePS.flush
+				
 				preprocessor.runFile(currentFile.path).toString.writeToFile(currentTargetPath)
 				test.apply(currentTargetPath).run
+				
+				var sum_console = Settings::consoleBAOS.toString
+				var sum_parse = if (sum_console.contains("error: parse error")) "PARSE_ERR" else "PARSE_OK "
+				var sum_result = if (sum_console.contains("result: #if")) "#if" else "   "
+				var sum_oracle = if (sum_console.contains("oracle: pass")) "Opass"
+					else if (sum_console.contains("oracle: pass")) "Ofail"
+					else "     "
+				summaryln('''«sum_parse» «sum_result» «sum_oracle» .«currentRelativePath»''')
 			}
 			else {
 				println('''ignoring file    .«currentRelativePath»''')
 				//FileUtils.copyFile(file, new File(targetPath))
+				summaryln('''ig                .«currentRelativePath»''')
 			}
 		}
 	}
@@ -96,8 +113,10 @@ class Reconfigurator {
 
 
 			val String[] testargs = #[
-				"-source", "D:\\eclipse_xtc_test\\test-source",
-				"-target", "D:\\eclipse_xtc_test\\test-target" ]
+				"-source",  "D:\\eclipse_xtc_test\\test-source\\",
+				"-target",  "D:\\eclipse_xtc_test\\test-target\\",
+				"-oracle",  "D:\\eclipse_xtc_test\\test-oracle\\",
+				"-include", "D:\\eclipse_xtc_test\\test-headers\\" ]
 			if (!Settings::init(testargs)) throw new Exception("Settings initialization error.");
 			
 			if (Settings::targetFile.isDirectory) {
@@ -125,7 +144,8 @@ class Reconfigurator {
 		println("Reconfigurator DONE")
 		
 		
-		Settings::consoleBAOS.toString.writeToFile(Settings.outputFile.path)
+		flushConsole
+		Settings::summaryBAOS.toString.writeToFile(Settings.summaryFile.path)
 		
 		Settings::systemOutPS.append(Settings::consoleBAOS.toString)
 		Settings::systemOutPS.flush

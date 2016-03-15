@@ -8,7 +8,7 @@ import xtc.util.Pair
 import xtc.lang.cpp.Syntax.Text
 import xtc.lang.cpp.Syntax.Text
 
-class RenameVariableRule extends Rule {
+class RenameVariableRule extends AncestorGuaranteedRule {
 	
 	val String newName
 	
@@ -29,7 +29,7 @@ class RenameVariableRule extends Rule {
 			lang
 	}
 
-	override dispatch Pair<?> transform(Pair<?> pair) {
+	override dispatch Pair<Object> transform(Pair<Object> pair) {
 		pair
 	}
 	

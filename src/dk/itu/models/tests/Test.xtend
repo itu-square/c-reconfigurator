@@ -15,8 +15,6 @@ import java.io.File
 
 abstract class Test {
 	
-	protected var StringBuilder log = new StringBuilder
-	
 	protected val PRINT_HASH_CODE = true
 
 	protected val String file
@@ -57,18 +55,6 @@ abstract class Test {
 
 	def printAST(Node node, Boolean printHashCode) {
 		PrintAST::printAST(node, printHashCode)
-	}
-	
-	def print(String text) {
-		log.append(text)
-	}
-	
-	def println(String text) {
-		log.append(text + "\n")
-	}
-
-	def println() {
-		log.append("\n")
 	}
 	
 	static def String get_id (HashMap<PresenceCondition, String> map, PresenceCondition pc) {

@@ -13,7 +13,7 @@ import dk.itu.models.Reconfigurator
 import static extension dk.itu.models.Extensions.*
 import xtc.tree.Node
 
-class Ifdef2IfRule extends Rule {
+class Ifdef2IfRule extends AncestorGuaranteedRule {
 	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
 		cond
@@ -23,7 +23,7 @@ class Ifdef2IfRule extends Rule {
 		lang
 	}
 
-	override dispatch Pair<?> transform(Pair<?> pair) {
+	override dispatch Pair<Object> transform(Pair<Object> pair) {
 		pair
 	}
 	

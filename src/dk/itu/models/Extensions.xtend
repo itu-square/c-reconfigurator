@@ -11,12 +11,14 @@ import java.util.Iterator
 import java.util.List
 import org.eclipse.xtext.xbase.lib.Functions.Function1
 import org.eclipse.xtext.xbase.lib.Functions.Function2
+import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
+import xtc.tree.GNode
 import xtc.tree.Node
 import xtc.util.Pair
 
 import static dk.itu.models.Extensions.*
-import java.util.function.Predicate
-import java.util.function.Function
+import java.io.BufferedReader
+import java.io.FileReader
 
 class Extensions {
 	public static def String folder(String filePath) {
@@ -30,7 +32,7 @@ class Extensions {
 	
 	public static def void writeToFile(String text, String file) {
 		try {
-			var PrintWriter file_output = new PrintWriter(new FileOutputStream(file));
+			var PrintWriter file_output = new PrintWriter(new FileOutputStream(file, true));
 			file_output.write(text);
 			file_output.flush();
 			file_output.close();
@@ -39,17 +41,39 @@ class Extensions {
 		}
 	}
 	
-	public static def void print(Object o) {
-		System.out.print(o)
-		Settings::systemOutPS.flush
+	public static def String readFile(String fileName) throws IOException {
+	    val BufferedReader br = new BufferedReader(new FileReader(fileName));
+	    try {
+	        val StringBuilder sb = new StringBuilder();
+	        var String line = br.readLine();
+	
+	        while (line != null) {
+	            sb.append(line);
+	            sb.append("\n");
+	            line = br.readLine();
+	        }
+	        return sb.toString();
+	    } finally {
+	        br.close();
+	    }
 	}
 	
-	public static def void println(Object o) {
-		print(o + "\n")
+	public static def void flushConsole() {
+		Settings::systemOutPS.print(Settings::consoleBAOS)
+		Settings::consoleBAOS.toString.writeToFile(Settings::consoleFile.path)
+		Settings::consoleBAOS.reset()
 	}
 	
-	public static def void println() {
-		print("\n")
+	public static def void summary(Object o) {
+		Settings::summaryPS.print(o)
+	}
+	
+	public static def void summaryln(Object o) {
+		Settings::summaryPS.print(o + "\n")
+	}
+	
+	public static def void summaryln() {
+		Settings::summaryPS.print("\n")
 	}
 	
 	public static def printCode(Object o) {
@@ -61,11 +85,11 @@ class Extensions {
 	}
 	
 	
-	public static def Pair<Object> toPair(List<?> node) {
+	public static def Pair<?> toPair(List<?> node) {
 		node.toPair
 	}
 
-	public static def Pair<Object> toPair(Iterable<?> node) {
+	public static def Pair<Object> toPair(Iterable<Object> node) {
 		var Pair<Object> p = Pair.empty()
 		for (var i = node.size - 1; i >= 0; i--) {
 			p = new Pair(node.get(i), p)
@@ -162,5 +186,18 @@ class Extensions {
 	
 	public static def <T,U> U pipe(T it, Function1<? super T, U> f) {
 		f.apply(it)
+	}
+	
+	public static def Pair<Object> getChildrenGuardedBy(GNode node, PresenceCondition pc) {
+		var Pair<Object> p = Pair.EMPTY
+		var index = node.indexOf(pc) + 1
+		while (index < node.size && !(node.get(index) instanceof PresenceCondition)) {
+			p = p.add(node.get(index++))
+		}
+		p
+	}
+	
+	public static def boolean containsConditional(Node node) {
+		ContainsConditional::containsConditional(node)
 	}
 }

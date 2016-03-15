@@ -9,7 +9,7 @@ import java.util.List
 import java.util.HashMap
 import dk.itu.models.strategies.TopDownStrategy
 
-class ReconfigureFunctionRule extends Rule {
+class ReconfigureFunctionRule extends AncestorGuaranteedRule {
 	
 	val public pcidmap = new HashMap<PresenceCondition, String>
 	
@@ -42,7 +42,7 @@ class ReconfigureFunctionRule extends Rule {
 		lang
 	}
 
-	override dispatch Pair<?> transform(Pair<?> pair) {
+	override dispatch Pair<Object> transform(Pair<Object> pair) {
 		pair
 	}
 
@@ -72,13 +72,15 @@ class ReconfigureFunctionRule extends Rule {
 			
 			newNode
 		}
-		else if (node.name.equals("FunctionDefinition")
-			&& !ancestors.last.name.equals("Conditional")) {
-				val tdn = new TopDownStrategy
-				tdn.register(new RewriteFunctionCallRule(fmap, pcidmap))
-				val newNode = tdn.transform(node)
-				
-				newNode
+		else if (
+			node.name.equals("FunctionDefinition") &&
+			!ancestors.last.name.equals("Conditional")
+		) {
+			val tdn = new TopDownStrategy
+			tdn.register(new RewriteFunctionCallRule(fmap, pcidmap))
+			val newNode = tdn.transform(node)
+			
+			newNode
 		} else
 			node
 	}

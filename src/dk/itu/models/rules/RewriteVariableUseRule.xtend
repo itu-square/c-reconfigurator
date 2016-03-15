@@ -30,7 +30,7 @@ class RewriteVariableUseRule extends Rule {
 		lang
 	}
 
-	override dispatch Pair<?> transform(Pair<?> pair) {
+	override dispatch Pair<Object> transform(Pair<Object> pair) {
 		pair
 	}
 	

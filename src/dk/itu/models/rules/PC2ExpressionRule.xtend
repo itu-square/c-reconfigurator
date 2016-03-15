@@ -8,8 +8,13 @@ import xtc.util.Pair
 import dk.itu.models.Reconfigurator
 import net.sf.javabdd.BDD
 import xtc.lang.cpp.Syntax.Text
+import static extension dk.itu.models.Extensions.*
 
 class PC2ExpressionRule extends Rule {
+	
+	new() {
+		throw new UnsupportedOperationException("TODO: Fix this rule. Decide if it is even useful.")
+	}
 
 	def t(BDD bdd) {
 		val vars = Reconfigurator.presenceConditionManager.variableManager
@@ -83,7 +88,7 @@ class PC2ExpressionRule extends Rule {
 		lang
 	}
 
-	override dispatch Pair<?> transform(Pair<?> pair) {
+	override dispatch Pair<Object> transform(Pair<Object> pair) {
 		pair
 	}
 	

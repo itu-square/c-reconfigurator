@@ -14,13 +14,17 @@ class Settings {
 	static public var File oracleFile
 	static public var List<File> includeFiles
 	static public var File reconfigFile
-	static public var File outputFile
+	static public var File consoleFile
+	static public var File summaryFile
 	
 	
 	static public var systemOutPS = System.out
 	
 	static public var consoleBAOS = new ByteArrayOutputStream()
 	static public var consolePS = new PrintStream(consoleBAOS)
+	
+	static public var summaryBAOS = new ByteArrayOutputStream()
+	static public var summaryPS = new PrintStream(summaryBAOS)
 	
 	
 	static public def void captureOutput() {
@@ -55,7 +59,8 @@ class Settings {
 					return true }]
 		
 		reconfigFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REconfig.c")
-		outputFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REoutput.txt")
+		consoleFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REconsole.txt")
+		summaryFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REsummary.txt")
 		
 		println('''  Source: «sourceFile»''')
 		println('''  Target: «targetFile»''')

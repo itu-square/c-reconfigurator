@@ -5,6 +5,7 @@ import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
+import static extension dk.itu.models.Extensions.*
 
 class RemOneRule extends Rule {
 	
@@ -16,21 +17,18 @@ class RemOneRule extends Rule {
 		lang
 	}
 
-	override dispatch Pair<?> transform(Pair<?> pair) {
-		if (!(pair.head instanceof GNode)) return pair
-		val node = pair.head as GNode
-		
-		if (node.name.equals("Conditional")
-			&& node.filter(PresenceCondition).size == 1
-			&& node.get(0).toString.equals("1")) {
-				
-				var newPair = pair.tail
-				for(var index = node.size - 1; index >= 1; index--)
-							newPair = new Pair(node.get(index), newPair)
-				newPair
-			}
-			else
-				pair
+	override dispatch Pair<Object> transform(Pair<Object> pair) {
+		if (!pair.empty &&
+			pair.head instanceof GNode &&
+			(pair.head as GNode).name.equals("Conditional") &&
+			(pair.head as GNode).filter(PresenceCondition).size == 1 &&
+			((pair.head as GNode).get(0) as PresenceCondition).isTrue
+		)
+			return (pair.head as GNode)
+				.getChildrenGuardedBy((pair.head as GNode).get(0) as PresenceCondition)
+				.append(pair.tail)
+		else
+			pair
 	}
 	
 	override dispatch Object transform(GNode node) {

@@ -6,8 +6,13 @@ import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
+import static extension dk.itu.models.Extensions.*
 
-class BottomUpStrategy extends Strategy {
+class BottomUpStrategy extends AncestorGuaranteedStrategy {
+	
+	new() {
+		throw new UnsupportedOperationException("TODO: Fix this strategy. It cannot guarantee ancestors.")
+	}
 
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
 		cond
@@ -17,42 +22,53 @@ class BottomUpStrategy extends Strategy {
 		lang
 	}
 
-	override dispatch Pair<?> transform(Pair<?> pair) {
+	override dispatch Pair<Object> transform(Pair<Object> pair) {
 		if (pair.isEmpty) return pair
 		
-		var Pair<?> newTail = transform(pair.tail) as Pair<?>
+		var Pair<Object> newTail = transform(pair.tail) as Pair<Object>
 		var Object newHead = transform(pair.head)	
 		
-		var Pair<?> newPair = if (!newTail.equals(pair.tail) || !newHead.equals(pair.head))
+		var Pair<Object> newPair = if (!newTail.equals(pair.tail) || !newHead.equals(pair.head))
 			new Pair(newHead, newTail)
 			else pair
 		
 		for (Rule rule : rules) {
-			newPair = rule.transform(newPair) as Pair<?>
+			newPair = rule.transform(newPair) as Pair<Object>
 		}
-		
+
 		newPair
 	}
 
 	override dispatch Object transform(GNode node) {
+		println("ancestors " + ancestors.size)
 		var Object newNode = node
-		
-		ancestors.add(node)
-		var Pair<?> oldPair = node.toPair
-		var Pair<?> newPair = transform(oldPair) as Pair<?>
-		if(!oldPair.equals(newPair)) {
-			newNode =  GNode::create(node.name)
-			(newNode as GNode).addAll(newPair)
+		var Object prev = node
+		do {
+			prev = newNode
+			if (newNode instanceof GNode) {
+			ancestors.add(newNode)
+			var Pair<Object> oldPair = newNode.toPair
+			var Pair<Object> newPair = transform(oldPair) as Pair<Object>
+			ancestors.remove(newNode)
+			if(!oldPair.equals(newPair)) {
+				newNode =  GNode::create(node.name)
+				(newNode as GNode).addAll(newPair)
+			}
+			
+	//		var Object prev = newNode
+			if (newNode.equals(prev))
+			for (Rule rule : rules) {
+				println(rule.class)
+				println(newNode)
+				newNode = rule.transform(newNode)
+				println(newNode)
+				println
+				
+			}
+			}
 		}
-		ancestors.remove(node)
-		
-		var Object prev = newNode
-		for (Rule rule : rules) {
-			newNode = rule.transform(newNode)
-		}
-		
-		if(!newNode.equals(prev))
-			newNode = transform(newNode)
+		while(!newNode.equals(prev))
+//			newNode = transform(newNode)
 		
 		
 		newNode

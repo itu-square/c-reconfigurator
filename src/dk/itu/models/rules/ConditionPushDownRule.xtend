@@ -16,7 +16,7 @@ class ConditionPushDownRule extends Rule {
 		lang
 	}
 
-	override dispatch Pair<?> transform(Pair<?> pair) {
+	override dispatch Pair<Object> transform(Pair<Object> pair) {
 		if (pair.empty) return pair
 		if (!(pair.head instanceof GNode)) return pair
 		if (!(pair.head as GNode).name.equals("Conditional")) return pair
@@ -43,20 +43,6 @@ class ConditionPushDownRule extends Rule {
 	}
 	
 	override dispatch Object transform(GNode node) {
-		if(node.name.equals("Conditional")
-			&& node.size == 2
-			&& node.get(1) instanceof GNode
-			&& (
-				(node.get(1) as GNode).name.equals("CompoundStatement")
-				|| (node.get(1) as GNode).name.equals("DeclarationOrStatementList")
-			)) {
-				val newCond = GNode::create("Conditional")
-				newCond.add(node.get(0))
-				(node.get(1) as GNode).forEach[newCond.add(it)]
-				val newNode = GNode::create((node.get(1) as GNode).name)
-				newNode.add(newCond)
-				return newNode
-			}
 		node
 	}
 

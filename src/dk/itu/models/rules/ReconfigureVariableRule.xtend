@@ -10,7 +10,7 @@ import java.util.HashMap
 import dk.itu.models.strategies.TopDownStrategy
 import java.util.Map
 
-class ReconfigureVariableRule extends Rule {
+class ReconfigureVariableRule extends AncestorGuaranteedRule {
 	
 	val public pcidmap = new HashMap<PresenceCondition, String>
 	val public variableToPCMap = new HashMap<String, List<PresenceCondition>>
@@ -23,7 +23,7 @@ class ReconfigureVariableRule extends Rule {
 		lang
 	}
 
-	override dispatch Pair<?> transform(Pair<?> pair) {
+	override dispatch Pair<Object> transform(Pair<Object> pair) {
 		pair
 	}
 

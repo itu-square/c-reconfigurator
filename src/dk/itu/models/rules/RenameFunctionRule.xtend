@@ -6,9 +6,8 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
 import xtc.lang.cpp.Syntax.Text
-import xtc.lang.cpp.Syntax.Text
 
-class RenameFunctionRule extends Rule {
+class RenameFunctionRule extends AncestorGuaranteedRule {
 	
 	val String newName
 	
@@ -21,15 +20,17 @@ class RenameFunctionRule extends Rule {
 	}
 
 	override dispatch Language<CTag> transform(Language<CTag> lang) {
-		if (ancestors.get(ancestors.size-1).name.equals("SimpleDeclarator")
+		if(
+			ancestors.get(ancestors.size-1).name.equals("SimpleDeclarator")
 			&& ancestors.get(ancestors.size-2).name.equals("FunctionDeclarator")
-			&& !lang.toString.equals(newName))
+			&& !lang.toString.equals(newName)
+		){
 			return new Text<CTag>(CTag.IDENTIFIER, newName)
-		else
+		} else
 			lang
 	}
 
-	override dispatch Pair<?> transform(Pair<?> pair) {
+	override dispatch Pair<Object> transform(Pair<Object> pair) {
 		pair
 	}
 	

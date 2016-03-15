@@ -5,8 +5,9 @@ import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
+import static extension dk.itu.models.Extensions.*
 
-class RemExtraRule extends Rule {
+class RemExtraRule extends AncestorGuaranteedRule {
 
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
 		cond
@@ -16,25 +17,23 @@ class RemExtraRule extends Rule {
 		lang
 	}
 
-	override dispatch Pair<?> transform(Pair<?> pair) {
-		pair
+	override dispatch Pair<Object> transform(Pair<Object> pair) {
+		if(
+			!pair.empty &&
+			
+			(pair.head instanceof GNode) &&
+			(pair.head as GNode).name == "Conditional" &&
+			(pair.head as GNode).filter(PresenceCondition).size == 1 &&
+			
+			((pair.head as GNode).guard as PresenceCondition).BDD.imp(((pair.head as GNode).get(0) as PresenceCondition).BDD).isOne
+		) {
+			(pair.head as GNode).toPair.tail.append(pair.tail)
+		} else
+			pair
 	}
 	
 	override dispatch Object transform(GNode node) {
-		if (node.name == "Conditional" && node.size == 2) {
-			val c = (node.get(0) as PresenceCondition)
-			val g = guard(node) as PresenceCondition
-			
-			if (g.getBDD.imp(c.getBDD).isOne) {
-//				println('''«g» implies «c»''')
-//				println
-				node.get(1)
-			} else {
-				node
-			}
-		} else {
-			node
-		}
+		node
 	}
 
 }

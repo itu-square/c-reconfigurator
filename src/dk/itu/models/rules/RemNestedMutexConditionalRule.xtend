@@ -6,7 +6,7 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
 
-class RemNestedMutexConditionalRule extends Rule {
+class RemNestedMutexConditionalRule extends AncestorGuaranteedRule {
 
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
 		cond
@@ -16,21 +16,19 @@ class RemNestedMutexConditionalRule extends Rule {
 		lang
 	}
 
-	override dispatch Pair<?> transform(Pair<?> pair) {
-		if(pair.head instanceof GNode) {
-			val node = pair.head as GNode
+	override dispatch Pair<Object> transform(Pair<Object> pair) {
+		if(
+			!pair.empty &&
 			
-			if (node.name == "Conditional" && node.size == 2) {
-				val c = node.get(0) as PresenceCondition
-				val g = guard(node) as PresenceCondition
-				
-				if (g.isMutuallyExclusive(c)) {
-					return pair.tail
-				}
-			}
-		}
-		
-		pair
+			(pair.head instanceof GNode) &&
+			(pair.head as GNode).name.equals("Conditional") &&
+			(pair.head as GNode).filter(PresenceCondition).size == 1 &&
+			
+			((pair.head as GNode).guard as PresenceCondition).isMutuallyExclusive((pair.head as GNode).get(0) as PresenceCondition)
+		)
+			pair.tail
+		else		
+			pair
 	}
 
 	override dispatch Object transform(GNode node) {
