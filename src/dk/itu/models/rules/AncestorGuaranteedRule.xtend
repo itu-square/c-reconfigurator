@@ -5,6 +5,9 @@ import xtc.tree.GNode
 import xtc.tree.Node
 import dk.itu.models.Reconfigurator
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
+import xtc.lang.cpp.Syntax.Language
+import xtc.lang.cpp.CTag
+import xtc.util.Pair
 
 abstract class AncestorGuaranteedRule extends Rule {
 	
@@ -29,5 +32,21 @@ abstract class AncestorGuaranteedRule extends Rule {
 			return condition
 		}
 	}
+
+	override dispatch PresenceCondition transform(PresenceCondition cond) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+
+	override dispatch Language<CTag> transform(Language<CTag> lang) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+
+	override dispatch Pair<Object> transform(Pair<Object> pair) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}
+
+	override dispatch Object transform(GNode node) {
+		throw new UnsupportedOperationException("TODO: auto-generated method stub")
+	}	
 	
 }

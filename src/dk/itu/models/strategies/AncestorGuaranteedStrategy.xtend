@@ -13,8 +13,7 @@ abstract class AncestorGuaranteedStrategy extends Strategy {
 		this.ancestors = new ArrayList<GNode>
 	}
 	
-	def register(AncestorGuaranteedRule rule) {
+	public def register(AncestorGuaranteedRule rule) {
 		rules.add(rule.init(ancestors))
 	}
-	
 }

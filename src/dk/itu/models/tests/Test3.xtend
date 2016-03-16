@@ -14,6 +14,8 @@ import dk.itu.models.rules.RemNestedMutexConditionalRule
 import static extension dk.itu.models.Extensions.*
 import dk.itu.models.Settings
 import java.io.File
+import dk.itu.models.rules.ScopingRule
+import dk.itu.models.rules.PrintScopeRule
 
 class Test3 extends Test {
 
@@ -50,6 +52,11 @@ class Test3 extends Test {
 		var Node funextracted = tdn1.transform(normalized) as Node
 		writeToFile(funextracted.printCode, file)
 		writeToFile(funextracted.printAST, file + ".ast")
+		
+		
+		val tdn2 = new TopDownStrategy
+		tdn2.register(new PrintScopeRule)
+		tdn2.transform(funextracted)
 
 		// check #if elimination
 		println('''result: «IF funextracted.containsConditional»#if«ELSE»   «ENDIF»''')
