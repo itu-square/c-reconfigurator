@@ -72,7 +72,7 @@ class Reconfigurator {
 				test.apply(currentTargetPath).run
 				
 				var sum_console = Settings::consoleBAOS.toString
-				var sum_parse = if (sum_console.contains("error: parse error")) "PARSE_ERR" else "PARSE_OK "
+				var sum_parse = if (sum_console.contains("error: parse error")) "PARSE_ERR" else ( if (sum_console.contains("Exception")) "EXCEPTION" else "PARSE_OK ")
 				var sum_result = if (sum_console.contains("result: #if")) "#if" else "   "
 				var sum_oracle = if (sum_console.contains("oracle: pass")) "Opass"
 					else if (sum_console.contains("oracle: pass")) "Ofail"
@@ -97,10 +97,10 @@ class Reconfigurator {
 //			if (!Settings::init(args)) throw new Exception("Settings initialization error.");
 	
 			val String[] testargs = #[
-				"-source",  "D:\\eclipse_xtc_test\\test-source\\vars1.c",
-				"-target",  "D:\\eclipse_xtc_test\\test-target\\vars1.c"//,
-//				"-oracle",  "D:\\eclipse_xtc_test\\test-oracle\\",
-//				"-include", "D:\\eclipse_xtc_test\\test-headers\\"
+				"-source",  "D:\\eclipse_xtc_test\\test-source\\",
+				"-target",  "D:\\eclipse_xtc_test\\test-target\\",
+				"-oracle",  "D:\\eclipse_xtc_test\\test-oracle\\",
+				"-include", "D:\\eclipse_xtc_test\\test-headers\\"
 			]
 			if (!Settings::init(testargs)) throw new Exception("Settings initialization error.");
 			

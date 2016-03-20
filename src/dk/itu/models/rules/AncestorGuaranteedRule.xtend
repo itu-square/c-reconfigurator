@@ -18,7 +18,7 @@ abstract class AncestorGuaranteedRule extends Rule {
 		this
 	}
 
-	def protected guard(Node node) {
+	def protected PresenceCondition guard(Node node) {
 		val lastGuard = ancestors.findLast[it.name == "Conditional"]
 		if (lastGuard == null) {
 			return Reconfigurator.presenceConditionManager.newPresenceCondition(true)
@@ -29,7 +29,7 @@ abstract class AncestorGuaranteedRule extends Rule {
 			val condition = lastGuard.findLast [
 				it instanceof PresenceCondition && lastGuard.indexOf(it) < lastGuard.indexOf(child)
 			]
-			return condition
+			return condition as PresenceCondition
 		}
 	}
 

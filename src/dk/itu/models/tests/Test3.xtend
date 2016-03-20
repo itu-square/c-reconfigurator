@@ -16,6 +16,7 @@ import dk.itu.models.Settings
 import java.io.File
 import dk.itu.models.rules.ScopingRule
 import dk.itu.models.rules.PrintScopeRule
+import com.sun.xml.internal.ws.api.config.management.policy.ManagementAssertion.Setting
 
 class Test3 extends Test {
 
@@ -50,13 +51,13 @@ class Test3 extends Test {
 		tdn1.register(new ReconfigureFunctionRule)
 
 		var Node funextracted = tdn1.transform(normalized) as Node
-		writeToFile(funextracted.printCode, file)
+		writeToFile('''#include "«Settings::reconfigFile»"«"\n" + funextracted.printCode»''', file)
 		writeToFile(funextracted.printAST, file + ".ast")
 		
 		
-		val tdn2 = new TopDownStrategy
-		tdn2.register(new PrintScopeRule)
-		tdn2.transform(funextracted)
+//		val tdn2 = new TopDownStrategy
+//		tdn2.register(new PrintScopeRule)
+//		tdn2.transform(funextracted)
 
 		// check #if elimination
 		println('''result: «IF funextracted.containsConditional»#if«ELSE»   «ENDIF»''')

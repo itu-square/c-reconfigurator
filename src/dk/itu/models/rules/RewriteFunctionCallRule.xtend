@@ -12,7 +12,7 @@ import net.sf.javabdd.BDD
 import dk.itu.models.Reconfigurator
 import static extension dk.itu.models.Extensions.*
 
-class RewriteFunctionCallRule extends Rule {
+class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 	
 	
 	def cexp(BDD bdd) {
@@ -100,22 +100,41 @@ class RewriteFunctionCallRule extends Rule {
 		pair
 	}
 	
-	def buildExp (String fname, List<PresenceCondition> conditions, Pair<?> args) {
-		 var exp = GNode::create("FunctionCall",
-		 	GNode::create("PrimaryIdentifier", new Text(CTag.IDENTIFIER, "assert")),
+	def buildExp (String fname, List<PresenceCondition> conditions, Pair<?> args, PresenceCondition guard) {
+		
+		var PresenceCondition disjunctionPC = null
+		for (PresenceCondition pc : conditions.reverseView) {
+			disjunctionPC = if (disjunctionPC == null) pc else pc.or(disjunctionPC)
+		}
+//		println("disj:> " + disjunctionPC)
+//		println("grd :> " + guard)
+//		println("impl:> " + guard.BDD.imp(disjunctionPC.BDD))
+//		println("one :> " + guard.BDD.imp(disjunctionPC.BDD).isOne)
+//		println("zero:> " + guard.BDD.imp(disjunctionPC.BDD).isZero)
+//		println("!mp :> " + !guard.BDD.imp(disjunctionPC.BDD).isOne)
+		
+		if (!guard.BDD.imp(disjunctionPC.BDD).isOne)
+			println('''Reconfigurator error: «fname» undefined under «disjunctionPC.not».''')
+		
+		var exp = if (guard.BDD.imp(disjunctionPC.BDD).isOne) null else
+			GNode::create("FunctionCall",
+		 	GNode::create("PrimaryIdentifier", new Text(CTag.IDENTIFIER, "_reconfig_undefined")),
 		 	new Language<CTag>(CTag.LPAREN),
-		 	GNode::create("ExpressionList", new Text(CTag.OCTALconstant, "0"),
+		 	GNode::create("ExpressionList", GNode::create("StringLiteralList", new Text(CTag.STRINGliteral, '''"«fname»"''')),
 		 	new Language<CTag>(CTag.RPAREN)))
 		
 		for (PresenceCondition pc : conditions.reverseView) {
-			exp = GNode::create("PrimaryExpression",
+			val newCall = GNode::create("FunctionCall",
+		 				GNode::create("PrimaryIdentifier", new Text(CTag.IDENTIFIER, fname + "_V" + pcidmap.get_id(pc))),
+		 				GNode::createFromPair("ExpressionList", args));
+			
+			exp = if (exp == null) newCall else
+			 GNode::create("PrimaryExpression",
 				new Language<CTag>(CTag.LPAREN),
 		 		GNode::create("ConditionalExpression",
 		 			pc.BDD.cexp,
 		 			new Language<CTag>(CTag.QUESTION),
-		 			GNode::create("FunctionCall",
-		 				GNode::create("PrimaryIdentifier", new Text(CTag.IDENTIFIER, fname + "_V" + pcidmap.get_id(pc))),
-		 				GNode::createFromPair("ExpressionList", args)),
+		 			newCall,
 		 			new Language<CTag>(CTag.COLON),
 		 			exp
 		 			),
@@ -130,11 +149,20 @@ class RewriteFunctionCallRule extends Rule {
 		if (node.name.equals("FunctionCall")
 			&& fmap.containsKey((node.get(0) as GNode).get(0).toString)
 		) {
+//			println("func:> " + node.printCode)
+//			println("fmap:> " + fmap.size)
+//			fmap.forEach[k, v| println("fmap:> " + k + " " + v)]
+//			println("grd :> " + node.guard)
+//			println("name:> " + (node.get(0) as GNode).get(0).toString)
+//			println(fmap.containsKey((node.get(0) as GNode).get(0).toString))
+
 			val fcall = (node.get(0) as GNode).get(0).toString
-			buildExp(fcall, fmap.get(fcall), node.toPair.tail)
+			val newExp = buildExp(fcall, fmap.get(fcall), node.toPair.tail, node.guard)
+//			println("exp :> " +	if (newExp == null) "null" else newExp.printCode)
+//			println
+			return newExp
 		}
-		else
-			node
+		node
 	}
 
 }

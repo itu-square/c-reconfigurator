@@ -8,6 +8,7 @@ import xtc.util.Pair
 import java.util.List
 import java.util.HashMap
 import dk.itu.models.strategies.TopDownStrategy
+import static extension dk.itu.models.Extensions.*
 
 class ReconfigureFunctionRule extends AncestorGuaranteedRule {
 	
@@ -53,6 +54,13 @@ class ReconfigureFunctionRule extends AncestorGuaranteedRule {
 			&& (node.get(1) as GNode).name.equals("FunctionDefinition")
 		) {
 			val presenceCondition = node.get(0) as PresenceCondition
+
+//			println
+//			println(":> " + node.printCode)
+//			println(":> " + node.guard)
+//			println(":> " + presenceCondition)
+//			println
+			
 			val functionDefinition = node.get(1) as GNode
 			
 			pcidmap.put_pcid(presenceCondition, pcidmap.size.toString)
@@ -64,25 +72,32 @@ class ReconfigureFunctionRule extends AncestorGuaranteedRule {
 			val newName = functionName + "_V" + pcidmap.get_id(presenceCondition)
 			
 			fmap.put_function(functionName, presenceCondition)
-			
-			// TODO: without traversal
+
+
 			val tdn = new TopDownStrategy
 			tdn.register(new RenameFunctionRule(newName))
-			val newNode = tdn.transform(functionDefinition)
+			tdn.register(new RewriteFunctionCallRule(fmap, pcidmap))
+			val newNode = tdn.transform(node) as GNode
+
+//			println("newn:> " + newNode.get(1).printCode)
 			
-			newNode
+			return newNode.get(1)
 		}
 		else if (
 			node.name.equals("FunctionDefinition") &&
 			!ancestors.last.name.equals("Conditional")
 		) {
+//			println
+//			println(":> " + node.printCode)
+//			println(":> " + node.guard)
+//			println
 			val tdn = new TopDownStrategy
 			tdn.register(new RewriteFunctionCallRule(fmap, pcidmap))
-			val newNode = tdn.transform(node)
-			
-			newNode
-		} else
-			node
+			val newNode = tdn.transform(node) as GNode
+//			println("newn:> " + newNode.printCode)
+			return newNode
+		}
+		node
 	}
 
 }
