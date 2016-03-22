@@ -30,13 +30,7 @@ class Ifdef2IfRule extends AncestorGuaranteedRule {
 	override dispatch Object transform(GNode node) {		
 		if (node.name == "Conditional") {
 			var featureExpr = (node.get(0) as PresenceCondition).toString
-			var featureNames = Reconfigurator.preprocessor.getFeatureNames(featureExpr) as List<String>
-			var variable = featureExpr.substring(featureExpr.indexOf(' ') + 1, featureExpr.indexOf(')'))
-			var transformedFeature = Reconfigurator.transformedFeaturemap.get(variable)
-			
-			//TODO: deal with complex feature expr (e.g. A && (B || C) )
-			if(featureExpr.startsWith("!"))
-				transformedFeature = "!" + transformedFeature
+			var transformedFeatureExpr = Reconfigurator.preprocessor.getTransformedFeatureExpr(featureExpr)
 			
 			ancestors.add(node)
 			
@@ -44,7 +38,7 @@ class Ifdef2IfRule extends AncestorGuaranteedRule {
 			newNode.addAll(#[
 				new Language<CTag>(CTag.^IF),
 				new Language<CTag>(CTag.LPAREN),
-				GNode.create("PrimaryIdentifier", new Text<CTag>(CTag.OCTALconstant, featureExpr)),
+				GNode.create("PrimaryIdentifier", new Text<CTag>(CTag.OCTALconstant, transformedFeatureExpr)),
 				new Language<CTag>(CTag.RPAREN),
 				new Language<CTag>(CTag.LBRACE)
 			] as List<Node>)

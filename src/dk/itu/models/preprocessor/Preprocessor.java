@@ -244,6 +244,21 @@ public class Preprocessor {
 		return featureExpression.replaceAll("\\s", "");
 	}
 	
+	public String getTransformedFeatureExpr(String originalFeatExpr) {
+		String transformedFeatureExpr = removeKeywords(originalFeatExpr);
+		List<String> featureNames = getFeatureNames(transformedFeatureExpr);
+		
+		for (String feat : featureNames) {
+			try {
+				transformedFeatureExpr = transformedFeatureExpr.replace(feat, mapFeatureAndTransformedFeatureNames.get(feat));
+			} catch(NullPointerException npe) {
+				throw new NullPointerException("There is no transformed feature name (i.e., _reconfig_+) for the feature " + feat);
+			}
+		}
+		
+		return transformedFeatureExpr;
+	}
+	
 	public Map<String, String> getMapFeatureAndTransformedFeatureNames() {
 		return mapFeatureAndTransformedFeatureNames;
 	}
