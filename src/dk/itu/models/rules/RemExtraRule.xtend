@@ -27,9 +27,15 @@ class RemExtraRule extends AncestorGuaranteedRule {
 			
 			((pair.head as GNode).guard as PresenceCondition).BDD.imp(((pair.head as GNode).get(0) as PresenceCondition).BDD).isOne
 		) {
-			(pair.head as GNode).toPair.tail.append(pair.tail)
+//			println("RemExtra")
+//			println(pair)
+//			println("curr:> " + (pair.head as GNode).get(0) as PresenceCondition)
+//			println("grd :> " + (pair.head as GNode).guard)
+//			println((pair.head as GNode).toPair.tail.append(pair.tail))
+//			println
+			return (pair.head as GNode).toPair.tail.append(pair.tail)
 		} else
-			pair
+			return pair
 	}
 	
 	override dispatch Object transform(GNode node) {

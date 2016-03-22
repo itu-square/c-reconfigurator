@@ -31,6 +31,14 @@ class SplitConditionalRule extends Rule {
 					GNode::createFromPair("Conditional", pc, (pair.head as GNode).getChildrenGuardedBy(pc))))
 			}
 			newPair = newPair.append(pair.tail)
+			
+			//debug
+			println("-------- SplitConditionalRule ------------------------------------")
+			pair.forEach[println("--\n" + printAST)]
+			println("-------- TO")
+			newPair.forEach[println("--\n" + printAST)]
+			println("------------------------------------------------------------------")
+			
 			newPair
 		} else
 			pair

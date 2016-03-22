@@ -26,8 +26,8 @@ class Test3 extends Test {
 
 	override transform(Node node) {
 ////		println(file)
-//		writeToFile(node.printCode, file + "base.c")
-////		writeToFile(node.printAST, file + ".ast")
+		writeToFile(node.printCode, file + "base.c")
+		writeToFile(node.printAST, file + "base.c.ast")
 
 		println("PHASE 1 - Normalize")
 		

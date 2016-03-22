@@ -32,18 +32,20 @@ class TopDownStrategy extends AncestorGuaranteedStrategy {
 			var Pair<Object> prev
 			var Pair<Object> newPair = pair
 			
-			do {
-				prev = newPair
-				for (Rule rule : rules) {
-					newPair = rule.transform(newPair) as Pair<Object>
-					if (newPair != prev) return newPair
-				}
-			} while (newPair != prev)
+			prev = newPair
+			for (Rule rule : rules) {
+				newPair = rule.transform(newPair) as Pair<Object>
+				if (newPair != prev) return newPair
+			}
 			
 			if(!newPair.empty) {
-				var Object newHead = transform(newPair.head)	
-				var Pair<Object> newTail = transform(newPair.tail) as Pair<Object>
-				newPair = new Pair(newHead, newTail)
+				val oldHead = newPair.head
+				val Object newHead = transform(oldHead)
+				
+				val oldTail = newPair.tail
+				val Pair<Object> newTail = transform(oldTail) as Pair<Object>
+				if(!newHead.equals(oldHead) || !newTail.equals(oldTail)) 
+					newPair = new Pair(newHead, newTail)
 			}
 			
 			return newPair
@@ -71,6 +73,8 @@ class TopDownStrategy extends AncestorGuaranteedStrategy {
 					transform(newNode.toPair) as Pair<Object>
 				)
 				ancestors.remove(ancestor)
+				if(newNode != ancestor && ancestors.size != 0)
+					return newNode
 			}
 		
 		} while (newNode != prev)

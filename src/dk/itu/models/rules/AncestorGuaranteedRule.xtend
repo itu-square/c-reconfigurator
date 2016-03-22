@@ -8,6 +8,7 @@ import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.lang.cpp.CTag
 import xtc.util.Pair
+import static extension dk.itu.models.Extensions.*
 
 abstract class AncestorGuaranteedRule extends Rule {
 	
@@ -29,6 +30,13 @@ abstract class AncestorGuaranteedRule extends Rule {
 			val condition = lastGuard.findLast [
 				it instanceof PresenceCondition && lastGuard.indexOf(it) < lastGuard.indexOf(child)
 			]
+			
+//			println(ancestors.indexOf(lastGuard) < ancestors.size-1)
+//			println("anc1 :> " + ancestors.get(ancestors.indexOf(lastGuard) + 1).printCode)
+//			println("chld :> " + child.printCode)
+//			println("gurd :> " + lastGuard.printCode)
+//			println
+			
 			return condition as PresenceCondition
 		}
 	}
