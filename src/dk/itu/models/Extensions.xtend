@@ -3,22 +3,26 @@ package dk.itu.models
 import com.google.common.collect.AbstractIterator
 import com.google.common.collect.FluentIterable
 import com.google.common.collect.UnmodifiableIterator
+import java.io.BufferedReader
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.io.FileReader
 import java.io.IOException
+import java.io.PrintStream
 import java.io.PrintWriter
+import java.util.HashMap
 import java.util.Iterator
 import java.util.List
 import org.eclipse.xtext.xbase.lib.Functions.Function1
 import org.eclipse.xtext.xbase.lib.Functions.Function2
+import us.cuny.qc.cs.babbage.Minimize
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.tree.GNode
 import xtc.tree.Node
 import xtc.util.Pair
 
 import static dk.itu.models.Extensions.*
-import java.io.BufferedReader
-import java.io.FileReader
 
 class Extensions {
 	public static def String folder(String filePath) {
@@ -199,5 +203,87 @@ class Extensions {
 	
 	public static def boolean containsConditional(Node node) {
 		ContainsConditional::containsConditional(node)
+	}
+	
+	public static def String PCtoMexp(PresenceCondition cond, HashMap<String, String> varMap) {
+		val HashMap<String, String> varMapInverse = new HashMap<String, String>
+		val char a = 'a'
+		val bdd = cond.BDD
+		val vars = Reconfigurator.presenceConditionManager.variableManager
+		
+		if (bdd.isOne()) {
+			return "1"
+		} else if (bdd.isZero()) {
+			return "0"
+      	}
+		
+		val StringBuilder mexp = new StringBuilder
+		
+		var firstConjunction = true;
+		for (Object o : bdd.allsat()) {
+			if (!firstConjunction) { mexp.append("+") } 
+
+			var byte[] sat = o as byte[]
+			for (var i = 0; i < sat.length; i++) {
+//				if (sat.get(i) >= 0 && ! firstTerm) { print(" && "); }
+
+				if(sat.get(i) >= 0) {
+//					print("!")
+					var id = vars.getName(i)
+					id = id.substring(9, id.length-1)
+					if (!varMapInverse.containsKey(id)) {
+						val shortId = ((a + varMapInverse.size)as char).toString
+						varMapInverse.put(id, shortId)
+						varMap.put(shortId, id)
+					}
+					id = varMapInverse.get(id)
+//					print(id)
+					mexp.append(id)
+				}
+				if(sat.get(i) == 0) {	
+					mexp.append("'")
+				}
+			}
+        	firstConjunction = false
+		}
+		
+		mexp.toString
+	}
+	
+	public static def String MexptoCPPexp(String mexp, HashMap<String, String> varMap) {
+		val StringBuilder output = new StringBuilder
+		val input = mexp.toCharArray
+		var firstConjunction = true
+			
+		for (var i = 0; i < input.length; i++) {
+			val current = input.get(i)
+			
+			if ((current.toString).equals("+")) {
+				output.append(" || ")
+				firstConjunction = true
+			} else if (!(current.toString).equals("'") && !(current.toString).equals(" ")) {
+				if (firstConjunction == false) {
+					output.append(" && ")
+				}
+				if(i < input.length -1 && (input.get(i+1).toString).equals("'"))
+					output.append("!")
+				output.append('''defined(«varMap.get(current.toString)»)''')
+				firstConjunction = false
+			}
+		}
+		output.toString
+	}
+	
+	
+	public static def String PCtoCPPexp(PresenceCondition condition) {
+		if (condition.toString.equals("1")) "1"
+		else if (condition.toString.equals("0")) "0"
+		else {
+			val varMap = new HashMap<String, String>
+			val mexp = condition.PCtoMexp(varMap)
+			val baos = new ByteArrayOutputStream
+			var ps = new PrintStream(baos)
+			Minimize::process(mexp, ps).MexptoCPPexp(varMap)
+		}
 	}
 }

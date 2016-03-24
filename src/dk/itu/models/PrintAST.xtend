@@ -7,6 +7,8 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.tree.Node
 
+import static extension dk.itu.models.Extensions.*
+
 class PrintAST extends PrintMethod {
 
 	// setting: enable to print each object's hash code
@@ -67,7 +69,9 @@ class PrintAST extends PrintMethod {
 	}
 
 	static def private dispatch void t(PresenceCondition condition) {
-		output.println('''«type("[pc  ]")»«indent(condition)»|- «condition»«hash(condition)»«properties(condition)»''')
+		val CPPexp = condition.PCtoCPPexp
+		
+		output.println('''«type("[pc  ]")»«indent(condition)»|- «CPPexp»«hash(condition)»«properties(condition)»''')
 	}
 
 	static def private dispatch void t(Language<CTag> language) {

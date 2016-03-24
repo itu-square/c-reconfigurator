@@ -7,6 +7,8 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.tree.Node
 
+import static extension dk.itu.models.Extensions.*
+
 class PrintCode extends PrintMethod {
 
 	// the indentation prefix; add or remove spaces from it
@@ -29,25 +31,22 @@ class PrintCode extends PrintMethod {
 	}
 
 	static def private dispatch void t(PresenceCondition condition) {
-		//log.println (condition)
-		//condition.BDD.printSetWithDomains
-		//log.println
-		
+		val CPPexp = condition.PCtoCPPexp
 		
 		if (!last_line.empty && !last_line.startsWith("#"))
 			output.println
 
 		if (ancestors.last.head == condition) {
-			output.println('''«indent»#if «condition»''')
-			last_line = '''#if «condition»'''
+			output.println('''«indent»#if «CPPexp»''')
+			last_line = '''#if «CPPexp»'''
 		} else {
 //			if (ancestors.last.filter(PresenceCondition).size == 2 &&
 //				!(ancestors.last.head as PresenceCondition).is(condition)) {
 //				output.println('''«indent»#else''')
 //				last_line = '''#else'''
 //			} else {
-				output.println('''«indent»#elif «condition»''')
-				last_line = '''#elif «condition»'''
+				output.println('''«indent»#elif «CPPexp»''')
+				last_line = '''#elif «CPPexp»'''
 //			}
 		}
 	}

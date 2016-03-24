@@ -14,7 +14,7 @@ import static extension dk.itu.models.Extensions.*
 
 class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 	
-	
+	// TODO: move to Extensions and minimize
 	def cexp(BDD bdd) {
 		val vars = Reconfigurator.presenceConditionManager.variableManager
 		

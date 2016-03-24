@@ -75,7 +75,7 @@ class Reconfigurator {
 				var sum_parse = if (sum_console.contains("error: parse error")) "PARSE_ERR" else ( if (sum_console.contains("Exception")) "EXCEPTION" else "PARSE_OK ")
 				var sum_result = if (sum_console.contains("result: #if")) "#if" else "   "
 				var sum_oracle = if (sum_console.contains("oracle: pass")) "Opass"
-					else if (sum_console.contains("oracle: pass")) "Ofail"
+					else if (sum_console.contains("oracle: fail")) "Ofail"
 					else "     "
 				summaryln('''«sum_parse» «sum_result» «sum_oracle» .«currentRelativePath»''')
 			}

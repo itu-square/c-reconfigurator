@@ -33,11 +33,11 @@ class SplitConditionalRule extends Rule {
 			newPair = newPair.append(pair.tail)
 			
 			//debug
-			println("-------- SplitConditionalRule ------------------------------------")
-			pair.forEach[println("--\n" + printAST)]
-			println("-------- TO")
-			newPair.forEach[println("--\n" + printAST)]
-			println("------------------------------------------------------------------")
+//			println("-------- SplitConditionalRule ------------------------------------")
+//			pair.forEach[println("--\n" + printAST)]
+//			println("-------- TO")
+//			newPair.forEach[println("--\n" + printAST)]
+//			println("------------------------------------------------------------------")
 			
 			newPair
 		} else
