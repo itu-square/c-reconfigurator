@@ -40,6 +40,26 @@ abstract class AncestorGuaranteedRule extends Rule {
 			return condition as PresenceCondition
 		}
 	}
+	
+	// Computes the conjunction of all ancestor PresenceConditions of a Node.
+	def protected PresenceCondition presenceCondition(Node node) {
+		// Create a starting point.
+		var PresenceCondition result = Reconfigurator::presenceConditionManager.newPresenceCondition(true)
+		
+		for(var i = 0; i <= ancestors.size-2; i++) {
+			
+			val ancestor = ancestors.get(i) 
+			if(ancestor.name.equals("Conditional")) {
+				
+				val child = ancestors.get(i+1)
+				result = result.and(ancestor.findLast[
+					it instanceof PresenceCondition && ancestor.indexOf(it) < ancestor.indexOf(child)
+				] as PresenceCondition ?: Reconfigurator::presenceConditionManager.newPresenceCondition(true))	
+			}
+		}
+		
+		result
+	}
 
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
 		throw new UnsupportedOperationException("TODO: auto-generated method stub")

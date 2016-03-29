@@ -7,58 +7,71 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
 import java.util.AbstractMap.SimpleEntry
+import java.util.HashMap
+import java.util.List
+import xtc.lang.cpp.Syntax.Text
 
 abstract class ScopingRule extends AncestorGuaranteedRule {
 	
-	protected val ArrayList<SimpleEntry<GNode,ArrayList<String>>> localVariables
+	protected val ArrayList<SimpleEntry<GNode,HashMap<String, List<PresenceCondition>>>> localVariableScopes
 	
 	new () {
 		super()
-		this.localVariables = new ArrayList<SimpleEntry<GNode,ArrayList<String>>>
+		this.localVariableScopes = new ArrayList<SimpleEntry<GNode,HashMap<String, List<PresenceCondition>>>>
 	}
 	
 	protected def addScope(GNode node) {
-		this.localVariables.add(new SimpleEntry<GNode,ArrayList<String>>(node, new ArrayList<String>))
+		this.localVariableScopes.add(new SimpleEntry<GNode,HashMap<String, List<PresenceCondition>>>(node, new HashMap<String, List<PresenceCondition>>))
 	}
 	
 	protected def clearScope() {
 		while (
-			localVariables.size > 0 &&
-			!ancestors.contains(localVariables.last.key)
+			localVariableScopes.size > 0 &&
+			!ancestors.contains(localVariableScopes.last.key)
 		) {
-			localVariables.remove(localVariables.size - 1)
+			localVariableScopes.remove(localVariableScopes.size - 1)
 		}
 	}
 	
 	protected def addVariable(String name) {
-		localVariables.last.value.add(name)
+		localVariableScopes.last.value.putIfAbsent(name, new ArrayList<PresenceCondition>)
 	}
 	
 	protected def variableExists(String name) {
-		localVariables.map[value].flatten.exists[equals(name)]
+		localVariableScopes.exists[ se |
+			se.value.keySet.contains(name)
+		]
+	}
+	
+	protected def List<PresenceCondition> getPCListForLastDeclaration(String name) {
+		val scope = localVariableScopes.findLast[scope | scope.value.containsKey(name)]
+		if (scope != null)
+			scope.value.get(name)
+		else
+			null
 	}
 	
 	def PresenceCondition transform(PresenceCondition cond) {
-		println("sr")
+//		println("srcond")
 		clearScope
 		cond
 	}
 
 	def Language<CTag> transform(Language<CTag> lang) {
-		println("sr")
+//		println("srlang")
 		clearScope
 		lang
 	}
 
 	def Pair<Object> transform(Pair<Object> pair) {
-		println("sr")
+//		println("srpair")
 		clearScope
 		pair
 	}
 	
 	def Object transform(GNode node) {
 		clearScope
-		if (node.name.equals("FunctionDefinition")) {
+		if (#["TranslationUnit", "FunctionDefinition"].contains(node.name)) {
 			addScope(node)
 		}
 		
@@ -71,16 +84,21 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		}
 		
 		if (
-			node.name.equals("Declaration") &&
-			ancestors.exists[name.equals("FunctionDefinition")]
+			node.name.equals("Declaration")// &&
+//			ancestors.exists[name.equals("FunctionDefinition")]
 		) {
 			val declaringList = node.get(0) as GNode
 			val simpleDeclarator = declaringList.filter(GNode).findFirst[name.equals("SimpleDeclarator")]
-			val variableName = simpleDeclarator.get(0).toString
-			addVariable(variableName)
+			val variableName = simpleDeclarator.get(0) as Language<CTag>
+//			println('''===> «variableName» («variableName.hasProperty("reconfiguratorVariable")»)''')
+			if (!variableName.hasProperty("reconfiguratorVariable") ||
+				!variableName.getBooleanProperty("reconfiguratorVariable")
+			) {
+				addVariable(variableName.toString)
+			}
 		}
 		
-		println("sr")
+//		println("srnode")
 		node
 	}
 	

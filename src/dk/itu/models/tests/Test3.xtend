@@ -1,22 +1,19 @@
 package dk.itu.models.tests
 
-import xtc.tree.Node
-import dk.itu.models.rules.RemOneRule
-import dk.itu.models.rules.RemExtraRule
-import dk.itu.models.rules.SplitConditionalRule
-import dk.itu.models.rules.ConditionPushDownRule
-import dk.itu.models.strategies.TopDownStrategy
-import dk.itu.models.rules.ReconfigureFunctionRule
-import dk.itu.models.rules.RemSequentialMutexConditionalRule
-import dk.itu.models.rules.RemNestedMutexConditionalRule
-//import dk.itu.models.rules.ExtractFirstRule
-//import dk.itu.models.rules.MergeSequencesRule
-import static extension dk.itu.models.Extensions.*
 import dk.itu.models.Settings
+import dk.itu.models.rules.ConditionPushDownRule
+import dk.itu.models.rules.ConstrainNestedConditionalsRule
+import dk.itu.models.rules.ReconfigureFunctionRule
+import dk.itu.models.rules.ReconfigureVariableRule
+import dk.itu.models.rules.RemExtraRule
+import dk.itu.models.rules.RemOneRule
+import dk.itu.models.rules.RemSequentialMutexConditionalRule
+import dk.itu.models.rules.SplitConditionalRule
+import dk.itu.models.strategies.TopDownStrategy
 import java.io.File
-import dk.itu.models.rules.ScopingRule
-import dk.itu.models.rules.PrintScopeRule
-import com.sun.xml.internal.ws.api.config.management.policy.ManagementAssertion.Setting
+import xtc.tree.Node
+
+import static extension dk.itu.models.Extensions.*
 
 class Test3 extends Test {
 
@@ -35,24 +32,34 @@ class Test3 extends Test {
 		tdn.register(new RemOneRule)
 		tdn.register(new RemExtraRule)
 		tdn.register(new RemSequentialMutexConditionalRule)
-		tdn.register(new RemNestedMutexConditionalRule)
+		tdn.register(new ConstrainNestedConditionalsRule)
 		tdn.register(new SplitConditionalRule)
 		tdn.register(new ConditionPushDownRule)
-//		tdn.register(new MergeSequencesRule)
-//		tdn.register(new ExtractFirstRule)
 //
 		var Node normalized = tdn.transform(node) as Node
 		writeToFile(normalized.printCode, file + "norm.c")
 		writeToFile(normalized.printAST, file + "norm.ast")
 		
-		println("PHASE 2 - Extract functions")
-
+		
+		
+		println("PHASE 2 - Reconfigure variables")
+		
 		val tdn1 = new TopDownStrategy
-		tdn1.register(new ReconfigureFunctionRule)
+		tdn1.register(new ReconfigureVariableRule)
+		
+		
+		var Node varReconfigured = tdn1.transform(normalized) as Node
+		writeToFile('''#include "«Settings::reconfigFile»"«"\n" + varReconfigured.printCode»''', file + ".var.c")
+		writeToFile(varReconfigured.printAST, file + ".var.c.ast")
+		
+		println("PHASE 3 - Reconfigure functions")
 
-		var Node funextracted = tdn1.transform(normalized) as Node
-		writeToFile('''#include "«Settings::reconfigFile»"«"\n" + funextracted.printCode»''', file)
-		writeToFile(funextracted.printAST, file + ".ast")
+		val tdn2 = new TopDownStrategy
+		tdn2.register(new ReconfigureFunctionRule)
+
+		var Node funReconfigured = tdn2.transform(varReconfigured) as Node
+		writeToFile('''#include "«Settings::reconfigFile»"«"\n" + funReconfigured.printCode»''', file)
+		writeToFile(funReconfigured.printAST, file + ".ast")
 		
 		
 //		val tdn2 = new TopDownStrategy
@@ -60,13 +67,13 @@ class Test3 extends Test {
 //		tdn2.transform(funextracted)
 
 		// check #if elimination
-		println('''result: «IF funextracted.containsConditional»#if«ELSE»   «ENDIF»''')
+		println('''result: «IF funReconfigured.containsConditional»#if«ELSE»   «ENDIF»''')
 
 		// check oracle
 		if(Settings::oracleFile != null) {
 			val oracle = file.replace(Settings::targetFile.path, Settings::oracleFile.path) + ".ast"
 			if((new File(oracle)).exists)
-				if(funextracted.printAST.equals(readFile(oracle)))
+				if(funReconfigured.printAST.equals(readFile(oracle)))
 					println("oracle: pass")
 				else
 					println("oracle: fail")

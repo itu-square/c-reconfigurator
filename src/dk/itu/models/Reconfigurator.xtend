@@ -10,6 +10,7 @@ import org.apache.commons.io.FileUtils
 import xtc.lang.cpp.PresenceConditionManager
 
 import static extension dk.itu.models.Extensions.*
+import dk.itu.models.tests.Test4
 
 class Reconfigurator {
 	
@@ -97,10 +98,10 @@ class Reconfigurator {
 //			if (!Settings::init(args)) throw new Exception("Settings initialization error.");
 	
 			val String[] testargs = #[
-				"-source",  "D:\\eclipse_xtc_test\\test-source\\",
-				"-target",  "D:\\eclipse_xtc_test\\test-target\\",
-				"-oracle",  "D:\\eclipse_xtc_test\\test-oracle\\",
-				"-include", "D:\\eclipse_xtc_test\\test-headers\\"
+				"-source",  "D:\\eclipse_xtc_test\\test-source\\rule-tests\\vars2.c",
+				"-target",  "D:\\eclipse_xtc_test\\test-target\\rule-tests\\vars2.c"//,
+//				"-oracle",  "D:\\eclipse_xtc_test\\test-oracle\\",
+//				"-include", "D:\\eclipse_xtc_test\\test-headers\\"
 			]
 			if (!Settings::init(testargs)) throw new Exception("Settings initialization error.");
 			
@@ -119,7 +120,7 @@ class Reconfigurator {
 			preprocessor = new Preprocessor
 			Reconfigurator::transformedFeaturemap = preprocessor.mapFeatureAndTransformedFeatureNames
 			
-			reconfigure(Settings::sourceFile, [String f | new Test3(f)])
+			reconfigure(Settings::sourceFile, [String f | new Test4(f)])
 			
 			println('''writing file     .«Settings::reconfigFile.path.relativeTo(Settings::targetFile.path)»''')
 			preprocessor.writeReconfig(Settings::reconfigFile.path)
