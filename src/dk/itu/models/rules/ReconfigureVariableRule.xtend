@@ -97,7 +97,7 @@ class ReconfigureVariableRule extends ScopingRule {
 //			println(''':> «node.get(0) as PresenceCondition»''')
 //			println(''':> «node.presenceCondition.and(node.get(0) as PresenceCondition)»''')
 //			println
-			tdn.register(new RewriteVariableUseRule(localVariableScopes, presenceCondition, pcidmap))
+			tdn.register(new RewriteVariableUseRule(localVariableScopes, presenceCondition, pcidmap, variableName, newName))
 			val newNode = tdn.transform(node.get(1)) as GNode
 			
 			// Return the new Declaration without the surrounding Conditional.

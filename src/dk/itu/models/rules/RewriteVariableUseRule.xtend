@@ -21,11 +21,40 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 	
 	protected val PresenceCondition externalGuard
 	
-	new (ArrayList<SimpleEntry<GNode,HashMap<String, List<PresenceCondition>>>> localVariableScopes, PresenceCondition externalGuard, HashMap<PresenceCondition, String> pcidmap) {
+	// In case we rename variables in a Declaration Assignment
+	// the currenttly declared variable does not refer to previous scopes.
+	// int a = a;   is equivalent to   int a;
+	//                                 a = a;
+	// Therefore it should only be replaced with its new name.
+	protected val String currentDeclarationOldName
+	protected val String currentDeclarationNewName
+	
+	new (
+		ArrayList<SimpleEntry<GNode,HashMap<String, List<PresenceCondition>>>> localVariableScopes,
+		PresenceCondition externalGuard,
+		HashMap<PresenceCondition, String> pcidmap
+	) {
 		super()
 		this.localVariableScopes = localVariableScopes
 		this.externalGuard = externalGuard
 		this.pcidmap = pcidmap
+		this.currentDeclarationOldName = ""
+		this.currentDeclarationNewName = ""
+	}
+	
+	new (
+		ArrayList<SimpleEntry<GNode,HashMap<String, List<PresenceCondition>>>> localVariableScopes,
+		PresenceCondition externalGuard,
+		HashMap<PresenceCondition, String> pcidmap,
+		String currentDeclarationOldName,
+		String currentDeclarationNewName
+	) {
+		super()
+		this.localVariableScopes = localVariableScopes
+		this.externalGuard = externalGuard
+		this.pcidmap = pcidmap
+		this.currentDeclarationOldName = currentDeclarationOldName
+		this.currentDeclarationNewName = currentDeclarationNewName
 	}
 	
 	protected def variableExists(String name) {
@@ -158,16 +187,20 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 	
 	override dispatch Object transform(GNode node) {
 		if (node.name.equals("PrimaryIdentifier")
+			&& (node.get(0) as Language<CTag>).toString.equals(currentDeclarationOldName)
+		) {
+			return GNode::create("PrimaryIdentifier", new Text(CTag.IDENTIFIER, currentDeclarationNewName));
+		} else if (node.name.equals("PrimaryIdentifier")
 			&& variableExists((node.get(0) as Language<CTag>).toString)
 		) {
 			var varname = (node.get(0) as Language<CTag>).toString
-			println
-			println('''::> «varname» («ancestors.head.printCode»)''')
-			println('''contains: «variableExists((node.get(0) as Language<CTag>).toString)»''')
-			println('''externalGuard: «externalGuard.PCtoCPPexp»''')
+//			println
+//			println('''::> «varname» («ancestors.head.printCode»)''')
+//			println('''contains: «variableExists((node.get(0) as Language<CTag>).toString)»''')
+//			println('''externalGuard: «externalGuard.PCtoCPPexp»''')
 			val newExp = buildExp((node.get(0) as Language<CTag>).toString)
 			if (newExp != null) {
-				println('''newExp: «newExp.printCode»''')
+//				println('''newExp: «newExp.printCode»''')
 				return newExp
 			}
 		} else if (node.name.equals("AssignmentExpression")) {
