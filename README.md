@@ -25,6 +25,8 @@ This README would normally document whatever steps are necessary to get your app
 
 ### Who do I talk to? ###
 
-* Repo admins:
-** gdf
++ Repo admins:
+  * Alex Lazar
+  * Jean Melo
+  * (modelsteam:administrators)
 * Other community or team contact
