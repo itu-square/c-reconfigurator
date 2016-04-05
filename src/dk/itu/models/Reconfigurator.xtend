@@ -2,7 +2,7 @@ package dk.itu.models
 
 import dk.itu.models.preprocessor.Preprocessor
 import dk.itu.models.tests.Test
-import dk.itu.models.tests.Test3
+import dk.itu.models.tests.Test5
 import java.io.File
 import java.util.ArrayList
 import java.util.Map
@@ -72,13 +72,19 @@ class Reconfigurator {
 				preprocessor.runFile(currentFile.path).toString.writeToFile(currentTargetPath)
 				test.apply(currentTargetPath).run
 				
-				var sum_console = Settings::consoleBAOS.toString
-				var sum_parse = if (sum_console.contains("error: parse error")) "PARSE_ERR" else ( if (sum_console.contains("Exception")) "EXCEPTION" else "PARSE_OK ")
+				val sum_console = Settings::consoleBAOS.toString
+				val sum_parse =
+					if (sum_console.contains("error: parse error")) " ERR   "
+					else ( if (sum_console.contains("Exception")) " EXCPT "
+					else " OK    ")
+				val sum_check1 =
+					if (sum_console.contains("check: ContainsIf1")) " #if1  "
+					else "       "
 				var sum_result = if (sum_console.contains("result: #if")) "#if" else "   "
 				var sum_oracle = if (sum_console.contains("oracle: pass")) "Opass"
 					else if (sum_console.contains("oracle: fail")) "Ofail"
 					else "     "
-				summaryln('''«sum_parse» «sum_result» «sum_oracle» .«currentRelativePath»''')
+				summaryln('''|«sum_parse»|«sum_check1»|«sum_result» «sum_oracle» .«currentRelativePath»''')
 			}
 			else {
 				println('''ignoring file    .«currentRelativePath»''')
@@ -95,15 +101,33 @@ class Reconfigurator {
 		println
 		
 		try {
-//			if (!Settings::init(args)) throw new Exception("Settings initialization error.");
+			var actualArgs = args
+			
+//			actualArgs = #[
+//				"-source",  "D:\\eclipse_xtc_test\\test-source\\rule-tests\\vars2.c",
+//				"-target",  "D:\\eclipse_xtc_test\\test-target\\rule-tests\\vars2.c"
+//			]
+//			val (String)=>Test test = [String f | new Test4(f)]
+			
+			
+			
+//			actualArgs = #[
+//				"-source",  "D:\\repos\\reconfigurator-vbdb\\linux\\simple\\0dc77b6.c",
+//				"-target",  "D:\\repos\\reconfigurator-vbdb\\linux\\simple-target\\0dc77b6.c"
+//			]
+//			val (String)=>Test test = [String f | new Test5(f)]
 	
-			val String[] testargs = #[
-				"-source",  "D:\\eclipse_xtc_test\\test-source\\rule-tests\\vars2.c",
-				"-target",  "D:\\eclipse_xtc_test\\test-target\\rule-tests\\vars2.c"//,
-//				"-oracle",  "D:\\eclipse_xtc_test\\test-oracle\\",
-//				"-include", "D:\\eclipse_xtc_test\\test-headers\\"
+	
+	
+			actualArgs = #[
+				"-source",  "D:\\repos\\reconfigurator-vbdb\\testfiles\\variable\\8.c",
+				"-target",  "D:\\repos\\reconfigurator-vbdb\\testfiles-target\\variable\\8.c"
 			]
-			if (!Settings::init(testargs)) throw new Exception("Settings initialization error.");
+			val (String)=>Test test = [String f | new Test5(f)]
+	
+			
+			
+			if (!Settings::init(actualArgs)) throw new Exception("Settings initialization error.");
 			
 			if (Settings::targetFile.isDirectory) {
 				FileUtils.deleteDirectory(Settings::targetFile)
@@ -118,9 +142,13 @@ class Reconfigurator {
 			}
 			
 			preprocessor = new Preprocessor
-			Reconfigurator::transformedFeaturemap = preprocessor.mapFeatureAndTransformedFeatureNames
+			transformedFeaturemap = preprocessor.mapFeatureAndTransformedFeatureNames
 			
-			reconfigure(Settings::sourceFile, [String f | new Test4(f)])
+			summaryln('''----------------------------------------------------------------''')
+			summaryln('''| PARSE | CHEK1 |-----------------------------------------------''')
+			summaryln('''----------------------------------------------------------------''')
+			reconfigure(Settings::sourceFile, test)
+			summaryln('''----------------------------------------------------------------''')
 			
 			println('''writing file     .«Settings::reconfigFile.path.relativeTo(Settings::targetFile.path)»''')
 			preprocessor.writeReconfig(Settings::reconfigFile.path)
@@ -133,12 +161,13 @@ class Reconfigurator {
 		
 		
 		flushConsole
-		Settings::summaryBAOS.toString.writeToFile(Settings.summaryFile.path)
 		
 		Settings::systemOutPS.append(Settings::consoleBAOS.toString)
 		Settings::systemOutPS.flush
 		
-		
+		Settings::summaryBAOS.toString.writeToFile(Settings.summaryFile.path)
+		Settings::systemOutPS.append(Settings::summaryBAOS.toString)
+		Settings::systemOutPS.flush
 	}
 
 }

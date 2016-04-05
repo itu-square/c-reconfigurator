@@ -37,6 +37,8 @@ class PrintCode extends PrintMethod {
 			output.println
 
 		if (ancestors.last.head == condition) {
+			if (!last_line.startsWith("#"))
+				output.println
 			output.println('''«indent»#if «CPPexp»''')
 			last_line = '''#if «CPPexp»'''
 		} else {
@@ -52,7 +54,7 @@ class PrintCode extends PrintMethod {
 	}
 
 	static def private dispatch void t(Language<CTag> language) {
-
+		
 		if (language.toString.equals("}"))
 			indent = indent.substring(4)
 
@@ -66,7 +68,7 @@ class PrintCode extends PrintMethod {
 		}
 
 		if (last_line.startsWith("#") || last_C_line.endsWith(";") || last_C_line.endsWith("{") ||
-			last_C_line.endsWith("}"))
+			last_C_line.endsWith("}") || language.toString.equals("{"))
 			output.print(indent)
 
 		if (firstToken || language.toString.equals(";") || language.toString.equals(")") || last_C_line.endsWith("(") ||
@@ -76,6 +78,10 @@ class PrintCode extends PrintMethod {
 		} else {
 			output.print(" ")
 			last_C_line += " "
+		}
+		
+		if (last_C_line.endsWith("}") && !last_line.startsWith("#")) {
+			output.println
 		}
 
 		output.print(language.toString)
@@ -106,6 +112,8 @@ class PrintCode extends PrintMethod {
 				output.println
 			output.println('''«indent»#endif''')
 			last_line = "#"
+			if (last_C_line.endsWith("}") || last_C_line.endsWith(";"))
+				output.println
 		}
 	}
 }

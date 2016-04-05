@@ -7,7 +7,7 @@ import xtc.tree.GNode
 import xtc.util.Pair
 import static extension dk.itu.models.Extensions.*
 
-class RemSequentialMutexConditionalRule extends Rule {
+class MergeSequentialMutexConditionalRule extends Rule {
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
 		cond
 	}

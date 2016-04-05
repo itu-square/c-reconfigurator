@@ -1,15 +1,15 @@
 package dk.itu.models.tests
 
-import xtc.tree.Node
-import dk.itu.models.strategies.TopDownStrategy
-import dk.itu.models.rules.ReconfigureVariableRule
 import dk.itu.models.Settings
-import dk.itu.models.rules.RemOneRule
-import dk.itu.models.rules.RemExtraRule
-import dk.itu.models.rules.RemSequentialMutexConditionalRule
-import dk.itu.models.rules.SplitConditionalRule
 import dk.itu.models.rules.ConditionPushDownRule
 import dk.itu.models.rules.ConstrainNestedConditionalsRule
+import dk.itu.models.rules.ExtractInitializerRule
+import dk.itu.models.rules.MergeSequentialMutexConditionalRule
+import dk.itu.models.rules.RemExtraRule
+import dk.itu.models.rules.RemOneRule
+import dk.itu.models.rules.SplitConditionalRule
+import dk.itu.models.strategies.TopDownStrategy
+import xtc.tree.Node
 
 class Test4 extends Test {
 	
@@ -27,7 +27,7 @@ class Test4 extends Test {
 		val tdn0 = new TopDownStrategy
 		tdn0.register(new RemOneRule)
 		tdn0.register(new RemExtraRule)
-		tdn0.register(new RemSequentialMutexConditionalRule)
+		tdn0.register(new MergeSequentialMutexConditionalRule)
 		tdn0.register(new ConstrainNestedConditionalsRule)
 		tdn0.register(new SplitConditionalRule)
 		tdn0.register(new ConditionPushDownRule)
@@ -42,7 +42,8 @@ class Test4 extends Test {
 		
 		
 		val tdn = new TopDownStrategy
-		tdn.register(new ReconfigureVariableRule)
+//		tdn.register(new ReconfigureVariableRule)
+		tdn.register(new ExtractInitializerRule)
 		
 		
 		var Node varReconfigured = tdn.transform(normalized) as Node

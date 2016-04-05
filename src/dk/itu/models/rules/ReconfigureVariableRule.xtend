@@ -37,45 +37,33 @@ class ReconfigureVariableRule extends ScopingRule {
 		pair
 	}
 	
-	def debug(GNode node) {
-			println
-			println('''---- «node.name» ----------------------------------------------------''')
-			print(node.printCode)
-			println("-----------")
-			localVariableScopes.forEach[ scope |
-				println(''':> «scope.key.name»:''')
-				scope.value.forEach[ variable, pcs |
-					println('''   «variable»(«pcs.size»): ''')
-					pcs.forEach[pc | println('''      «pc»''')] ] ]
-			println
-	}
-
 	override dispatch Object transform(GNode node) {
 		
 		// Update the variable scopes and declarations.
 		(this as ScopingRule).transform(node)
-		
+
 		// Visit a variable Declaration under a Conditional.
 		if	(  node.name.equals("Conditional")						// current GNode is a Conditional
 			&& node.size == 2										// has 2 children (1st is a PresenceCondition)
 			&& node.get(1) instanceof GNode
 			&& (node.get(1) as GNode).name.equals("Declaration")	// 2nd child is a variable Declaration
 		) {
-//			debug(node)
+			println
+			println("-----------------")
+			println(node.printAST)
 			
 			val presenceCondition = node.presenceCondition.and(node.get(0) as PresenceCondition)
-			
 			
 			// Put the current PresenceCondition into the PC-ID map (if it does not already exist)
 			// and assign a new number ID to it.
 			pcidmap.put_pcid(presenceCondition, pcidmap.size.toString)
-			
 			
 			val declaration = node.get(1) as GNode
 			val declaringList = declaration.get(0) as GNode
 			val simpleDeclarator = declaringList.filter(GNode).findFirst[name.equals("SimpleDeclarator")]
 			val variableName = simpleDeclarator.get(0).toString
 			val newName = variableName + "_V" + pcidmap.get_id(presenceCondition)
+			println(''':> «variableName» -> «newName»''')
 			
 			// Add the variable in the declaration to the variable scope
 			// because this Declaration node hasn't been visited yet.
@@ -93,11 +81,7 @@ class ReconfigureVariableRule extends ScopingRule {
 			val tdn = new TopDownStrategy
 			tdn.register(new RenameVariableRule(newName))
 //			println(''':> «variableName»''')
-//			println(''':> «node.presenceCondition»''')
-//			println(''':> «node.get(0) as PresenceCondition»''')
-//			println(''':> «node.presenceCondition.and(node.get(0) as PresenceCondition)»''')
-//			println
-			tdn.register(new RewriteVariableUseRule(localVariableScopes, presenceCondition, pcidmap, variableName, newName))
+//			tdn.register(new RewriteVariableUseRule(localVariableScopes, presenceCondition, pcidmap, variableName, newName))
 			val newNode = tdn.transform(node.get(1)) as GNode
 			
 			// Return the new Declaration without the surrounding Conditional.
@@ -105,24 +89,23 @@ class ReconfigureVariableRule extends ScopingRule {
 		} else if(#["ExpressionStatement"]
 			.contains(node.name)
 		) {
-			debug(node)
 			
 			val tdn = new TopDownStrategy
 			tdn.register(new RewriteVariableUseRule(localVariableScopes, node.guard, pcidmap))
 			val newNode = tdn.transform(node) as GNode
 
-//			println("newn:> " + newNode.get(1).printCode)
 			
 			return newNode
-//		} else if(!#["TranslationUnit", "ExternalDeclarationList", "DeclaringList",
-//			"SimpleDeclarator"]
-//			.contains(node.name)
-//		) {
-//			println('''unhandled: ReconfigureVariableRule of «node.name»''')
+////		} else if(!#["TranslationUnit", "ExternalDeclarationList", "DeclaringList",
+////			"SimpleDeclarator"]
+////			.contains(node.name)
+////		) {
+////			println('''unhandled: ReconfigureVariableRule of «node.name»''')
+////			node
+//		} else {
 //			node
-		} else {
-			node
 		}
+		node
 	}
 
 }

@@ -84,18 +84,18 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		}
 		
 		if (
-			node.name.equals("Declaration")// &&
-//			ancestors.exists[name.equals("FunctionDefinition")]
+			node.name.equals("Declaration") &&
+			(node.get(0) as GNode).name.equals("DeclaringList")
 		) {
 			val declaringList = node.get(0) as GNode
 			val simpleDeclarator = declaringList.filter(GNode).findFirst[name.equals("SimpleDeclarator")]
 			val variableName = simpleDeclarator.get(0) as Language<CTag>
 //			println('''===> «variableName» («variableName.hasProperty("reconfiguratorVariable")»)''')
-			if (!variableName.hasProperty("reconfiguratorVariable") ||
-				!variableName.getBooleanProperty("reconfiguratorVariable")
-			) {
+//			if (!variableName.hasProperty("reconfiguratorVariable") ||
+//				!variableName.getBooleanProperty("reconfiguratorVariable")
+//			) {
 				addVariable(variableName.toString)
-			}
+//			}
 		}
 		
 //		println("srnode")

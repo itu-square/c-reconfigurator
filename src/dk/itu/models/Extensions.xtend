@@ -23,6 +23,7 @@ import xtc.tree.Node
 import xtc.util.Pair
 
 import static dk.itu.models.Extensions.*
+import dk.itu.models.checks.CheckContainsIf1
 
 class Extensions {
 	public static def String folder(String filePath) {
@@ -78,6 +79,18 @@ class Extensions {
 	
 	public static def void summaryln() {
 		Settings::summaryPS.print("\n")
+	}
+	
+	public static def void debug(Object o) {
+		if (Settings::DEBUG) print(o)
+	}
+	
+	public static def void debugln(Object o) {
+		if (Settings::DEBUG) print(o + "\n")
+	}
+	
+	public static def void debugln() {
+		if (Settings::DEBUG) print("\n")
 	}
 	
 	public static def printCode(Object o) {
@@ -203,6 +216,10 @@ class Extensions {
 	
 	public static def boolean containsConditional(Node node) {
 		ContainsConditional::containsConditional(node)
+	}
+	
+	public static def boolean checkContainsIf1(Node node) {
+		CheckContainsIf1::check(node)
 	}
 	
 	public static def String PCtoMexp(PresenceCondition cond, HashMap<String, String> varMap) {

@@ -9,6 +9,8 @@ import static extension dk.itu.models.Extensions.*
 
 class Settings {
 	
+	static public val boolean DEBUG = true
+	
 	static public var File sourceFile
 	static public var File targetFile
 	static public var File oracleFile
