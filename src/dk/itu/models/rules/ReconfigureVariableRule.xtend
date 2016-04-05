@@ -9,6 +9,7 @@ import xtc.tree.GNode
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
+import dk.itu.models.Settings
 
 class ReconfigureVariableRule extends ScopingRule {
 	
@@ -38,7 +39,7 @@ class ReconfigureVariableRule extends ScopingRule {
 	}
 	
 	override dispatch Object transform(GNode node) {
-		
+		Settings::DEBUG = false
 		// Update the variable scopes and declarations.
 		(this as ScopingRule).transform(node)
 
@@ -48,9 +49,9 @@ class ReconfigureVariableRule extends ScopingRule {
 			&& node.get(1) instanceof GNode
 			&& (node.get(1) as GNode).name.equals("Declaration")	// 2nd child is a variable Declaration
 		) {
-			println
-			println("-----------------")
-			println(node.printAST)
+			debugln
+			debugln("-----------------")
+			debugln(node.printAST)
 			
 			val presenceCondition = node.presenceCondition.and(node.get(0) as PresenceCondition)
 			
@@ -63,7 +64,7 @@ class ReconfigureVariableRule extends ScopingRule {
 			val simpleDeclarator = declaringList.filter(GNode).findFirst[name.equals("SimpleDeclarator")]
 			val variableName = simpleDeclarator.get(0).toString
 			val newName = variableName + "_V" + pcidmap.get_id(presenceCondition)
-			println(''':> «variableName» -> «newName»''')
+			debugln(''':> «variableName» -> «newName»''')
 			
 			// Add the variable in the declaration to the variable scope
 			// because this Declaration node hasn't been visited yet.

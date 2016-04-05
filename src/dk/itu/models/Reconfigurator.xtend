@@ -58,13 +58,21 @@ class Reconfigurator {
 			if (!targetDir.exists) {
 				println('''making directory .«currentRelativePath»''')
 				targetDir.mkdirs
-				summaryln('''md                  .«currentRelativePath»''')
+				summaryln('''| md    |       |       |      | .«currentRelativePath»''')
 			}
 			currentFile.listFiles.filter[isFile].forEach[reconfigure(test)]
 			currentFile.listFiles.filter[isDirectory].forEach[reconfigure(test)]
 		}
 		else {
-			if(currentFile.path.endsWith(".c") || currentFile.path.endsWith(".h")) {
+			var File oracle = null
+			if(Settings::oracleFile != null) {
+				oracle = new File(currentFile.path.replace(Settings::sourceFile.path, Settings::oracleFile.path) + ".ast")
+			}
+			if (
+				(!Settings::oracleOnly || oracle != null && oracle.exists)
+				&& (currentFile.path.endsWith(".c") || currentFile.path.endsWith(".h"))
+			) {
+				println
 				println('''processing file  .«currentRelativePath»''')
 				flushConsole
 				Settings::consolePS.flush
@@ -80,16 +88,17 @@ class Reconfigurator {
 				val sum_check1 =
 					if (sum_console.contains("check: ContainsIf1")) " #if1  "
 					else "       "
-				var sum_result = if (sum_console.contains("result: #if")) "#if" else "   "
-				var sum_oracle = if (sum_console.contains("oracle: pass")) "Opass"
-					else if (sum_console.contains("oracle: fail")) "Ofail"
-					else "     "
-				summaryln('''|«sum_parse»|«sum_check1»|«sum_result» «sum_oracle» .«currentRelativePath»''')
+				var sum_result = if (sum_console.contains("result: #if")) " #if  " else "      "
+				var sum_oracle = if (sum_console.contains("oracle: pass")) " Opass "
+					else if (sum_console.contains("oracle: fail")) " Ofail "
+					else " O-    "
+				summaryln('''|«sum_parse»|«sum_check1»|«sum_oracle»|«sum_result»| .«currentRelativePath»''')
 			}
 			else {
+				println
 				println('''ignoring file    .«currentRelativePath»''')
 				//FileUtils.copyFile(file, new File(targetPath))
-				summaryln('''ig                .«currentRelativePath»''')
+				summaryln('''| ig    |       |       |      | .«currentRelativePath»''')
 			}
 		}
 	}
@@ -119,9 +128,20 @@ class Reconfigurator {
 	
 	
 	
+//			actualArgs = #[
+//				"-source",  "D:\\repos\\reconfigurator-vbdb\\testfiles\\variable\\variable_condition_2.c",
+//				"-target",  "D:\\repos\\reconfigurator-vbdb\\testfiles-target\\variable\\variable_condition_2.c"//,
+////				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\testfiles-oracle\\variable\\8.c"
+//			]
+//			val (String)=>Test test = [String f | new Test5(f)]
+			
+			
+			
 			actualArgs = #[
-				"-source",  "D:\\repos\\reconfigurator-vbdb\\testfiles\\variable\\8.c",
-				"-target",  "D:\\repos\\reconfigurator-vbdb\\testfiles-target\\variable\\8.c"
+				"-source",  "D:\\repos\\reconfigurator-vbdb\\testfiles\\variable\\",
+				"-target",  "D:\\repos\\reconfigurator-vbdb\\testfiles-target\\variable\\",
+				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\testfiles-oracle\\variable\\",
+				"-oracleOnly"
 			]
 			val (String)=>Test test = [String f | new Test5(f)]
 	
@@ -145,7 +165,7 @@ class Reconfigurator {
 			transformedFeaturemap = preprocessor.mapFeatureAndTransformedFeatureNames
 			
 			summaryln('''----------------------------------------------------------------''')
-			summaryln('''| PARSE | CHEK1 |-----------------------------------------------''')
+			summaryln('''| PARSE | CHEK1 | ORACL | #IFS | FILE --------------------------''')
 			summaryln('''----------------------------------------------------------------''')
 			reconfigure(Settings::sourceFile, test)
 			summaryln('''----------------------------------------------------------------''')

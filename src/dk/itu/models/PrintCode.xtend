@@ -71,7 +71,8 @@ class PrintCode extends PrintMethod {
 			last_C_line.endsWith("}") || language.toString.equals("{"))
 			output.print(indent)
 
-		if (firstToken || language.toString.equals(";") || language.toString.equals(")") || last_C_line.endsWith("(") ||
+		if (firstToken || language.toString.equals(";") || language.toString.equals(")") || language.toString.equals("++")
+			|| last_C_line.endsWith("(") ||
 			last_C_line.endsWith(";") || language.toString.equals("{") || last_C_line.endsWith("{") ||
 			language.toString.equals("}") || last_C_line.endsWith("}") || last_C_line.endsWith("!")) {
 			firstToken = false
@@ -80,15 +81,15 @@ class PrintCode extends PrintMethod {
 			last_C_line += " "
 		}
 		
-		if (last_C_line.endsWith("}") && !last_line.startsWith("#")) {
-			output.println
-		}
+//		if (last_C_line.endsWith("}") && !last_line.startsWith("#")) {
+//			output.println
+//		}
 
 		output.print(language.toString)
 		if (last_C_line.endsWith(";") || last_C_line.endsWith("{") || last_C_line.endsWith("}"))
 			last_C_line = language.toString
 		else
-			last_C_line += language
+			last_C_line += language.toString
 
 		last_line = last_C_line
 

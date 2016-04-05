@@ -11,6 +11,9 @@ import dk.itu.models.rules.MergeSequentialMutexConditionalRule
 import static extension dk.itu.models.Extensions.*
 import dk.itu.models.Settings
 import dk.itu.models.rules.ReconfigureVariableRule
+import java.io.File
+import dk.itu.models.rules.SplitConditionalRule
+import dk.itu.models.rules.RemZeroRule
 
 class Test5 extends Test {
 	
@@ -28,6 +31,8 @@ class Test5 extends Test {
 		
 		val tdn1 = new TopDownStrategy
 		tdn1.register(new RemOneRule)
+		tdn1.register(new RemZeroRule)
+		tdn1.register(new SplitConditionalRule)
 		tdn1.register(new ConstrainNestedConditionalsRule)
 		tdn1.register(new ConditionPushDownRule)
 		tdn1.register(new MergeSequentialMutexConditionalRule)
@@ -57,6 +62,19 @@ class Test5 extends Test {
 		var Node varReconfigured = tdn.transform(normalized2) as Node
 		writeToFile('''#include "«Settings::reconfigFile»"«"\n" + varReconfigured.printCode»''', file)
 		writeToFile(varReconfigured.printAST, file + ".ast")
+		
+		// check #if elimination
+		println('''result: «IF varReconfigured.containsConditional»#if«ELSE»   «ENDIF»''')
+
+		// check oracle
+		if(Settings::oracleFile != null) {
+			val oracle = file.replace(Settings::targetFile.path, Settings::oracleFile.path) + ".ast"
+			if((new File(oracle)).exists)
+				if(varReconfigured.printAST.equals(readFile(oracle)))
+					println("oracle: pass")
+				else
+					println("oracle: fail")
+		}
 	}
 	
 }

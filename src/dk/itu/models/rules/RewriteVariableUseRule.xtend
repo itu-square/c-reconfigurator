@@ -14,6 +14,7 @@ import xtc.lang.cpp.Syntax.Text
 import dk.itu.models.Reconfigurator
 import net.sf.javabdd.BDD
 import dk.itu.models.strategies.TopDownStrategy
+import dk.itu.models.Settings
 
 class RewriteVariableUseRule extends AncestorGuaranteedRule {
 	
@@ -218,6 +219,7 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 	}
 	
 	override dispatch Object transform(GNode node) {
+		Settings::DEBUG = false
 		
 		if (
 			node.name.equals("PrimaryIdentifier")

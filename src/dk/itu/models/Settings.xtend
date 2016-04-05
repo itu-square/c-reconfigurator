@@ -9,7 +9,9 @@ import static extension dk.itu.models.Extensions.*
 
 class Settings {
 	
-	static public val boolean DEBUG = true
+	static public var boolean DEBUG = true
+	
+	static public var boolean oracleOnly = false
 	
 	static public var File sourceFile
 	static public var File targetFile
@@ -57,6 +59,8 @@ class Settings {
 				case "-include":
 					if(args.indexOf(it) < args.size-1) { includeFiles.add(new File(args.get(args.indexOf(it)+1))); return true }
 					else {println("-include argument has no value."); return false}
+				case "-oracleOnly":
+					oracleOnly = true
 				default:
 					return true }]
 		
