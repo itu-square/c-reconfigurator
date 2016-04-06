@@ -58,7 +58,7 @@ class Reconfigurator {
 			if (!targetDir.exists) {
 				println('''making directory .«currentRelativePath»''')
 				targetDir.mkdirs
-				summaryln('''| md    |       |       |      | .«currentRelativePath»''')
+				summaryln('''| md    |       |       |       | .«currentRelativePath»''')
 			}
 			currentFile.listFiles.filter[isFile].forEach[reconfigure(test)]
 			currentFile.listFiles.filter[isDirectory].forEach[reconfigure(test)]
@@ -83,22 +83,27 @@ class Reconfigurator {
 				val sum_console = Settings::consoleBAOS.toString
 				val sum_parse =
 					if (sum_console.contains("error: parse error")) " ERR   "
-					else ( if (sum_console.contains("Exception")) " EXCPT "
-					else " OK    ")
+					else ( if (sum_console.contains("Exception")) 	" EXCPT "
+					else 											" OK    ")
 				val sum_check1 =
 					if (sum_console.contains("check: ContainsIf1")) " #if1  "
-					else "       "
-				var sum_result = if (sum_console.contains("result: #if")) " #if  " else "      "
-				var sum_oracle = if (sum_console.contains("oracle: pass")) " Opass "
-					else if (sum_console.contains("oracle: fail")) " Ofail "
-					else " O-    "
+					else 											"       "
+				var sum_result =
+					if (sum_console.contains("result: #if")) 			"   #if "
+					else (if (sum_console.contains("result: no#if")) 	" no#if "
+					else 												"   -   ")
+					
+				var sum_oracle =
+					if (sum_console.contains("oracle: pass")) 			" Opass "
+					else (if (sum_console.contains("oracle: fail")) 	" Ofail "
+					else 												" O-    ")
 				summaryln('''|«sum_parse»|«sum_check1»|«sum_oracle»|«sum_result»| .«currentRelativePath»''')
 			}
 			else {
 				println
 				println('''ignoring file    .«currentRelativePath»''')
 				//FileUtils.copyFile(file, new File(targetPath))
-				summaryln('''| ig    |       |       |      | .«currentRelativePath»''')
+				summaryln('''| ig    |       |       |       | .«currentRelativePath»''')
 			}
 		}
 	}
@@ -129,19 +134,19 @@ class Reconfigurator {
 	
 	
 //			actualArgs = #[
-//				"-source",  "D:\\repos\\reconfigurator-vbdb\\testfiles\\variable\\variable_condition_2.c",
-//				"-target",  "D:\\repos\\reconfigurator-vbdb\\testfiles-target\\variable\\variable_condition_2.c"//,
-////				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\testfiles-oracle\\variable\\8.c"
+//				"-source",  "D:\\repos\\reconfigurator-vbdb\\testfiles\\variables\\scope_1.c",
+//				"-target",  "D:\\repos\\reconfigurator-vbdb\\testfiles-target\\variables\\scope_1.c",
+//				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\testfiles-oracle\\variables\\scope_1.c"
 //			]
 //			val (String)=>Test test = [String f | new Test5(f)]
 			
 			
 			
 			actualArgs = #[
-				"-source",  "D:\\repos\\reconfigurator-vbdb\\testfiles\\variable\\",
-				"-target",  "D:\\repos\\reconfigurator-vbdb\\testfiles-target\\variable\\",
-				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\testfiles-oracle\\variable\\",
-				"-oracleOnly"
+				"-source",  "D:\\repos\\reconfigurator-vbdb\\testfiles\\variables\\",
+				"-target",  "D:\\repos\\reconfigurator-vbdb\\testfiles-target\\variables\\",
+				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\testfiles-oracle\\variables\\"//,
+//				"-oracleOnly"
 			]
 			val (String)=>Test test = [String f | new Test5(f)]
 	
