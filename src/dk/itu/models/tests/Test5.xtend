@@ -15,6 +15,7 @@ import xtc.tree.Node
 
 import static extension dk.itu.models.Extensions.*
 import dk.itu.models.rules.normalize.OptimizeAssignmentExpressionRule
+import dk.itu.models.rules.NormalizeRule
 
 class Test5 extends Test {
 	
@@ -31,24 +32,25 @@ class Test5 extends Test {
 		println("PHASE 1 - Normalize")
 		var Node normalized = node
 		
-//		val tdn0 = new TopDownStrategy
-//		normalized = tdn0.transform(normalized) as Node
+		val tdn0 = new TopDownStrategy
+		tdn0.register(new NormalizeRule)
+		normalized = tdn0.transform(normalized) as Node
 		
-		val tdn1 = new TopDownStrategy
-		tdn1.register(new RemOneRule)
-		tdn1.register(new RemZeroRule)
-		tdn1.register(new SplitConditionalRule)
-		tdn1.register(new ConstrainNestedConditionalsRule)
-		tdn1.register(new ConditionPushDownRule)
-		tdn1.register(new MergeSequentialMutexConditionalRule)
-		normalized = tdn1.transform(normalized) as Node
+//		val tdn1 = new TopDownStrategy
+//		tdn1.register(new RemOneRule)
+//		tdn1.register(new RemZeroRule)
+//		tdn1.register(new SplitConditionalRule)
+//		tdn1.register(new ConstrainNestedConditionalsRule)
+//		tdn1.register(new ConditionPushDownRule)
+//		tdn1.register(new MergeSequentialMutexConditionalRule)
+//		normalized = tdn1.transform(normalized) as Node
 		
 		if(normalized.checkContainsIf1) return;
 		
-		val tdn2 = new TopDownStrategy
-		tdn2.register(new MergeConditionalsRule)
-		tdn2.register(new OptimizeAssignmentExpressionRule)
-		normalized = tdn2.transform(normalized) as Node
+//		val tdn2 = new TopDownStrategy
+//		tdn2.register(new MergeConditionalsRule)
+//		tdn2.register(new OptimizeAssignmentExpressionRule)
+//		normalized = tdn2.transform(normalized) as Node
 		
 		writeToFile(normalized.printCode, file)
 		writeToFile(normalized.printAST, file + ".ast")
