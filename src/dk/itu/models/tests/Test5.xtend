@@ -64,7 +64,7 @@ class Test5 extends Test {
 		writeToFile(varReconfigured.printAST, file + ".ast")
 		
 		// check #if elimination
-		println('''result: «IF varReconfigured.containsConditional»#if«ELSE»   «ENDIF»''')
+		println('''result: «IF varReconfigured.containsConditional»#if«ELSE»no#if«ENDIF»''')
 
 		// check oracle
 		if(Settings::oracleFile != null) {
