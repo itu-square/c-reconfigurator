@@ -14,6 +14,7 @@ import java.io.File
 import xtc.tree.Node
 
 import static extension dk.itu.models.Extensions.*
+import dk.itu.models.rules.normalize.OptimizeAssignmentExpressionRule
 
 class Test5 extends Test {
 	
@@ -28,6 +29,10 @@ class Test5 extends Test {
 		
 		
 		println("PHASE 1 - Normalize")
+		var Node normalized = node
+		
+//		val tdn0 = new TopDownStrategy
+//		normalized = tdn0.transform(normalized) as Node
 		
 		val tdn1 = new TopDownStrategy
 		tdn1.register(new RemOneRule)
@@ -36,20 +41,17 @@ class Test5 extends Test {
 		tdn1.register(new ConstrainNestedConditionalsRule)
 		tdn1.register(new ConditionPushDownRule)
 		tdn1.register(new MergeSequentialMutexConditionalRule)
-		
-		var Node normalized = tdn1.transform(node) as Node
-		writeToFile(normalized.printCode, file)
-		writeToFile(normalized.printAST, file + ".ast")
+		normalized = tdn1.transform(normalized) as Node
 		
 		if(normalized.checkContainsIf1) return;
 		
-//		println("PHASE 1.2 - Normalize II")
-		
 		val tdn2 = new TopDownStrategy
 		tdn2.register(new MergeConditionalsRule)
+		tdn2.register(new OptimizeAssignmentExpressionRule)
+		normalized = tdn2.transform(normalized) as Node
 		
-		var Node normalized2 = tdn2.transform(normalized) as Node
-		writeToFile(normalized2.printCode, file)
+		writeToFile(normalized.printCode, file)
+		writeToFile(normalized.printAST, file + ".ast")
 		
 		println("PHASE 2 - Reconfigure variables")
 		
@@ -59,7 +61,7 @@ class Test5 extends Test {
 //		tdn.register(new ExtractInitializerRule)
 		
 		
-		var Node varReconfigured = tdn.transform(normalized2) as Node
+		var Node varReconfigured = tdn.transform(normalized) as Node
 		writeToFile('''#include "«Settings::reconfigFile»"«"\n" + varReconfigured.printCode»''', file)
 		writeToFile(varReconfigured.printAST, file + ".ast")
 		

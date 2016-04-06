@@ -154,7 +154,7 @@ class Reconfigurator {
 			transformedFeaturemap = preprocessor.mapFeatureAndTransformedFeatureNames
 			
 			summaryln('''----------------------------------------------------------------''')
-			summaryln('''| PARSE | CHEK1 | ORACL | #IFS  | FILE --------------------------''')
+			summaryln('''| PARSE | CHEK1 | ORACL | #IFS  | FILE -------------------------''')
 			summaryln('''----------------------------------------------------------------''')
 			reconfigure(Settings::sourceFile, test)
 			summaryln('''----------------------------------------------------------------''')
