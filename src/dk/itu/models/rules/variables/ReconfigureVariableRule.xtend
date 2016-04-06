@@ -39,7 +39,6 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 	}
 	
 	override dispatch Object transform(GNode node) {
-		Settings::DEBUG = false
 		// Update the variable scopes and declarations.
 		(this as dk.itu.models.rules.ScopingRule).transform(node)
 
@@ -49,10 +48,6 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 			&& node.get(1) instanceof GNode
 			&& (node.get(1) as GNode).name.equals("Declaration")	// 2nd child is a variable Declaration
 		) {
-			debugln
-			debugln("-----------------")
-			debugln(node.printAST)
-			
 			val presenceCondition = node.presenceCondition.and(node.get(0) as PresenceCondition)
 			
 			// Put the current PresenceCondition into the PC-ID map (if it does not already exist)
@@ -64,7 +59,6 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 			val simpleDeclarator = declaringList.filter(GNode).findFirst[name.equals("SimpleDeclarator")]
 			val variableName = simpleDeclarator.get(0).toString
 			val newName = variableName + "_V" + pcidmap.get_id(presenceCondition)
-			debugln(''':> «variableName» -> «newName»''')
 			
 			// Add the variable in the declaration to the variable scope
 			// because this Declaration node hasn't been visited yet.
@@ -81,30 +75,19 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 			// rewrite variable use in the assignment expression.
 			val tdn = new TopDownStrategy
 			tdn.register(new RenameVariableRule(newName))
-//			println(''':> «variableName»''')
-//			tdn.register(new RewriteVariableUseRule(localVariableScopes, presenceCondition, pcidmap, variableName, newName))
 			val newNode = tdn.transform(node.get(1)) as GNode
 			
 			// Return the new Declaration without the surrounding Conditional.
 			return newNode
-		} else if(#["ExpressionStatement"]
+		} else if(#["ExpressionStatement", "Initializer"]
 			.contains(node.name)
 		) {
-			
 			val tdn = new TopDownStrategy
 			tdn.register(new RewriteVariableUseRule(localVariableScopes, node.guard, pcidmap))
 			val newNode = tdn.transform(node) as GNode
 
 			
 			return newNode
-////		} else if(!#["TranslationUnit", "ExternalDeclarationList", "DeclaringList",
-////			"SimpleDeclarator"]
-////			.contains(node.name)
-////		) {
-////			println('''unhandled: ReconfigureVariableRule of «node.name»''')
-////			node
-//		} else {
-//			node
 		}
 		node
 	}

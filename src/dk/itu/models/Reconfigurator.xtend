@@ -116,39 +116,23 @@ class Reconfigurator {
 		
 		try {
 			var actualArgs = args
-			
+
 //			actualArgs = #[
-//				"-source",  "D:\\eclipse_xtc_test\\test-source\\rule-tests\\vars2.c",
-//				"-target",  "D:\\eclipse_xtc_test\\test-target\\rule-tests\\vars2.c"
-//			]
-//			val (String)=>Test test = [String f | new Test4(f)]
-			
-			
-			
-//			actualArgs = #[
-//				"-source",  "D:\\repos\\reconfigurator-vbdb\\linux\\simple\\0dc77b6.c",
-//				"-target",  "D:\\repos\\reconfigurator-vbdb\\linux\\simple-target\\0dc77b6.c"
+//				"-source",  "D:\\repos\\reconfigurator-vbdb\\testfiles\\variable\\conditional_expression.c",
+//				"-target",  "D:\\repos\\reconfigurator-vbdb\\testfiles-target\\variable\\conditional_expression.c",
+//				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\testfiles-oracle\\variable\\conditional_expression.c"
 //			]
 //			val (String)=>Test test = [String f | new Test5(f)]
-	
-	
-	
+			
+			
+			
 			actualArgs = #[
-				"-source",  "D:\\repos\\reconfigurator-vbdb\\testfiles\\variables\\scope_1.c",
-				"-target",  "D:\\repos\\reconfigurator-vbdb\\testfiles-target\\variables\\scope_1.c",
-				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\testfiles-oracle\\variables\\scope_1.c"
+				"-source",  "D:\\repos\\reconfigurator-vbdb\\testfiles\\variable\\",
+				"-target",  "D:\\repos\\reconfigurator-vbdb\\testfiles-target\\variable\\",
+				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\testfiles-oracle\\variable\\"//,
+//				"-oracleOnly"
 			]
 			val (String)=>Test test = [String f | new Test5(f)]
-			
-			
-			
-//			actualArgs = #[
-//				"-source",  "D:\\repos\\reconfigurator-vbdb\\testfiles\\variables\\",
-//				"-target",  "D:\\repos\\reconfigurator-vbdb\\testfiles-target\\variables\\",
-//				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\testfiles-oracle\\variables\\"//,
-////				"-oracleOnly"
-//			]
-//			val (String)=>Test test = [String f | new Test5(f)]
 	
 			
 			

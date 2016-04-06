@@ -3,6 +3,7 @@ package dk.itu.models
 import com.google.common.collect.AbstractIterator
 import com.google.common.collect.FluentIterable
 import com.google.common.collect.UnmodifiableIterator
+import dk.itu.models.checks.CheckContainsIf1
 import java.io.BufferedReader
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -17,13 +18,14 @@ import java.util.List
 import org.eclipse.xtext.xbase.lib.Functions.Function1
 import org.eclipse.xtext.xbase.lib.Functions.Function2
 import us.cuny.qc.cs.babbage.Minimize
+import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
+import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.tree.Node
 import xtc.util.Pair
 
 import static dk.itu.models.Extensions.*
-import dk.itu.models.checks.CheckContainsIf1
 
 class Extensions {
 	public static def String folder(String filePath) {
@@ -114,6 +116,36 @@ class Extensions {
 		p
 	}
 	
+	
+	public static def boolean structurallyEquals(Pair<Object> i1, Pair<Object> i2) {
+		if (i1 == i2) return true // referential equality
+		
+		var Pair<Object> p1 = i1
+		var Pair<Object> p2 = i2
+		
+		while (!p1.isEmpty && !p2.isEmpty) {
+			
+			switch (true) {
+				case
+					p1.head instanceof PresenceCondition
+					&& p2.head instanceof PresenceCondition
+					&& !(p1.head as PresenceCondition).is(p2.head as PresenceCondition) : return false
+				case
+					p1.head instanceof Language
+					&& p2.head instanceof Language
+					&& !(p1.head as Language<CTag>).printAST.equals((p2.head as Language<CTag>).printAST) : return false
+				case
+					p1.head instanceof GNode
+					&& p2.head instanceof GNode
+					&& !(p1.head as GNode).printAST.equals((p2.head as GNode).printAST) : return false
+			}
+			
+			p1 = p1.tail
+			p2 = p2.tail
+		}
+
+    	return p1.isEmpty && p2.isEmpty
+  }
 	
 	
 	private static def <T> UnmodifiableIterator<T> filterIndexedHelper(Iterable<T> unfiltered, Function2<? super T, Integer, Boolean> predicate) {

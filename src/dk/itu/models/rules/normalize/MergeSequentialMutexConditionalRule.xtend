@@ -17,22 +17,24 @@ class MergeSequentialMutexConditionalRule extends dk.itu.models.rules.Rule {
 	}
 
 	override dispatch Pair<Object> transform(Pair<Object> pair) {
+
 		if(
-			!pair.empty &&
-			pair.size >= 2 &&
+			!pair.empty
+			&& pair.size >= 2
 			
-			(pair.head instanceof GNode) &&
-			(pair.head as GNode).name.equals("Conditional") &&
-			(pair.head as GNode).filter(PresenceCondition).size.equals(1) &&
+			&& (pair.head instanceof GNode)
+			&& (pair.head as GNode).name.equals("Conditional")
+			&& (pair.head as GNode).filter(PresenceCondition).size.equals(1)
 			
-			(pair.tail.head instanceof GNode) &&
-			(pair.tail.head as GNode).name.equals("Conditional") &&
-			(pair.tail.head as GNode).filter(PresenceCondition).size.equals(1) &&
+			&& (pair.tail.head instanceof GNode)
+			&& (pair.tail.head as GNode).name.equals("Conditional")
+			&& (pair.tail.head as GNode).filter(PresenceCondition).size.equals(1)
 			
-			(pair.head as GNode).filter(PresenceCondition).get(0)
-				.isMutuallyExclusive((pair.tail.head as GNode).filter(PresenceCondition).get(0)) &&
-			(pair.head as GNode).toPair.tail == (pair.tail.head as GNode).toPair.tail
+			&& (pair.head as GNode).filter(PresenceCondition).get(0)
+				.isMutuallyExclusive((pair.tail.head as GNode).filter(PresenceCondition).get(0))
+			&& (pair.head as GNode).toPair.tail.structurallyEquals((pair.tail.head as GNode).toPair.tail)
 		) {
+			
 			return new Pair<Object>(
 				GNode::createFromPair(
 					"Conditional",

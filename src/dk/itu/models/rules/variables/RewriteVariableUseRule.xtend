@@ -14,7 +14,6 @@ import xtc.lang.cpp.Syntax.Text
 import dk.itu.models.Reconfigurator
 import net.sf.javabdd.BDD
 import dk.itu.models.strategies.TopDownStrategy
-import dk.itu.models.Settings
 
 class RewriteVariableUseRule extends dk.itu.models.rules.AncestorGuaranteedRule {
 	
@@ -22,14 +21,6 @@ class RewriteVariableUseRule extends dk.itu.models.rules.AncestorGuaranteedRule 
 	protected val ArrayList<SimpleEntry<GNode,HashMap<String, List<PresenceCondition>>>> localVariableScopes
 	
 	protected val PresenceCondition externalGuard
-	
-//	// In case we rename variables in a Declaration Assignment
-//	// the currenttly declared variable does not refer to previous scopes.
-//	// int a = a;   is equivalent to   int a;
-//	//                                 a = a;
-//	// Therefore it should only be replaced with its new name.
-//	protected val String currentDeclarationOldName
-//	protected val String currentDeclarationNewName
 	
 	new (
 		ArrayList<SimpleEntry<GNode,HashMap<String, List<PresenceCondition>>>> localVariableScopes,
@@ -40,24 +31,7 @@ class RewriteVariableUseRule extends dk.itu.models.rules.AncestorGuaranteedRule 
 		this.localVariableScopes = localVariableScopes
 		this.externalGuard = externalGuard
 		this.pcidmap = pcidmap
-//		this.currentDeclarationOldName = ""
-//		this.currentDeclarationNewName = ""
 	}
-	
-//	new (
-//		ArrayList<SimpleEntry<GNode,HashMap<String, List<PresenceCondition>>>> localVariableScopes,
-//		PresenceCondition externalGuard,
-//		HashMap<PresenceCondition, String> pcidmap,
-//		String currentDeclarationOldName,
-//		String currentDeclarationNewName
-//	) {
-//		super()
-//		this.localVariableScopes = localVariableScopes
-//		this.externalGuard = externalGuard
-//		this.pcidmap = pcidmap
-//		this.currentDeclarationOldName = currentDeclarationOldName
-//		this.currentDeclarationNewName = currentDeclarationNewName
-//	}
 	
 	protected def variableExists(String name) {
 		localVariableScopes.exists[ scope |
@@ -69,7 +43,7 @@ class RewriteVariableUseRule extends dk.itu.models.rules.AncestorGuaranteedRule 
 		map.get(map.keySet.findFirst[is(pc)])
 	}
 	
-		// TODO: move to Extensions and minimize
+	// TODO: move to Extensions and minimize
 	def cexp(BDD bdd) {
 		val vars = Reconfigurator.presenceConditionManager.variableManager
 		
@@ -202,16 +176,10 @@ class RewriteVariableUseRule extends dk.itu.models.rules.AncestorGuaranteedRule 
 		val declarationPCs = new ArrayList<PresenceCondition>
 		
 		for (SimpleEntry<GNode,HashMap<String, List<PresenceCondition>>> scope : localVariableScopes.toList.reverseView) {
-			debugln('''| scope: «scope.value»''')
-			debugln('''|             «scope.value.containsKey(varName)»''')
 			if(scope.value.containsKey(varName)) {
 				val scopePCs = scope.value.get(varName)
 				declarationPCs.addAll(scopePCs)
 				return declarationPCs
-//				declarationPCs.addAll(scope.value.get(varName))
-//				return declarationPCs
-//			} else {
-//				for (PresenceCondition pc in scope.g)
 			}
 		}
 		
@@ -219,64 +187,26 @@ class RewriteVariableUseRule extends dk.itu.models.rules.AncestorGuaranteedRule 
 	}
 	
 	override dispatch Object transform(GNode node) {
-		Settings::DEBUG = false
-		
 		if (
 			node.name.equals("PrimaryIdentifier")
 			|| (node.name.equals("Increment")
 				&& node.filter(GNode).head.name.equals("PrimaryIdentifier")
 			)
 		) {
-			debugln
-			debugln("------------------------")
-			debugln("| RewriteVariableUseRule ")
-			debugln("------------------------")
-			debugln('''| «node.name» => «node.printCode»''')
-			
 			val varName =
 				if (node.name.equals("PrimaryIdentifier"))
 					(node.get(0) as Language<CTag>).toString
-				else if (node.name.equals("Increment")) {
-					var v1 = node.filter(GNode)
-					var v2 = node.filter(GNode).head
-					var v3 = node.filter(GNode).head.get(0)
+				else if (node.name.equals("Increment"))
 					(node.filter(GNode).head.get(0) as Language<CTag>).toString
-				}	
 			
-			debugln('''| variable name     => «varName»''')
-			debugln('''| variable local pc => «node.presenceCondition»''')
-			debugln('''| variable exrt grd => «externalGuard.PCtoCPPexp»''')
-			debugln('''| loc var scopes    => «localVariableScopes.size»''')
 			val declarationPCs = computePCs(varName, externalGuard.and(node.presenceCondition))
-			debugln('''| declarationPCs ''')
-			declarationPCs.forEach[
-				debugln('''| - «PCtoCPPexp»''')
-			]
-			
-			debugln("| Expression")
+
 			val exp = buildExp(node, varName, externalGuard.and(node.presenceCondition), declarationPCs)
-			debugln('''| «if (exp != null) exp else "NULL"»''')
-			debugln('''| «if (exp != null) exp.printCode else "NULL"»''')
 			
 			if(exp != null)
 				return exp
 			else
 				return node
-//		} else if (node.name.equals("PrimaryIdentifier")
-//			&& variableExists((node.get(0) as Language<CTag>).toString)
-//		) {
-//			var varname = (node.get(0) as Language<CTag>).toString
-////			println
-////			println('''::> «varname» («ancestors.head.printCode»)''')
-////			println('''contains: «variableExists((node.get(0) as Language<CTag>).toString)»''')
-////			println('''externalGuard: «externalGuard.PCtoCPPexp»''')
-//			val newExp = buildExp((node.get(0) as Language<CTag>).toString)
-//			if (newExp != null) {
-////				println('''newExp: «newExp.printCode»''')
-//				return newExp
-//			}
-//		} else if (node.name.equals("AssignmentExpression")) {
-//			
 		}
 		node
 	}

@@ -9,7 +9,7 @@ import static extension dk.itu.models.Extensions.*
 
 class Settings {
 	
-	static public var boolean DEBUG = true
+	static public val boolean DEBUG = true
 	
 	static public var boolean oracleOnly = false
 	
