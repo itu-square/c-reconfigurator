@@ -1,15 +1,15 @@
 package dk.itu.models.tests
 
 import dk.itu.models.Settings
-import dk.itu.models.rules.ConditionPushDownRule
 import dk.itu.models.rules.Ifdef2IfRule
-import dk.itu.models.rules.MergeSequentialMutexConditionalRule
 import dk.itu.models.rules.ReconfigureFunctionRule
-import dk.itu.models.rules.ReconfigureVariableRule
 import dk.itu.models.rules.RemExtraRule
 import dk.itu.models.rules.RemNestedMutexConditionalRule
-import dk.itu.models.rules.RemOneRule
-import dk.itu.models.rules.SplitConditionalRule
+import dk.itu.models.rules.normalize.ConditionPushDownRule
+import dk.itu.models.rules.normalize.MergeSequentialMutexConditionalRule
+import dk.itu.models.rules.normalize.RemOneRule
+import dk.itu.models.rules.normalize.SplitConditionalRule
+import dk.itu.models.rules.variables.ReconfigureVariableRule
 import dk.itu.models.strategies.TopDownStrategy
 import java.io.File
 import xtc.tree.Node

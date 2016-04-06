@@ -1,4 +1,4 @@
-package dk.itu.models.rules
+package dk.itu.models.rules.variables
 
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
@@ -7,7 +7,7 @@ import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 import xtc.util.Pair
 
-class RenameVariableRule extends AncestorGuaranteedRule {
+class RenameVariableRule extends dk.itu.models.rules.AncestorGuaranteedRule {
 	
 	val String newName
 	

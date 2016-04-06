@@ -133,22 +133,22 @@ class Reconfigurator {
 	
 	
 	
-//			actualArgs = #[
-//				"-source",  "D:\\repos\\reconfigurator-vbdb\\testfiles\\variables\\scope_1.c",
-//				"-target",  "D:\\repos\\reconfigurator-vbdb\\testfiles-target\\variables\\scope_1.c",
-//				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\testfiles-oracle\\variables\\scope_1.c"
-//			]
-//			val (String)=>Test test = [String f | new Test5(f)]
-			
-			
-			
 			actualArgs = #[
-				"-source",  "D:\\repos\\reconfigurator-vbdb\\testfiles\\variables\\",
-				"-target",  "D:\\repos\\reconfigurator-vbdb\\testfiles-target\\variables\\",
-				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\testfiles-oracle\\variables\\"//,
-//				"-oracleOnly"
+				"-source",  "D:\\repos\\reconfigurator-vbdb\\testfiles\\variables\\scope_1.c",
+				"-target",  "D:\\repos\\reconfigurator-vbdb\\testfiles-target\\variables\\scope_1.c",
+				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\testfiles-oracle\\variables\\scope_1.c"
 			]
 			val (String)=>Test test = [String f | new Test5(f)]
+			
+			
+			
+//			actualArgs = #[
+//				"-source",  "D:\\repos\\reconfigurator-vbdb\\testfiles\\variables\\",
+//				"-target",  "D:\\repos\\reconfigurator-vbdb\\testfiles-target\\variables\\",
+//				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\testfiles-oracle\\variables\\"//,
+////				"-oracleOnly"
+//			]
+//			val (String)=>Test test = [String f | new Test5(f)]
 	
 			
 			
@@ -170,7 +170,7 @@ class Reconfigurator {
 			transformedFeaturemap = preprocessor.mapFeatureAndTransformedFeatureNames
 			
 			summaryln('''----------------------------------------------------------------''')
-			summaryln('''| PARSE | CHEK1 | ORACL | #IFS | FILE --------------------------''')
+			summaryln('''| PARSE | CHEK1 | ORACL | #IFS  | FILE --------------------------''')
 			summaryln('''----------------------------------------------------------------''')
 			reconfigure(Settings::sourceFile, test)
 			summaryln('''----------------------------------------------------------------''')

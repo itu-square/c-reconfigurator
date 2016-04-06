@@ -1,4 +1,4 @@
-package dk.itu.models.rules
+package dk.itu.models.rules.normalize
 
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
@@ -7,7 +7,7 @@ import xtc.tree.GNode
 import xtc.util.Pair
 import static extension dk.itu.models.Extensions.*
 
-class MergeSequentialMutexConditionalRule extends Rule {
+class MergeSequentialMutexConditionalRule extends dk.itu.models.rules.Rule {
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
 		cond
 	}

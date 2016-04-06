@@ -1,4 +1,4 @@
-package dk.itu.models.rules
+package dk.itu.models.rules.normalize
 
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
@@ -9,7 +9,7 @@ import xtc.util.Pair
 import static extension dk.itu.models.Extensions.*
 import dk.itu.models.Reconfigurator
 
-class ConstrainNestedConditionalsRule extends AncestorGuaranteedRule {
+class ConstrainNestedConditionalsRule extends dk.itu.models.rules.AncestorGuaranteedRule {
 	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
 		cond
@@ -31,7 +31,7 @@ class ConstrainNestedConditionalsRule extends AncestorGuaranteedRule {
 		) {
 			val currentPC = node.get(0) as PresenceCondition
 			val ancestorPC = node.presenceCondition
-			val simplifiedPC = Reconfigurator::presenceConditionManager.newPresenceCondition(currentPC.BDD.constrain(ancestorPC.BDD))
+			val simplifiedPC = Reconfigurator::presenceConditionManager.newPresenceCondition(currentPC.getBDD.constrain(ancestorPC.getBDD))
 			
 			if (!simplifiedPC.is(currentPC))
 			{

@@ -1,4 +1,4 @@
-package dk.itu.models.rules
+package dk.itu.models.rules.variables
 
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
@@ -16,7 +16,7 @@ import net.sf.javabdd.BDD
 import dk.itu.models.strategies.TopDownStrategy
 import dk.itu.models.Settings
 
-class RewriteVariableUseRule extends AncestorGuaranteedRule {
+class RewriteVariableUseRule extends dk.itu.models.rules.AncestorGuaranteedRule {
 	
 	private val HashMap<PresenceCondition, String> pcidmap
 	protected val ArrayList<SimpleEntry<GNode,HashMap<String, List<PresenceCondition>>>> localVariableScopes
@@ -134,7 +134,7 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
     
     private def replaceTextWithVarName (GNode node, String varName) {
     	val tdn = new TopDownStrategy
-    	tdn.register(new ReplaceIdentifiersRule(varName))
+    	tdn.register(new dk.itu.models.rules.ReplaceIdentifiersRule(varName))
     	tdn.transform(node) as GNode
     }
     
@@ -152,7 +152,7 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 			
 			// If the variable PC does not imply the PC disjunction
 			// then it doesn't imply any of the PCs.
-			if (!varPC.BDD.imp(disjunctionPC.BDD).isOne) {
+			if (!varPC.getBDD.imp(disjunctionPC.getBDD).isOne) {
 				println('''Reconfigurator error: «varName» undefined under «disjunctionPC.not».''')
 				return null
 			}
@@ -173,7 +173,7 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 				 GNode::create("PrimaryExpression",
 					new Language<CTag>(CTag.LPAREN),
 			 		GNode::create("ConditionalExpression",
-			 			pc.BDD.cexp,
+			 			pc.getBDD.cexp,
 			 			new Language<CTag>(CTag.QUESTION),
 			 			newExp,
 			 			new Language<CTag>(CTag.COLON),

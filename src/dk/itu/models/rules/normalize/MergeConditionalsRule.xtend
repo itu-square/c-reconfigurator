@@ -1,4 +1,4 @@
-package dk.itu.models.rules
+package dk.itu.models.rules.normalize
 
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
@@ -7,7 +7,7 @@ import xtc.util.Pair
 import xtc.tree.GNode
 import static extension dk.itu.models.Extensions.*
 
-class MergeConditionalsRule extends Rule {
+class MergeConditionalsRule extends dk.itu.models.rules.Rule {
 	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
 		cond
@@ -32,38 +32,6 @@ class MergeConditionalsRule extends Rule {
 			&& ((pair.head as GNode).get(0) as PresenceCondition)
 				.is((pair.tail.head as GNode).get(0) as PresenceCondition)
 		) {
-			println
-			println
-			println(pair)
-			println("---- 1 --------")
-			println((pair.head as GNode).printCode)
-			println("---- 2 --------")
-			println((pair.tail.head as GNode).printCode)
-			println("---- 3 --------")
-			println(pair.tail.tail)
-			println("---- R --------")
-			println(new Pair(
-				GNode::createFromPair(
-					"Conditional",
-					(pair.head as GNode).toPair),
-				pair.tail.tail
-			))
-			
-//			if((pair.head as GNode).toPair.tail.toString.contains("kobj")) {
-//				println
-//				println
-//				println
-//				println("---")
-//				println("- " + (pair.head as GNode).toPair.tail)
-//				println("+ " + (pair.tail.head as GNode).toPair.tail)
-//				println("=>")
-//				println(GNode::createFromPair(
-//					"Conditional",
-//					(pair.head as GNode).get(0),
-//					(pair.head as GNode).toPair.tail
-//						.append((pair.tail.head as GNode).toPair.tail)	
-//				).printCode)
-//			}
 			val newPair = new Pair(
 				GNode::createFromPair(
 					"Conditional",
@@ -73,7 +41,7 @@ class MergeConditionalsRule extends Rule {
 				),
 				pair.tail.tail
 			)
-//			println(newPair)
+
 			return newPair
 		} 
 		pair

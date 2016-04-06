@@ -1,4 +1,4 @@
-package dk.itu.models.rules
+package dk.itu.models.rules.normalize
 
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
@@ -6,7 +6,7 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
 
-class ConditionPushDownRule extends Rule {
+class ConditionPushDownRule extends dk.itu.models.rules.Rule {
 	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
 		cond

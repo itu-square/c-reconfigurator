@@ -1,18 +1,18 @@
 package dk.itu.models.tests
 
-import xtc.tree.Node
-import dk.itu.models.rules.RemOneRule
-import dk.itu.models.rules.RemExtraRule
-import dk.itu.models.strategies.BottomUpStrategy
-import dk.itu.models.rules.SplitConditionalRule
-import java.io.File
-import dk.itu.models.rules.ConditionPushDownRule
-import dk.itu.models.strategies.TopDownStrategy
-import dk.itu.models.rules.ReconfigureFunctionRule
-import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
-import dk.itu.models.rules.PC2ExpressionRule
-import dk.itu.models.preprocessor.Preprocessor
 import dk.itu.models.Reconfigurator
+import dk.itu.models.preprocessor.Preprocessor
+import dk.itu.models.rules.ReconfigureFunctionRule
+import dk.itu.models.rules.RemExtraRule
+import dk.itu.models.rules.normalize.ConditionPushDownRule
+import dk.itu.models.rules.normalize.RemOneRule
+import dk.itu.models.rules.normalize.SplitConditionalRule
+import dk.itu.models.strategies.BottomUpStrategy
+import dk.itu.models.strategies.TopDownStrategy
+import java.io.File
+import xtc.tree.Node
+
+import static dk.itu.models.Reconfigurator.*
 
 class Test1 extends Test {
 

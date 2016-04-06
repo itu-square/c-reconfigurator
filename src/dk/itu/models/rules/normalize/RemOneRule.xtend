@@ -1,4 +1,4 @@
-package dk.itu.models.rules
+package dk.itu.models.rules.normalize
 
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
@@ -7,7 +7,7 @@ import xtc.tree.GNode
 import xtc.util.Pair
 import static extension dk.itu.models.Extensions.*
 
-class RemZeroRule extends Rule {
+class RemOneRule extends dk.itu.models.rules.Rule {
 	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
 		cond
@@ -22,9 +22,11 @@ class RemZeroRule extends Rule {
 			pair.head instanceof GNode &&
 			(pair.head as GNode).name.equals("Conditional") &&
 			(pair.head as GNode).filter(PresenceCondition).size == 1 &&
-			((pair.head as GNode).get(0) as PresenceCondition).isFalse
+			((pair.head as GNode).get(0) as PresenceCondition).isTrue
 		)
-			return pair.tail
+			return (pair.head as GNode)
+				.getChildrenGuardedBy((pair.head as GNode).get(0) as PresenceCondition)
+				.append(pair.tail)
 		else
 			pair
 	}

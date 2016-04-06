@@ -1,4 +1,4 @@
-package dk.itu.models.rules
+package dk.itu.models.rules.variables
 
 import dk.itu.models.strategies.TopDownStrategy
 import java.util.HashMap
@@ -11,7 +11,7 @@ import xtc.util.Pair
 import static extension dk.itu.models.Extensions.*
 import dk.itu.models.Settings
 
-class ReconfigureVariableRule extends ScopingRule {
+class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 	
 	val public pcidmap = new HashMap<PresenceCondition, String>
 	
@@ -41,7 +41,7 @@ class ReconfigureVariableRule extends ScopingRule {
 	override dispatch Object transform(GNode node) {
 		Settings::DEBUG = false
 		// Update the variable scopes and declarations.
-		(this as ScopingRule).transform(node)
+		(this as dk.itu.models.rules.ScopingRule).transform(node)
 
 		// Visit a variable Declaration under a Conditional.
 		if	(  node.name.equals("Conditional")						// current GNode is a Conditional

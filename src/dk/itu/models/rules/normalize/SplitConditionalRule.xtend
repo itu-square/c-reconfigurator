@@ -1,4 +1,4 @@
-package dk.itu.models.rules
+package dk.itu.models.rules.normalize
 
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
@@ -7,7 +7,7 @@ import xtc.tree.GNode
 import xtc.util.Pair
 import static extension dk.itu.models.Extensions.*
 
-class SplitConditionalRule extends Rule {
+class SplitConditionalRule extends dk.itu.models.rules.Rule {
 	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
 		cond
@@ -30,16 +30,7 @@ class SplitConditionalRule extends Rule {
 				newPair = newPair.append(new Pair<Object>(
 					GNode::createFromPair("Conditional", pc, (pair.head as GNode).getChildrenGuardedBy(pc))))
 			}
-			newPair = newPair.append(pair.tail)
-			
-			//debug
-//			println("-------- SplitConditionalRule ------------------------------------")
-//			pair.forEach[println("--\n" + printAST)]
-//			println("-------- TO")
-//			newPair.forEach[println("--\n" + printAST)]
-//			println("------------------------------------------------------------------")
-			
-			newPair
+			newPair.append(pair.tail)
 		} else
 			pair
 	}
