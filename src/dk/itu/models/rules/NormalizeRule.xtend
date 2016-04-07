@@ -1,21 +1,21 @@
 package dk.itu.models.rules
 
-import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
-import xtc.lang.cpp.Syntax.Language
-import xtc.lang.cpp.CTag
-import xtc.tree.GNode
-import xtc.util.Pair
-import static extension dk.itu.models.Extensions.*
-import xtc.tree.Node
-import dk.itu.models.strategies.TopDownStrategy
+import dk.itu.models.rules.normalize.ConditionPushDownRule
+import dk.itu.models.rules.normalize.ConstrainNestedConditionalsRule
+import dk.itu.models.rules.normalize.EnforceBracesInSelectionStatementRule
+import dk.itu.models.rules.normalize.MergeConditionalsRule
+import dk.itu.models.rules.normalize.MergeSequentialMutexConditionalRule
+import dk.itu.models.rules.normalize.OptimizeAssignmentExpressionRule
 import dk.itu.models.rules.normalize.RemOneRule
 import dk.itu.models.rules.normalize.RemZeroRule
 import dk.itu.models.rules.normalize.SplitConditionalRule
-import dk.itu.models.rules.normalize.ConstrainNestedConditionalsRule
-import dk.itu.models.rules.normalize.ConditionPushDownRule
-import dk.itu.models.rules.normalize.MergeSequentialMutexConditionalRule
-import dk.itu.models.rules.normalize.MergeConditionalsRule
-import dk.itu.models.rules.normalize.OptimizeAssignmentExpressionRule
+import dk.itu.models.strategies.TopDownStrategy
+import xtc.lang.cpp.CTag
+import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
+import xtc.lang.cpp.Syntax.Language
+import xtc.tree.GNode
+import xtc.tree.Node
+import xtc.util.Pair
 
 class NormalizeRule extends Rule  {
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
@@ -46,6 +46,7 @@ class NormalizeRule extends Rule  {
 		val tdn2 = new TopDownStrategy
 		tdn2.register(new MergeConditionalsRule)
 		tdn2.register(new OptimizeAssignmentExpressionRule)
+		tdn2.register(new EnforceBracesInSelectionStatementRule)
 		normalized = tdn2.transform(normalized) as Node
 		
 		if(normalized != node)

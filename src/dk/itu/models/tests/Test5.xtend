@@ -25,7 +25,8 @@ class Test5 extends Test {
 	
 	override transform(Node node) {
 		
-		writeToFile(node.printCode, file)
+//		writeToFile(node.printCode, file + ".base.c")
+//		writeToFile(node.printAST, file + ".base.ast")
 		
 		
 		

@@ -116,6 +116,10 @@ class Extensions {
 		p
 	}
 	
+	public static def Pair<Object> subPair(Pair<Object> p, int startInclusive, int endExclusive) {
+		p.filterIndexed[e, i| startInclusive<=i && i<endExclusive].toPair
+	}
+	
 	
 	public static def boolean structurallyEquals(Pair<Object> i1, Pair<Object> i2) {
 		if (i1 == i2) return true // referential equality
@@ -168,7 +172,6 @@ class Extensions {
 	
 	public static def <T> Iterable<T> filterIndexed (Iterable<T> unfiltered, Function2<? super T, Integer, Boolean> predicate) {
 		if (unfiltered == null) throw new NullPointerException();
-		println ("start")
 		return new FluentIterable<T>() {
 			override public Iterator<T> iterator() {
 				return filterIndexedHelper(unfiltered, predicate);
