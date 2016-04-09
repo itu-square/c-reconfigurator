@@ -10,7 +10,7 @@ import xtc.tree.Node
 import static extension dk.itu.models.Extensions.*
 
 class PrintCode extends PrintMethod {
-
+	
 	// the indentation prefix; add or remove spaces from it
 	static private var indent = ""
 
@@ -31,90 +31,151 @@ class PrintCode extends PrintMethod {
 	}
 
 	static def private dispatch void t(PresenceCondition condition) {
-		val CPPexp = condition.PCtoCPPexp
 		
-		if (!last_line.empty && !last_line.startsWith("#"))
-			output.println
-
-		if (ancestors.last.head == condition) {
-			if (!last_line.startsWith("#"))
-				output.println
-			output.println('''«indent»#if «CPPexp»''')
-			last_line = '''#if «CPPexp»'''
+		var current_line = last_line
+		
+		if (last_line.equals("#if")) {
+			output.print(''' «condition.PCtoCPPexp»''')
+			current_line += ''' «condition.PCtoCPPexp»'''
 		} else {
-//			if (ancestors.last.filter(PresenceCondition).size == 2 &&
-//				!(ancestors.last.head as PresenceCondition).is(condition)) {
-//				output.println('''«indent»#else''')
-//				last_line = '''#else'''
-//			} else {
-				output.println('''«indent»#elif «CPPexp»''')
-				last_line = '''#elif «CPPexp»'''
-//			}
+			output.println
+			output.print(indent)
+			output.print(last_C_line.replaceAll(".", " "))
+			output.print('''#elif «condition.PCtoCPPexp»''')
+			current_line = '''#elif «condition.PCtoCPPexp»'''
 		}
+		
+		last_line = current_line
 	}
 
 	static def private dispatch void t(Language<CTag> language) {
 		
-		if (language.toString.equals("}"))
-			indent = indent.substring(4)
-
-		if (last_line.endsWith(";") || language.toString.equals("{") || last_line.endsWith("}") ||
-			last_line.endsWith("{"))
+		var current_C_line = last_C_line
+		var current_line = last_line
+		
+		if (last_line.startsWith("#")) {
 			output.println
-
-		if (last_line.startsWith("#") && !last_C_line.endsWith(";") && !last_C_line.endsWith("{") &&
-			!last_C_line.endsWith("}")) {
-			output.print(last_C_line.replaceAll(".", " "))
-		}
-
-		if (last_line.startsWith("#") || last_C_line.endsWith(";") || last_C_line.endsWith("{") ||
-			last_C_line.endsWith("}") || language.toString.equals("{"))
-			output.print(indent)
-
-		if (firstToken || language.toString.equals(";") || language.toString.equals(")") || language.toString.equals("++")
-			|| last_C_line.endsWith("(") ||
-			last_C_line.endsWith(";") || language.toString.equals("{") || last_C_line.endsWith("{") ||
-			language.toString.equals("}") || last_C_line.endsWith("}") || last_C_line.endsWith("!")) {
-			firstToken = false
-		} else {
-			output.print(" ")
-			last_C_line += " "
+			current_line = ""
 		}
 		
-//		if (last_C_line.endsWith("}") && !last_line.startsWith("#")) {
-//			output.println
-//		}
+		if (
+			last_line.endsWith(";") || last_line.endsWith("{") || last_line.endsWith("}")
+			|| language.toString.equals("{")
+		) {
+			if (!last_line.startsWith("#"))
+				output.println
+			current_C_line = ""
+			current_line = ""
+		}
+		
+		if (language.toString.equals("}")) {
+			indent = indent.substring(4)
+			current_C_line = ""
+			current_line = ""
+		}
+		
+		if (current_C_line.isEmpty || last_line.startsWith("#"))
+			output.print(indent)
+		
+		if (last_line.startsWith("#")) {
+			output.print(current_C_line.replaceAll(".", " "))
+ 		}
 
+		if (
+			!last_C_line.isEmpty
+			&& !last_C_line.endsWith("(") && !last_C_line.endsWith(";") && !last_C_line.endsWith("{") && !last_line.endsWith("}")
+			&& !language.toString.equals(")") && !language.toString.equals("{") && !language.toString.equals("}")
+		) {
+			output.print(" ")
+			current_C_line += " "
+			current_line += " "
+ 		}
+ 		
 		output.print(language.toString)
-		if (last_C_line.endsWith(";") || last_C_line.endsWith("{") || last_C_line.endsWith("}"))
-			last_C_line = language.toString
-		else
-			last_C_line += language.toString
-
-		last_line = last_C_line
-
-		if (language.toString == "{")
+		current_C_line += language.toString
+		current_line += language.toString
+		
+		last_C_line = current_C_line
+		last_line = current_line
+		
+		if (language.toString.equals("{")) {
 			indent += "    "
+		}
 	}
 
 	static def private dispatch void t(GNode node) {
-		ancestors.add(node)
-
-//		println('''[DEBUG] node: «node»''')
-		node.forEach[
-//			println('''[DEBUG] «it»: «it.class»''')
-			t(it)
-		]
-
-		ancestors.remove(node)
-
+		
+		var PresenceCondition lastPC
+		
+		var preconditional_C_line = last_C_line
+		var current_C_line = last_C_line
+		var current_line = last_line
+		
 		if (node.name.equals("Conditional")) {
-			if (!last_line.startsWith("#"))
+			
+			if (!last_line.empty && !last_line.endsWith("{")) {
 				output.println
-			output.println('''«indent»#endif''')
-			last_line = "#"
-			if (last_C_line.endsWith("}") || last_C_line.endsWith(";"))
+				current_line = ""
+			}
+			
+			if (last_C_line.endsWith(";") || last_C_line.endsWith("{") || last_C_line.endsWith("}")) {
 				output.println
+				current_C_line = ""
+				current_line = ""
+			}
+			
+			output.print(indent)
+			
+			output.print(current_C_line.replaceAll(".", " "))
+			output.print("#if")
+			current_line += "#if"
+
+			last_C_line = current_C_line
+			last_line = current_line
+			for (Object it : node) {
+				if (it instanceof PresenceCondition) {
+					if (lastPC == null) {
+						lastPC = it
+					} else if (lastPC.isMutuallyExclusive(it)) {
+						lastPC = lastPC.or(it)
+						last_C_line = preconditional_C_line
+					} else {
+						lastPC = it
+					}
+				}
+				
+				t(it)
+			}
+			
+			output.println
+			output.print(indent)
+			if (!preconditional_C_line.endsWith(";") && !preconditional_C_line.endsWith("{"))
+				output.print(preconditional_C_line.replaceAll(".", " "))
+			output.print("#endif")
+			last_line = "#endif"
+
+		} else {
+			for (Object it : node) {
+				if (
+					it instanceof GNode
+					&& (it as GNode).name.equals("Conditional")
+					&& (it as GNode).filter(PresenceCondition).size == 1
+				) {
+					val pc = (it as GNode).get(0) as PresenceCondition
+					if (lastPC == null) {
+						lastPC = pc
+					} else if (lastPC.isMutuallyExclusive(pc)) {
+						lastPC = lastPC.or(pc)
+						last_C_line = preconditional_C_line
+					} else {
+						lastPC = pc
+					}
+					t(it)
+				} else {
+					t(it)
+					preconditional_C_line = last_C_line
+				}
+			}
 		}
 	}
 }
