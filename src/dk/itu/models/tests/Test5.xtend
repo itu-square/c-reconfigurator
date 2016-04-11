@@ -16,6 +16,7 @@ import xtc.tree.Node
 import static extension dk.itu.models.Extensions.*
 import dk.itu.models.rules.normalize.OptimizeAssignmentExpressionRule
 import dk.itu.models.rules.NormalizeRule
+import dk.itu.models.rules.prepare.IsolateDeclarationRule
 
 class Test5 extends Test {
 	
@@ -53,8 +54,26 @@ class Test5 extends Test {
 //		tdn2.register(new OptimizeAssignmentExpressionRule)
 //		normalized = tdn2.transform(normalized) as Node
 		
-		writeToFile(normalized.printCode, file)
-		writeToFile(normalized.printAST, file + ".ast")
+		writeToFile(normalized.printCode, file + ".norm.c")
+		writeToFile(normalized.printAST, file + ".norm.ast")
+		
+		
+		
+		
+		
+		
+		
+		println("PHASE 1.5 - Prepare for reconfiguration")
+		
+		val prepare_tdn = new TopDownStrategy
+		prepare_tdn.register(new IsolateDeclarationRule)
+		val Node prepared = prepare_tdn.transform(normalized) as Node
+		writeToFile(prepared.printCode, file + ".prep.c")
+		writeToFile(prepared.printAST, file + ".prep.ast")
+		
+		
+		
+		
 		
 		println("PHASE 2 - Reconfigure variables")
 		

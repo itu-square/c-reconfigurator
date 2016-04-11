@@ -560,15 +560,19 @@ public class Pair<T> implements Iterable<T> {
     return backward;
   }
 
+//AFLA: This makes no sense
+//* In either case, this method returns the newly created pair to
+//* facilitate incremental construction of lists.
+//* @return The newly added pair.
   /**
    * Add the specified element to the list starting at this pair.  If
    * this list is the empty list, this method simply allocates a new
    * pair.  Otherwise, it modifies this list's last non-empty element.
-   * In either case, this method returns the newly created pair to
-   * facilitate incremental construction of lists.
+   * AFLA: This method returns the head of the original pair with
+   * the newly added element at the end.
    *
    * @param element The element.
-   * @return The newly added pair.
+   * @return The original pair.
    * @throws IllegalStateException Signals that this pair represent
    *   the empty list.
    */
@@ -581,7 +585,7 @@ public class Pair<T> implements Iterable<T> {
     Pair<T> last = this;
     while (EMPTY != last.tail) last = last.tail;
     last.tail    = new Pair<T>(element);
-    return last.tail;
+    return this;
   }
 
   /**
