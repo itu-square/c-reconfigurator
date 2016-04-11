@@ -1,22 +1,14 @@
 package dk.itu.models.tests
 
 import dk.itu.models.Settings
-import dk.itu.models.rules.normalize.ConditionPushDownRule
-import dk.itu.models.rules.normalize.ConstrainNestedConditionalsRule
-import dk.itu.models.rules.normalize.MergeConditionalsRule
-import dk.itu.models.rules.normalize.MergeSequentialMutexConditionalRule
-import dk.itu.models.rules.normalize.RemOneRule
-import dk.itu.models.rules.normalize.RemZeroRule
-import dk.itu.models.rules.normalize.SplitConditionalRule
+import dk.itu.models.rules.NormalizeRule
+import dk.itu.models.rules.prepare.IsolateDeclarationRule
 import dk.itu.models.rules.variables.ReconfigureVariableRule
 import dk.itu.models.strategies.TopDownStrategy
 import java.io.File
 import xtc.tree.Node
 
 import static extension dk.itu.models.Extensions.*
-import dk.itu.models.rules.normalize.OptimizeAssignmentExpressionRule
-import dk.itu.models.rules.NormalizeRule
-import dk.itu.models.rules.prepare.IsolateDeclarationRule
 
 class Test5 extends Test {
 	

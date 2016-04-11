@@ -1,14 +1,10 @@
 package dk.itu.models.rules.prepare
 
-import dk.itu.models.Reconfigurator
 import dk.itu.models.rules.AncestorGuaranteedRule
-import java.util.List
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
-import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
-import xtc.tree.Node
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
@@ -37,12 +33,6 @@ class IsolateDeclarationRule extends AncestorGuaranteedRule {
 				c instanceof GNode
 				&& #["Declaration", "FunctionDefinition"].contains((c as GNode).name)]
 		){
-			println
-			println
-			println('''|-----------------------''')
-			println('''| IsolateDeclarationRule''')
-			println('''|--------               ''')
-			
 			val decl = (pair.head as GNode).findFirst[ c |
 				c instanceof GNode
 				&& #["Declaration", "FunctionDefinition"].contains((c as GNode).name)]

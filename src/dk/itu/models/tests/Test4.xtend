@@ -1,10 +1,10 @@
 package dk.itu.models.tests
 
 import dk.itu.models.Settings
-import dk.itu.models.rules.ExtractInitializerRule
 import dk.itu.models.rules.RemExtraRule
 import dk.itu.models.rules.normalize.ConditionPushDownRule
 import dk.itu.models.rules.normalize.ConstrainNestedConditionalsRule
+import dk.itu.models.rules.normalize.ExtractInitializerRule
 import dk.itu.models.rules.normalize.MergeSequentialMutexConditionalRule
 import dk.itu.models.rules.normalize.RemOneRule
 import dk.itu.models.rules.normalize.SplitConditionalRule

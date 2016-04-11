@@ -3,6 +3,7 @@ package dk.itu.models.rules
 import dk.itu.models.rules.normalize.ConditionPushDownRule
 import dk.itu.models.rules.normalize.ConstrainNestedConditionalsRule
 import dk.itu.models.rules.normalize.EnforceBracesInSelectionStatementRule
+import dk.itu.models.rules.normalize.ExtractInitializerRule
 import dk.itu.models.rules.normalize.MergeConditionalsRule
 import dk.itu.models.rules.normalize.MergeSequentialMutexConditionalRule
 import dk.itu.models.rules.normalize.OptimizeAssignmentExpressionRule
@@ -41,6 +42,7 @@ class NormalizeRule extends Rule  {
 		tdn1.register(new ConstrainNestedConditionalsRule)
 		tdn1.register(new ConditionPushDownRule)
 		tdn1.register(new MergeSequentialMutexConditionalRule)
+		tdn1.register(new ExtractInitializerRule)
 		normalized = tdn1.transform(normalized) as Node
 		
 		val tdn2 = new TopDownStrategy
