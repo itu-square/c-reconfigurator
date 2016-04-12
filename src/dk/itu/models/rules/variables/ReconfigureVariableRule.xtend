@@ -83,6 +83,8 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 			tdn.register(new RenameVariableRule(newName))
 			val newNode = tdn.transform(node.get(1)) as GNode
 			
+			newNode.setProperty("OriginalPC", node.presenceCondition.and(node.get(0) as PresenceCondition))
+			
 			// Return the new Declaration without the surrounding Conditional.
 			return newNode
 		} else if(#["ExpressionStatement", "Initializer", "ReturnStatement"]

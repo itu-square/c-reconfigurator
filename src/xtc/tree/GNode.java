@@ -20,7 +20,9 @@ package xtc.tree;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import xtc.util.Pair;
 
@@ -1195,6 +1197,15 @@ public abstract class GNode extends Node {
     }
   }
 
+  public static GNode createFromPair(String name, Pair p, Map<String, Object> properties) {
+	  GNode newNode = createFromPair(name, p);
+	  if(properties != null) {
+		  newNode.properties = new HashMap<String, Object>();
+		  newNode.properties.putAll(properties);
+	  }
+	  return newNode;
+  }
+  
   /**
    * Create a new generic node with the specified children.  If
    * possible, this method returns a fixed size node.

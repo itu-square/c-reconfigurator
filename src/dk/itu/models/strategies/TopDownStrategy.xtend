@@ -68,9 +68,15 @@ class TopDownStrategy extends AncestorGuaranteedStrategy {
 			if (newNode instanceof GNode) {
 				val ancestor = newNode
 				ancestors.add(ancestor)
+				
+				val newNodeConst = newNode
 				newNode = GNode::createFromPair(
 					newNode.name,
-					transform(newNode.toPair) as Pair<Object>
+					transform(newNode.toPair) as Pair<Object>,
+					if (newNode.properties == null)
+						null
+					else
+						newNode.properties.toInvertedMap[p | newNodeConst.getProperty(p.toString)]
 				)
 				ancestors.remove(ancestor)
 				if(newNode != ancestor && ancestors.size != 0)

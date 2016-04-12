@@ -121,6 +121,14 @@ class PrintCode extends PrintMethod {
 			current_C_line = ""
 			current_line = ""
 		}
+		
+		if(
+			#["Declaration", "FunctionDefinition"].contains(node.name)
+			&& node.properties != null && node.hasProperty("OriginalPC")
+		) {
+			output.println
+			output.print('''// «(node.getProperty("OriginalPC") as PresenceCondition).PCtoCPPexp»''')
+		}
 			
 		if(
 			ancestors.last != null

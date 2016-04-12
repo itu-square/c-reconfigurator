@@ -9,6 +9,7 @@ import java.util.List
 import java.util.HashMap
 import dk.itu.models.strategies.TopDownStrategy
 import static extension dk.itu.models.Extensions.*
+import xtc.tree.Node
 
 class ReconfigureFunctionRule extends AncestorGuaranteedRule {
 	
@@ -81,6 +82,8 @@ class ReconfigureFunctionRule extends AncestorGuaranteedRule {
 			tdn.register(new RenameFunctionRule(newName))
 			tdn.register(new RewriteFunctionCallRule(fmap, pcidmap))
 			val newNode = tdn.transform(node) as GNode
+			
+			(newNode.get(1) as Node).setProperty("OriginalPC", node.presenceCondition.and(node.get(0) as PresenceCondition))
 
 			return newNode.get(1)
 		}
