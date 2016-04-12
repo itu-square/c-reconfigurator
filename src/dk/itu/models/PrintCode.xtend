@@ -115,7 +115,7 @@ class PrintCode extends PrintMethod {
 		if(
 			#["Declaration", "FunctionDefinition"].contains(node.name)
 			&& !ancestors.exists[c | c instanceof GNode && c.name.equals("FunctionDefinition")]
-			&& !last_line.startsWith("#")
+			&& !last_line.startsWith("#") && !last_line.empty
 		) {
 			output.println
 			current_C_line = ""
@@ -128,6 +128,8 @@ class PrintCode extends PrintMethod {
 		) {
 			output.println
 			output.print('''// «(node.getProperty("OriginalPC") as PresenceCondition).PCtoCPPexp»''')
+			if(last_line.empty)
+				output.println
 		}
 			
 		if(
