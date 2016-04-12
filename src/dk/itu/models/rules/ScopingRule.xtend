@@ -1,15 +1,14 @@
 package dk.itu.models.rules
 
+import java.util.AbstractMap.SimpleEntry
 import java.util.ArrayList
-import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
+import java.util.HashMap
+import java.util.List
 import xtc.lang.cpp.CTag
+import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
-import java.util.AbstractMap.SimpleEntry
-import java.util.HashMap
-import java.util.List
-import xtc.lang.cpp.Syntax.Text
 
 abstract class ScopingRule extends AncestorGuaranteedRule {
 	
@@ -52,19 +51,16 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 	}
 	
 	def PresenceCondition transform(PresenceCondition cond) {
-//		println("srcond")
 		clearScope
 		cond
 	}
 
 	def Language<CTag> transform(Language<CTag> lang) {
-//		println("srlang")
 		clearScope
 		lang
 	}
 
 	def Pair<Object> transform(Pair<Object> pair) {
-//		println("srpair")
 		clearScope
 		pair
 	}
@@ -88,17 +84,20 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			(node.get(0) as GNode).name.equals("DeclaringList")
 		) {
 			val declaringList = node.get(0) as GNode
-			val simpleDeclarator = declaringList.filter(GNode).findFirst[name.equals("SimpleDeclarator")]
-			val variableName = simpleDeclarator.get(0) as Language<CTag>
-//			println('''===> «variableName» («variableName.hasProperty("reconfiguratorVariable")»)''')
-//			if (!variableName.hasProperty("reconfiguratorVariable") ||
-//				!variableName.getBooleanProperty("reconfiguratorVariable")
-//			) {
+			val simpleDeclarator =
+				if ((declaringList.get(1) as GNode).name.equals("SimpleDeclarator"))
+					(declaringList.get(1) as GNode)
+				else if (((declaringList.get(1) as GNode).get(1) as GNode).name.equals("SimpleDeclarator"))
+					((declaringList.get(1) as GNode).get(1) as GNode)
+				else
+					null
+			
+			if (simpleDeclarator != null) {
+				val variableName = simpleDeclarator.get(0).toString
 				addVariable(variableName.toString)
-//			}
+			}
 		}
 		
-//		println("srnode")
 		node
 	}
 	

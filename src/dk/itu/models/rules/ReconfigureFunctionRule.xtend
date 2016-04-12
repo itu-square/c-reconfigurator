@@ -12,9 +12,13 @@ import static extension dk.itu.models.Extensions.*
 
 class ReconfigureFunctionRule extends AncestorGuaranteedRule {
 	
-	val public pcidmap = new HashMap<PresenceCondition, String>
+	private val HashMap<PresenceCondition, String> pcidmap
 	
 	val public fmap = new HashMap<String, List<PresenceCondition>>
+	
+	new (HashMap<PresenceCondition, String> pcidmap) {
+		this.pcidmap = pcidmap
+	}
 	
 	static def void put_pcid (HashMap<PresenceCondition, String> map, PresenceCondition pc, String id) {
 		if (map.keySet.findFirst[is(pc)] == null)
@@ -55,18 +59,17 @@ class ReconfigureFunctionRule extends AncestorGuaranteedRule {
 		) {
 			val presenceCondition = node.get(0) as PresenceCondition
 
-//			println
-//			println(":> " + node.printCode)
-//			println(":> " + node.guard)
-//			println(":> " + presenceCondition)
-//			println
-			
 			val functionDefinition = node.get(1) as GNode
 			
 			pcidmap.put_pcid(presenceCondition, pcidmap.size.toString)
 			
 			val functionPrototype = functionDefinition.get(0) as GNode
-			val functionDeclarator = functionPrototype.filter(GNode).findFirst[name.equals("FunctionDeclarator")]
+			
+			val functionDeclarator =
+				if ((functionPrototype.get(1) as GNode).name.equals("FunctionDeclarator"))
+					(functionPrototype.get(1) as GNode)
+				else ((functionPrototype.get(1) as GNode).get(1) as GNode)
+			
 			val simpleDeclarator = functionDeclarator.get(0) as GNode
 			val functionName = simpleDeclarator.get(0).toString
 			val newName = functionName + "_V" + pcidmap.get_id(presenceCondition)
@@ -79,22 +82,15 @@ class ReconfigureFunctionRule extends AncestorGuaranteedRule {
 			tdn.register(new RewriteFunctionCallRule(fmap, pcidmap))
 			val newNode = tdn.transform(node) as GNode
 
-//			println("newn:> " + newNode.get(1).printCode)
-			
 			return newNode.get(1)
 		}
 		else if (
 			node.name.equals("FunctionDefinition") &&
 			!ancestors.last.name.equals("Conditional")
 		) {
-//			println
-//			println(":> " + node.printCode)
-//			println(":> " + node.guard)
-//			println
 			val tdn = new TopDownStrategy
 			tdn.register(new RewriteFunctionCallRule(fmap, pcidmap))
 			val newNode = tdn.transform(node) as GNode
-//			println("newn:> " + newNode.printCode)
 			return newNode
 		}
 		node

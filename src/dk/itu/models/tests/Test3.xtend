@@ -14,6 +14,8 @@ import java.io.File
 import xtc.tree.Node
 
 import static extension dk.itu.models.Extensions.*
+import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
+import java.util.HashMap
 
 class Test3 extends Test {
 
@@ -45,7 +47,7 @@ class Test3 extends Test {
 		println("PHASE 2 - Reconfigure variables")
 		
 		val tdn1 = new TopDownStrategy
-		tdn1.register(new ReconfigureVariableRule)
+		tdn1.register(new ReconfigureVariableRule(new HashMap<PresenceCondition, String>))
 		
 		
 		var Node varReconfigured = tdn1.transform(normalized) as Node
@@ -55,7 +57,7 @@ class Test3 extends Test {
 		println("PHASE 3 - Reconfigure functions")
 
 		val tdn2 = new TopDownStrategy
-		tdn2.register(new ReconfigureFunctionRule)
+		tdn2.register(new ReconfigureFunctionRule(new HashMap<PresenceCondition, String>))
 
 		var Node funReconfigured = tdn2.transform(varReconfigured) as Node
 		writeToFile('''#include "«Settings::reconfigFile»"«"\n" + funReconfigured.printCode»''', file)

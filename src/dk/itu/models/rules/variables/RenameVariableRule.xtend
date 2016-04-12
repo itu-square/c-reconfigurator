@@ -21,7 +21,7 @@ class RenameVariableRule extends dk.itu.models.rules.AncestorGuaranteedRule {
 
 	override dispatch Language<CTag> transform(Language<CTag> lang) {
 		if (ancestors.get(ancestors.size-1).name.equals("SimpleDeclarator")
-			&& ancestors.get(ancestors.size-2).name.equals("DeclaringList")
+			&& ancestors.exists[name.equals("Declaration")]
 			&& !lang.toString.equals(newName)) {
 				val newName = new Text<CTag>(CTag.IDENTIFIER, newName)
 				newName.setProperty("reconfiguratorVariable", true)

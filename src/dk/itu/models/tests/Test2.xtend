@@ -15,6 +15,8 @@ import java.io.File
 import xtc.tree.Node
 
 import static extension dk.itu.models.Extensions.*
+import java.util.HashMap
+import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 
 class Test2 extends Test {
 
@@ -41,7 +43,7 @@ class Test2 extends Test {
 		//println("PHASE 2 - Extract functions")
 
 		tdn = new TopDownStrategy
-		val extfRule = new ReconfigureFunctionRule
+		val extfRule = new ReconfigureFunctionRule(new HashMap<PresenceCondition, String>)
 		tdn.register(extfRule)
 
 		var Node funextracted = tdn.transform(normalized) as Node
@@ -50,7 +52,7 @@ class Test2 extends Test {
 		//println("PHASE 3 - Extract variables")
 
 		tdn = new TopDownStrategy
-		val extVarRule = new ReconfigureVariableRule
+		val extVarRule = new ReconfigureVariableRule(new HashMap<PresenceCondition, String>)
 		tdn.register(extVarRule)
 
 		var Node varextracted = tdn.transform(funextracted) as Node

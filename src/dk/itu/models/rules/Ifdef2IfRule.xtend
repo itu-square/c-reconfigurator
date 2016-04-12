@@ -1,19 +1,78 @@
 package dk.itu.models.rules
 
-import java.util.Collection
+import dk.itu.models.Reconfigurator
+import net.sf.javabdd.BDD
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 import xtc.util.Pair
-import java.util.HashMap
-import java.util.List
-import dk.itu.models.Reconfigurator
+
 import static extension dk.itu.models.Extensions.*
-import xtc.tree.Node
 
 class Ifdef2IfRule extends AncestorGuaranteedRule {
+	
+	// TODO: move to Extensions and minimize
+	def cexp(BDD bdd) {
+		val vars = Reconfigurator.presenceConditionManager.variableManager
+		
+		// unused yet
+//      if (bdd.isOne()) {
+//        print("1");
+//        return;
+//      } else if (bdd.isZero()) {
+//        print("0");
+//        return;
+//      }
+		
+		var GNode disj;
+		var firstConjunction = true;
+		for (Object o : bdd.allsat()) {
+//			if (!firstConjunction) { print(" || "); } 
+
+			var byte[] sat = o as byte[];
+			var GNode conj;
+			var Boolean firstTerm = true;
+			for (var i = 0; i < sat.length; i++) {
+//				if (sat.get(i) >= 0 && ! firstTerm) { print(" && "); }
+				switch (sat.get(i)) {
+					case 0 as byte: {
+//						print("!")
+						var id = vars.getName(i)
+						id = id.substring(9, id.length-1)
+						id = Reconfigurator.transformedFeaturemap.get(id)
+						var term = GNode::create("UnaryExpression",
+							GNode::create("Unaryoperator", new Language<CTag>(CTag.NOT)),
+							GNode::create("PrimaryIdentifier", new Text<CTag>(CTag.IDENTIFIER, id)))
+						
+						if(firstTerm) { conj = term }
+						else { conj = GNode::create("LogicalAndExpression", conj, new Language<CTag>(CTag.ANDAND), term) }
+						firstTerm = false
+					}
+					case 1 as byte: {
+						var id = vars.getName(i)
+						id = id.substring(9, id.length-1)
+						id = Reconfigurator.transformedFeaturemap.get(id)
+//						print(id)
+						var term = GNode::create("PrimaryIdentifier", new Text<CTag>(CTag.IDENTIFIER, id))
+						
+						if(firstTerm) { conj = term }
+						else { conj = GNode::create("LogicalAndExpression", conj, new Language<CTag>(CTag.ANDAND), term) }
+						firstTerm = false
+					}
+				}
+			}
+			if(firstConjunction) { disj = conj }
+			else { disj = GNode::create("LogicalORExpression", disj, new Language<CTag>(CTag.OROR), conj) }
+        	firstConjunction = false;
+		}
+		
+		GNode::create("PrimaryExpression",
+				new Language<CTag>(CTag.LPAREN),
+				disj,
+				new Language<CTag>(CTag.RPAREN))
+    }
 	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
 		cond
@@ -27,37 +86,23 @@ class Ifdef2IfRule extends AncestorGuaranteedRule {
 		pair
 	}
 	
-	override dispatch Object transform(GNode node) {		
-		if (node.name == "Conditional") {
-			var featureExpr = (node.get(0) as PresenceCondition).toString
-			var transformedFeatureExpr = Reconfigurator.preprocessor.getTransformedFeatureExpr(featureExpr)
+	override dispatch Object transform(GNode node) {
+		
+		if (node.name.equals("Conditional")) {
 			
-			ancestors.add(node)
-			
-			val newNode = GNode::create("SelectionStatement")
-			newNode.addAll(#[
-				new Language<CTag>(CTag.^IF),
-				new Language<CTag>(CTag.LPAREN),
-				GNode.create("PrimaryIdentifier", new Text<CTag>(CTag.OCTALconstant, transformedFeatureExpr)),
-				new Language<CTag>(CTag.RPAREN),
-				new Language<CTag>(CTag.LBRACE)
-			] as List<Node>)
-			newNode.addAll(node.toPair.tail)
-			newNode.add(new Language<CTag>(CTag.RBRACE))
-			
-			ancestors.remove(node)
-
-			newNode
-		} else {
-			ancestors.add(node)
-
-			val newNode = GNode::create(node.name)
-			node.forEach[newNode.add(it)]
-
-			ancestors.remove(node)
-
-			newNode
+			return GNode::createFromPair(
+				"SelectionStatement",
+				new Pair<Object>(new Language<CTag>(CTag.^IF))
+					.add(new Language<CTag>(CTag.LPAREN))
+					.add((node.get(0) as PresenceCondition).BDD.cexp)
+					.add(new Language<CTag>(CTag.RPAREN))
+					.add(new Language<CTag>(CTag.LBRACE))
+					.append(node.toPair.tail)
+					.add(new Language<CTag>(CTag.RBRACE))
+			)
 		}
+		
+		node
 	}
 
 }

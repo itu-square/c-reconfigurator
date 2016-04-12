@@ -9,6 +9,10 @@ import java.io.File
 import xtc.tree.Node
 
 import static extension dk.itu.models.Extensions.*
+import java.util.HashMap
+import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
+import dk.itu.models.rules.ReconfigureFunctionRule
+import dk.itu.models.rules.Ifdef2IfRule
 
 class Test5 extends Test {
 	
@@ -68,25 +72,55 @@ class Test5 extends Test {
 		
 		
 		println("PHASE 2 - Reconfigure variables")
-		
-		
+		val pcidmap = new HashMap<PresenceCondition, String>		
+		val reconfigureVariableRule = new ReconfigureVariableRule(pcidmap)
 		val tdn = new TopDownStrategy
-		tdn.register(new ReconfigureVariableRule)
-//		tdn.register(new ExtractInitializerRule)
+		tdn.register(reconfigureVariableRule)
 		
 		
-		var Node varReconfigured = tdn.transform(normalized) as Node
+		var Node varReconfigured = tdn.transform(prepared) as Node
 		writeToFile('''#include "«Settings::reconfigFile»"«"\n" + varReconfigured.printCode»''', file)
 		writeToFile(varReconfigured.printAST, file + ".ast")
 		
+		
+		
+		
+		
+		
+		
+		
+		println("PHASE 3 - Reconfigure functions")
+
+		val tdn2 = new TopDownStrategy
+		tdn2.register(new ReconfigureFunctionRule(pcidmap))
+
+		var Node funReconfigured = tdn2.transform(varReconfigured) as Node
+		writeToFile('''#include "«Settings::reconfigFile»"«"\n" + funReconfigured.printCode»''', file)
+		writeToFile(funReconfigured.printAST, file + ".ast")
+		
+		
+		
+		
+		
+		println("PHASE 4 - #ifdef to if")
+		
+		
+		val tdn4 = new TopDownStrategy
+		tdn4.register(new Ifdef2IfRule)
+
+		var Node allReconfigured = tdn4.transform(funReconfigured) as Node
+		writeToFile('''#include "«Settings::reconfigFile»"«"\n" + allReconfigured.printCode»''', file)
+		writeToFile(allReconfigured.printAST, file + ".ast")
+		
+		
 		// check #if elimination
-		println('''result: «IF varReconfigured.containsConditional»#if«ELSE»no#if«ENDIF»''')
+		println('''result: «IF allReconfigured.containsConditional»#if«ELSE»no#if«ENDIF»''')
 
 		// check oracle
 		if(Settings::oracleFile != null) {
 			val oracle = file.replace(Settings::targetFile.path, Settings::oracleFile.path) + ".ast"
 			if((new File(oracle)).exists)
-				if(varReconfigured.printAST.equals(readFile(oracle)))
+				if(allReconfigured.printAST.equals(readFile(oracle)))
 					println("oracle: pass")
 				else
 					println("oracle: fail")

@@ -176,11 +176,30 @@ class RewriteVariableUseRule extends dk.itu.models.rules.AncestorGuaranteedRule 
 		val declarationPCs = new ArrayList<PresenceCondition>
 		
 		for (SimpleEntry<GNode,HashMap<String, List<PresenceCondition>>> scope : localVariableScopes.toList.reverseView) {
-			if(scope.value.containsKey(varName)) {
-				val scopePCs = scope.value.get(varName)
-				declarationPCs.addAll(scopePCs)
-				return declarationPCs
-			}
+			val variables = scope.value
+			
+			if (variables.containsKey(varName)) {				// if the variable is declared in the current scope
+				val scopePCs = variables.get(varName)
+				if (scopePCs.exists[it.is(varPC)]) {				// if the current scope pcs contain the exact variable pc
+					declarationPCs.add(varPC)						// add the one and return
+					return declarationPCs
+				} else {											// otherwise
+					for (PresenceCondition pc : scopePCs) {
+						if (varPC.BDD.imp(pc.BDD).isOne) {
+							declarationPCs.add(pc)					// add the ones that are implied by the var PC
+						}
+					}
+					
+					// compute the disjunction of all declaration PCs up to this point
+					var PresenceCondition disjunctionPC = Reconfigurator::presenceConditionManager.newPresenceCondition(false)
+					for (PresenceCondition pc : declarationPCs) {
+						disjunctionPC = if (disjunctionPC == null) pc else pc.or(disjunctionPC)
+					}
+					if (disjunctionPC.isTrue) {						// if the PCs collected so far cover the universe
+						return declarationPCs							// return
+					}
+				}
+			}													// otherwise move to the next scope
 		}
 		
 		return declarationPCs
@@ -207,6 +226,13 @@ class RewriteVariableUseRule extends dk.itu.models.rules.AncestorGuaranteedRule 
 				return exp
 			else
 				return node
+//		} else if(node.name.equals("AssignmentExpression")) {
+//			println
+//			println
+//			println('''----------------------------''')
+//			println('''- RewriteVariableUse''')
+//			println('''----------------------------''')
+//			println('''- «node»''')
 		}
 		node
 	}

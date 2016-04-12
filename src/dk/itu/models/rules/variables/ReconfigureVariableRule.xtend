@@ -9,11 +9,14 @@ import xtc.tree.GNode
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
-import dk.itu.models.Settings
 
 class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 	
-	val public pcidmap = new HashMap<PresenceCondition, String>
+	private val HashMap<PresenceCondition, String> pcidmap
+	
+	new (HashMap<PresenceCondition, String> pcidmap) {
+		this.pcidmap = pcidmap
+	}
 	
 	static def void put_pcid (HashMap<PresenceCondition, String> map, PresenceCondition pc, String id) {
 		if (map.keySet.findFirst[is(pc)] == null)
@@ -48,6 +51,7 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 			&& node.get(1) instanceof GNode
 			&& (node.get(1) as GNode).name.equals("Declaration")	// 2nd child is a variable Declaration
 		) {
+			
 			val presenceCondition = node.presenceCondition.and(node.get(0) as PresenceCondition)
 			
 			// Put the current PresenceCondition into the PC-ID map (if it does not already exist)
@@ -56,8 +60,10 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 			
 			val declaration = node.get(1) as GNode
 			val declaringList = declaration.get(0) as GNode
-			val simpleDeclarator = declaringList.filter(GNode).findFirst[name.equals("SimpleDeclarator")]
-			val variableName = simpleDeclarator.get(0).toString
+			val variableName =
+				if ((declaringList.get(1) as GNode).name.equals("SimpleDeclarator"))
+					(declaringList.get(1) as GNode).get(0).toString
+				else ((declaringList.get(1) as GNode).get(1) as GNode).get(0).toString
 			val newName = variableName + "_V" + pcidmap.get_id(presenceCondition)
 			
 			// Add the variable in the declaration to the variable scope
@@ -79,16 +85,42 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 			
 			// Return the new Declaration without the surrounding Conditional.
 			return newNode
-		} else if(#["ExpressionStatement", "Initializer"]
+		} else if(#["ExpressionStatement", "Initializer", "ReturnStatement"]
 			.contains(node.name)
 		) {
 			val tdn = new TopDownStrategy
-			tdn.register(new RewriteVariableUseRule(localVariableScopes, node.guard, pcidmap))
+			tdn.register(new RewriteVariableUseRule(localVariableScopes, node.presenceCondition, pcidmap))
 			val newNode = tdn.transform(node) as GNode
-
-			
+	
 			return newNode
+			
+		} else if (node.name.equals("SelectionStatement")) {
+			
+//			println
+//			println('''----------------------''')
+//			println('''- ReconfigureVariable ''')
+//			println('''----------------------''')
+//			println('''- «node»''')
+//			println('''----------------------''')
+//			node.forEach[
+//				println('''- «it»''')]
+////			println('''- «variableName» -> «newName»''')
+////			println('''- «node.get(1).printAST»''')
+////			println('''- «newNode.printCode»''')
+
+			val tdn = new TopDownStrategy
+			tdn.register(new RewriteVariableUseRule(localVariableScopes, node.presenceCondition, pcidmap))
+			val newNode = tdn.transform(node.get(2)) as GNode
+			
+			if (!newNode.printAST.equals(node.get(2).printAST))
+				return GNode::createFromPair(
+					"SelectionStatement",
+					node.map[
+						if (node.indexOf(it) == 2) newNode
+						else it].toPair)
+				else return node
 		}
+		
 		node
 	}
 

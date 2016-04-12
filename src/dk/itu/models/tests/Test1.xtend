@@ -13,6 +13,8 @@ import java.io.File
 import xtc.tree.Node
 
 import static dk.itu.models.Reconfigurator.*
+import java.util.HashMap
+import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 
 class Test1 extends Test {
 
@@ -58,7 +60,7 @@ class Test1 extends Test {
 		println("PHASE 2 - Extract functions")
 
 		val tdn = new TopDownStrategy
-		val extfRule = new ReconfigureFunctionRule
+		val extfRule = new ReconfigureFunctionRule(new HashMap<PresenceCondition, String>)
 		tdn.register(extfRule)
 
 		var Node funextracted = tdn.transform(normalized) as Node
@@ -68,14 +70,14 @@ class Test1 extends Test {
 //		tdn1.register(new PC2ExpressionRule)
 //		tdn1.transform(normalized)
 		
-		println("pcidmap")
-		println
-		println
-		extfRule.pcidmap.keySet.forEach[ pc |
-			println('''«extfRule.pcidmap.get(pc)»   «pc»''')
-		]
-		println
-		println
+//		println("pcidmap")
+//		println
+//		println
+//		extfRule.pcidmap.keySet.forEach[ pc |
+//			println('''«extfRule.pcidmap.get(pc)»   «pc»''')
+//		]
+//		println
+//		println
 //		
 //		println("fmap")
 //		println

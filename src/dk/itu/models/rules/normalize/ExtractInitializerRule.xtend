@@ -1,14 +1,14 @@
 package dk.itu.models.rules.normalize
 
+import dk.itu.models.rules.AncestorGuaranteedRule
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
+import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 import xtc.util.Pair
+
 import static extension dk.itu.models.Extensions.*
-import dk.itu.models.rules.Rule
-import dk.itu.models.rules.AncestorGuaranteedRule
-import xtc.lang.cpp.Syntax.Text
 
 class ExtractInitializerRule extends AncestorGuaranteedRule {
 	
@@ -40,14 +40,6 @@ class ExtractInitializerRule extends AncestorGuaranteedRule {
 				else ((declaringList.get(1) as GNode).get(1) as GNode).get(0).toString
 			val initializer = declaringList.filter(GNode).findFirst[name.equals("InitializerOpt")].get(1) as GNode
 			
-			println
-			println
-			println('''-------------''')
-			println('''- Declaration''')
-			println('''-------      ''')
-			println('''- «varName»''')
-			println('''- «initializer»''')
-			
 			return
 				new Pair<Object>(
 					GNode::createFromPair(
@@ -68,21 +60,6 @@ class ExtractInitializerRule extends AncestorGuaranteedRule {
 					new Language<CTag>(CTag::SEMICOLON)
 				))
 				.append(pair.tail)
-			
-//			val initializer = ((pair.head as GNode).get(0) as GNode).filter(GNode).findFirst[name.equals("InitializerOpt")].get(1) as GNode 
-//			println('''initializer: «initializer.printCode»''')
-
-//			println(
-//				GNode::create(
-//					"Declaration",
-//					GNode::create(
-//						"DeclaringList",
-//						((pair.head as GNode).get(0) as GNode).get(0)
-//						)))
-
-
-// variable scope Thum & Schaefer
-
 		}
 		
 		pair

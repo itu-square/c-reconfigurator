@@ -58,6 +58,12 @@ abstract class AncestorGuaranteedRule extends Rule {
 			}
 		}
 		
+		if(ancestors.size > 0 && ancestors.last.name.equals("Conditional")) {		
+			result = result.and(ancestors.last.findLast[
+				it instanceof PresenceCondition && ancestors.last.indexOf(it) < ancestors.last.indexOf(node)
+			] as PresenceCondition ?: Reconfigurator::presenceConditionManager.newPresenceCondition(true))	
+		}
+		
 		result
 	}
 

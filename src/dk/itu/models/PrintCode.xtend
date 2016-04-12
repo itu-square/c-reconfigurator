@@ -77,14 +77,15 @@ class PrintCode extends PrintMethod {
 		if (current_C_line.isEmpty || last_line.startsWith("#"))
 			output.print(indent)
 		
-		if (last_line.startsWith("#")) {
+		if (last_line.startsWith("#") && !last_line.equals("#endif")) {
 			output.print(current_C_line.replaceAll(".", " "))
  		}
 
 		if (
 			!last_C_line.isEmpty
-			&& !last_C_line.endsWith("(") && !last_C_line.endsWith(";") && !last_C_line.endsWith("{") && !last_line.endsWith("}")
-			&& !language.toString.equals(")") && !language.toString.equals("{") && !language.toString.equals("}")
+			&& !last_C_line.endsWith("(") && !last_C_line.endsWith(";") && !last_C_line.endsWith("{") && !last_C_line.endsWith("!") && !last_line.endsWith("}")
+			&& !language.toString.equals(")") && !language.toString.equals("{") && !language.toString.equals("}") && !language.toString.equals(";")
+			&& !#["UnaryIdentifierDeclarator", "UnaryAbstractDeclarator"].contains(ancestors.last.name)
 		) {
 			output.print(" ")
 			current_C_line += " "
@@ -111,6 +112,31 @@ class PrintCode extends PrintMethod {
 		var current_C_line = last_C_line
 		var current_line = last_line
 		
+		if(
+			#["Declaration", "FunctionDefinition"].contains(node.name)
+			&& !ancestors.exists[c | c instanceof GNode && c.name.equals("FunctionDefinition")]
+			&& !last_line.startsWith("#")
+		) {
+			output.println
+			current_C_line = ""
+			current_line = ""
+		}
+			
+		if(
+			ancestors.last != null
+			&& ancestors.last.name.equals("SelectionStatement")
+			&& ancestors.last.indexOf(node) > 0
+			&& ancestors.last.get(ancestors.last.indexOf(node)-1) instanceof Language
+			&& ((ancestors.last.get(ancestors.last.indexOf(node)-1) as Language<CTag>).tag.equals(CTag::RPAREN)
+				|| (ancestors.last.get(ancestors.last.indexOf(node)-1) as Language<CTag>).tag.equals(CTag::^ELSE))
+			&& #["ExpressionStatement", "ReturnStatement"].contains(node.name)
+		) {
+			output.println
+			output.print("        ")
+			current_C_line = "        "
+			current_line = "        "
+		}
+		
 		if (node.name.equals("Conditional")) {
 			
 			if (!last_line.empty && !last_line.endsWith("{")) {
@@ -132,6 +158,8 @@ class PrintCode extends PrintMethod {
 
 			last_C_line = current_C_line
 			last_line = current_line
+			
+			ancestors.add(node)
 			for (Object it : node) {
 				if (it instanceof PresenceCondition) {
 					if (lastPC == null) {
@@ -143,9 +171,9 @@ class PrintCode extends PrintMethod {
 						lastPC = it
 					}
 				}
-				
 				t(it)
 			}
+			ancestors.remove(node)
 			
 			output.println
 			output.print(indent)
@@ -155,6 +183,7 @@ class PrintCode extends PrintMethod {
 			last_line = "#endif"
 
 		} else {
+			ancestors.add(node)
 			for (Object it : node) {
 				if (
 					it instanceof GNode
@@ -176,6 +205,7 @@ class PrintCode extends PrintMethod {
 					preconditional_C_line = last_C_line
 				}
 			}
+			ancestors.remove(node)
 		}
 	}
 }
