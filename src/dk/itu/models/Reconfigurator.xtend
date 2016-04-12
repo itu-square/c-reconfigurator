@@ -125,9 +125,9 @@ class Reconfigurator {
 //			val (String)=>Test test = [String f | new Test5(f)]
 
 //			actualArgs = #[
-//				"-source",  "D:\\repos\\reconfigurator-vbdb\\linux\\simple\\0dc77b6.c",
-//				"-target",  "D:\\repos\\reconfigurator-vbdb\\linux\\simple-target\\0dc77b6.c",
-//				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\linux\\simple-oracle\\0dc77b6.c"
+//				"-source",  "D:\\repos\\reconfigurator-vbdb\\linux\\simple\\1c17e4d.c",
+//				"-target",  "D:\\repos\\reconfigurator-vbdb\\linux\\simple-target\\1c17e4d.c",
+//				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\linux\\simple-oracle\\1c17e4d.c"
 //			]
 //			val (String)=>Test test = [String f | new Test5(f)]
 			

@@ -80,7 +80,7 @@ class ReconfigureFunctionRule extends AncestorGuaranteedRule {
 
 			val tdn = new TopDownStrategy
 			tdn.register(new RenameFunctionRule(newName))
-			tdn.register(new RewriteFunctionCallRule(fmap, pcidmap))
+			tdn.register(new RewriteFunctionCallRule(fmap, node.presenceCondition, pcidmap))
 			val newNode = tdn.transform(node) as GNode
 			
 			(newNode.get(1) as Node).setProperty("OriginalPC", node.presenceCondition.and(node.get(0) as PresenceCondition))
@@ -92,7 +92,7 @@ class ReconfigureFunctionRule extends AncestorGuaranteedRule {
 			!ancestors.last.name.equals("Conditional")
 		) {
 			val tdn = new TopDownStrategy
-			tdn.register(new RewriteFunctionCallRule(fmap, pcidmap))
+			tdn.register(new RewriteFunctionCallRule(fmap, node.presenceCondition, pcidmap))
 			val newNode = tdn.transform(node) as GNode
 			return newNode
 		}

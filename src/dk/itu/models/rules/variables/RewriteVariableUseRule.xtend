@@ -184,11 +184,16 @@ class RewriteVariableUseRule extends dk.itu.models.rules.AncestorGuaranteedRule 
 					declarationPCs.add(varPC)						// add the one and return
 					return declarationPCs
 				} else {											// otherwise
-					for (PresenceCondition pc : scopePCs) {
-						if (varPC.BDD.imp(pc.BDD).isOne) {
-							declarationPCs.add(pc)					// add the ones that are implied by the var PC
-						}
-					}
+				
+					// AFLA: this filter doesn't seem to be working
+					// neither this way or reversed
+					// just add all instead
+//					for (PresenceCondition pc : scopePCs) {
+//						if (varPC.BDD.imp(pc.BDD).isOne) {
+//							declarationPCs.add(pc)					// add the ones that are implied by the var PC
+//						}
+//					}
+					declarationPCs.addAll(scopePCs)
 					
 					// compute the disjunction of all declaration PCs up to this point
 					var PresenceCondition disjunctionPC = Reconfigurator::presenceConditionManager.newPresenceCondition(false)

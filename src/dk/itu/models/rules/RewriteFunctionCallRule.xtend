@@ -11,6 +11,7 @@ import xtc.lang.cpp.Syntax.Text
 import net.sf.javabdd.BDD
 import dk.itu.models.Reconfigurator
 import static extension dk.itu.models.Extensions.*
+import java.util.ArrayList
 
 class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 	
@@ -83,9 +84,13 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 	
 	private val HashMap<String, List<PresenceCondition>> fmap
 	
-	new (HashMap<String, List<PresenceCondition>> fmap, HashMap<PresenceCondition, String> pcidmap) {
+	protected val PresenceCondition externalGuard
+	
+	new (HashMap<String, List<PresenceCondition>> fmap, PresenceCondition externalGuard,
+		HashMap<PresenceCondition, String> pcidmap) {
 		this.fmap = fmap
 		this.pcidmap = pcidmap
+		this.externalGuard = externalGuard
 	}
 	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
@@ -100,67 +105,98 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 		pair
 	}
 	
-	def buildExp (String fname, List<PresenceCondition> conditions, Pair<?> args, PresenceCondition guard) {
+	def buildExp (GNode node, String fname, List<PresenceCondition> declarationPCs, Pair<?> args, PresenceCondition guard) {
 		
-		var PresenceCondition disjunctionPC = null
-		for (PresenceCondition pc : conditions.reverseView) {
-			disjunctionPC = if (disjunctionPC == null) pc else pc.or(disjunctionPC)
-		}
-//		println("disj:> " + disjunctionPC)
-//		println("grd :> " + guard)
-//		println("impl:> " + guard.BDD.imp(disjunctionPC.BDD))
-//		println("one :> " + guard.BDD.imp(disjunctionPC.BDD).isOne)
-//		println("zero:> " + guard.BDD.imp(disjunctionPC.BDD).isZero)
-//		println("!mp :> " + !guard.BDD.imp(disjunctionPC.BDD).isOne)
-		
-		if (!guard.BDD.imp(disjunctionPC.BDD).isOne)
-			println('''Reconfigurator error: «fname» undefined under «disjunctionPC.not».''')
-		
-		var exp = if (guard.BDD.imp(disjunctionPC.BDD).isOne) null else
-			GNode::create("FunctionCall",
-		 	GNode::create("PrimaryIdentifier", new Text(CTag.IDENTIFIER, "_reconfig_undefined")),
-		 	new Language<CTag>(CTag.LPAREN),
-		 	GNode::create("ExpressionList", GNode::create("StringLiteralList", new Text(CTag.STRINGliteral, '''"«fname»"''')),
-		 	new Language<CTag>(CTag.RPAREN)))
-		
-		for (PresenceCondition pc : conditions.reverseView) {
-			val newCall = GNode::create("FunctionCall",
-		 				GNode::create("PrimaryIdentifier", new Text(CTag.IDENTIFIER, fname + "_V" + pcidmap.get_id(pc))),
-		 				GNode::createFromPair("ExpressionList", args));
+		if (declarationPCs.empty) { // there are no declarations of this variable
+			return null
+		} else {
+			var PresenceCondition disjunctionPC = null
+			for (PresenceCondition pc : declarationPCs.reverseView) {
+				disjunctionPC = if (disjunctionPC == null) pc else pc.or(disjunctionPC)
+			}
 			
-			exp = if (exp == null) newCall else
-			 GNode::create("PrimaryExpression",
-				new Language<CTag>(CTag.LPAREN),
-		 		GNode::create("ConditionalExpression",
-		 			pc.BDD.cexp,
-		 			new Language<CTag>(CTag.QUESTION),
-		 			newCall,
-		 			new Language<CTag>(CTag.COLON),
-		 			exp
-		 			),
-		 		new Language<CTag>(CTag.RPAREN)
-			)
+			if (!guard.BDD.imp(disjunctionPC.BDD).isOne) {
+				println('''Reconfigurator error: «fname» undefined under «disjunctionPC.not».''')
+				return null
+			}
+			
+			var GNode exp = null
+			
+			if (disjunctionPC.isFalse) {
+				exp = node
+			}
+			
+			for (PresenceCondition pc : declarationPCs.reverseView) {
+				val newCall = GNode::create("FunctionCall",
+			 				GNode::create("PrimaryIdentifier", new Text(CTag.IDENTIFIER, fname + "_V" + pcidmap.get_id(pc))),
+			 				GNode::createFromPair("ExpressionList", args));
+				
+				exp = if (exp == null) newCall else
+				 GNode::create("PrimaryExpression",
+					new Language<CTag>(CTag.LPAREN),
+			 		GNode::create("ConditionalExpression",
+			 			pc.BDD.cexp,
+			 			new Language<CTag>(CTag.QUESTION),
+			 			newCall,
+			 			new Language<CTag>(CTag.COLON),
+			 			exp
+			 			),
+			 		new Language<CTag>(CTag.RPAREN)
+				)
+			}
+			
+			exp
 		}
+	}
+	
+	private def computePCs (String funcName, PresenceCondition callPC){
+		val declarationPCs = new ArrayList<PresenceCondition>
 		
-		exp
+			if (fmap.containsKey(funcName)) {				// if the variable is declared in the current scope
+				val scopePCs = fmap.get(funcName)
+				if (scopePCs.exists[it.is(callPC)]) {				// if the current scope pcs contain the exact variable pc
+					declarationPCs.add(callPC)						// add the one and return
+					return declarationPCs
+				} else {											// otherwise
+					
+					// AFLA: this filter doesn't seem to be working
+					// neither this way or reversed
+					// just add all instead
+//					for (PresenceCondition pc : scopePCs) {
+//						if (callPC.BDD.imp(pc.BDD).isOne) {
+//							declarationPCs.add(pc)					// add the ones that are implied by the var PC
+//						}
+//					}
+					declarationPCs.addAll(scopePCs)
+					
+					// compute the disjunction of all declaration PCs up to this point
+					var PresenceCondition disjunctionPC = Reconfigurator::presenceConditionManager.newPresenceCondition(false)
+					for (PresenceCondition pc : declarationPCs) {
+						disjunctionPC = if (disjunctionPC == null) pc else pc.or(disjunctionPC)
+					}
+					if (disjunctionPC.isTrue) {						// if the PCs collected so far cover the universe
+						return declarationPCs							// return
+					}
+				}
+			}													// otherwise move to the next scope
+		
+		
+		return declarationPCs
 	}
 	
 	override dispatch Object transform(GNode node) {
 		if (node.name.equals("FunctionCall")
 			&& fmap.containsKey((node.get(0) as GNode).get(0).toString)
 		) {
-//			println("func:> " + node.printCode)
-//			println("fmap:> " + fmap.size)
-//			fmap.forEach[k, v| println("fmap:> " + k + " " + v)]
-//			println("grd :> " + node.guard)
-//			println("name:> " + (node.get(0) as GNode).get(0).toString)
-//			println(fmap.containsKey((node.get(0) as GNode).get(0).toString))
-
 			val fcall = (node.get(0) as GNode).get(0).toString
-			val newExp = buildExp(fcall, fmap.get(fcall), node.toPair.tail, node.presenceCondition)
-//			println("exp :> " +	if (newExp == null) "null" else newExp.printCode)
-//			println
-			return newExp
+			
+			val declarationPCs = computePCs(fcall, externalGuard.and(node.presenceCondition))
+			val exp = buildExp(node, fcall, declarationPCs, node.toPair.tail, externalGuard.and(node.presenceCondition))
+
+			if(exp != null)
+				return exp
+			else
+				return node
 		}
 		node
 	}
