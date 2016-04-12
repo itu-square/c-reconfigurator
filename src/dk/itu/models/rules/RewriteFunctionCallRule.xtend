@@ -157,7 +157,7 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 //			println(fmap.containsKey((node.get(0) as GNode).get(0).toString))
 
 			val fcall = (node.get(0) as GNode).get(0).toString
-			val newExp = buildExp(fcall, fmap.get(fcall), node.toPair.tail, node.guard)
+			val newExp = buildExp(fcall, fmap.get(fcall), node.toPair.tail, node.presenceCondition)
 //			println("exp :> " +	if (newExp == null) "null" else newExp.printCode)
 //			println
 			return newExp
