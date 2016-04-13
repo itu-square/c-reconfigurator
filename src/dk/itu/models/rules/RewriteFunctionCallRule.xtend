@@ -162,12 +162,12 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 					// AFLA: this filter doesn't seem to be working
 					// neither this way or reversed
 					// just add all instead
-//					for (PresenceCondition pc : scopePCs) {
-//						if (callPC.BDD.imp(pc.BDD).isOne) {
-//							declarationPCs.add(pc)					// add the ones that are implied by the var PC
-//						}
-//					}
-					declarationPCs.addAll(scopePCs)
+					for (PresenceCondition pc : scopePCs) {
+						if (!callPC.and(pc).isFalse) {
+							declarationPCs.add(pc)					// add the ones that are not falsified by the var PC
+						}
+					}
+//					declarationPCs.addAll(scopePCs)
 					
 					// compute the disjunction of all declaration PCs up to this point
 					var PresenceCondition disjunctionPC = Reconfigurator::presenceConditionManager.newPresenceCondition(false)
