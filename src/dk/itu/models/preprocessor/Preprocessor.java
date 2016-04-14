@@ -53,15 +53,13 @@ public class Preprocessor {
 			 * Gets the defined features, split them by "," and, finally, remove
 			 * all duplicate white spaces
 			 */		
-			Set set = new HashSet(Arrays.asList(defs.replaceAll("\\s+", "")
-					.split(",")));
+			HashSet<String> set = new HashSet<String>(Arrays.asList(defs.replaceAll("\\s+", "").split(",")));
 
 			// Compiles the regex then sets the pattern
 			Pattern pattern = Pattern.compile(Tag.regex,
 					Pattern.CASE_INSENSITIVE);
 
 			String line;
-			int lineNumber = 0; // for counting the line number
 			int currentLevel = 0; // for controling the tags (e.g., ifdefs and
 									// endifs)
 			int removeLevel = -1; // if -1 can write, otherwise cannot
@@ -70,7 +68,6 @@ public class Preprocessor {
 
 			// reading line-by-line from input file
 			while ((line = br.readLine()) != null) {
-				lineNumber++;
 
 				/**
 				 * Creates a matcher that will match 
@@ -88,6 +85,13 @@ public class Preprocessor {
 					MatchResult result = matcher.toMatchResult();
 					String dir = result.group(1).toLowerCase().replace(" ", ""); // cpp directive
 					String param = result.group(2); // feature expression
+					
+					System.out.println();
+					System.out.println();
+					System.out.println();
+					System.out.println("------------------");
+					System.out.println(dir);
+					System.out.println(param);
 
 					if (Tag.INCLUDE.equals(dir)) {
 						out.append("char include[] = \"" + line.replace("\"", "\\\"") + "\";\n");
@@ -187,16 +191,6 @@ public class Preprocessor {
 		
 		bw.close();
 	}
-
-	private void writeFeatureToFile(BufferedWriter bw, String param) throws IOException {
-		
-		List<String> features = getFeatureNames(param);
-		
-		for (String featureName : features) {
-			bw.write("feature _reconfig_"+ featureName +";");
-			bw.newLine();
-		}
-	}
 	
 	private void saveFeatureNamesIntoMap(String param) {
 		List<String> features = getFeatureNames(param);
@@ -210,6 +204,7 @@ public class Preprocessor {
 	public List<String> getFeatureNames(String featureExpression) {
 		List<String> featureNames = new ArrayList<String>();
 		
+		featureExpression = removeComments(featureExpression);
 		featureExpression = removeWhitespace(featureExpression);
 		featureExpression = removeKeywords(featureExpression);
 		featureExpression = removeParentheses(featureExpression);
@@ -221,6 +216,14 @@ public class Preprocessor {
 		}
 		
 		return featureNames;
+	}
+	
+	private String removeComments(String featureExpression) {
+		int idx = featureExpression.indexOf("//");
+		if (idx != -1)
+			return featureExpression.substring(0, idx);
+		
+		return featureExpression;
 	}
 
 	private String removeOperators(String featureExpression) {
