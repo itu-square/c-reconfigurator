@@ -11,6 +11,7 @@ import xtc.lang.cpp.PresenceConditionManager
 
 import static extension dk.itu.models.Extensions.*
 import dk.itu.models.tests.Test4
+import java.io.FilenameFilter
 
 class Reconfigurator {
 	
@@ -38,7 +39,7 @@ class Reconfigurator {
 			"-showErrors"
 //			"-headerGuards",
 //			"-macroTable",
-//			"-E",
+//			,"-E"
 		]
 		
 		var newArgs = new ArrayList<String>
@@ -58,7 +59,7 @@ class Reconfigurator {
 			if (!targetDir.exists) {
 				println('''making directory .«currentRelativePath»''')
 				targetDir.mkdirs
-				summaryln('''| md    |       |       |       | .«currentRelativePath»''')
+				summaryln('''| md    |       |       |       |       | .«currentRelativePath»''')
 			}
 			currentFile.listFiles.filter[isFile].forEach[reconfigure(test)]
 			currentFile.listFiles.filter[isDirectory].forEach[reconfigure(test)]
@@ -81,6 +82,10 @@ class Reconfigurator {
 				test.apply(currentTargetPath).run
 				
 				val sum_console = Settings::consoleBAOS.toString
+				val sum_header =
+					if (sum_console.contains("error: header"))		" ERR   "
+					else											" OK    "
+				
 				val sum_parse =
 					if (sum_console.contains("error: parse error")) " ERR   "
 					else ( if (sum_console.contains("Exception")) 	" EXCPT "
@@ -97,13 +102,13 @@ class Reconfigurator {
 					if (sum_console.contains("oracle: pass")) 			" Opass "
 					else (if (sum_console.contains("oracle: fail")) 	" Ofail "
 					else 												" O-    ")
-				summaryln('''|«sum_parse»|«sum_check1»|«sum_oracle»|«sum_result»| .«currentRelativePath»''')
+				summaryln('''|«sum_header»|«sum_parse»|«sum_check1»|«sum_oracle»|«sum_result»| .«currentRelativePath»''')
 			}
 			else {
 				println
 				println('''ignoring file    .«currentRelativePath»''')
 				//FileUtils.copyFile(file, new File(targetPath))
-				summaryln('''| ig    |       |       |       | .«currentRelativePath»''')
+				summaryln('''| ig    |       |       |       |       | .«currentRelativePath»''')
 			}
 		}
 	}
@@ -125,16 +130,19 @@ class Reconfigurator {
 //			val (String)=>Test test = [String f | new Test5(f)]
 
 			actualArgs = #[
-				"-source",  "D:\\repos\\reconfigurator-vbdb\\linux\\simple\\63878ac.c",
-				"-target",  "D:\\repos\\reconfigurator-vbdb\\linux\\simple-target\\63878ac.c"//,
-//				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\linux\\simple-oracle\\63878ac.c"
+				"-source"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple\\0988c4c.c"
+			   ,"-target"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple-target\\0988c4c.c"
+//			   ,"-include"	,"D:\\repos\\reconfigurator-vbdb\\linux\\glibc-2.23\\"
+//			   ,"-include"	,"D:\\repos\\reconfigurator-vbdb\\linux\\glibc-2.23\\include\\"
+//			   ,"-include"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple-include\\"
+//			   ,"-oracle"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple-oracle\\0988c4c.c"
 			]
 			val (String)=>Test test = [String f | new Test5(f)]
 			
 //			actualArgs = #[
-//				"-source",  "D:\\repos\\reconfigurator-vbdb\\linux\\simple\\",
-//				"-target",  "D:\\repos\\reconfigurator-vbdb\\linux\\simple-target\\",
-//				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\linux\\simple-oracle\\"
+//				"-source"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple\\"
+//			   ,"-target"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple-target\\"
+//			   ,"-oracle"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple-oracle\\"
 //			]
 //			val (String)=>Test test = [String f | new Test5(f)]
 			
@@ -163,19 +171,26 @@ class Reconfigurator {
 				FileUtils.deleteDirectory(Settings::targetFile)
 				Settings::targetFile.mkdir
 				}
-			else { 
-				Settings::targetFile.delete
+			else {
+
+				new File(Settings::targetFile.parent).listFiles()
+					.filter[name.startsWith(Settings::targetFile.name)]
+					.forEach[it.delete]
+
+//				Settings::targetFile.delete
 				Settings::reconfigFile.delete
 				Settings::consoleFile.delete
 				Settings::summaryFile.delete
 				Settings::targetFile.parentFile.mkdir
 			}
 			
+//			System::exit(1)
+			
 			preprocessor = new Preprocessor
 			transformedFeaturemap = preprocessor.mapFeatureAndTransformedFeatureNames
 			
 			summaryln('''----------------------------------------------------------------''')
-			summaryln('''| PARSE | CHEK1 | ORACL | #IFS  | FILE -------------------------''')
+			summaryln('''| HEADR | PARSE | CHEK1 | ORACL | #IFS  | FILE -----------------''')
 			summaryln('''----------------------------------------------------------------''')
 			reconfigure(Settings::sourceFile, test)
 			summaryln('''----------------------------------------------------------------''')

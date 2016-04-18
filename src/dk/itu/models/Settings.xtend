@@ -45,24 +45,23 @@ class Settings {
 		if(!args.contains("-source")) { println("-source argument is missing."); return false }
 		if(!args.contains("-target")) { println("-target argument is missing."); return false }
 		
-		args.filter[it.startsWith("-")].forall[
-			switch(it) {
+		for (var i = 0; i < args.size; i++) {
+			switch(args.get(i)) {
 				case "-source":
-					if(args.indexOf(it) < args.size-1) { sourceFile = new File(args.get(args.indexOf(it)+1)); return true }
+					if(i < args.size-1) { sourceFile = new File(args.get(i+1)) }
 					else {println("-source argument has no value."); return false}
 				case "-target":
-					if(args.indexOf(it) < args.size-1) { targetFile = new File(args.get(args.indexOf(it)+1)); return true }
+					if(i < args.size-1) { targetFile = new File(args.get(i+1)) }
 					else {println("-target argument has no value."); return false}
 				case "-oracle":
-					if(args.indexOf(it) < args.size-1) { oracleFile = new File(args.get(args.indexOf(it)+1)); return true }
+					if(i < args.size-1) { oracleFile = new File(args.get(i+1)) }
 					else {println("-oracle argument has no value."); return false}
 				case "-include":
-					if(args.indexOf(it) < args.size-1) { includeFiles.add(new File(args.get(args.indexOf(it)+1))); return true }
+					if(i < args.size-1) { includeFiles.add(new File(args.get(i+1))) }
 					else {println("-include argument has no value."); return false}
 				case "-oracleOnly":
 					oracleOnly = true
-				default:
-					return true }]
+			}}
 		
 		reconfigFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REconfig.c")
 		consoleFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REconsole.txt")

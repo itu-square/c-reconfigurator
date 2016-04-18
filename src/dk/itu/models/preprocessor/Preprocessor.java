@@ -86,13 +86,6 @@ public class Preprocessor {
 					String dir = result.group(1).toLowerCase().replace(" ", ""); // cpp directive
 					String param = result.group(2); // feature expression
 					
-					System.out.println();
-					System.out.println();
-					System.out.println();
-					System.out.println("------------------");
-					System.out.println(dir);
-					System.out.println(param);
-
 					if (Tag.INCLUDE.equals(dir)) {
 						out.append("char include[] = \"" + line.replace("\"", "\\\"") + "\";\n");
 					}
