@@ -1,13 +1,13 @@
-package dk.itu.models.rules.variables
+package dk.itu.models.rules.phase4functions
 
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
-import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 import xtc.util.Pair
+import xtc.lang.cpp.Syntax.Text
 
-class RenameVariableRule extends dk.itu.models.rules.AncestorGuaranteedRule {
+class RenameFunctionRule extends dk.itu.models.rules.AncestorGuaranteedRule {
 	
 	val String newName
 	
@@ -20,15 +20,14 @@ class RenameVariableRule extends dk.itu.models.rules.AncestorGuaranteedRule {
 	}
 
 	override dispatch Language<CTag> transform(Language<CTag> lang) {
-		if (ancestors.get(ancestors.size-1).name.equals("SimpleDeclarator")
-			&& ancestors.exists[name.equals("Declaration")]
-			&& !lang.toString.equals(newName)) {
-				val newName = new Text<CTag>(CTag.IDENTIFIER, newName)
-				newName.setProperty("reconfiguratorVariable", true)
-				newName
-		} else {
+		if(
+			ancestors.get(ancestors.size-1).name.equals("SimpleDeclarator")
+			&& ancestors.get(ancestors.size-2).name.equals("FunctionDeclarator")
+			&& !lang.toString.equals(newName)
+		){
+			return new Text<CTag>(CTag.IDENTIFIER, newName)
+		} else
 			lang
-		}
 	}
 
 	override dispatch Pair<Object> transform(Pair<Object> pair) {

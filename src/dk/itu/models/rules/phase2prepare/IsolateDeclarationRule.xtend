@@ -1,4 +1,4 @@
-package dk.itu.models.rules.prepare
+package dk.itu.models.rules.phase2prepare
 
 import dk.itu.models.rules.AncestorGuaranteedRule
 import xtc.lang.cpp.CTag

@@ -1,15 +1,6 @@
-package dk.itu.models.rules
+package dk.itu.models.rules.phase1normalize
 
-import dk.itu.models.rules.normalize.ConditionPushDownRule
-import dk.itu.models.rules.normalize.ConstrainNestedConditionalsRule
-import dk.itu.models.rules.normalize.EnforceBracesInSelectionStatementRule
-import dk.itu.models.rules.normalize.ExtractInitializerRule
-import dk.itu.models.rules.normalize.MergeConditionalsRule
-import dk.itu.models.rules.normalize.MergeSequentialMutexConditionalRule
-import dk.itu.models.rules.normalize.OptimizeAssignmentExpressionRule
-import dk.itu.models.rules.normalize.RemOneRule
-import dk.itu.models.rules.normalize.RemZeroRule
-import dk.itu.models.rules.normalize.SplitConditionalRule
+import dk.itu.models.rules.Rule
 import dk.itu.models.strategies.TopDownStrategy
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition

@@ -1,21 +1,21 @@
-package dk.itu.models.rules.variables
+package dk.itu.models.rules.phase3variables
 
-import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
-import xtc.lang.cpp.Syntax.Language
-import xtc.lang.cpp.CTag
-import xtc.util.Pair
-import xtc.tree.GNode
-import static extension dk.itu.models.Extensions.*
-import java.util.ArrayList
+import dk.itu.models.Reconfigurator
+import dk.itu.models.rules.AncestorGuaranteedRule
+import dk.itu.models.strategies.TopDownStrategy
 import java.util.AbstractMap.SimpleEntry
+import java.util.ArrayList
 import java.util.HashMap
 import java.util.List
-import xtc.lang.cpp.Syntax.Text
-import dk.itu.models.Reconfigurator
 import net.sf.javabdd.BDD
-import dk.itu.models.strategies.TopDownStrategy
+import xtc.lang.cpp.CTag
+import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
+import xtc.lang.cpp.Syntax.Language
+import xtc.lang.cpp.Syntax.Text
+import xtc.tree.GNode
+import xtc.util.Pair
 
-class RewriteVariableUseRule extends dk.itu.models.rules.AncestorGuaranteedRule {
+class RewriteVariableUseRule extends AncestorGuaranteedRule {
 	
 	private val HashMap<PresenceCondition, String> pcidmap
 	protected val ArrayList<SimpleEntry<GNode,HashMap<String, List<PresenceCondition>>>> localVariableScopes
@@ -108,7 +108,7 @@ class RewriteVariableUseRule extends dk.itu.models.rules.AncestorGuaranteedRule 
     
     private def replaceTextWithVarName (GNode node, String varName) {
     	val tdn = new TopDownStrategy
-    	tdn.register(new dk.itu.models.rules.ReplaceIdentifiersRule(varName))
+    	tdn.register(new ReplaceIdentifiersRule(varName))
     	tdn.transform(node) as GNode
     }
     

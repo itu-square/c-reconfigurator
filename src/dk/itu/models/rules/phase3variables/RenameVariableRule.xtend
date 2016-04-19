@@ -1,4 +1,4 @@
-package dk.itu.models.rules
+package dk.itu.models.rules.phase3variables
 
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
@@ -7,13 +7,12 @@ import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 import xtc.util.Pair
 
-class ReplaceIdentifiersRule extends Rule {
+class RenameVariableRule extends dk.itu.models.rules.AncestorGuaranteedRule {
 	
-	protected val String newIdentifier
+	val String newName
 	
-	new (String newIdentifier) {
-		super()
-		this.newIdentifier = newIdentifier
+	new (String name) {
+		newName = name
 	}
 	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
@@ -21,13 +20,15 @@ class ReplaceIdentifiersRule extends Rule {
 	}
 
 	override dispatch Language<CTag> transform(Language<CTag> lang) {
-		if (
-			lang.tag.equals(CTag::IDENTIFIER)
-			&& !lang.toString.equals(newIdentifier)
-		) {
-			return new Text(CTag.IDENTIFIER, newIdentifier)
+		if (ancestors.get(ancestors.size-1).name.equals("SimpleDeclarator")
+			&& ancestors.exists[name.equals("Declaration")]
+			&& !lang.toString.equals(newName)) {
+				val newName = new Text<CTag>(CTag.IDENTIFIER, newName)
+				newName.setProperty("reconfiguratorVariable", true)
+				newName
+		} else {
+			lang
 		}
-		lang
 	}
 
 	override dispatch Pair<Object> transform(Pair<Object> pair) {
@@ -37,4 +38,5 @@ class ReplaceIdentifiersRule extends Rule {
 	override dispatch Object transform(GNode node) {
 		node
 	}
+
 }

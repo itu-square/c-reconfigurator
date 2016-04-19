@@ -1,22 +1,13 @@
-package dk.itu.models.rules.normalize
+package dk.itu.models.rules.phase1normalize
 
+import dk.itu.models.rules.Rule
+import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
-import xtc.lang.cpp.CTag
 import xtc.tree.GNode
 import xtc.util.Pair
+
 import static extension dk.itu.models.Extensions.*
-import xtc.tree.Node
-import dk.itu.models.strategies.TopDownStrategy
-import dk.itu.models.rules.normalize.RemOneRule
-import dk.itu.models.rules.normalize.RemZeroRule
-import dk.itu.models.rules.normalize.SplitConditionalRule
-import dk.itu.models.rules.normalize.ConstrainNestedConditionalsRule
-import dk.itu.models.rules.normalize.ConditionPushDownRule
-import dk.itu.models.rules.normalize.MergeSequentialMutexConditionalRule
-import dk.itu.models.rules.normalize.MergeConditionalsRule
-import dk.itu.models.rules.normalize.OptimizeAssignmentExpressionRule
-import dk.itu.models.rules.Rule
 
 class EnforceBracesInSelectionStatementRule extends Rule {
 	override dispatch PresenceCondition transform(PresenceCondition cond) {

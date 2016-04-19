@@ -1,18 +1,19 @@
-package dk.itu.models.rules
+package dk.itu.models.rules.phase3variables
 
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
+import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 import xtc.util.Pair
-import xtc.lang.cpp.Syntax.Text
 
-class RenameFunctionRule extends AncestorGuaranteedRule {
+class ReplaceIdentifiersRule extends dk.itu.models.rules.Rule {
 	
-	val String newName
+	protected val String newIdentifier
 	
-	new (String name) {
-		newName = name
+	new (String newIdentifier) {
+		super()
+		this.newIdentifier = newIdentifier
 	}
 	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
@@ -20,14 +21,13 @@ class RenameFunctionRule extends AncestorGuaranteedRule {
 	}
 
 	override dispatch Language<CTag> transform(Language<CTag> lang) {
-		if(
-			ancestors.get(ancestors.size-1).name.equals("SimpleDeclarator")
-			&& ancestors.get(ancestors.size-2).name.equals("FunctionDeclarator")
-			&& !lang.toString.equals(newName)
-		){
-			return new Text<CTag>(CTag.IDENTIFIER, newName)
-		} else
-			lang
+		if (
+			lang.tag.equals(CTag::IDENTIFIER)
+			&& !lang.toString.equals(newIdentifier)
+		) {
+			return new Text(CTag.IDENTIFIER, newIdentifier)
+		}
+		lang
 	}
 
 	override dispatch Pair<Object> transform(Pair<Object> pair) {
@@ -37,5 +37,4 @@ class RenameFunctionRule extends AncestorGuaranteedRule {
 	override dispatch Object transform(GNode node) {
 		node
 	}
-
 }

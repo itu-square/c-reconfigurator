@@ -1,4 +1,4 @@
-package dk.itu.models.rules
+package dk.itu.models.rules.phase4functions
 
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
@@ -13,7 +13,7 @@ import dk.itu.models.Reconfigurator
 import static extension dk.itu.models.Extensions.*
 import java.util.ArrayList
 
-class RewriteFunctionCallRule extends AncestorGuaranteedRule {
+class RewriteFunctionCallRule extends dk.itu.models.rules.AncestorGuaranteedRule {
 	
 	// TODO: move to Extensions and minimize
 	def cexp(BDD bdd) {
@@ -115,7 +115,7 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 				disjunctionPC = if (disjunctionPC == null) pc else pc.or(disjunctionPC)
 			}
 			
-			if (!guard.BDD.imp(disjunctionPC.BDD).isOne) {
+			if (!guard.getBDD.imp(disjunctionPC.getBDD).isOne) {
 				println('''Reconfigurator error: «fname» undefined under «disjunctionPC.not».''')
 				return null
 			}
@@ -135,7 +135,7 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 				 GNode::create("PrimaryExpression",
 					new Language<CTag>(CTag.LPAREN),
 			 		GNode::create("ConditionalExpression",
-			 			pc.BDD.cexp,
+			 			pc.getBDD.cexp,
 			 			new Language<CTag>(CTag.QUESTION),
 			 			newCall,
 			 			new Language<CTag>(CTag.COLON),

@@ -1,4 +1,4 @@
-package dk.itu.models.rules.variables
+package dk.itu.models.rules.phase3variables
 
 import dk.itu.models.strategies.TopDownStrategy
 import java.util.HashMap

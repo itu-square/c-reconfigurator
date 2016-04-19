@@ -1,4 +1,4 @@
-package dk.itu.models.rules.normalize
+package dk.itu.models.rules.phase1normalize
 
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language

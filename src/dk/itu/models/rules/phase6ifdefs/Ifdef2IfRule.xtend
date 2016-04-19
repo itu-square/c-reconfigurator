@@ -1,4 +1,4 @@
-package dk.itu.models.rules
+package dk.itu.models.rules.phase6ifdefs
 
 import dk.itu.models.Reconfigurator
 import net.sf.javabdd.BDD
@@ -11,7 +11,7 @@ import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
 
-class Ifdef2IfRule extends AncestorGuaranteedRule {
+class Ifdef2IfRule extends dk.itu.models.rules.AncestorGuaranteedRule {
 	
 	// TODO: move to Extensions and minimize
 	def cexp(BDD bdd) {
@@ -88,19 +88,43 @@ class Ifdef2IfRule extends AncestorGuaranteedRule {
 	
 	override dispatch Object transform(GNode node) {
 		
-		if (node.name.equals("Conditional")) {
-			
-			return GNode::createFromPair(
-				"SelectionStatement",
-				new Pair<Object>(new Language<CTag>(CTag.^IF))
-					.add(new Language<CTag>(CTag.LPAREN))
-					.add((node.get(0) as PresenceCondition).BDD.cexp)
-					.add(new Language<CTag>(CTag.RPAREN))
-					.add(new Language<CTag>(CTag.LBRACE))
-					.append(node.toPair.tail)
-					.add(new Language<CTag>(CTag.RBRACE))
-			)
+		if (
+//			node.name.equals("Conditional")
+//			&& #["AdditiveExpression"].contains(node.name)
+//		) {
+//			GNode::create("PrimaryExpression",
+//				new Language<CTag>(CTag.LPAREN),
+//		 		GNode::create("ConditionalExpression",
+//		 			pc.getBDD.cexp,
+//		 			new Language<CTag>(CTag.QUESTION),
+//		 			newExp,
+//		 			new Language<CTag>(CTag.COLON),
+//		 			exp
+//		 			),
+//		 		new Language<CTag>(CTag.RPAREN)
+//			)
+//		} else if (
+			node.name.equals("Conditional")
+		) {
+			println
+			ancestors.forEach[
+				println('''- «it»''')]
+			throw new Exception("Ifdef2IfRule: unexpected Conditional context")
 		}
+		
+//		if (node.name.equals("Conditional")) {
+//			
+//			return GNode::createFromPair(
+//				"SelectionStatement",
+//				new Pair<Object>(new Language<CTag>(CTag.^IF))
+//					.add(new Language<CTag>(CTag.LPAREN))
+//					.add((node.get(0) as PresenceCondition).BDD.cexp)
+//					.add(new Language<CTag>(CTag.RPAREN))
+//					.add(new Language<CTag>(CTag.LBRACE))
+//					.append(node.toPair.tail)
+//					.add(new Language<CTag>(CTag.RBRACE))
+//			)
+//		}
 		
 		node
 	}

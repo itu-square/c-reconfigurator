@@ -10,8 +10,6 @@ import org.apache.commons.io.FileUtils
 import xtc.lang.cpp.PresenceConditionManager
 
 import static extension dk.itu.models.Extensions.*
-import dk.itu.models.tests.Test4
-import java.io.FilenameFilter
 
 class Reconfigurator {
 	
@@ -120,52 +118,9 @@ class Reconfigurator {
 		println
 		
 		try {
-			var actualArgs = args
-
-//			actualArgs = #[
-//				"-source",  "D:\\repos\\reconfigurator-testsuite\\tests\\IsolateDeclarationRule01.c",
-//				"-target",  "D:\\repos\\reconfigurator-testsuite\\target\\IsolateDeclarationRule01.c"//,
-////				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\testfiles-oracle\\variable\\conditional_expression.c"
-//			]
-//			val (String)=>Test test = [String f | new Test5(f)]
-
-			actualArgs = #[
-				"-source"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple\\0f8f809.c"
-			   ,"-target"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple-target\\0f8f809.c"
-//			   ,"-include"	,"D:\\repos\\reconfigurator-vbdb\\linux\\glibc-2.23\\"
-//			   ,"-include"	,"D:\\repos\\reconfigurator-vbdb\\linux\\glibc-2.23\\include\\"
-//			   ,"-include"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple-include\\"
-			   ,"-oracle"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple-oracle\\0f8f809.c"
-			]
 			val (String)=>Test test = [String f | new Test5(f)]
 			
-//			actualArgs = #[
-//				"-source"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple\\"
-//			   ,"-target"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple-target\\"
-//			   ,"-oracle"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple-oracle\\"
-//			]
-//			val (String)=>Test test = [String f | new Test5(f)]
-			
-//			actualArgs = #[
-//				"-source",  "D:\\repos\\reconfigurator-vbdb\\testfiles\\variable\\conditional_expression.c",
-//				"-target",  "D:\\repos\\reconfigurator-vbdb\\testfiles-target\\variable\\conditional_expression.c",
-//				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\testfiles-oracle\\variable\\conditional_expression.c"
-//			]
-//			val (String)=>Test test = [String f | new Test5(f)]
-			
-			
-			
-//			actualArgs = #[
-//				"-source",  "D:\\repos\\reconfigurator-vbdb\\testfiles\\variable\\",
-//				"-target",  "D:\\repos\\reconfigurator-vbdb\\testfiles-target\\variable\\",
-//				"-oracle",  "D:\\repos\\reconfigurator-vbdb\\testfiles-oracle\\variable\\"//,
-////				"-oracleOnly"
-//			]
-//			val (String)=>Test test = [String f | new Test5(f)]
-	
-			
-			
-			if (!Settings::init(actualArgs)) throw new Exception("Settings initialization error.");
+			if (!Settings::init(args)) throw new Exception("Settings initialization error.");
 			
 			if (Settings::targetFile.isDirectory) {
 				FileUtils.deleteDirectory(Settings::targetFile)

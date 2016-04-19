@@ -1,4 +1,4 @@
-package dk.itu.models.rules.normalize
+package dk.itu.models.rules.phase1normalize
 
 import dk.itu.models.rules.Rule
 import xtc.lang.cpp.CTag
@@ -6,7 +6,6 @@ import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
-import static extension dk.itu.models.Extensions.*
 
 class RemZeroRule extends Rule {
 	

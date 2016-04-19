@@ -1,4 +1,4 @@
-package dk.itu.models.rules.normalize
+package dk.itu.models.rules.phase1normalize
 
 import dk.itu.models.rules.AncestorGuaranteedRule
 import xtc.lang.cpp.CTag
