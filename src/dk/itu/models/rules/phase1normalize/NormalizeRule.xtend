@@ -33,6 +33,7 @@ class NormalizeRule extends Rule  {
 		tdn1.register(new ConstrainNestedConditionalsRule)
 		tdn1.register(new ConditionPushDownRule)
 		tdn1.register(new MergeSequentialMutexConditionalRule)
+		tdn1.register(new ReorderSequentialMutexConditionalRule)
 		tdn1.register(new ExtractInitializerRule)
 		normalized = tdn1.transform(normalized) as Node
 		
