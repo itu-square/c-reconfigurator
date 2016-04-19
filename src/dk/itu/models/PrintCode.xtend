@@ -58,8 +58,21 @@ class PrintCode extends PrintMethod {
 			current_line = ""
 		}
 		
+		
+		val Node iter = ancestors.findLast[name.equals("IterationStatement")]
+		val int chld_idx = if (iter == null) -1 else {
+			if (iter.equals(ancestors.last)) iter.indexOf(language) else iter.indexOf(ancestors.get(ancestors.indexOf(iter) +1))}
+		val Node lpar = if (iter == null) null else iter.findFirst[toString.equals("(")] as Node
+		val int lpar_idx = if (lpar == null) -1 else iter.indexOf(lpar)
+		val Node rpar = if (iter == null) null else iter.findFirst[toString.equals(")")] as Node
+		val int rpar_idx = if (rpar == null) -1 else iter.indexOf(rpar)
+		val boolean iterationExpression =
+			chld_idx != -1 && lpar_idx != -1 && rpar_idx != -1
+			&& lpar_idx < chld_idx && chld_idx < rpar_idx 
+		
 		if (
-			last_line.endsWith(";") || last_line.endsWith("{") || last_line.endsWith("}")
+			(last_line.endsWith(";") && !iterationExpression)
+			|| last_line.endsWith("{") || last_line.endsWith("}")
 			|| language.toString.equals("{")
 		) {
 			if (!last_line.startsWith("#"))
@@ -77,13 +90,13 @@ class PrintCode extends PrintMethod {
 		if (current_C_line.isEmpty || last_line.startsWith("#"))
 			output.print(indent)
 		
-		if (last_line.startsWith("#") && !last_line.equals("#endif")) {
+		if (last_line.startsWith("#") && !last_C_line.endsWith(";")) {
 			output.print(current_C_line.replaceAll(".", " "))
  		}
 
 		if (
 			!last_C_line.isEmpty
-			&& !last_C_line.endsWith("(") && !last_C_line.endsWith(";") && !last_C_line.endsWith("{") && !last_C_line.endsWith("!") && !last_line.endsWith("}")
+			&& !last_C_line.endsWith("(") && (!last_C_line.endsWith(";") || iterationExpression) && !last_C_line.endsWith("{") && !last_C_line.endsWith("!") && !last_line.endsWith("}")
 			&& !language.toString.equals(")") && !language.toString.equals("{") && !language.toString.equals("}") && !language.toString.equals(";")
 			&& !#["UnaryIdentifierDeclarator", "UnaryAbstractDeclarator"].contains(ancestors.last.name)
 		) {
