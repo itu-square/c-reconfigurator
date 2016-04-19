@@ -105,26 +105,28 @@ class Ifdef2IfRule extends dk.itu.models.rules.AncestorGuaranteedRule {
 //			)
 //		} else if (
 			node.name.equals("Conditional")
+			&& node.filter(PresenceCondition).size == 1
+			&& #["DeclarationOrStatementList"].contains(ancestors.last.name)
+		) {	
+			return GNode::createFromPair(
+				"SelectionStatement",
+				new Pair<Object>(new Language<CTag>(CTag.^IF))
+					.add(new Language<CTag>(CTag.LPAREN))
+					.add((node.get(0) as PresenceCondition).BDD.cexp)
+					.add(new Language<CTag>(CTag.RPAREN))
+					.add(new Language<CTag>(CTag.LBRACE))
+					.append(node.toPair.tail)
+					.add(new Language<CTag>(CTag.RBRACE))
+			)
+		} else if (
+			node.name.equals("Conditional")
 		) {
 			println
 			ancestors.forEach[
 				println('''- «it»''')]
+			println(node.printAST)
 			throw new Exception("Ifdef2IfRule: unexpected Conditional context")
 		}
-		
-//		if (node.name.equals("Conditional")) {
-//			
-//			return GNode::createFromPair(
-//				"SelectionStatement",
-//				new Pair<Object>(new Language<CTag>(CTag.^IF))
-//					.add(new Language<CTag>(CTag.LPAREN))
-//					.add((node.get(0) as PresenceCondition).BDD.cexp)
-//					.add(new Language<CTag>(CTag.RPAREN))
-//					.add(new Language<CTag>(CTag.LBRACE))
-//					.append(node.toPair.tail)
-//					.add(new Language<CTag>(CTag.RBRACE))
-//			)
-//		}
 		
 		node
 	}
