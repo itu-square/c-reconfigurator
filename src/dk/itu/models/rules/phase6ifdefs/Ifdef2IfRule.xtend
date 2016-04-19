@@ -10,6 +10,10 @@ import xtc.tree.GNode
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
+import java.util.ArrayList
+import xtc.tree.Node
+import java.util.AbstractMap.SimpleEntry
+import javax.script.SimpleScriptContext
 
 class Ifdef2IfRule extends dk.itu.models.rules.AncestorGuaranteedRule {
 	
@@ -89,21 +93,49 @@ class Ifdef2IfRule extends dk.itu.models.rules.AncestorGuaranteedRule {
 	override dispatch Object transform(GNode node) {
 		
 		if (
-//			node.name.equals("Conditional")
-//			&& #["AdditiveExpression"].contains(node.name)
-//		) {
-//			GNode::create("PrimaryExpression",
-//				new Language<CTag>(CTag.LPAREN),
-//		 		GNode::create("ConditionalExpression",
-//		 			pc.getBDD.cexp,
-//		 			new Language<CTag>(CTag.QUESTION),
-//		 			newExp,
-//		 			new Language<CTag>(CTag.COLON),
-//		 			exp
-//		 			),
-//		 		new Language<CTag>(CTag.RPAREN)
-//			)
-//		} else if (
+			node.name.equals("Conditional")
+			&& #["AdditiveExpression"].contains(ancestors.last.name)
+		) {
+			//            List<     Map<        OriginalPC,        SimplifiedPC>>
+			val pcs = new ArrayList<SimpleEntry<PresenceCondition, PresenceCondition>>
+			
+			var disPC = Reconfigurator::presenceConditionManager.newPresenceCondition(false)
+			for (PresenceCondition pc : node.filter(PresenceCondition)) {
+				val newPC = Reconfigurator::presenceConditionManager.newPresenceCondition(pc.BDD.constrain(disPC.BDD.not))
+				pcs.add(new SimpleEntry(pc, newPC))
+				disPC = disPC.or(pc)
+			}
+			
+			if (!pcs.reverseView.head.value.isTrue)
+				throw new Exception("Ifdef2IfRule: Conditional in Expression does not cover universe (or I might be using the wrong universe; check against node.presenceCondition).")
+			
+			var Node exp = null
+			for (SimpleEntry<PresenceCondition, PresenceCondition> map : pcs.reverseView) {
+				if (node.getChildrenGuardedBy(map.key).size != 1) {
+					println('''- Ifdef2IfRule: PresenceCondition guarding multiple children.''')
+					println('''- «node.getChildrenGuardedBy(map.key).size»''')
+					node.getChildrenGuardedBy(map.key).forEach[println('''- «it»''')]
+					println(node.printAST)
+					throw new Exception("Ifdef2IfRule: PresenceCondition guarding multiple children.")
+				}
+				
+				if (exp == null) { // and pc.isTrue because of previous check
+					exp = node.getChildrenGuardedBy(map.key).get(0) as Node
+				} else {
+					exp = GNode::create("PrimaryExpression",
+						new Language<CTag>(CTag.LPAREN),
+				 		GNode::create("ConditionalExpression",
+				 			map.value.getBDD.cexp,
+				 			new Language<CTag>(CTag.QUESTION),
+				 			node.getChildrenGuardedBy(map.key).get(0),
+				 			new Language<CTag>(CTag.COLON),
+				 			exp
+				 			),
+				 		new Language<CTag>(CTag.RPAREN))
+				}
+			}
+			return exp
+		} else if (
 			node.name.equals("Conditional")
 			&& node.filter(PresenceCondition).size == 1
 			&& #["DeclarationOrStatementList"].contains(ancestors.last.name)

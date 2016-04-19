@@ -68,7 +68,9 @@ class OptimizeAssignmentExpressionRule extends Rule {
 				tdn.register(new RemZeroRule)
 				tdn.register(new ConstrainNestedConditionalsRule)
 				
-				return tdn.transform(newPair) as Pair<Object>
+				throw new Exception("test this")
+			
+//				return tdn.transform(newPair) as Pair<Object>
 			}
 		}
 		
