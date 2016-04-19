@@ -130,12 +130,12 @@ class Reconfigurator {
 //			val (String)=>Test test = [String f | new Test5(f)]
 
 			actualArgs = #[
-				"-source"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple\\0988c4c.c"
-			   ,"-target"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple-target\\0988c4c.c"
+				"-source"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple\\0f8f809.c"
+			   ,"-target"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple-target\\0f8f809.c"
 //			   ,"-include"	,"D:\\repos\\reconfigurator-vbdb\\linux\\glibc-2.23\\"
 //			   ,"-include"	,"D:\\repos\\reconfigurator-vbdb\\linux\\glibc-2.23\\include\\"
 //			   ,"-include"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple-include\\"
-//			   ,"-oracle"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple-oracle\\0988c4c.c"
+			   ,"-oracle"	,"D:\\repos\\reconfigurator-vbdb\\linux\\simple-oracle\\0f8f809.c"
 			]
 			val (String)=>Test test = [String f | new Test5(f)]
 			
