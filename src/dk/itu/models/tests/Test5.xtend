@@ -60,7 +60,7 @@ class Test5 extends Test {
 		val reconfigureVariableRule = new ReconfigureVariableRule(pcidmap)
 		val tdn3 = new TopDownStrategy
 		tdn3.register(reconfigureVariableRule)
-		var Node node3 = tdn2.transform(node2) as Node
+		var Node node3 = tdn3.transform(node2) as Node
 //		writeToFile(node3.printCode, file + ".phase3.c")
 //		writeToFile(node3.printAST, file + ".phase3.ast")
 
