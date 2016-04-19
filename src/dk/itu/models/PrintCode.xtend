@@ -192,6 +192,38 @@ class PrintCode extends PrintMethod {
 			output.print("#endif")
 			last_line = "#endif"
 
+		} else if (
+			node.name.equals("Declaration")
+			
+			&& node.get(0) instanceof GNode
+			&& (node.get(0) as GNode).name.equals("DeclaringList")
+			
+			&& (node.get(0) as GNode).get(0).toString.equals("char")
+			
+			&& (node.get(0) as GNode).get(1) instanceof GNode
+			&& ((node.get(0) as GNode).get(1) as GNode).name.equals("ArrayDeclarator")
+			&& ((node.get(0) as GNode).get(1) as GNode).get(0) instanceof GNode
+			&& (((node.get(0) as GNode).get(1) as GNode).get(0) as GNode).name.equals("SimpleDeclarator")
+			&& (((node.get(0) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString.equals("include")
+			
+			&& (node.get(0) as GNode).get(2) instanceof GNode
+			&& ((node.get(0) as GNode).get(2) as GNode).name.equals("InitializerOpt")
+			&& ((node.get(0) as GNode).get(2) as GNode).get(1) instanceof GNode
+			&& (((node.get(0) as GNode).get(2) as GNode).get(1) as GNode).name.equals("Initializer")
+			
+			&& (((node.get(0) as GNode).get(2) as GNode).get(1) as GNode)
+				.get(0) instanceof GNode
+			&& ((((node.get(0) as GNode).get(2) as GNode).get(1) as GNode)
+				.get(0) as GNode).name.equals("StringLiteralList")
+			&& ((((node.get(0) as GNode).get(2) as GNode).get(1) as GNode)
+				.get(0) as GNode).get(0).toString.startsWith("\"#include")
+		) {
+			var includeStrLit = ((((node.get(0) as GNode).get(2) as GNode).get(1) as GNode)
+				.get(0) as GNode).get(0).toString
+			includeStrLit = includeStrLit.subSequence(1, includeStrLit.length-1).toString
+			
+			output.println(includeStrLit)
+			last_line = includeStrLit
 		} else {
 			ancestors.add(node)
 			for (Object it : node) {
