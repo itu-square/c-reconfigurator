@@ -38,11 +38,23 @@ class PrintCode extends PrintMethod {
 			output.print(''' «condition.PCtoCPPexp»''')
 			current_line += ''' «condition.PCtoCPPexp»'''
 		} else {
+			var disPC = Reconfigurator::presenceConditionManager.newPresenceCondition(false)
+			for (PresenceCondition pc : ancestors.last.filter(PresenceCondition).filter[ancestors.last.indexOf(it)<ancestors.last.indexOf(condition)]) {
+				disPC = disPC.or(pc)
+			}
+			val newPC = Reconfigurator::presenceConditionManager.newPresenceCondition(condition.BDD.constrain(disPC.BDD.not))
+			
 			output.println
 			output.print(indent)
 			output.print(last_C_line.replaceAll(".", " "))
-			output.print('''#elif «condition.PCtoCPPexp»''')
-			current_line = '''#elif «condition.PCtoCPPexp»'''
+			
+			if (newPC.isTrue) {
+				output.print('''#else''')
+				current_line = '''#else'''
+			} else {
+				output.print('''#elif «newPC.PCtoCPPexp»''')
+				current_line = '''#elif «newPC.PCtoCPPexp»'''
+			}
 		}
 		
 		last_line = current_line
