@@ -6,7 +6,6 @@ import dk.itu.models.tests.Test5
 import java.io.File
 import java.util.ArrayList
 import java.util.Map
-import org.apache.commons.io.FileUtils
 import xtc.lang.cpp.PresenceConditionManager
 
 import static extension dk.itu.models.Extensions.*
@@ -123,23 +122,17 @@ class Reconfigurator {
 			if (!Settings::init(args)) throw new Exception("Settings initialization error.");
 			
 			if (Settings::targetFile.isDirectory) {
-				FileUtils.deleteDirectory(Settings::targetFile)
-				Settings::targetFile.mkdir
+				Settings::targetFile.listFiles.forEach[delete]
 				}
 			else {
-
 				new File(Settings::targetFile.parent).listFiles()
 					.filter[name.startsWith(Settings::targetFile.name)]
-					.forEach[it.delete]
-
-//				Settings::targetFile.delete
+					.forEach[delete]
 				Settings::reconfigFile.delete
 				Settings::consoleFile.delete
 				Settings::summaryFile.delete
 				Settings::targetFile.parentFile.mkdir
 			}
-			
-//			System::exit(1)
 			
 			preprocessor = new Preprocessor
 			transformedFeaturemap = preprocessor.mapFeatureAndTransformedFeatureNames
