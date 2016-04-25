@@ -94,7 +94,7 @@ class Ifdef2IfRule extends dk.itu.models.rules.AncestorGuaranteedRule {
 		
 		if (
 			node.name.equals("Conditional")
-			&& #["AdditiveExpression"].contains(ancestors.last.name)
+			&& #["AdditiveExpression", "Initializer"].contains(ancestors.last.name)
 		) {
 			//            List<     Map<        OriginalPC,        SimplifiedPC>>
 			val pcs = new ArrayList<SimpleEntry<PresenceCondition, PresenceCondition>>
