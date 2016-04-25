@@ -1,11 +1,11 @@
 package dk.itu.models
 
-import java.io.File
-import java.util.List
-import java.util.ArrayList
 import java.io.ByteArrayOutputStream
+import java.io.File
 import java.io.PrintStream
-import static extension dk.itu.models.Extensions.*
+import java.util.ArrayList
+import java.util.List
+import java.util.regex.Pattern
 
 class Settings {
 	
@@ -21,6 +21,7 @@ class Settings {
 	static public var File consoleFile
 	static public var File summaryFile
 	
+	static public var Pattern ignorePattern
 	
 	static public var systemOutPS = System.out
 	
@@ -61,6 +62,9 @@ class Settings {
 					else {println("-include argument has no value."); return false}
 				case "-oracleOnly":
 					oracleOnly = true
+				case "-ignore":
+					if(i < args.size-1) { ignorePattern = Pattern.compile(args.get(i+1), Pattern.CASE_INSENSITIVE) }
+					else {println("-ignore argument has no value."); return false}
 			}}
 		
 		reconfigFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REconfig.c")

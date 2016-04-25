@@ -69,6 +69,7 @@ class Reconfigurator {
 			if (
 				(!Settings::oracleOnly || oracle != null && oracle.exists)
 				&& (currentFile.path.endsWith(".c") || currentFile.path.endsWith(".h"))
+				&& (Settings::ignorePattern == null || !Settings::ignorePattern.matcher(currentFile.path).matches)
 			) {
 				println
 				println('''processing file  .«currentRelativePath»''')
