@@ -26,6 +26,7 @@ import xtc.tree.Node
 import xtc.util.Pair
 
 import static dk.itu.models.Extensions.*
+import xtc.lang.cpp.Syntax.Text
 
 class Extensions {
 	public static def String folder(String filePath) {
@@ -135,8 +136,8 @@ class Extensions {
 					&& p2.head instanceof PresenceCondition
 					&& !(p1.head as PresenceCondition).is(p2.head as PresenceCondition) : return false
 				case
-					p1.head instanceof Language
-					&& p2.head instanceof Language
+					p1.head instanceof Language<?>
+					&& p2.head instanceof Language<?>
 					&& !(p1.head as Language<CTag>).printAST.equals((p2.head as Language<CTag>).printAST) : return false
 				case
 					p1.head instanceof GNode
@@ -257,6 +258,7 @@ class Extensions {
 		CheckContainsIf1::check(node)
 	}
 	
+	// PresenceCondition to Minimized expression
 	public static def String PCtoMexp(PresenceCondition cond, HashMap<String, String> varMap) {
 		val HashMap<String, String> varMapInverse = new HashMap<String, String>
 		val char a = 'a'
@@ -302,6 +304,7 @@ class Extensions {
 		mexp.toString
 	}
 	
+	// Minimized expression to C preprocessor expression
 	public static def String MexptoCPPexp(String mexp, HashMap<String, String> varMap) {
 		val StringBuilder output = new StringBuilder
 		val input = mexp.toCharArray
@@ -326,7 +329,7 @@ class Extensions {
 		output.toString
 	}
 	
-	
+	// PresenceCondition direct to C preprocessor expression shortcut
 	public static def String PCtoCPPexp(PresenceCondition condition) {
 		if (condition.toString.equals("1")) "1"
 		else if (condition.toString.equals("0")) "0"
@@ -338,4 +341,62 @@ class Extensions {
 			Minimize::process(mexp, ps).MexptoCPPexp(varMap)
 		}
 	}
+
+	// Minimized expression to C expression
+	public static def GNode MexptoCexp(String mexp, HashMap<String, String> varMap) {
+//		
+//		println
+//		println('''----------------------''')
+//		println('''- «mexp»''')
+		
+		var GNode disj
+		val input = mexp.toCharArray
+			
+		var GNode conj
+		for (var i = 0; i < input.length; i++) {
+			val current = input.get(i)
+			
+			if ((current.toString).equals("+")) {
+				if(disj == null) { disj = conj }
+				else { disj = GNode::create("LogicalORExpression", disj, new Language<CTag>(CTag.OROR), conj) }
+        		conj = null;
+			} else if (!(current.toString).equals("'") && !(current.toString).equals(" ")) {
+				var id = varMap.get(current.toString)
+				id = Reconfigurator.transformedFeaturemap.get(id)
+				var term = GNode::create("PrimaryIdentifier", new Text<CTag>(CTag.IDENTIFIER, id))
+				
+				if(i < input.length -1 && (input.get(i+1).toString).equals("'"))
+					term = GNode::create("UnaryExpression",
+							GNode::create("Unaryoperator", new Language<CTag>(CTag.NOT)),
+							term)
+					
+				if(conj == null) { conj = term }
+				else { conj = GNode::create("LogicalAndExpression", conj, new Language<CTag>(CTag.ANDAND), term) }
+			}
+		}
+		
+		if(disj == null) { disj = conj }
+		else { disj = GNode::create("LogicalORExpression", disj, new Language<CTag>(CTag.OROR), conj) }
+//			
+//		println('''- «disj.printCode»''')
+
+		GNode::create("PrimaryExpression",
+				new Language<CTag>(CTag.LPAREN),
+				disj,
+				new Language<CTag>(CTag.RPAREN))
+    }
+
+	// PresenceCondition direct to C expression shortcut
+	public static def GNode PCtoCexp(PresenceCondition condition) {
+		if (condition.toString.equals("1")) throw new Exception("Return a Language literal 1")
+		else if (condition.toString.equals("0")) throw new Exception("Return a Language literal 0")
+		else {
+			val varMap = new HashMap<String, String>
+			val mexp = condition.PCtoMexp(varMap)
+			val baos = new ByteArrayOutputStream
+			var ps = new PrintStream(baos)
+			Minimize::process(mexp, ps).MexptoCexp(varMap)
+		}
+	}
+
 }
