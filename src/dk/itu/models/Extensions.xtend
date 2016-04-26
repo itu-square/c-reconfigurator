@@ -132,6 +132,8 @@ class Extensions {
 			
 			switch (true) {
 				case
+					p1.head.class != p2.head.class : return false
+				case
 					p1.head instanceof PresenceCondition
 					&& p2.head instanceof PresenceCondition
 					&& !(p1.head as PresenceCondition).is(p2.head as PresenceCondition) : return false
