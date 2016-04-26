@@ -47,21 +47,24 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 	def buildExp (GNode node, String fname, List<PresenceCondition> declarationPCs, Pair<?> args, PresenceCondition guard) {
 		
 		if (declarationPCs.empty) { // there are no declarations of this variable
-			return null
+			node.setProperty("HandledByRewriteFunctionCallRule", true)
+			return node
 		} else {
 			var PresenceCondition disjunctionPC = null
 			for (PresenceCondition pc : declarationPCs.reverseView) {
 				disjunctionPC = if (disjunctionPC == null) pc else pc.or(disjunctionPC)
 			}
 			
-			if (!guard.getBDD.imp(disjunctionPC.getBDD).isOne) {
-				println('''Reconfigurator error: «fname» undefined under «disjunctionPC.not».''')
-				return null
+			if (guard.and(disjunctionPC).isFalse) {
+				println('''Reconfigurator error: «fname» undefined under «guard».''')
+				node.setProperty("HandledByRewriteFunctionCallRule", true)
+				return node
 			}
 			
 			var GNode exp = null
 			
-			if (disjunctionPC.isFalse) {
+			if (!guard.getBDD.imp(disjunctionPC.getBDD).isOne) {
+				node.setProperty("HandledByRewriteFunctionCallRule", true)
 				exp = node
 			}
 			
@@ -126,6 +129,7 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 	override dispatch Object transform(GNode node) {
 		if (node.name.equals("FunctionCall")
 			&& fmap.containsKey((node.get(0) as GNode).get(0).toString)
+			&& !node.getBooleanProperty("HandledByRewriteFunctionCallRule")
 		) {
 			val fcall = (node.get(0) as GNode).get(0).toString
 			
