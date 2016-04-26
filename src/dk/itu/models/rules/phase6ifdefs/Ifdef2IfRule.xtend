@@ -31,7 +31,7 @@ class Ifdef2IfRule extends AncestorGuaranteedRule {
 		
 		if (
 			node.name.equals("Conditional")
-			&& #["AdditiveExpression", "Initializer", "ExpressionStatement"].contains(ancestors.last.name)
+			&& #["AdditiveExpression", "Initializer", "ExpressionStatement", "ReturnStatement"].contains(ancestors.last.name)
 		) {
 			//            List<     Map<        OriginalPC,        SimplifiedPC>>
 			val pcs = new ArrayList<SimpleEntry<PresenceCondition, PresenceCondition>>
