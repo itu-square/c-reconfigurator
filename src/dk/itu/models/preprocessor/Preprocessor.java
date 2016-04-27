@@ -201,7 +201,8 @@ public class Preprocessor {
 		featureExpression = removeWhitespace(featureExpression);
 		featureExpression = removeKeywords(featureExpression);
 		featureExpression = removeParentheses(featureExpression);
-		featureExpression = removeOperators(featureExpression);
+		featureExpression = removeRelationalOperators(featureExpression);
+		featureExpression = removeLogicalOperators(featureExpression);
 		
 		String[] features = featureExpression.split(",");
 		for (String feature : features) {
@@ -218,8 +219,16 @@ public class Preprocessor {
 		
 		return featureExpression;
 	}
+	
+	private String removeRelationalOperators(String featureExpression) {
+		String relationalOpsRegex = "(==|!=|>|>=|<|<=)";
+		featureExpression = featureExpression.replaceAll(relationalOpsRegex+"\\d+", "");
+		featureExpression = featureExpression.replaceAll("\\d+"+relationalOpsRegex, "");
+		
+		return featureExpression;
+	}
 
-	private String removeOperators(String featureExpression) {
+	private String removeLogicalOperators(String featureExpression) {
 		return featureExpression.replaceAll("&&|\\|\\|", ",");
 	}
 
