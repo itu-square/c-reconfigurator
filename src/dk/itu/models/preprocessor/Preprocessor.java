@@ -174,6 +174,8 @@ public class Preprocessor {
 		BufferedWriter bw = new BufferedWriter(new FileWriter(context.getDestfile()));
 		
 		// header
+		bw.write("#include <assert.h>");
+		bw.newLine();
 		bw.write("typedef int feature;");
 		bw.newLine();
 		
@@ -181,7 +183,9 @@ public class Preprocessor {
 			bw.write("feature " + reconfiguredFeature + ";");
 			bw.newLine();
 		}
-		
+		bw.write("void* _reconfig_skip () { }");
+		// AFLA: maybe undefined could be used later
+//		bw.write("void* _reconfig_undefined (char* value) { assert(0); }");
 		bw.close();
 	}
 	

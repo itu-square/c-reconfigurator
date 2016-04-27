@@ -49,10 +49,21 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
     	tdn.transform(node) as GNode
     }
     
-	protected def buildExp(GNode node, String varName, PresenceCondition varPC, List<PresenceCondition> declarationPCs) {
+    private def setHandled(GNode node) {
+    	node.setProperty("HandledByRewriteVariableUseRule", true)
+    	switch (true) {
+    		case (node.name.equals("Increment") && node.filter(GNode).head.name.equals("PrimaryIdentifier")):
+    			node.filter(GNode).head.setProperty("HandledByRewriteVariableUseRule", true)
+			case (node.name.equals("Subscript") && node.filter(GNode).head.name.equals("PrimaryIdentifier")):
+    			node.filter(GNode).head.setProperty("HandledByRewriteVariableUseRule", true)
+    	}
+    }
+    
+	protected def buildExp(GNode node, String varName, PresenceCondition guard, List<PresenceCondition> declarationPCs) {
 		
 		if (declarationPCs.empty) { // there are no declarations of this variable
-			return null
+			node.setHandled
+			return node
 		} else {
 			
 			// compute the disjunction of all declaration PCs
@@ -61,17 +72,19 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 				disjunctionPC = if (disjunctionPC == null) pc else pc.or(disjunctionPC)
 			}
 			
-			// If the variable PC does not imply the PC disjunction
-			// then it doesn't imply any of the PCs.
-			if (!varPC.getBDD.imp(disjunctionPC.getBDD).isOne) {
-				println('''Reconfigurator error: «varName» undefined under «disjunctionPC.not».''')
-				return null
-			}
+			// If the guard and the PC disjunction cannot be true in the same time
+			// then the guard cannot be true in the same time with any of the PCs.
+			if (guard.and(disjunctionPC).isFalse) {
+				println('''Reconfigurator error: «varName» undefined under «guard».''')
+				node.setHandled
+				return node
+ 			}
 			
 			// Initialize the expression to null.
 			var GNode exp = null
 			
-			if (disjunctionPC.isFalse) {
+			if (!guard.getBDD.imp(disjunctionPC.getBDD).isOne) {
+				node.setHandled
 				exp = node
 			}
 			
@@ -148,17 +161,22 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 	}
 	
 	override dispatch Object transform(GNode node) {
+		
 		if (
-			node.name.equals("PrimaryIdentifier")
-			|| (node.name.equals("Increment")
-				&& node.filter(GNode).head.name.equals("PrimaryIdentifier")
+			(
+				   (node.name.equals("PrimaryIdentifier"))
+				|| (node.name.equals("Increment") && node.filter(GNode).head.name.equals("PrimaryIdentifier"))
+				|| (node.name.equals("Subscript") && node.filter(GNode).head.name.equals("PrimaryIdentifier"))
 			)
+			&& !node.getBooleanProperty("HandledByRewriteVariableUseRule")
 		) {
 			val varName =
 				if (node.name.equals("PrimaryIdentifier"))
 					(node.get(0) as Language<CTag>).toString
-				else if (node.name.equals("Increment"))
+				else if (node.name.equals("Increment") || node.name.equals("Subscript"))
 					(node.filter(GNode).head.get(0) as Language<CTag>).toString
+				else
+					throw new Exception("RewriteVariableUseRule: unknown location of variable name")
 			
 			val declarationPCs = computePCs(varName, externalGuard.and(node.presenceCondition))
 

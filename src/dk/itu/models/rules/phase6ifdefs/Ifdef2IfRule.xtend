@@ -12,6 +12,7 @@ import xtc.tree.Node
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
+import xtc.lang.cpp.Syntax.Text
 
 class Ifdef2IfRule extends AncestorGuaranteedRule {
 	
@@ -44,10 +45,17 @@ class Ifdef2IfRule extends AncestorGuaranteedRule {
 				disPC = disPC.or(pc)
 			}
 			
-			if (!pcs.reverseView.head.value.isTrue)
-				throw new Exception("Ifdef2IfRule: Conditional in Expression does not cover universe (or I might be using the wrong universe; check against node.presenceCondition).")
-			
 			var Node exp = null
+			if (!node.presenceCondition.getBDD.imp(disPC.getBDD).isOne) {
+				exp = GNode::create(
+					"FunctionCall",
+					GNode::create(
+						"PrimaryIdentifier",
+						new Text(CTag::IDENTIFIER, "_reconfig_skip")),
+					new Language<CTag>(CTag::LPAREN),
+					new Language<CTag>(CTag::RPAREN))
+			}
+			
 			for (SimpleEntry<PresenceCondition, PresenceCondition> map : pcs.reverseView) {
 				if (node.getChildrenGuardedBy(map.key).size != 1) {
 					println('''- Ifdef2IfRule: PresenceCondition guarding multiple children.''')
