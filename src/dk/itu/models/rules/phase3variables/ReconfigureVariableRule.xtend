@@ -129,7 +129,7 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 			
 			// Find the bottom-most declaration of the current variable name (bottom-most scope)
 			// and add the current PresenceCondition to it.
-			getPCListForLastDeclaration(variableName).add(node.get(0) as PresenceCondition)
+			getPCListForLastDeclaration(variableName).add(node.presenceCondition.and(node.get(0) as PresenceCondition))
 			
 			// Create a TopDownStrategy to
 			// rename the declared variable and
