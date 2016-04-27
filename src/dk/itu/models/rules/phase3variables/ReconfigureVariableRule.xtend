@@ -46,10 +46,35 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 		(this as dk.itu.models.rules.ScopingRule).transform(node)
 
 		// Visit a variable Declaration under a Conditional.
-		if	(  node.name.equals("Conditional")						// current GNode is a Conditional
+		if	(
+			node.name.equals("Conditional")							// current GNode is a Conditional
 			&& node.size == 2										// has 2 children (1st is a PresenceCondition)
-			&& node.get(1) instanceof GNode
+			
+			&& (node.get(1) instanceof GNode)
 			&& (node.get(1) as GNode).name.equals("Declaration")	// 2nd child is a variable Declaration
+			
+			&& ((node.get(1) as GNode).get(0) instanceof GNode)
+			&& ((node.get(1) as GNode).get(0) as GNode).name.equals("DeclaringList")
+			
+			&& (((node.get(1) as GNode).get(0) as GNode).get(0) instanceof GNode)
+			&& (((node.get(1) as GNode).get(0) as GNode).get(0) as GNode).name.equals("DeclaringList")
+		) {
+			println
+			println('''-------------------------''')
+			println('''- ReconfigureVariableRule''')
+			println('''------''')
+			println((node.get(1) as GNode).printAST)
+			println
+			throw new Exception("ReconfigureVariableRule: multiple variables declared at once.")
+		} else if (
+			node.name.equals("Conditional")							// current GNode is a Conditional
+			&& node.size == 2										// has 2 children (1st is a PresenceCondition)
+			
+			&& (node.get(1) instanceof GNode)
+			&& (node.get(1) as GNode).name.equals("Declaration")	// 2nd child is a variable Declaration
+			
+			&& ((node.get(1) as GNode).get(0) instanceof GNode)
+			&& ((node.get(1) as GNode).get(0) as GNode).name.equals("DeclaringList")
 		) {
 			
 			val presenceCondition = node.presenceCondition.and(node.get(0) as PresenceCondition)
@@ -60,6 +85,7 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 			
 			val declaration = node.get(1) as GNode
 			val declaringList = declaration.get(0) as GNode
+			
 			val variableName =
 				if ((declaringList.get(1) as GNode).name.equals("SimpleDeclarator")) {
 					(declaringList.get(1) as GNode).get(0).toString
@@ -84,7 +110,6 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 					println('''------''')
 					println(declaringList.printAST)
 					println
-					
 					throw new Exception("ReconfigureVariableRule: unknown location of variable name")
 				}
 //				else ((declaringList.get(1) as GNode).get(1) as GNode).get(0).toString
