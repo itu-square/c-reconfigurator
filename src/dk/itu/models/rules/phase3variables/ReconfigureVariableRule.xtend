@@ -87,6 +87,11 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 			val declaration = node.get(1) as GNode
 			val declaringList = declaration.get(0) as GNode
 			
+			if(declaringList.toString.contains("DeclarationQualifierList") 
+				&& declaringList.toString.contains("typedef")) {
+					throw new Exception("ReconfigureVariableRule: does not yet handle typedefs")
+			}
+			
 			val variableName =
 				if ((declaringList.get(1) as GNode).name.equals("SimpleDeclarator")) {
 					(declaringList.get(1) as GNode).get(0).toString
