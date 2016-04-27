@@ -9,6 +9,7 @@ import xtc.tree.GNode
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
+import xtc.tree.Node
 
 class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 	
@@ -161,7 +162,7 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 
 			val tdn = new TopDownStrategy
 			tdn.register(new RewriteVariableUseRule(localVariableScopes, node.presenceCondition, pcidmap))
-			val newNode = tdn.transform(node.get(2)) as GNode
+			val newNode = tdn.transform(node.get(2)) as Node
 			
 			if (!newNode.printAST.equals(node.get(2).printAST))
 				return GNode::createFromPair(
