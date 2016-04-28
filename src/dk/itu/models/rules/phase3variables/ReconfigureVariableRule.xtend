@@ -94,21 +94,29 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 			
 			val variableName =
 				if ((declaringList.get(1) as GNode).name.equals("SimpleDeclarator")) {
+					
 					(declaringList.get(1) as GNode).get(0).toString
-				} else if(
-					(declaringList.get(1) as GNode).name.equals("UnaryIdentifierDeclarator")
+										
+				} else if((declaringList.get(1) as GNode).name.equals("UnaryIdentifierDeclarator")
 					&& (declaringList.get(1) as GNode).get(1) instanceof GNode
-					&& ((declaringList.get(1) as GNode).get(1) as GNode).name.equals("SimpleDeclarator")
-				) {
+					&& ((declaringList.get(1) as GNode).get(1) as GNode).name.equals("SimpleDeclarator")) {
+					
 					((declaringList.get(1) as GNode).get(1) as GNode).get(0).toString
-				} else if(
-					(declaringList.get(1) as GNode).name.equals("UnaryIdentifierDeclarator")
+					
+				} else if((declaringList.get(1) as GNode).name.equals("UnaryIdentifierDeclarator")
 					&& (declaringList.get(1) as GNode).get(1) instanceof GNode
 					&& ((declaringList.get(1) as GNode).get(1) as GNode).name.equals("ArrayDeclarator")
 					&& ((declaringList.get(1) as GNode).get(1) as GNode).get(0) instanceof GNode
-					&& (((declaringList.get(1) as GNode).get(1) as GNode).get(0) as GNode).name.equals("SimpleDeclarator")
-				) {
+					&& (((declaringList.get(1) as GNode).get(1) as GNode).get(0) as GNode).name.equals("SimpleDeclarator")) {
+					
 					(((declaringList.get(1) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString
+					
+				} else if((declaringList.get(1) as GNode).name.equals("ArrayDeclarator")
+					&& (declaringList.get(1) as GNode).get(0) instanceof GNode
+					&& ((declaringList.get(1) as GNode).get(0) as GNode).name.equals("SimpleDeclarator")) {
+					
+					((declaringList.get(1) as GNode).get(0) as GNode).get(0).toString
+					
 				} else {
 					println
 					println('''-------------------------''')
