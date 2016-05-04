@@ -79,15 +79,15 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			addVariable(variableName)
 		}
 		
-		if (
-			node.name.equals("Declaration") &&
-			(node.get(0) as GNode).name.equals("DeclaringList")
+		if (node.name.equals("Declaration") 
+			&& node.get(0) instanceof GNode
+			&& (node.get(0) as GNode).name.equals("DeclaringList")
 		) {
 			val declaringList = node.get(0) as GNode
 			val simpleDeclarator =
-				if ((declaringList.get(1) as GNode).name.equals("SimpleDeclarator"))
+				if (declaringList.get(1) instanceof GNode && (declaringList.get(1) as GNode).name.equals("SimpleDeclarator"))
 					(declaringList.get(1) as GNode)
-				else if (((declaringList.get(1) as GNode).get(1) as GNode).name.equals("SimpleDeclarator"))
+				else if ( declaringList.get(1) instanceof GNode && ((declaringList.get(1) as GNode).get(1) as GNode).name.equals("SimpleDeclarator"))
 					((declaringList.get(1) as GNode).get(1) as GNode)
 				else
 					null

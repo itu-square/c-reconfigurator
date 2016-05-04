@@ -42,6 +42,9 @@ class NormalizeRule extends Rule  {
 		tdn2.register(new MergeConditionalsRule)
 		tdn2.register(new OptimizeAssignmentExpressionRule)
 		tdn2.register(new EnforceBracesInSelectionStatementRule)
+		
+		tdn2.register(new SplitMultipleVariablesRule)
+		
 		normalized = tdn2.transform(normalized) as Node
 		
 		if(normalized != node)
