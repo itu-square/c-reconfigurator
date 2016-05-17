@@ -83,8 +83,8 @@ class Test5 extends Test {
 		val tdn5 = new TopDownStrategy
 		tdn5.register(new RemergeConditionalsRule)
 		var Node node5 = tdn5.transform(node4) as Node
-		writeToFile(node5.printCode, file + ".phase5.c")
-		writeToFile(node5.printAST, file + ".phase5.ast")
+//		writeToFile(node5.printCode, file + ".phase5.c")
+//		writeToFile(node5.printAST, file + ".phase5.ast")
 
 
 

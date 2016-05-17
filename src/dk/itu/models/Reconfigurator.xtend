@@ -126,12 +126,14 @@ class Reconfigurator {
 				Settings::targetFile.listFiles.forEach[delete]
 				}
 			else {
-				new File(Settings::targetFile.parent).listFiles()
-					.filter[name.startsWith(Settings::targetFile.name)]
-					.forEach[delete]
-				Settings::reconfigFile.delete
-				Settings::consoleFile.delete
-				Settings::summaryFile.delete
+				if(Settings::targetFile.parentFile.exists) {
+					new File(Settings::targetFile.parent).listFiles()
+						.filter[name.startsWith(Settings::targetFile.name)]
+						.forEach[delete]
+					Settings::reconfigFile.delete
+					Settings::consoleFile.delete
+					Settings::summaryFile.delete
+				}
 				Settings::targetFile.parentFile.mkdir
 			}
 			
