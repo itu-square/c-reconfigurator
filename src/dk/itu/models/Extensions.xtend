@@ -21,12 +21,10 @@ import us.cuny.qc.cs.babbage.Minimize
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
+import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 import xtc.tree.Node
 import xtc.util.Pair
-
-import static dk.itu.models.Extensions.*
-import xtc.lang.cpp.Syntax.Text
 
 class Extensions {
 	public static def String folder(String filePath) {
@@ -239,8 +237,8 @@ class Extensions {
 	}
 	
 	
-	public static def <T,U> U pipe(T it, Function1<? super T, U> f) {
-		f.apply(it)
+	public static def <I,O> O pipe(I i, Function1<? super I, O> f) {
+		f.apply(i)
 	}
 	
 	public static def Pair<Object> getChildrenGuardedBy(GNode node, PresenceCondition pc) {

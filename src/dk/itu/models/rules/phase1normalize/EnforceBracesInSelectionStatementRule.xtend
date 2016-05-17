@@ -25,90 +25,77 @@ class EnforceBracesInSelectionStatementRule extends Rule {
 	override dispatch Object transform(GNode node) {
 		
 		if (node.name.equals("SelectionStatement")) {
-//			println
-//			println
-//			println
-//			println('''-------------------------------''')
-//			println('''- EnforceBraces ---------------''')
-//			println('''----------------''')
-//			println(node.printCode)
-//			println('''- i1: «node.findFirst[toString.equals(")")]»''')
-//			println('''- i1: «node.indexOf(node.findFirst[toString.equals(")")])»''')
-//			println('''- i2: «node.findFirst[it instanceof Language && (it as Language<CTag>).tag.equals(CTag::^ELSE)]»''')
-//			println('''- i2: «node.indexOf(node.findFirst[it instanceof Language && (it as Language<CTag>).tag.equals(CTag::^ELSE)])»''')
-			
-			var i1 = node.indexOf(node.findFirst[toString.equals(")")])
-			var i2 = node.indexOf(node.findFirst[it instanceof Language && (it as Language<CTag>).tag.equals(CTag::^ELSE)])
 			var update = false
-			var newPair = node.toPair.subPair(0, i1+1)
 			
-			if (i2 != -1) {
-				val Pair<Object> children = node.toPair.subPair(i1+1, i2)
-//				println('''---''')
-//				children.forEach[println(it.printCode)]
+			var branchStartIncl = node.indexOf(node.findFirst[toString.equals(")")]) + 1
+			var newPair = node.toPair.subPair(0, branchStartIncl)
+			
+			if (node.exists[it instanceof Language<?> && (it as Language<CTag>).tag.equals(CTag::^ELSE)]) {
+				
+				var branchEndExcl = node.indexOf(node.findFirst[it instanceof Language<?> && (it as Language<CTag>).tag.equals(CTag::^ELSE)])
+				
+				val Pair<Object> branchChildren = node.toPair.subPair(branchStartIncl, branchEndExcl)
 				
 				if (
-					children.size > 1
-					&& (!(children.head instanceof Language)
-						|| (children.head as Language<CTag>).tag.equals(CTag::LBRACE))
-				) {
-//					println(''':> children''')
+					(
+						branchChildren.size == 1
+						&& (branchChildren.head instanceof GNode)
+						&& ((branchChildren.head as GNode).name.equals("SelectionStatement")
+							|| (branchChildren.head as GNode).name.equals("Conditional")))
+					|| (
+						branchChildren.size > 1
+						&& (!(branchChildren.head instanceof Language<?>)
+							|| (branchChildren.head as Language<CTag>).tag.equals(CTag::LBRACE)))
+				) {		
 					update = true
-					newPair.add(GNode::createFromPair(
-						"CompoundStatement",
-						new Pair<Object>(new Language<CTag>(CTag::LBRACE))
-							.append(children)
-							.add(new Language<CTag>(CTag::RBRACE))
-							.add(new Language<CTag>(CTag::^ELSE))))
+					newPair = newPair
+						.add(GNode::createFromPair(
+							"CompoundStatement",
+							new Pair<Object>(new Language<CTag>(CTag::LBRACE))
+								.append(branchChildren)
+								.add(new Language<CTag>(CTag::RBRACE))))
+						.add(new Language<CTag>(CTag::^ELSE))
+				} else {
+					newPair = newPair.append(branchChildren)
+						.add(new Language<CTag>(CTag::^ELSE))
 				}
 				
-				i1 = i2
-				i2 = node.size
-			}
-			else {
-				i2 = node.size
+				branchStartIncl = branchEndExcl + 1
 			}
 			
-			val Pair<Object> children = node.toPair.subPair(i1+1, i2)
-//			println('''---''')
-//			children.forEach[println(it.printCode)]
+			var branchEndExcl = node.size
+			val Pair<Object> branchChildren = node.toPair.subPair(branchStartIncl, branchEndExcl)
 			
 			if (
-				children.size > 1
-				&& (!(children.head instanceof Language)
-					|| (children.head as Language<CTag>).tag.equals(CTag::LBRACE))
+				(
+					branchChildren.size == 1
+					&& (branchChildren.head instanceof GNode)
+					&& ((branchChildren.head as GNode).name.equals("SelectionStatement")
+						|| (branchChildren.head as GNode).name.equals("Conditional")))
+				|| (
+					branchChildren.size > 1
+					&& (!(branchChildren.head instanceof Language<?>)
+						|| (branchChildren.head as Language<CTag>).tag.equals(CTag::LBRACE)))
 			) {
-//				println(''':> children''')
-				update = true
-				var newChildren = new Pair<Object>(new Language<CTag>(CTag::LBRACE))
-				newChildren = newChildren.append(children)
-				newChildren.add(new Language<CTag>(CTag::RBRACE))
 				
+			
+				update = true
 				newPair.add(GNode::createFromPair(
 					"CompoundStatement",
-					newChildren))
+					new Pair<Object>(new Language<CTag>(CTag::LBRACE))
+						.append(branchChildren)
+						.add(new Language<CTag>(CTag::RBRACE))))
+			} else {
+				newPair = newPair.append(branchChildren)
 			}
 			
 			if (update) {
-//				println
-//				println
-//				println
-//				println
-//				println("-----------------------------")
-//				println(node.printAST)
-//				println("-----------------------------")
-//				println(GNode::createFromPair(
-//					"SelectionStatement",
-//					newPair
-//				).printAST)
-				
 				return GNode::createFromPair(
 					"SelectionStatement",
 					newPair
 				)
 			}
 		}
-		
 		node
 	}
 }

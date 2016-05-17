@@ -4,15 +4,16 @@ import dk.itu.models.Reconfigurator
 import dk.itu.models.rules.AncestorGuaranteedRule
 import java.util.AbstractMap.SimpleEntry
 import java.util.ArrayList
+import org.eclipse.xtext.xbase.lib.Functions.Function1
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
+import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 import xtc.tree.Node
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
-import xtc.lang.cpp.Syntax.Text
 
 class Ifdef2IfRule extends AncestorGuaranteedRule {
 	
@@ -32,8 +33,13 @@ class Ifdef2IfRule extends AncestorGuaranteedRule {
 		
 		if (
 			node.name.equals("Conditional")
-			&& #["AdditiveExpression", "Initializer", "ExpressionStatement", "ReturnStatement",
-				"MultiplicativeExpression", "PrimaryExpression"].contains(ancestors.last.name)
+			&& (
+				#["AdditiveExpression", "Initializer", "ExpressionStatement", "ReturnStatement",
+					"MultiplicativeExpression", "PrimaryExpression"].contains(ancestors.last.name)
+				||
+				(ancestors.last.name.equals("SelectionStatement")
+					&& ancestors.last.indexOf(node) < ancestors.last.indexOf(ancestors.last.findFirst[it instanceof Language<?> && (it as Language<CTag>).tag.equals(CTag.RPAREN)]) )
+				)
 		) {
 			//            List<     Map<        OriginalPC,        SimplifiedPC>>
 			val pcs = new ArrayList<SimpleEntry<PresenceCondition, PresenceCondition>>
@@ -83,8 +89,8 @@ class Ifdef2IfRule extends AncestorGuaranteedRule {
 			return exp
 		} else if (
 			node.name.equals("Conditional")
-			&& #["DeclarationOrStatementList", "CompoundStatement"].contains(ancestors.last.name)
-		) {	
+			&& #["DeclarationOrStatementList", "CompoundStatement", "SelectionStatement"].contains(ancestors.last.name)
+		) {
 			//            List<     Map<        OriginalPC,        SimplifiedPC>>
 			val pcs = new ArrayList<SimpleEntry<PresenceCondition, PresenceCondition>>
 			
@@ -99,33 +105,46 @@ class Ifdef2IfRule extends AncestorGuaranteedRule {
 			var GNode lastexp = null
 			
 			for (SimpleEntry<PresenceCondition, PresenceCondition> map : pcs) {
+				
+				val branchChildren = node.getChildrenGuardedBy(map.key)
+				val useBraces = branchChildren.size > 1
+					|| (branchChildren.get(0) instanceof GNode && 
+						(
+							(branchChildren.get(0) as GNode).name.equals("SelectionStatement")
+							|| (branchChildren.get(0) as GNode).name.equals("IterationStatement")
+						)
+					)
+				val Function1<Node, Node> lbrace = [Node n | if (useBraces) n.add(new Language<CTag>(CTag::LBRACE)) else n]
+				val Function1<Node, Node> rbrace = [Node n | if (useBraces) n.add(new Language<CTag>(CTag::RBRACE)) else n]
+				
+				
 				if (map == pcs.head) {
 					exp = GNode::create("SelectionStatement")
 					exp = exp.add(new Language<CTag>(CTag::^IF))
 						.add(new Language<CTag>(CTag::LPAREN))
-						.add((node.get(0) as PresenceCondition).PCtoCexp)
+						.add(map.value.PCtoCexp)
 						.add(new Language<CTag>(CTag::RPAREN))
-						.add(new Language<CTag>(CTag::LBRACE))
-						.addAll(node.getChildrenGuardedBy(map.key))
-						.add(new Language<CTag>(CTag::RBRACE)) as GNode
+						.pipe(lbrace)
+						.addAll(branchChildren)
+						.pipe(rbrace) as GNode
 					lastexp = exp
 				} else if (map != pcs.last) {
 					var newexp = GNode::create("SelectionStatement")
 					newexp = newexp.add(new Language<CTag>(CTag::^IF))
 							.add(new Language<CTag>(CTag::LPAREN))
-							.add((node.get(0) as PresenceCondition).PCtoCexp)
+							.add(map.value.PCtoCexp)
 							.add(new Language<CTag>(CTag::RPAREN))
-							.add(new Language<CTag>(CTag::LBRACE))
-							.addAll(node.getChildrenGuardedBy(map.key))
-							.add(new Language<CTag>(CTag::RBRACE)) as GNode
+							.pipe(lbrace)
+							.addAll(branchChildren)
+							.pipe(rbrace) as GNode
 					lastexp.add(new Language<CTag>(CTag::^ELSE))
 					lastexp.add(newexp)
 					lastexp = newexp
 				} else { // map == pcs.last
 					lastexp.add(new Language<CTag>(CTag::^ELSE))
-						.add(new Language<CTag>(CTag::LBRACE))
-						.addAll(node.getChildrenGuardedBy(map.key))
-						.add(new Language<CTag>(CTag::RBRACE))
+						.pipe(lbrace)
+						.addAll(branchChildren)
+						.pipe(rbrace) as GNode
 				}
 			}
 			return exp
