@@ -14,6 +14,7 @@ class Reconfigurator {
 	
 	// per test settings
 	static public var Test test
+	static public var String file
 	static public var PresenceConditionManager presenceConditionManager
 	static public var Map<String, String> transformedFeaturemap
 	static public var Preprocessor preprocessor

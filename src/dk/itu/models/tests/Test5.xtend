@@ -94,14 +94,16 @@ class Test5 extends Test {
 		val tdn6 = new TopDownStrategy
 		tdn6.register(new Ifdef2IfRule)
 		var Node node6 = tdn6.transform(node5) as Node
-		writeToFile('''#include "«Settings::reconfigFile»"«"\n" + node6.printCode»''', file)
-		writeToFile(node6.printAST, file + ".ast")
+//		writeToFile(node5.printCode, file + ".phase6.c")
+//		writeToFile(node5.printAST, file + ".phase6.ast")
 
 
 
 
 
 		val Node result = node6
+		writeToFile('''#include "«Settings::reconfigFile»"«"\n" + result.printCode»''', file)
+//		writeToFile(result.printAST, file + ".ast")
 		
 		
 		// check #if elimination

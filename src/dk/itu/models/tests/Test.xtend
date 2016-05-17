@@ -12,6 +12,7 @@ import xtc.tree.Node
 import java.util.HashMap
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import java.io.File
+import dk.itu.models.Reconfigurator
 
 abstract class Test {
 	
@@ -21,6 +22,7 @@ abstract class Test {
 
 	new(String inputFile) {
 		this.file = inputFile
+		Reconfigurator::file = inputFile
 	}
 
 	def void run(List<String> args) {

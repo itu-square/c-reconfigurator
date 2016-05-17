@@ -131,6 +131,24 @@ class PrintCode extends PrintMethod {
 
 	static def private dispatch void t(GNode node) {
 		
+		val locs = node.nestedNodesLocations
+		
+		if (
+			!Settings::printIncludes
+			&& ancestors.size >= 1
+			&& ancestors.last.name.equals("ExternalDeclarationList")
+			&& locs.size == 1
+			&& !locs.get(0).equals(Reconfigurator::file)
+		) {
+//			println
+//			println("- pp: node => " + node.name)	
+//			println("- pp: locs  => " + locs.size)
+//			locs.forEach[
+//				println("- pp:     loc - " + it)]
+//			println("- pp:    file - " + Reconfigurator::file)
+			return
+		}
+		
 		var PresenceCondition lastPC
 		
 		var preconditional_C_line = last_C_line
@@ -161,7 +179,7 @@ class PrintCode extends PrintMethod {
 			ancestors.last != null
 			&& ancestors.last.name.equals("SelectionStatement")
 			&& ancestors.last.indexOf(node) > 0
-			&& ancestors.last.get(ancestors.last.indexOf(node)-1) instanceof Language
+			&& ancestors.last.get(ancestors.last.indexOf(node)-1) instanceof Language<?>
 			&& ((ancestors.last.get(ancestors.last.indexOf(node)-1) as Language<CTag>).tag.equals(CTag::RPAREN)
 				|| (ancestors.last.get(ancestors.last.indexOf(node)-1) as Language<CTag>).tag.equals(CTag::^ELSE))
 			&& #["ExpressionStatement", "ReturnStatement"].contains(node.name)

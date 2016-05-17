@@ -25,6 +25,7 @@ import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 import xtc.tree.Node
 import xtc.util.Pair
+import java.util.ArrayList
 
 class Extensions {
 	public static def String folder(String filePath) {
@@ -397,6 +398,26 @@ class Extensions {
 			var ps = new PrintStream(baos)
 			Minimize::process(mexp, ps).MexptoCexp(varMap)
 		}
+	}
+	
+	private static def void getNestedNodesLocations(Node node, ArrayList<String> locations) {
+		for(Object child : node) {
+			if (child instanceof Node) {
+				val location = (child as Node).location
+				if (location != null && !locations.contains(location.file))
+					locations.add(location.file)
+				getNestedNodesLocations(child as Node, locations)
+			}
+		}
+	}
+	
+	public static def List<String> getNestedNodesLocations(Node node)
+	{
+		val ArrayList<String> locations = new ArrayList<String>
+		if (node.location != null)
+			locations.add(node.location.file)
+		getNestedNodesLocations(node, locations)
+		return locations
 	}
 
 }

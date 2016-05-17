@@ -12,6 +12,7 @@ class Settings {
 	static public val boolean DEBUG = true
 	
 	static public var boolean oracleOnly = false
+	static public var boolean printIncludes = false
 	
 	static public var String reconfiguratorIncludePlaceholder = "_reconfig_include"; 
 	
@@ -64,6 +65,8 @@ class Settings {
 					else {println("-include argument has no value."); return false}
 				case "-oracleOnly":
 					oracleOnly = true
+				case "-printIncludes":
+					printIncludes = true
 				case "-ignore":
 					if(i < args.size-1) { ignorePattern = Pattern.compile(args.get(i+1), Pattern.CASE_INSENSITIVE) }
 					else {println("-ignore argument has no value."); return false}
