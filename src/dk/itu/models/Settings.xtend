@@ -13,6 +13,8 @@ class Settings {
 	
 	static public var boolean oracleOnly = false
 	
+	static public var String reconfiguratorIncludePlaceholder = "_reconfig_include"; 
+	
 	static public var File sourceFile
 	static public var File targetFile
 	static public var File oracleFile

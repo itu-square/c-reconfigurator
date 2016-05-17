@@ -18,6 +18,8 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import dk.itu.models.Settings;
+
 
 public class Preprocessor {
 
@@ -87,7 +89,7 @@ public class Preprocessor {
 					String param = result.group(2); // feature expression
 					
 					if (Tag.INCLUDE.equals(dir)) {
-						out.append("char include[] = \"" + line.replace("\"", "\\\"") + "\";\n");
+						out.append("char " + Settings.reconfiguratorIncludePlaceholder + "[] = \"" + line.replace("\"", "\\\"") + "\";\n");
 					}
 					out.append(line + "\n");
 					

@@ -10,6 +10,7 @@ import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
 import xtc.tree.Node
+import dk.itu.models.Settings
 
 class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 	
@@ -126,30 +127,32 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 					println
 					throw new Exception("ReconfigureVariableRule: unknown location of variable name")
 				}
-//				else ((declaringList.get(1) as GNode).get(1) as GNode).get(0).toString
-			val newName = variableName + "_V" + pcidmap.get_id(presenceCondition)
-			
-			// Add the variable in the declaration to the variable scope
-			// because this Declaration node hasn't been visited yet.
-			if(!variableExists(variableName)) {
-				addVariable(variableName)
+
+			if (!variableName.equals(Settings::reconfiguratorIncludePlaceholder)) {
+				val newName = variableName + "_V" + pcidmap.get_id(presenceCondition)
+				
+				// Add the variable in the declaration to the variable scope
+				// because this Declaration node hasn't been visited yet.
+				if(!variableExists(variableName)) {
+					addVariable(variableName)
+				}
+				
+				// Find the bottom-most declaration of the current variable name (bottom-most scope)
+				// and add the current PresenceCondition to it.
+				getPCListForLastDeclaration(variableName).add(node.presenceCondition.and(node.get(0) as PresenceCondition))
+				
+				// Create a TopDownStrategy to
+				// rename the declared variable and
+				// rewrite variable use in the assignment expression.
+				val tdn = new TopDownStrategy
+				tdn.register(new RenameVariableRule(newName))
+				val newNode = tdn.transform(node.get(1)) as GNode
+				
+				newNode.setProperty("OriginalPC", node.presenceCondition.and(node.get(0) as PresenceCondition))
+				
+				// Return the new Declaration without the surrounding Conditional.
+				return newNode
 			}
-			
-			// Find the bottom-most declaration of the current variable name (bottom-most scope)
-			// and add the current PresenceCondition to it.
-			getPCListForLastDeclaration(variableName).add(node.presenceCondition.and(node.get(0) as PresenceCondition))
-			
-			// Create a TopDownStrategy to
-			// rename the declared variable and
-			// rewrite variable use in the assignment expression.
-			val tdn = new TopDownStrategy
-			tdn.register(new RenameVariableRule(newName))
-			val newNode = tdn.transform(node.get(1)) as GNode
-			
-			newNode.setProperty("OriginalPC", node.presenceCondition.and(node.get(0) as PresenceCondition))
-			
-			// Return the new Declaration without the surrounding Conditional.
-			return newNode
 		} else if(#["ExpressionStatement", "Initializer", "ReturnStatement"]
 			.contains(node.name)
 		) {
