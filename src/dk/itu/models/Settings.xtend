@@ -15,11 +15,14 @@ class Settings {
 	static public var boolean printIncludes = false
 	
 	static public var String reconfiguratorIncludePlaceholder = "_reconfig_include"; 
+	static public var List<String> defineMacros
+	static public var List<String> undefMacros
 	
 	static public var File sourceFile
 	static public var File targetFile
 	static public var File oracleFile
-	static public var List<File> includeFiles
+	static public var List<File> includeFolders
+	static public var List<File> headerFiles
 	static public var File reconfigFile
 	static public var File consoleFile
 	static public var File summaryFile
@@ -44,7 +47,10 @@ class Settings {
 	// return false in case of error
 	//        true in case of success
 	static public def boolean init(String[] args) {
-		includeFiles = new ArrayList<File>
+		includeFolders = new ArrayList<File>
+		headerFiles = new ArrayList<File>
+		defineMacros = new ArrayList<String>
+		undefMacros = new ArrayList<String>
 		
 		if(!args.contains("-source")) { println("-source argument is missing."); return false }
 		if(!args.contains("-target")) { println("-target argument is missing."); return false }
@@ -61,8 +67,17 @@ class Settings {
 					if(i < args.size-1) { oracleFile = new File(args.get(i+1)) }
 					else {println("-oracle argument has no value."); return false}
 				case "-include":
-					if(i < args.size-1) { includeFiles.add(new File(args.get(i+1))) }
+					if(i < args.size-1) { includeFolders.add(new File(args.get(i+1))) }
 					else {println("-include argument has no value."); return false}
+				case "-hdFile":
+					if(i < args.size-1) { headerFiles.add(new File(args.get(i+1))) }
+					else {println("-hdFile argument has no value."); return false}
+				case "-define":
+					if(i < args.size-1) { defineMacros.add(args.get(i+1)) }
+					else {println("-define argument has no value."); return false}
+				case "-undef":
+					if(i < args.size-1) { undefMacros.add(args.get(i+1)) }
+					else {println("-undef argument has no value."); return false}
 				case "-oracleOnly":
 					oracleOnly = true
 				case "-printIncludes":
@@ -79,8 +94,10 @@ class Settings {
 		println('''  Source: «sourceFile»''')
 		println('''  Target: «targetFile»''')
 		println('''  Oracle: «if (oracleFile != null) oracleFile else "[none]"»''')
-		includeFiles.forEach[
+		includeFolders.forEach[
 			println(''' Include: «it»''')]
+		headerFiles.forEach[
+			println(''' Header: «it»''')]
 		println('''REconfig: «reconfigFile»''')
 		println
 		
@@ -90,7 +107,9 @@ class Settings {
 		if(sourceFile.isFile && targetFile.exists && targetFile.isDirectory) { println("Source is file, but target is directory."); return false }
 		if(sourceFile.isFile && oracleFile != null && oracleFile.exists && oracleFile.isDirectory) { println("Source is file, but oracle is directory."); return false }
 
-		if (!includeFiles.forall[if(!exists || !directory) { println("Include does not exist or is not directory: " + it); false} else true])
+		if (!includeFolders.forall[if(!exists || !directory) { println("Include does not exist or is not directory: " + it); false} else true])
+			return false
+		if (!headerFiles.forall[if(!exists || directory) { println("Header does not exist or is directory: " + it); false} else true])
 			return false
 		
 		true

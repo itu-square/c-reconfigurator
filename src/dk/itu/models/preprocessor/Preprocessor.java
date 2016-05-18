@@ -47,7 +47,14 @@ public class Preprocessor {
 	private StringBuilder preprocess() throws IOException {
 		StringBuilder out = new StringBuilder();
 		BufferedReader br = null; // for reading from file
-
+		
+		for (String defineMacro : Settings.defineMacros) {
+			out.append("#define " + defineMacro + "\n");
+		}
+		for (String undefMacro : Settings.undefMacros) {
+			out.append("#undef " + undefMacro + "\n");
+		}
+		
 		try {
 			br = new BufferedReader(new FileReader(context.getSrcfile()));
 
