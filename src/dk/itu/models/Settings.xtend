@@ -13,6 +13,7 @@ class Settings {
 	
 	static public var boolean oracleOnly = false
 	static public var boolean printIncludes = false
+	static public var boolean minimize = false
 	
 	static public var String reconfiguratorIncludePlaceholder = "_reconfig_include"; 
 	static public var List<String> defineMacros
@@ -51,6 +52,8 @@ class Settings {
 		headerFiles = new ArrayList<File>
 		defineMacros = new ArrayList<String>
 		undefMacros = new ArrayList<String>
+		
+		undefMacros.add("__cplusplus")
 		
 		if(!args.contains("-source")) { println("-source argument is missing."); return false }
 		if(!args.contains("-target")) { println("-target argument is missing."); return false }

@@ -27,8 +27,8 @@ class Reconfigurator {
 //			"-naiveFMLR",
 //			"-lexer",
 			"-no-exit",
-			"-U", "__cplusplus",
 //			"-showActions",
+//			"-verbose",
 //			"-follow-set",
 //			"-printAST",
 //			"-printSource",
@@ -38,10 +38,17 @@ class Reconfigurator {
 //			"-headerGuards",
 //			"-macroTable",
 //			,"-E"
+//			,"-isystem"	,"/home/alex/repos/includes-redhat/usr/include/"
 		]
 		
 		var newArgs = new ArrayList<String>
 		newArgs.addAll(args)
+		for (String defineMacro : Settings.defineMacros) {
+			newArgs.add("-D")
+			newArgs.add(defineMacro) }
+		for (String undefMacro : Settings::undefMacros) {
+			newArgs.add("-U")
+			newArgs.add(undefMacro) }
 		for (File include : Settings::includeFolders) {
 			newArgs.addAll("-I", include.path) }
 		for (File header : Settings::headerFiles) {

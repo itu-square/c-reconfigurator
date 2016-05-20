@@ -26,6 +26,7 @@ import xtc.tree.GNode
 import xtc.tree.Node
 import xtc.util.Pair
 import java.util.ArrayList
+import com.google.common.io.Files
 
 class Extensions {
 	public static def String folder(String filePath) {
@@ -38,13 +39,19 @@ class Extensions {
 	}
 	
 	public static def void writeToFile(String text, String file) {
+		println("Writing file: " + file)
+		val fileObject = new File(file)
+		if (!fileObject.parentFile.exists) {
+			Files.createParentDirs(fileObject)
+		}
+			
 		try {
 			var PrintWriter file_output = new PrintWriter(new FileOutputStream(file, true));
 			file_output.write(text);
 			file_output.flush();
 			file_output.close();
 		} catch (IOException e) {
-			System.err.println("Can not recover from the input or output fault");
+			System.err.println('''Can not recover from the input or output fault: «e.message» {«fileObject.parentFile.exists»}''');
 		}
 	}
 	
@@ -339,7 +346,10 @@ class Extensions {
 			val mexp = condition.PCtoMexp(varMap)
 			val baos = new ByteArrayOutputStream
 			var ps = new PrintStream(baos)
-			Minimize::process(mexp, ps).MexptoCPPexp(varMap)
+			if (Settings::minimize)
+				Minimize::process(mexp, ps).MexptoCPPexp(varMap)
+			else
+				mexp.MexptoCPPexp(varMap)
 		}
 	}
 
@@ -396,7 +406,10 @@ class Extensions {
 			val mexp = condition.PCtoMexp(varMap)
 			val baos = new ByteArrayOutputStream
 			var ps = new PrintStream(baos)
-			Minimize::process(mexp, ps).MexptoCexp(varMap)
+			if (Settings::minimize)
+				Minimize::process(mexp, ps).MexptoCexp(varMap)
+			else
+				mexp.MexptoCexp(varMap)
 		}
 	}
 	

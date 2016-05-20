@@ -23,7 +23,9 @@ class Test5 extends Test {
 	
 	override transform(Node node) {
 		
-//		writeToFile(node.printCode, file + ".phase0.c")
+		println("PHASE 0 - Print base")
+		
+		writeToFile(node.printCode, file + ".phase0.c")
 //		writeToFile(node.printAST, file + ".phase0.ast")
 		
 		
@@ -37,7 +39,7 @@ class Test5 extends Test {
 		
 		if(node1.checkContainsIf1) return;
 		
-//		writeToFile(node1.printCode, file + ".phase1.c")
+		writeToFile(node1.printCode, file + ".phase1.c")
 //		writeToFile(node1.printAST, file + ".phase1.ast")
 
 
@@ -83,7 +85,7 @@ class Test5 extends Test {
 		val tdn5 = new TopDownStrategy
 		tdn5.register(new RemergeConditionalsRule)
 		var Node node5 = tdn5.transform(node4) as Node
-//		writeToFile(node5.printCode, file + ".phase5.c")
+		writeToFile(node5.printCode, file + ".phase5.c")
 //		writeToFile(node5.printAST, file + ".phase5.ast")
 
 
@@ -94,8 +96,8 @@ class Test5 extends Test {
 		val tdn6 = new TopDownStrategy
 		tdn6.register(new Ifdef2IfRule)
 		var Node node6 = tdn6.transform(node5) as Node
-//		writeToFile(node5.printCode, file + ".phase6.c")
-//		writeToFile(node5.printAST, file + ".phase6.ast")
+//		writeToFile(node6.printCode, file + ".phase6.c")
+//		writeToFile(node6.printAST, file + ".phase6.ast")
 
 
 

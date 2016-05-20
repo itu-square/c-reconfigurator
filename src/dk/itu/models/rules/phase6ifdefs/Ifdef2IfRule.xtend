@@ -14,6 +14,7 @@ import xtc.tree.Node
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
+import dk.itu.models.Settings
 
 class Ifdef2IfRule extends AncestorGuaranteedRule {
 	
@@ -148,6 +149,20 @@ class Ifdef2IfRule extends AncestorGuaranteedRule {
 				}
 			}
 			return exp
+		} else if (
+			node.name.equals("Conditional")
+			&& ancestors.last.name.equals("ExternalDeclarationList")
+			&& node.get(1) instanceof GNode
+			&& (node.get(1) as GNode).name.equals("Declaration")
+			&& (node.get(1) as GNode).get(0) instanceof GNode
+			&& ((node.get(1) as GNode).get(0) as GNode).name.equals("DeclaringList")
+			&& ((node.get(1) as GNode).get(0) as GNode).get(1) instanceof GNode
+			&& (((node.get(1) as GNode).get(0) as GNode).get(1) as GNode).name.equals("ArrayDeclarator")
+			&& (((node.get(1) as GNode).get(0) as GNode).get(1) as GNode).get(0) instanceof GNode
+			&& ((((node.get(1) as GNode).get(0) as GNode).get(1) as GNode).get(0) as GNode).name.equals("SimpleDeclarator")
+			&& ((((node.get(1) as GNode).get(0) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString.equals(Settings::reconfiguratorIncludePlaceholder)
+		) {
+			return node
 		} else if (
 			node.name.equals("Conditional")
 		) {

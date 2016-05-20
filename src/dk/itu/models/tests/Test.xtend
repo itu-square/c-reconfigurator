@@ -13,6 +13,7 @@ import java.util.HashMap
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import java.io.File
 import dk.itu.models.Reconfigurator
+import dk.itu.models.Settings
 
 abstract class Test {
 	
@@ -29,10 +30,14 @@ abstract class Test {
 		var newArgs = new ArrayList<String>
 		newArgs.addAll(args)
 		newArgs.add(file)
+		
+		newArgs.forEach[println("=> " + it)]
+		
 		new SuperC().run(newArgs)
 	}
 
 	protected def void writeToFile(String text, String file) {
+		println("Writing file: " + file)
 		try {
 			var PrintWriter file_output = new PrintWriter(new FileOutputStream(file));
 			file_output.write(text);

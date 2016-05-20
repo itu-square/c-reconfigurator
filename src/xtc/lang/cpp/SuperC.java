@@ -548,7 +548,7 @@ public class SuperC extends Tool {
     conditionEvaluator = new ConditionEvaluator(expressionParser,
                                                 presenceConditionManager,
                                                 macroTable);
-
+StringBuilder content = new StringBuilder();
     if (null != commandline) {
       Syntax syntax;
       
@@ -558,7 +558,9 @@ public class SuperC extends Tool {
       catch (Exception e) {
         e.printStackTrace();
       }
-
+//System.out.println("commandline: non null");
+(new BufferedReader(commandline).lines()).forEach(x -> content.append(x+"\n"));
+//System.out.println(content.toString());
       fileManager = new HeaderFileManager(commandline,
                                           new File("<command-line>"),
                                           iquote, I, sysdirs, tokenCreator,
@@ -588,7 +590,13 @@ public class SuperC extends Tool {
       commandline = null;
     }
     
-    fileManager = new HeaderFileManager(in, file, iquote, I, sysdirs,
+//System.out.println("after commandline:");
+(new BufferedReader(in).lines()).forEach(x -> content.append(x+"\n"));
+//System.out.println(content.toString());
+
+	dk.itu.models.Extensions.writeToFile(content.toString(), dk.itu.models.Reconfigurator.file+".content.c");
+    fileManager = new HeaderFileManager(new StringReader(content.toString()), file, iquote, I, sysdirs,
+//    fileManager = new HeaderFileManager(in, file, iquote, I, sysdirs,
                                         tokenCreator, lexerTimer,
                                         runtime.getString(xtc.util.Runtime.INPUT_ENCODING));
     fileManager.collectStatistics(runtime.test("statisticsPreprocessor"));
@@ -611,7 +619,7 @@ public class SuperC extends Tool {
     if (runtime.test("time")) {
       preprocessor = new StreamTimer<Syntax>(preprocessor, preprocessorTimer);
     }
-      
+
     // Run SuperC.
     if (runtime.test("follow-set")) {
       // Compute the follow-set of each token of the preprocessed
