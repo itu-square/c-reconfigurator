@@ -14,6 +14,7 @@ class Settings {
 	static public var boolean oracleOnly = false
 	static public var boolean printIncludes = false
 	static public var boolean minimize = false
+	static public var boolean parseOnly = true
 	
 	static public var String reconfiguratorIncludePlaceholder = "_reconfig_include"; 
 	static public var List<String> defineMacros

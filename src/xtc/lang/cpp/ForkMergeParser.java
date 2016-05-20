@@ -897,7 +897,8 @@ public class ForkMergeParser {
                == Kind.EOF ? "EOF"
                : "\"" + subparser.lookahead.token.syntax + "\"")
             + " at "
-            + subparser.lookahead.token.syntax.getLocation());
+            + subparser.lookahead.token.syntax.getLocation()
+            + " under {" + subparser.lookahead.presenceCondition +"}");
     }
 
     if (NEW_ERROR_HANDLING) {
@@ -1158,7 +1159,8 @@ public class ForkMergeParser {
               error("parse error on "
                     + (subparser.lookahead.token.syntax.kind() == Kind.EOF ?
                        "EOF" : "\"" + subparser.lookahead.token.syntax + "\"")
-                    + " at " + subparser.lookahead.token.syntax.getLocation());
+                    + " at " + subparser.lookahead.token.syntax.getLocation()
+                    + " under {" + subparser.lookahead.presenceCondition +"}");
             }
 
             break;

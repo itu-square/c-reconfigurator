@@ -31,7 +31,7 @@ abstract class Test {
 		newArgs.addAll(args)
 		newArgs.add(file)
 		
-		newArgs.forEach[println("=> " + it)]
+//		newArgs.forEach[println("=> " + it)]
 		
 		new SuperC().run(newArgs)
 	}

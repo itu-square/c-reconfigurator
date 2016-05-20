@@ -23,9 +23,14 @@ class Test5 extends Test {
 	
 	override transform(Node node) {
 		
+		if(Settings::parseOnly) {
+			writeToFile(node.printCode, file)
+			return
+		}
+		
 		println("PHASE 0 - Print base")
 		
-		writeToFile(node.printCode, file + ".phase0.c")
+//		writeToFile(node.printCode, file + ".phase0.c")
 //		writeToFile(node.printAST, file + ".phase0.ast")
 		
 		
