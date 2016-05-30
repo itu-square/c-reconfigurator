@@ -11,12 +11,13 @@ import xtc.util.Pair
 import static extension dk.itu.models.Extensions.*
 import xtc.tree.Node
 import dk.itu.models.Settings
+import dk.itu.models.PresenceConditionIdMap
 
 class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 	
-	private val HashMap<PresenceCondition, String> pcidmap
+	private val PresenceConditionIdMap pcidmap
 	
-	new (HashMap<PresenceCondition, String> pcidmap) {
+	new (PresenceConditionIdMap pcidmap) {
 		this.pcidmap = pcidmap
 	}
 	
@@ -83,53 +84,56 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 			
 			// Put the current PresenceCondition into the PC-ID map (if it does not already exist)
 			// and assign a new number ID to it.
-			pcidmap.put_pcid(presenceCondition, pcidmap.size.toString)
-			
 			val declaration = node.get(1) as GNode
 			val declaringList = declaration.get(0) as GNode
+			val simpleDeclarator = declaringList.getDescendantNode("SimpleDeclarator")
 			
-			if(declaringList.toString.contains("DeclarationQualifierList") 
-				&& declaringList.toString.contains("typedef")) {
-					throw new Exception("ReconfigureVariableRule: does not yet handle typedefs")
-			}
+			val variableName = if (simpleDeclarator != null) {
+				simpleDeclarator.get(0).toString
+			} else { "" }
 			
-			val variableName =
-				if ((declaringList.get(1) as GNode).name.equals("SimpleDeclarator")) {
-					
-					(declaringList.get(1) as GNode).get(0).toString
-										
-				} else if((declaringList.get(1) as GNode).name.equals("UnaryIdentifierDeclarator")
-					&& (declaringList.get(1) as GNode).get(1) instanceof GNode
-					&& ((declaringList.get(1) as GNode).get(1) as GNode).name.equals("SimpleDeclarator")) {
-					
-					((declaringList.get(1) as GNode).get(1) as GNode).get(0).toString
-					
-				} else if((declaringList.get(1) as GNode).name.equals("UnaryIdentifierDeclarator")
-					&& (declaringList.get(1) as GNode).get(1) instanceof GNode
-					&& ((declaringList.get(1) as GNode).get(1) as GNode).name.equals("ArrayDeclarator")
-					&& ((declaringList.get(1) as GNode).get(1) as GNode).get(0) instanceof GNode
-					&& (((declaringList.get(1) as GNode).get(1) as GNode).get(0) as GNode).name.equals("SimpleDeclarator")) {
-					
-					(((declaringList.get(1) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString
-					
-				} else if((declaringList.get(1) as GNode).name.equals("ArrayDeclarator")
-					&& (declaringList.get(1) as GNode).get(0) instanceof GNode
-					&& ((declaringList.get(1) as GNode).get(0) as GNode).name.equals("SimpleDeclarator")) {
-					
-					((declaringList.get(1) as GNode).get(0) as GNode).get(0).toString
-					
-				} else {
-					println
-					println('''-------------------------''')
-					println('''- ReconfigureVariableRule''')
-					println('''------''')
-					println(declaringList.printAST)
-					println
-					throw new Exception("ReconfigureVariableRule: unknown location of variable name")
-				}
-
-			if (!variableName.equals(Settings::reconfiguratorIncludePlaceholder)) {
-				val newName = variableName + "_V" + pcidmap.get_id(presenceCondition)
+//			if(declaringList.toString.contains("DeclarationQualifierList") 
+//				&& declaringList.toString.contains("typedef")) {
+//					println("WARNING: ReconfigureVariableRule: does not yet handle typedefs")
+//					return node
+//			}
+//			
+//			val variableName =
+//				if ((declaringList.get(1) as GNode).name.equals("SimpleDeclarator")) {
+//					
+//					(declaringList.get(1) as GNode).get(0).toString
+//										
+//				} else if((declaringList.get(1) as GNode).name.equals("UnaryIdentifierDeclarator")
+//					&& (declaringList.get(1) as GNode).get(1) instanceof GNode
+//					&& ((declaringList.get(1) as GNode).get(1) as GNode).name.equals("SimpleDeclarator")) {
+//					
+//					((declaringList.get(1) as GNode).get(1) as GNode).get(0).toString
+//					
+//				} else if((declaringList.get(1) as GNode).name.equals("UnaryIdentifierDeclarator")
+//					&& (declaringList.get(1) as GNode).get(1) instanceof GNode
+//					&& ((declaringList.get(1) as GNode).get(1) as GNode).name.equals("ArrayDeclarator")
+//					&& ((declaringList.get(1) as GNode).get(1) as GNode).get(0) instanceof GNode
+//					&& (((declaringList.get(1) as GNode).get(1) as GNode).get(0) as GNode).name.equals("SimpleDeclarator")) {
+//					
+//					(((declaringList.get(1) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString
+//					
+//				} else if((declaringList.get(1) as GNode).name.equals("ArrayDeclarator")
+//					&& (declaringList.get(1) as GNode).get(0) instanceof GNode
+//					&& ((declaringList.get(1) as GNode).get(0) as GNode).name.equals("SimpleDeclarator")) {
+//					
+//					((declaringList.get(1) as GNode).get(0) as GNode).get(0).toString
+//					
+//				} else {
+//					println
+//					println('''-------------------------''')
+//					println('''- ReconfigureVariableRule''')
+//					println('''------''')
+//					println(declaringList.printAST)
+//					println
+//					throw new Exception("ReconfigureVariableRule: unknown location of variable name")
+//				}
+			if (!variableName.empty && !variableName.equals(Settings::reconfiguratorIncludePlaceholder)) {
+				val newName = variableName + "_V" + pcidmap.getId(presenceCondition)
 				
 				// Add the variable in the declaration to the variable scope
 				// because this Declaration node hasn't been visited yet.
@@ -157,27 +161,14 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 			.contains(node.name)
 		) {
 			val tdn = new TopDownStrategy
-			tdn.register(new RewriteVariableUseRule(localVariableScopes, node.presenceCondition, pcidmap))
+			tdn.register(new RewriteVariableUseRule(variableDeclarationScopes, node.presenceCondition, pcidmap))
 			val newNode = tdn.transform(node) as GNode
 	
 			return newNode
 			
 		} else if (node.name.equals("SelectionStatement")) {
-			
-//			println
-//			println('''----------------------''')
-//			println('''- ReconfigureVariable ''')
-//			println('''----------------------''')
-//			println('''- «node»''')
-//			println('''----------------------''')
-//			node.forEach[
-//				println('''- «it»''')]
-////			println('''- «variableName» -> «newName»''')
-////			println('''- «node.get(1).printAST»''')
-////			println('''- «newNode.printCode»''')
-
 			val tdn = new TopDownStrategy
-			tdn.register(new RewriteVariableUseRule(localVariableScopes, node.presenceCondition, pcidmap))
+			tdn.register(new RewriteVariableUseRule(variableDeclarationScopes, node.presenceCondition, pcidmap))
 			val newNode = tdn.transform(node.get(2)) as Node
 			
 			if (!newNode.printAST.equals(node.get(2).printAST))

@@ -3,7 +3,10 @@ package dk.itu.models
 import com.google.common.collect.AbstractIterator
 import com.google.common.collect.FluentIterable
 import com.google.common.collect.UnmodifiableIterator
+import com.google.common.io.Files
 import dk.itu.models.checks.CheckContainsIf1
+import dk.itu.models.rules.phase3variables.ReplaceDeclaratorTextRule
+import dk.itu.models.strategies.TopDownStrategy
 import java.io.BufferedReader
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -12,6 +15,7 @@ import java.io.FileReader
 import java.io.IOException
 import java.io.PrintStream
 import java.io.PrintWriter
+import java.util.ArrayList
 import java.util.HashMap
 import java.util.Iterator
 import java.util.List
@@ -25,8 +29,11 @@ import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 import xtc.tree.Node
 import xtc.util.Pair
-import java.util.ArrayList
-import com.google.common.io.Files
+import dk.itu.models.rules.phase4functions.RenameFunctionRule
+import dk.itu.models.rules.phase3variables.RewriteVariableUseRule
+import java.util.AbstractMap.SimpleEntry
+import dk.itu.models.rules.phase3variables.ReplaceIdentifierRule
+import dk.itu.models.rules.phase4functions.RewriteFunctionCallRule
 
 class Extensions {
 	public static def String folder(String filePath) {
@@ -88,18 +95,6 @@ class Extensions {
 	
 	public static def void summaryln() {
 		Settings::summaryPS.print("\n")
-	}
-	
-	public static def void debug(Object o) {
-		if (Settings::DEBUG) print(o)
-	}
-	
-	public static def void debugln(Object o) {
-		if (Settings::DEBUG) print(o + "\n")
-	}
-	
-	public static def void debugln() {
-		if (Settings::DEBUG) print("\n")
 	}
 	
 	public static def printCode(Object o) {
@@ -355,11 +350,6 @@ class Extensions {
 
 	// Minimized expression to C expression
 	public static def GNode MexptoCexp(String mexp, HashMap<String, String> varMap) {
-//		
-//		println
-//		println('''----------------------''')
-//		println('''- «mexp»''')
-		
 		var GNode disj
 		val input = mexp.toCharArray
 			
@@ -388,8 +378,6 @@ class Extensions {
 		
 		if(disj == null) { disj = conj }
 		else { disj = GNode::create("LogicalORExpression", disj, new Language<CTag>(CTag.OROR), conj) }
-//			
-//		println('''- «disj.printCode»''')
 
 		GNode::create("PrimaryExpression",
 				new Language<CTag>(CTag.LPAREN),
@@ -432,5 +420,71 @@ class Extensions {
 		getNestedNodesLocations(node, locations)
 		return locations
 	}
+	
+	public static def Node getDescendantNode(Node node, String nodeName) {
+		for(Object child : node) {
+			if (child instanceof Node) {
+				if ((child as Node).name.equals(nodeName))
+					return child
+				else {
+					val r = getDescendantNode(child as Node, nodeName)
+					if (r != null) return r
+				}
+			}	
+		}
+		return null
+	}
+	
+	public static def boolean containsTypedef(Node node) {
+		for(Object child : node) {
+			if (
+				child instanceof Language<?>
+				&& (child as Language<CTag>).tag.equals(CTag::TYPEDEF)
+			) {
+				return true
+			} else if (child instanceof Node) {
+				val r = containsTypedef(child as Node)
+				if (r == true) return true
+			}	
+		}
+		return false
+	}
+	
+	public static def replaceDeclaratorTextWithNewId (GNode node, String newId) {
+    	val tdn = new TopDownStrategy
+    	tdn.register(new ReplaceDeclaratorTextRule(newId))
+    	tdn.transform(node) as GNode
+    }
+	
+	public static def renameFunctionWithNewId (GNode node, String newId) {
+    	val tdn = new TopDownStrategy
+    	tdn.register(new RenameFunctionRule(newId))
+    	tdn.transform(node) as GNode
+    }
+    
+    public static def rewriteVariableUse (
+    	GNode node,
+		ArrayList<SimpleEntry<GNode,DeclarationPCMap>> variableDeclarationScopes,
+		PresenceCondition pc,
+		PresenceConditionIdMap pcidmap ) {
+			val tdn = new TopDownStrategy
+			tdn.register(new RewriteVariableUseRule(variableDeclarationScopes, pc, pcidmap))
+			tdn.transform(node) as GNode
+	}
 
+	public static def replaceIdentifierVarName (GNode node, String oldName, String newName) {
+    	val tdn = new TopDownStrategy
+    	tdn.register(new ReplaceIdentifierRule(oldName, newName))
+    	tdn.transform(node) as GNode
+    }
+    
+    public static def rewriteFunctionCall (
+    	GNode node,
+		DeclarationPCMap fmap,
+		PresenceCondition pc,
+		PresenceConditionIdMap pcidmap ) {
+    		val tdn = new TopDownStrategy
+			tdn.register(new RewriteFunctionCallRule(fmap, pc, pcidmap))
+			tdn.transform(node) as GNode
+		}
 }

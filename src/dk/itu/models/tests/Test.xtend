@@ -2,18 +2,19 @@ package dk.itu.models.tests
 
 import dk.itu.models.PrintAST
 import dk.itu.models.PrintCode
+import dk.itu.models.Reconfigurator
+import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.io.PrintWriter
 import java.util.ArrayList
+import java.util.HashMap
 import java.util.List
+import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.SuperC
 import xtc.tree.Node
-import java.util.HashMap
-import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
-import java.io.File
-import dk.itu.models.Reconfigurator
-import dk.itu.models.Settings
+
+import static dk.itu.models.Reconfigurator.*
 
 abstract class Test {
 	
@@ -30,9 +31,6 @@ abstract class Test {
 		var newArgs = new ArrayList<String>
 		newArgs.addAll(args)
 		newArgs.add(file)
-		
-//		newArgs.forEach[println("=> " + it)]
-		
 		new SuperC().run(newArgs)
 	}
 

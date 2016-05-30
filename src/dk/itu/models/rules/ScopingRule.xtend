@@ -1,8 +1,9 @@
 package dk.itu.models.rules
 
+import dk.itu.models.DeclarationPCMap
+import dk.itu.models.Settings
 import java.util.AbstractMap.SimpleEntry
 import java.util.ArrayList
-import java.util.HashMap
 import java.util.List
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
@@ -10,92 +11,169 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
 
+import static extension dk.itu.models.Extensions.*
+
 abstract class ScopingRule extends AncestorGuaranteedRule {
 	
-	protected val ArrayList<SimpleEntry<GNode,HashMap<String, List<PresenceCondition>>>> localVariableScopes
+	protected val ArrayList<SimpleEntry<GNode,DeclarationPCMap>> variableDeclarationScopes
+	protected val DeclarationPCMap typeDeclarations
+	protected val DeclarationPCMap functionDeclarations
 	
 	new () {
 		super()
-		this.localVariableScopes = new ArrayList<SimpleEntry<GNode,HashMap<String, List<PresenceCondition>>>>
+		this.variableDeclarationScopes = new ArrayList<SimpleEntry<GNode,DeclarationPCMap>>
+		this.typeDeclarations = new DeclarationPCMap
+		this.functionDeclarations = new DeclarationPCMap
 	}
 	
-	protected def addScope(GNode node) {
-		this.localVariableScopes.add(new SimpleEntry<GNode,HashMap<String, List<PresenceCondition>>>(node, new HashMap<String, List<PresenceCondition>>))
+	protected def addVariableDeclarationScope(GNode node) {
+		this.variableDeclarationScopes.add(new SimpleEntry<GNode,DeclarationPCMap>(node, new DeclarationPCMap))
 	}
 	
-	protected def clearScope() {
+	protected def clearVariableDeclarationScopes() {
 		while (
-			localVariableScopes.size > 0 &&
-			!ancestors.contains(localVariableScopes.last.key)
+			variableDeclarationScopes.size > 0 &&
+			!ancestors.contains(variableDeclarationScopes.last.key)
 		) {
-			localVariableScopes.remove(localVariableScopes.size - 1)
+			variableDeclarationScopes.remove(variableDeclarationScopes.size - 1)
 		}
 	}
 	
 	protected def addVariable(String name) {
-		localVariableScopes.last.value.putIfAbsent(name, new ArrayList<PresenceCondition>)
+		variableDeclarationScopes.last.value.newDeclaration(name)
 	}
 	
 	protected def variableExists(String name) {
-		localVariableScopes.exists[ se |
-			se.value.keySet.contains(name)
+		variableDeclarationScopes.exists[ se |
+			se.value.containsDeclaration(name)
 		]
 	}
 	
 	protected def List<PresenceCondition> getPCListForLastDeclaration(String name) {
-		val scope = localVariableScopes.findLast[scope | scope.value.containsKey(name)]
+		val scope = variableDeclarationScopes.findLast[scope | scope.value.containsDeclaration(name)]
 		if (scope != null)
-			scope.value.get(name)
+			scope.value.pcList(name)
 		else
 			null
 	}
 	
 	def PresenceCondition transform(PresenceCondition cond) {
-		clearScope
+		clearVariableDeclarationScopes
 		cond
 	}
 
 	def Language<CTag> transform(Language<CTag> lang) {
-		clearScope
+		clearVariableDeclarationScopes
 		lang
 	}
 
 	def Pair<Object> transform(Pair<Object> pair) {
-		clearScope
+		clearVariableDeclarationScopes
 		pair
 	}
 	
 	def Object transform(GNode node) {
-		clearScope
-		if (#["TranslationUnit", "FunctionDefinition"].contains(node.name)) {
-			addScope(node)
+		clearVariableDeclarationScopes
+		if (#["ExternalDeclarationList", "FunctionDefinition", "FunctionDeclarator", "CompoundStatement"].contains(node.name)) {
+			addVariableDeclarationScope(node)
+		} else if(#["TranslationUnit", "Declaration", "DeclaringList", "SUEDeclarationSpecifier",
+			"DeclarationQualifierList", "StructOrUnionSpecifier", "StructOrUnion",
+			"IdentifierOrTypedefName", "SimpleDeclarator", "ArrayDeclarator",
+			"ArrayAbstractDeclarator", "InitializerOpt", "Initializer", "StringLiteralList",
+			"Conditional", "BasicDeclarationSpecifier", "SignedKeyword", "ParameterTypedefDeclarator",
+			"DeclarationExtension", "DeclarationQualifier", "TypeQualifier", "AttributeSpecifier",
+			"AttributeKeyword", "AttributeListOpt", "AttributeList", "Word",
+			"TypedefDeclarationSpecifier", "FunctionPrototype", "FunctionSpecifier",
+			"PostfixingFunctionDeclarator", "ParameterTypeListOpt",
+			"ParameterTypeList", "ParameterList", "ParameterDeclaration", "BasicTypeSpecifier",
+			"TypeQualifierList", "TypeQualifier", "ConstQualifier",
+			"DeclarationOrStatementList", "ReturnStatement", "MultiplicativeExpression",
+			"CastExpression", "TypeName", "TypedefTypeSpecifier", "PrimaryIdentifier",
+			"SelectionStatement", "RelationalExpression", "ExpressionStatement", "AssignmentExpression",
+			"AssignmentOperator", "FunctionCall", "ExpressionList", "PrimaryExpression",
+			"ConditionalExpression", "LogicalAndExpression", "UnaryExpression", "Unaryoperator",
+			"ShiftExpression", "UnaryIdentifierDeclarator", "AttributeSpecifierListOpt",
+			"AttributeSpecifierList", "AttributeExpressionOpt", "AbstractDeclarator",
+			"UnaryAbstractDeclarator", "EqualityExpression", "LogicalORExpression", "Declaration",
+			"RestrictQualifier", "AndExpression", "InclusiveOrExpression", "IterationStatement",
+			"AdditiveExpression", "StatementAsExpression", "Subscript", "Decrement", "GotoStatement",
+			"BreakStatement", "LabeledStatement", "Increment", "MatchedInitializerList",
+			"DesignatedInitializer", "Designation", "DesignatorList", "Designator",
+			"ContinueStatement"].contains(node.name)) {
+			// no scope
+		} else {
+			println()
+			ancestors.forEach[println("- " + it.name)]
+			println(node.printAST)
+			throw new Exception("ScopingRule: possible scope : " + node.name + ".")
 		}
 		
 		if (
-			node.name.equals("SimpleDeclarator") &&
-			ancestors.exists[name.equals("ParameterDeclaration")]
+			node.name.equals("Declaration")
+			&& node.containsTypedef
 		) {
-			val variableName = node.get(0).toString
-			addVariable(variableName)
-		}
-		
-		if (node.name.equals("Declaration") 
-			&& node.get(0) instanceof GNode
-			&& (node.get(0) as GNode).name.equals("DeclaringList")
-		) {
-			val declaringList = node.get(0) as GNode
-			val simpleDeclarator =
-				if (declaringList.get(1) instanceof GNode && (declaringList.get(1) as GNode).name.equals("SimpleDeclarator"))
-					(declaringList.get(1) as GNode)
-				else if ( declaringList.get(1) instanceof GNode && ((declaringList.get(1) as GNode).get(1) as GNode).name.equals("SimpleDeclarator"))
-					((declaringList.get(1) as GNode).get(1) as GNode)
-				else
-					null
+			var declarator = node.getDescendantNode("SimpleDeclarator")
+			if (declarator == null)
+				declarator = node.getDescendantNode("ParameterTypedefDeclarator")
 			
-			if (simpleDeclarator != null) {
-				val variableName = simpleDeclarator.get(0).toString
-				addVariable(variableName.toString)
-			}
+			typeDeclarations.newDeclaration(declarator.get(0).toString)
+		} else if (
+			node.name.equals("Declaration")
+			&& node.getDescendantNode("FunctionDeclarator") != null
+		) {
+			var declarator = node.getDescendantNode("SimpleDeclarator")
+			if (declarator == null)
+				declarator = node.getDescendantNode("ParameterTypedefDeclarator")
+			
+			functionDeclarations.newDeclaration(declarator.get(0).toString)
+		} else if (
+			#["Declaration", "ParameterDeclaration"].contains(node.name)
+			//&& (!(node.get(0) instanceof Language<?>) || !(node.get(0) as Language<CTag>).tag.equals(CTag::VOID))
+			&& (node.size > 1 || node.get(0) instanceof GNode)
+			&& node.getDescendantNode("FunctionDeclarator") == null
+			&& !node.containsTypedef
+		) {
+			var declarator = node.getDescendantNode("SimpleDeclarator")
+			if (declarator == null)
+				declarator = node.getDescendantNode("ParameterTypedefDeclarator")
+			val variableName = declarator.get(0).toString
+			if (!variableName.equals(Settings::reconfiguratorIncludePlaceholder))
+				addVariable(variableName)
+		} else if (
+			#["FunctionDefinition", "FunctionDeclarator"].contains(node.name)
+		) {
+			var declarator = node.getDescendantNode("SimpleDeclarator")
+			val functionName = declarator.get(0).toString
+			functionDeclarations.newDeclaration(functionName)
+		} else if (#["TranslationUnit", "ExternalDeclarationList", "DeclaringList",
+			"SUEDeclarationSpecifier", "DeclarationQualifierList", "StructOrUnionSpecifier",
+			"StructOrUnion", "IdentifierOrTypedefName", "SimpleDeclarator", "ArrayDeclarator",
+			"ArrayAbstractDeclarator", "InitializerOpt", "Initializer", "StringLiteralList",
+			"Conditional", "BasicDeclarationSpecifier", "SignedKeyword", "ParameterTypedefDeclarator",
+			"DeclarationExtension", "DeclarationQualifier", "TypeQualifier", "AttributeSpecifier",
+			"AttributeKeyword", "AttributeListOpt", "AttributeList", "Word",
+			"TypedefDeclarationSpecifier", "FunctionPrototype", "FunctionSpecifier",
+			"PostfixingFunctionDeclarator", "ParameterTypeListOpt",
+			"ParameterTypeList", "ParameterList", "BasicTypeSpecifier", "TypeQualifierList",
+			"TypeQualifier", "ConstQualifier", "CompoundStatement", "DeclarationOrStatementList",
+			"ReturnStatement", "MultiplicativeExpression", "CastExpression", "TypeName",
+			"TypedefTypeSpecifier", "PrimaryIdentifier", "SelectionStatement",
+			"RelationalExpression", "ExpressionStatement", "AssignmentExpression", "AssignmentOperator",
+			"FunctionCall", "ExpressionList", "PrimaryExpression", "ConditionalExpression",
+			"LogicalAndExpression", "UnaryExpression", "Unaryoperator", "ShiftExpression",
+			"UnaryIdentifierDeclarator", "AttributeSpecifierListOpt", "AttributeSpecifierList",
+			"AttributeExpressionOpt", "AbstractDeclarator", "UnaryAbstractDeclarator",
+			"EqualityExpression", "LogicalORExpression", "RestrictQualifier", "AndExpression",
+			"InclusiveOrExpression", "IterationStatement", "AdditiveExpression", "StatementAsExpression",
+			"Subscript", "Decrement", "GotoStatement", "BreakStatement", "LabeledStatement", "Increment",
+			"MatchedInitializerList", "DesignatedInitializer", "Designation", "DesignatorList",
+			"Designator", "ContinueStatement"].contains(node.name)
+			|| (node.name.equals("ParameterDeclaration") && (node.size == 1 || !(node instanceof GNode))) ) {
+			// no declaration
+		} else {
+			println()
+			println(node.printAST)
+			throw new Exception("ScopingRule: possible declaration : " + node.name + ".")
 		}
 		
 		node

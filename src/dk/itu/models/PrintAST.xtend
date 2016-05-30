@@ -79,6 +79,18 @@ class PrintAST extends PrintMethod {
 	}
 
 	static def private dispatch void t(GNode node) {
+		
+		val locs = node.nestedNodesLocations
+		
+		if (
+			!Settings::printIncludes
+			&& ancestors.size >= 1
+			&& ancestors.last.name.equals("ExternalDeclarationList")
+			&& !locs.contains(Reconfigurator::file)
+		) {
+			return
+		}
+		
 		output.println('''«type("[gnod]")»«indent(node)»|- «node.name»«hash(node)»«properties(node)»''')
 
 		ancestors.add(node)

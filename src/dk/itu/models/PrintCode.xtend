@@ -80,7 +80,10 @@ class PrintCode extends PrintMethod {
 		val int rpar_idx = if (rpar == null) -1 else iter.indexOf(rpar)
 		val boolean iterationExpression =
 			chld_idx != -1 && lpar_idx != -1 && rpar_idx != -1
-			&& lpar_idx < chld_idx && chld_idx < rpar_idx 
+			&& lpar_idx < chld_idx && chld_idx < rpar_idx
+			
+		if(language == null)
+			ancestors.forEach[println(it.name)]
 		
 		if (
 			(last_line.endsWith(";") && !iterationExpression)
@@ -137,15 +140,8 @@ class PrintCode extends PrintMethod {
 			!Settings::printIncludes
 			&& ancestors.size >= 1
 			&& ancestors.last.name.equals("ExternalDeclarationList")
-			&& locs.size == 1
-			&& !locs.get(0).equals(Reconfigurator::file)
+			&& !locs.contains(Reconfigurator::file)
 		) {
-//			println
-//			println("- pp: node => " + node.name)	
-//			println("- pp: locs  => " + locs.size)
-//			locs.forEach[
-//				println("- pp:     loc - " + it)]
-//			println("- pp:    file - " + Reconfigurator::file)
 			return
 		}
 		
@@ -156,7 +152,7 @@ class PrintCode extends PrintMethod {
 		var current_line = last_line
 		
 		if(
-			#["Declaration", "FunctionDefinition"].contains(node.name)
+			#["Declaration", "DeclarationExtension", "FunctionDefinition"].contains(node.name)
 			&& !ancestors.exists[c | c instanceof GNode && c.name.equals("FunctionDefinition")]
 			&& !last_line.startsWith("#") && !last_line.empty
 		) {
@@ -166,7 +162,7 @@ class PrintCode extends PrintMethod {
 		}
 		
 		if(
-			#["Declaration", "FunctionDefinition"].contains(node.name)
+			#["Declaration", "DeclarationExtension", "FunctionDefinition"].contains(node.name)
 			&& node.properties != null && node.hasProperty("OriginalPC")
 		) {
 			output.println
@@ -235,6 +231,32 @@ class PrintCode extends PrintMethod {
 			output.print("#endif")
 			last_line = "#endif"
 
+		} else if (node.name.equals("ConditionalExpression")) {
+			
+			output.println
+			output.print(indent)
+			output.print(current_C_line.replaceAll(".", " "))
+
+			last_C_line = current_C_line
+			last_line = current_line
+			
+			ancestors.add(node)
+			for (Object it : node) {
+				if (
+					it instanceof Language<?>
+					&& ((it as Language<CTag>).tag.equals(CTag::QUESTION)
+						|| (it as Language<CTag>).tag.equals(CTag::COLON))
+				) {
+					output.println
+					output.print(indent)
+					output.print(preconditional_C_line.replaceAll(".", " "))
+		
+					last_C_line = preconditional_C_line
+					last_line = preconditional_C_line
+				}
+				t(it)
+			}
+			ancestors.remove(node)
 		} else if (
 			node.name.equals("Declaration")
 			
@@ -247,7 +269,7 @@ class PrintCode extends PrintMethod {
 			&& ((node.get(0) as GNode).get(1) as GNode).name.equals("ArrayDeclarator")
 			&& ((node.get(0) as GNode).get(1) as GNode).get(0) instanceof GNode
 			&& (((node.get(0) as GNode).get(1) as GNode).get(0) as GNode).name.equals("SimpleDeclarator")
-			&& (((node.get(0) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString.equals("include")
+			&& (((node.get(0) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString.equals(Settings::reconfiguratorIncludePlaceholder)
 			
 			&& (node.get(0) as GNode).get(2) instanceof GNode
 			&& ((node.get(0) as GNode).get(2) as GNode).name.equals("InitializerOpt")
@@ -265,7 +287,9 @@ class PrintCode extends PrintMethod {
 				.get(0) as GNode).get(0).toString
 			includeStrLit = includeStrLit.subSequence(1, includeStrLit.length-1).toString
 			
-			output.println(includeStrLit)
+			output.println
+			output.print(indent)
+			output.print(includeStrLit.replace("\\\"", "\""))
 			last_line = includeStrLit
 		} else {
 			ancestors.add(node)

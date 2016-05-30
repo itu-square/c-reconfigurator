@@ -13,20 +13,21 @@ import xtc.tree.GNode
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
+import dk.itu.models.DeclarationPCMap
+import dk.itu.models.PresenceConditionIdMap
 
 class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 
-	private val HashMap<PresenceCondition, String> pcidmap
+	private val DeclarationPCMap fmap
+	private val PresenceConditionIdMap pcidmap
 	static def String get_id (HashMap<PresenceCondition, String> map, PresenceCondition pc) {
 		map.get(map.keySet.findFirst[is(pc)])
 	}
 	
-	private val HashMap<String, List<PresenceCondition>> fmap
 	
 	protected val PresenceCondition externalGuard
 	
-	new (HashMap<String, List<PresenceCondition>> fmap, PresenceCondition externalGuard,
-		HashMap<PresenceCondition, String> pcidmap) {
+	new (DeclarationPCMap fmap, PresenceCondition externalGuard, PresenceConditionIdMap pcidmap) {
 		this.fmap = fmap
 		this.pcidmap = pcidmap
 		this.externalGuard = externalGuard
@@ -70,7 +71,7 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 			
 			for (PresenceCondition pc : declarationPCs.reverseView) {
 				val newCall = GNode::create("FunctionCall",
-			 				GNode::create("PrimaryIdentifier", new Text(CTag.IDENTIFIER, fname + "_V" + pcidmap.get_id(pc))),
+			 				GNode::create("PrimaryIdentifier", new Text(CTag.IDENTIFIER, fname + "_V" + pcidmap.getId(pc))),
 			 				GNode::createFromPair("ExpressionList", args));
 				
 				exp = if (exp == null) newCall else
@@ -94,8 +95,8 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 	private def computePCs (String funcName, PresenceCondition callPC){
 		val declarationPCs = new ArrayList<PresenceCondition>
 		
-			if (fmap.containsKey(funcName)) {				// if the variable is declared in the current scope
-				val scopePCs = fmap.get(funcName)
+			if (fmap.containsDeclaration(funcName)) {				// if the variable is declared in the current scope
+				val scopePCs = fmap.pcList(funcName)
 				if (scopePCs.exists[it.is(callPC)]) {				// if the current scope pcs contain the exact variable pc
 					declarationPCs.add(callPC)						// add the one and return
 					return declarationPCs
@@ -128,7 +129,7 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 	
 	override dispatch Object transform(GNode node) {
 		if (node.name.equals("FunctionCall")
-			&& fmap.containsKey((node.get(0) as GNode).get(0).toString)
+			&& fmap.containsDeclaration((node.get(0) as GNode).get(0).toString)
 			&& !node.getBooleanProperty("HandledByRewriteFunctionCallRule")
 		) {
 			val fcall = (node.get(0) as GNode).get(0).toString

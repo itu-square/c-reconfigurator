@@ -6,8 +6,9 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 import xtc.util.Pair
+import dk.itu.models.rules.AncestorGuaranteedRule
 
-class ReplaceIdentifiersRule extends dk.itu.models.rules.Rule {
+class ReplaceDeclaratorTextRule extends AncestorGuaranteedRule {
 	
 	protected val String newIdentifier
 	
@@ -22,10 +23,11 @@ class ReplaceIdentifiersRule extends dk.itu.models.rules.Rule {
 
 	override dispatch Language<CTag> transform(Language<CTag> lang) {
 		if (
-			lang.tag.equals(CTag::IDENTIFIER)
+			lang instanceof Text<?>
+			&& #["SimpleDeclarator", "ParameterTypedefDeclarator"].contains(ancestors.last.name)
 			&& !lang.toString.equals(newIdentifier)
 		) {
-			return new Text(CTag.IDENTIFIER, newIdentifier)
+			return new Text(lang.tag, newIdentifier)
 		}
 		lang
 	}

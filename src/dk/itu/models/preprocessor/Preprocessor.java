@@ -51,6 +51,8 @@ public class Preprocessor {
 		try {
 			br = new BufferedReader(new FileReader(context.getSrcfile()));
 
+//			for (File header : Settings.headerFiles) {
+//				out.append("#include \"" + header.getPath().replace("\\", "\\\\") + "\"\n"); }
 			/**
 			 * Gets the defined features, split them by "," and, finally, remove
 			 * all duplicate white spaces

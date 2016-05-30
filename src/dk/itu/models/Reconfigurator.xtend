@@ -38,7 +38,6 @@ class Reconfigurator {
 //			"-headerGuards",
 //			"-macroTable",
 //			,"-E"
-//			,"-isystem"	,"/home/alex/repos/includes-redhat/usr/include/"
 		]
 		
 		var newArgs = new ArrayList<String>
@@ -49,10 +48,12 @@ class Reconfigurator {
 		for (String undefMacro : Settings::undefMacros) {
 			newArgs.add("-U")
 			newArgs.add(undefMacro) }
+		for (File include : Settings::systemIncludeFolders) {
+			newArgs.addAll("-isystem", include.path) }
 		for (File include : Settings::includeFolders) {
 			newArgs.addAll("-I", include.path) }
 		for (File header : Settings::headerFiles) {
-			newArgs.addAll("-include", header.path) }
+			newArgs.addAll("-include", header.path.replace("\\", "\\\\")) }
 		
 		test.run(newArgs)
 	}

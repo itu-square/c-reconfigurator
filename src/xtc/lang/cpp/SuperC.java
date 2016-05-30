@@ -34,6 +34,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 import dk.itu.models.Reconfigurator;
+import dk.itu.models.Settings;
 
 import java.util.Map;
 import java.util.IdentityHashMap;
@@ -548,7 +549,9 @@ public class SuperC extends Tool {
     conditionEvaluator = new ConditionEvaluator(expressionParser,
                                                 presenceConditionManager,
                                                 macroTable);
-StringBuilder content = new StringBuilder();
+
+    StringBuilder content = new StringBuilder();
+    
     if (null != commandline) {
       Syntax syntax;
       
@@ -558,9 +561,9 @@ StringBuilder content = new StringBuilder();
       catch (Exception e) {
         e.printStackTrace();
       }
-//System.out.println("commandline: non null");
-(new BufferedReader(commandline).lines()).forEach(x -> content.append(x+"\n"));
-//System.out.println(content.toString());
+
+      (new BufferedReader(commandline).lines()).forEach(x -> content.append(x+"\n"));
+
       fileManager = new HeaderFileManager(commandline,
                                           new File("<command-line>"),
                                           iquote, I, sysdirs, tokenCreator,
@@ -590,13 +593,14 @@ StringBuilder content = new StringBuilder();
       commandline = null;
     }
     
-//System.out.println("after commandline:");
-(new BufferedReader(in).lines()).forEach(x -> content.append(x+"\n"));
-//System.out.println(content.toString());
+    (new BufferedReader(in).lines()).forEach(x -> content.append(x+"\n"));
 
-	dk.itu.models.Extensions.writeToFile(content.toString(), dk.itu.models.Reconfigurator.file+".content.c");
-    fileManager = new HeaderFileManager(new StringReader(content.toString()), file, iquote, I, sysdirs,
-//    fileManager = new HeaderFileManager(in, file, iquote, I, sysdirs,
+    if (Settings.printFullContent) {
+		dk.itu.models.Extensions.writeToFile(content.toString(), dk.itu.models.Reconfigurator.file+".content.c");
+	}
+	
+	fileManager = new HeaderFileManager(new StringReader(content.toString()), file, iquote, I, sysdirs,
+//	fileManager = new HeaderFileManager(in, file, iquote, I, sysdirs,
                                         tokenCreator, lexerTimer,
                                         runtime.getString(xtc.util.Runtime.INPUT_ENCODING));
     fileManager.collectStatistics(runtime.test("statisticsPreprocessor"));

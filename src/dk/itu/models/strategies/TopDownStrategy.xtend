@@ -7,6 +7,8 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
 import static extension dk.itu.models.Extensions.*
+import dk.itu.models.Settings
+import dk.itu.models.Reconfigurator
 
 class TopDownStrategy extends AncestorGuaranteedStrategy {
 
@@ -55,6 +57,17 @@ class TopDownStrategy extends AncestorGuaranteedStrategy {
 	}
 
 	override dispatch Object transform(GNode node) {
+		
+		val locs = node.nestedNodesLocations
+		
+		if (
+			!Settings::reconfigureIncludes
+			&& ancestors.size >= 1
+			&& ancestors.last.name.equals("ExternalDeclarationList")
+			&& !locs.contains(Reconfigurator::file)
+		) {
+			return node
+		}
 		
 		var GNode prev
 		var Object newNode = node

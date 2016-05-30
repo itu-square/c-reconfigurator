@@ -10,14 +10,15 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.tree.Node
 import xtc.util.Pair
+import dk.itu.models.DeclarationPCMap
+import dk.itu.models.PresenceConditionIdMap
 
 class ReconfigureFunctionRule extends AncestorGuaranteedRule {
 	
-	private val HashMap<PresenceCondition, String> pcidmap
+	val public fmap = new DeclarationPCMap
+	private val PresenceConditionIdMap pcidmap
 	
-	val public fmap = new HashMap<String, List<PresenceCondition>>
-	
-	new (HashMap<PresenceCondition, String> pcidmap) {
+	new (PresenceConditionIdMap pcidmap) {
 		this.pcidmap = pcidmap
 	}
 	
@@ -62,8 +63,6 @@ class ReconfigureFunctionRule extends AncestorGuaranteedRule {
 
 			val functionDefinition = node.get(1) as GNode
 			
-			pcidmap.put_pcid(presenceCondition, pcidmap.size.toString)
-			
 			val functionPrototype = functionDefinition.get(0) as GNode
 			
 			val functionDeclarator =
@@ -73,9 +72,9 @@ class ReconfigureFunctionRule extends AncestorGuaranteedRule {
 			
 			val simpleDeclarator = functionDeclarator.get(0) as GNode
 			val functionName = simpleDeclarator.get(0).toString
-			val newName = functionName + "_V" + pcidmap.get_id(presenceCondition)
+			val newName = functionName + "_V" + pcidmap.getId(presenceCondition)
 			
-			fmap.put_function(functionName, presenceCondition)
+			fmap.putPC(functionName, presenceCondition)
 
 
 			val tdn = new TopDownStrategy
