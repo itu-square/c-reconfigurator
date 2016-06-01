@@ -29,7 +29,7 @@ class Test5 extends Test {
 		
 		println("PHASE 0 - Print base")
 		
-		writeToFile(node.printCode, file + ".phase0.c")
+//		writeToFile(node.printCode, file + ".phase0.c")
 //		writeToFile(node.printAST, file + ".phase0.ast")
 		
 		
@@ -43,7 +43,7 @@ class Test5 extends Test {
 		
 //		if(node1.checkContainsIf1) return;
 		
-		writeToFile(node1.printCode, file + ".phase1.c")
+//		writeToFile(node1.printCode, file + ".phase1.c")
 //		writeToFile(node1.printAST, file + ".phase1.ast")
 
 
@@ -109,7 +109,7 @@ class Test5 extends Test {
 		tdn6.register(new Ifdef2IfRule)
 		var Node node6 = tdn6.transform(node5) as Node
 //		writeToFile(node6.printCode, file + ".phase6.c")
-		writeToFile(node6.printAST, file + ".phase6.ast")
+//		writeToFile(node6.printAST, file + ".phase6.ast")
 
 
 

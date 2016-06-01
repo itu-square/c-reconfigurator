@@ -38,10 +38,6 @@ class ReorderSequentialMutexConditionalRule extends AncestorGuaranteedRule {
 			&& (pair.head as GNode).filter(PresenceCondition).get(0).toString.length >
 				(pair.tail.head as GNode).filter(PresenceCondition).get(0).toString.length
 		) {
-			println
-			println("---------------")
-			println(ancestors.last.name)
-			
 			return new Pair<Object>(pair.tail.head).add(pair.head).append(pair.tail.tail)
 		}
 		

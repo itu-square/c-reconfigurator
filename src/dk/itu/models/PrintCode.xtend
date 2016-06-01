@@ -170,7 +170,8 @@ class PrintCode extends PrintMethod {
 			if(last_line.empty)
 				output.println
 		}
-			
+		
+		// IF or ELSE with a single statement
 		if(
 			ancestors.last != null
 			&& ancestors.last.name.equals("SelectionStatement")
@@ -179,6 +180,21 @@ class PrintCode extends PrintMethod {
 			&& ((ancestors.last.get(ancestors.last.indexOf(node)-1) as Language<CTag>).tag.equals(CTag::RPAREN)
 				|| (ancestors.last.get(ancestors.last.indexOf(node)-1) as Language<CTag>).tag.equals(CTag::^ELSE))
 			&& #["ExpressionStatement", "ReturnStatement"].contains(node.name)
+		) {
+			output.println
+			output.print("        ")
+			current_C_line = "        "
+			current_line = "        "
+		}
+		
+		// FOR with a single statement
+		if(
+			ancestors.last != null
+			&& ancestors.last.name.equals("IterationStatement")
+			&& ancestors.last.indexOf(node) > 0
+			&& ancestors.last.get(ancestors.last.indexOf(node)-1) instanceof Language<?>
+			&& (ancestors.last.get(ancestors.last.indexOf(node)-1) as Language<CTag>).tag.equals(CTag::RPAREN)
+			&& node.name.equals("ExpressionStatement")
 		) {
 			output.println
 			output.print("        ")

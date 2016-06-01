@@ -165,22 +165,8 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 					else
 						throw new Exception("RewriteVariableUseRule: unknown location of variable name")
 				
-				if(varName.equals("node_to_cpumask_map")) {
-					println
-				}
-				
 				val declarationPCs = computePCs(varName, externalGuard.and(node.presenceCondition))
-	
 				val exp = buildExp(node, varName, externalGuard.and(node.presenceCondition), declarationPCs)
-				
-				if(varName.equals("node_to_cpumask_map")) {
-					println
-					println("----------------")
-					println(varName)
-					println(node)
-					println(exp)
-					
-				}
 				
 				if(exp != null)
 					return exp
