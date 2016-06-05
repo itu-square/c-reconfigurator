@@ -4,9 +4,10 @@ import dk.itu.models.rules.AncestorGuaranteedRule
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
-import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 import xtc.util.Pair
+
+import static extension dk.itu.models.Extensions.*
 
 class SplitMultipleVariablesRule extends AncestorGuaranteedRule {
 	
@@ -32,21 +33,26 @@ class SplitMultipleVariablesRule extends AncestorGuaranteedRule {
 		) {
 			val innermostDeclaringList = getInnermostDeclaringList((pair.head as GNode)) as GNode
 			val declaringList = (pair.head as GNode).get(0) as GNode
-		
-			val varName =
-				if (declaringList.get(1) instanceof GNode && (declaringList.get(1) as GNode).name.equals("SimpleDeclarator"))
-					
-					(declaringList.get(1) as GNode).get(0).toString
-				
-				else if ((declaringList.get(0) as GNode).name.equals("DeclaringList") 
-					&& declaringList.get(1) instanceof Language
-					&& (declaringList.get(2) as GNode).name.equals("SimpleDeclarator"))
-					
-					(declaringList.get(2) as GNode).get(0).toString
-				
-				else 
-					throw new Exception("SplitMultipleVariableRule: unknown variable name.")
 			
+			val unaryIdentifierDeclarator = declaringList.findFirst[
+				it instanceof GNode
+				&& (it as GNode).name.equals("UnaryIdentifierDeclarator")]
+				
+			val simpleDeclarator = declaringList.findFirst[
+				it instanceof GNode
+				&& (it as GNode).name.equals("SimpleDeclarator")]
+			
+			val declarator =
+				if (unaryIdentifierDeclarator != null)
+					unaryIdentifierDeclarator
+				else if (simpleDeclarator != null)
+					simpleDeclarator
+				else {
+					debugln
+					debugln("----- SplitMultipleVariablesRule -----------------")
+					debugln(((pair.head as GNode)).printAST)
+					throw new Exception("SplitMultipleVariableRule: unknown variable name.")
+				}
 			return
 				new Pair<Object>(
 					GNode::create(
@@ -61,7 +67,7 @@ class SplitMultipleVariablesRule extends AncestorGuaranteedRule {
 						GNode::create(
 							"DeclaringList",
 							innermostDeclaringList.get(0), // gets type
-							GNode::create("SimpleDeclarator", new Text(CTag::IDENTIFIER, varName)),
+							declarator,
 							new Language<CTag>(CTag::SEMICOLON)
 						)
 					)
