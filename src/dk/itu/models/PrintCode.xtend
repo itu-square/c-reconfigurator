@@ -35,8 +35,9 @@ class PrintCode extends PrintMethod {
 		var current_line = last_line
 		
 		if (last_line.equals("#if")) {
-			output.print(''' «condition.PCtoCPPexp»''')
-			current_line += ''' «condition.PCtoCPPexp»'''
+			val cond = condition.PCtoCPPexp
+			output.print(''' «cond»''')
+			current_line += ''' «cond»'''
 		} else {
 			var disPC = Reconfigurator::presenceConditionManager.newPresenceCondition(false)
 			for (PresenceCondition pc : ancestors.last.filter(PresenceCondition).filter[ancestors.last.indexOf(it)<ancestors.last.indexOf(condition)]) {
@@ -52,8 +53,9 @@ class PrintCode extends PrintMethod {
 				output.print('''#else''')
 				current_line = '''#else'''
 			} else {
-				output.print('''#elif «newPC.PCtoCPPexp»''')
-				current_line = '''#elif «newPC.PCtoCPPexp»'''
+				val cond = newPC.PCtoCPPexp
+				output.print('''#elif «cond»''')
+				current_line = '''#elif «cond»'''
 			}
 		}
 		
@@ -81,9 +83,6 @@ class PrintCode extends PrintMethod {
 		val boolean iterationExpression =
 			chld_idx != -1 && lpar_idx != -1 && rpar_idx != -1
 			&& lpar_idx < chld_idx && chld_idx < rpar_idx
-			
-		if(language == null)
-			ancestors.forEach[println(it.name)]
 		
 		if (
 			(last_line.endsWith(";") && !iterationExpression)

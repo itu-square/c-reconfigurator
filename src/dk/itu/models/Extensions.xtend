@@ -46,7 +46,7 @@ class Extensions {
 	}
 	
 	public static def void writeToFile(String text, String file) {
-		println("Writing file: " + file)
+		debugln("Writing file: " + file)
 		val fileObject = new File(file)
 		if (!fileObject.parentFile.exists) {
 			Files.createParentDirs(fileObject)
@@ -83,6 +83,18 @@ class Extensions {
 		Settings::systemOutPS.print(Settings::consoleBAOS)
 		Settings::consoleBAOS.toString.writeToFile(Settings::consoleFile.path)
 		Settings::consoleBAOS.reset()
+	}
+
+	public static def void debug(Object o) {
+		Settings::consolePS.print(o)
+	}
+	
+	public static def void debugln(Object o) {
+		Settings::consolePS.print(o + "\n")
+	}
+	
+	public static def void debugln() {
+		Settings::consolePS.print("\n")
 	}
 	
 	public static def void summary(Object o) {
@@ -220,7 +232,6 @@ class Extensions {
 			override protected computeNext() {
 				while (iterator.hasNext()) {
 					val Object element = iterator.next();
-					println("hello")
 					if (predicate.apply(element, unfiltered)) {
 						return element;
 					}
@@ -282,19 +293,18 @@ class Extensions {
 
 			var byte[] sat = o as byte[]
 			for (var i = 0; i < sat.length; i++) {
-//				if (sat.get(i) >= 0 && ! firstTerm) { print(" && "); }
 
 				if(sat.get(i) >= 0) {
-//					print("!")
 					var id = vars.getName(i)
-					id = id.substring(9, id.length-1)
+					id = if (id.startsWith("(defined"))
+						"def_" + id.substring(9, id.length-1)
+						else id
 					if (!varMapInverse.containsKey(id)) {
 						val shortId = ((a + varMapInverse.size)as char).toString
 						varMapInverse.put(id, shortId)
 						varMap.put(shortId, id)
 					}
 					id = varMapInverse.get(id)
-//					print(id)
 					mexp.append(id)
 				}
 				if(sat.get(i) == 0) {	
@@ -325,7 +335,11 @@ class Extensions {
 				}
 				if(i < input.length -1 && (input.get(i+1).toString).equals("'"))
 					output.append("!")
-				output.append('''defined(«varMap.get(current.toString)»)''')
+				val id = varMap.get(current.toString)
+				if (id.startsWith("def_"))
+					output.append('''defined(«id.substring(4)»)''')
+				else
+					output.append(id)
 				firstConjunction = false
 			}
 		}
@@ -363,7 +377,8 @@ class Extensions {
         		conj = null;
 			} else if (!(current.toString).equals("'") && !(current.toString).equals(" ")) {
 				var id = varMap.get(current.toString)
-				id = Reconfigurator.transformedFeaturemap.get(id)
+				if (id.startsWith("def_"))
+					id = Reconfigurator.transformedFeaturemap.get(id.substring(4))
 				var term = GNode::create("PrimaryIdentifier", new Text<CTag>(CTag.IDENTIFIER, id))
 				
 				if(i < input.length -1 && (input.get(i+1).toString).equals("'"))

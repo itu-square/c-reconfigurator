@@ -258,6 +258,7 @@ public abstract class Tool {
    * @param node The node.
    */
   public void process(Node node) {
+	  Reconfigurator.timeAfterParsing = System.nanoTime();
 	  Reconfigurator.test.transform(node);
   }
 

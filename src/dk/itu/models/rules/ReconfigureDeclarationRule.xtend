@@ -157,7 +157,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				"InclusiveOrExpression", "IterationStatement", "AdditiveExpression", "StatementAsExpression",
 				"Subscript", "Decrement", "GotoStatement", "BreakStatement", "LabeledStatement", "Increment",
 				"MatchedInitializerList", "DesignatedInitializer", "Designation", "DesignatorList",
-				"Designator", "ContinueStatement"].contains(node.name)) {
+				"Designator", "ContinueStatement", "Expression"].contains(node.name)) {
 			node
 		} else {
 			println

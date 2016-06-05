@@ -66,8 +66,8 @@ class Test5 extends Test {
 		val tdnQ = new TopDownStrategy
 		tdnQ.register(new ReconfigureDeclarationRule)
 		var Node node4 = tdnQ.transform(node2) as Node
-////		writeToFile(node4.printCode, file + ".phase4.c")
-////		writeToFile(node4.printAST, file + ".phase4.ast")
+//		writeToFile(node4.printCode, file + ".phase4.c")
+//		writeToFile(node4.printAST, file + ".phase4.ast")
 
 //		println("PHASE 3 - Reconfigure variables")
 //		val pcidmap = new HashMap<PresenceCondition, String>		

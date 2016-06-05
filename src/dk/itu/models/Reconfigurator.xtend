@@ -15,6 +15,7 @@ class Reconfigurator {
 	// per test settings
 	static public var Test test
 	static public var String file
+	static public var long timeAfterParsing
 	static public var PresenceConditionManager presenceConditionManager
 	static public var Map<String, String> transformedFeaturemap
 	static public var Preprocessor preprocessor
@@ -67,7 +68,7 @@ class Reconfigurator {
 			if (!targetDir.exists) {
 				println('''making directory .«currentRelativePath»''')
 				targetDir.mkdirs
-				summaryln('''| md    |       |       |       |       | .«currentRelativePath»''')
+				summaryln('''| md    |       |       |       |       |       |       |       | .«currentRelativePath»''')
 			}
 			currentFile.listFiles.filter[isFile].forEach[reconfigure(test)]
 			currentFile.listFiles.filter[isDirectory].forEach[reconfigure(test)]
@@ -87,8 +88,17 @@ class Reconfigurator {
 				flushConsole
 				Settings::consolePS.flush
 				
+				var double startingTime = 0
+				timeAfterParsing = 0
+				var double timeAfterPreprocessing = 0
+				var double timeAfterReconfiguring = 0
+				
+				startingTime = System.nanoTime()
+				timeAfterParsing = 0;
 				preprocessor.runFile(currentFile.path).toString.writeToFile(currentTargetPath)
+				timeAfterPreprocessing = System.nanoTime()
 				test.apply(currentTargetPath).run
+				timeAfterReconfiguring = System.nanoTime()
 				
 				val sum_console = Settings::consoleBAOS.toString
 				val sum_header =
@@ -111,13 +121,28 @@ class Reconfigurator {
 					if (sum_console.contains("oracle: pass")) 			" Opass "
 					else (if (sum_console.contains("oracle: fail")) 	" Ofail "
 					else 												" O-    ")
-				summaryln('''|«sum_header»|«sum_parse»|«sum_check1»|«sum_oracle»|«sum_result»| .«currentRelativePath»''')
+				
+				// computing milliseconds
+				val String preprocessingEstimate = 
+					if (timeAfterPreprocessing != 0)
+						String.format(" %5.1f ", (timeAfterPreprocessing - startingTime)/ 1000000)
+					else "   -   "
+				val String parsingEstimate = 
+					if (timeAfterParsing != 0)
+						String.format(" %5.1f ", (timeAfterParsing - timeAfterPreprocessing)/ 1000000)
+					else "   -   "
+				val String recofiguringEstimate = 
+					if (timeAfterReconfiguring != 0)
+						String.format(" %5.1f ", (timeAfterReconfiguring - timeAfterParsing)/ 1000000)
+					else "   -   "
+				
+				summaryln('''|«sum_header»|«sum_parse»|«sum_check1»|«sum_oracle»|«sum_result»|«preprocessingEstimate»|«parsingEstimate»|«recofiguringEstimate»| .«currentRelativePath»''')
 			}
 			else {
 				println
 				println('''ignoring file    .«currentRelativePath»''')
 				//FileUtils.copyFile(file, new File(targetPath))
-				summaryln('''| ig    |       |       |       |       | .«currentRelativePath»''')
+				summaryln('''| ig    |       |       |       |       |       |       |       | .«currentRelativePath»''')
 			}
 		}
 	}
@@ -151,11 +176,11 @@ class Reconfigurator {
 			preprocessor = new Preprocessor
 			transformedFeaturemap = preprocessor.mapFeatureAndTransformedFeatureNames
 			
-			summaryln('''----------------------------------------------------------------''')
-			summaryln('''| HEADR | PARSE | CHEK1 | ORACL | #IFS  | FILE -----------------''')
-			summaryln('''----------------------------------------------------------------''')
+			summaryln('''----------------------------------------------------------------------------------------''')
+			summaryln('''| HEADR | PARSE | CHEK1 | ORACL | #IFS  | ¤prep | ¤pars | ¤reco | FILE -----------------''')
+			summaryln('''----------------------------------------------------------------------------------------''')
 			reconfigure(Settings::sourceFile, test)
-			summaryln('''----------------------------------------------------------------''')
+			summaryln('''----------------------------------------------------------------------------------------''')
 			
 			println('''writing file     .«Settings::reconfigFile.path.relativeTo(Settings::targetFile.path)»''')
 			preprocessor.writeReconfig(Settings::reconfigFile.path)

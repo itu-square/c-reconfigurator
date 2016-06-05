@@ -99,7 +99,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"AdditiveExpression", "StatementAsExpression", "Subscript", "Decrement", "GotoStatement",
 			"BreakStatement", "LabeledStatement", "Increment", "MatchedInitializerList",
 			"DesignatedInitializer", "Designation", "DesignatorList", "Designator",
-			"ContinueStatement"].contains(node.name)) {
+			"ContinueStatement", "Expression"].contains(node.name)) {
 			// no scope
 		} else {
 			println()
@@ -167,7 +167,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"InclusiveOrExpression", "IterationStatement", "AdditiveExpression", "StatementAsExpression",
 			"Subscript", "Decrement", "GotoStatement", "BreakStatement", "LabeledStatement", "Increment",
 			"MatchedInitializerList", "DesignatedInitializer", "Designation", "DesignatorList",
-			"Designator", "ContinueStatement"].contains(node.name)
+			"Designator", "ContinueStatement", "Expression"].contains(node.name)
 			|| (node.name.equals("ParameterDeclaration") && (node.size == 1 || !(node instanceof GNode))) ) {
 			// no declaration
 		} else {
