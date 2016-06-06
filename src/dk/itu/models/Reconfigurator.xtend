@@ -70,8 +70,8 @@ class Reconfigurator {
 				targetDir.mkdirs
 				summaryln('''| md    |       |       |       |       |       |       |       | .«currentRelativePath»''')
 			}
-			currentFile.listFiles.filter[isFile].forEach[reconfigure(test)]
-			currentFile.listFiles.filter[isDirectory].forEach[reconfigure(test)]
+			currentFile.listFiles.filter[isFile].sort.forEach[reconfigure(test)]
+			currentFile.listFiles.filter[isDirectory].sort.forEach[reconfigure(test)]
 		}
 		else {
 			var File oracle = null
