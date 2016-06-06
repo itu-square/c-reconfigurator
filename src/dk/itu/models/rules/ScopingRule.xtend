@@ -99,12 +99,14 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"AdditiveExpression", "StatementAsExpression", "Subscript", "Decrement", "GotoStatement",
 			"BreakStatement", "LabeledStatement", "Increment", "MatchedInitializerList",
 			"DesignatedInitializer", "Designation", "DesignatorList", "Designator",
-			"ContinueStatement", "Expression"].contains(node.name)) {
+			"ContinueStatement", "Expression", "SUETypeSpecifier", "StructDeclarationList",
+			"StructDeclaration", "StructDeclaringList", "StructDeclarator", "IndirectSelection",
+			"EmptyDefinition"].contains(node.name)) {
 			// no scope
 		} else {
-			println()
-			ancestors.forEach[println("- " + it.name)]
-			println(node.printAST)
+			debugln
+			ancestors.forEach[debugln("- " + it.name)]
+			debugln(node.printAST)
 			throw new Exception("ScopingRule: possible scope : " + node.name + ".")
 		}
 		
@@ -167,12 +169,14 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"InclusiveOrExpression", "IterationStatement", "AdditiveExpression", "StatementAsExpression",
 			"Subscript", "Decrement", "GotoStatement", "BreakStatement", "LabeledStatement", "Increment",
 			"MatchedInitializerList", "DesignatedInitializer", "Designation", "DesignatorList",
-			"Designator", "ContinueStatement", "Expression"].contains(node.name)
+			"Designator", "ContinueStatement", "Expression", "SUETypeSpecifier",
+			"StructDeclarationList", "StructDeclaration", "StructDeclaringList", "StructDeclarator",
+			"IndirectSelection", "EmptyDefinition"].contains(node.name)
 			|| (node.name.equals("ParameterDeclaration") && (node.size == 1 || !(node instanceof GNode))) ) {
 			// no declaration
 		} else {
-			println()
-			println(node.printAST)
+			debugln
+			debugln(node.printAST)
 			throw new Exception("ScopingRule: possible declaration : " + node.name + ".")
 		}
 		

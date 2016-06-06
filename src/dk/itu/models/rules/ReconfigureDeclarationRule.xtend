@@ -157,17 +157,19 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				"InclusiveOrExpression", "IterationStatement", "AdditiveExpression", "StatementAsExpression",
 				"Subscript", "Decrement", "GotoStatement", "BreakStatement", "LabeledStatement", "Increment",
 				"MatchedInitializerList", "DesignatedInitializer", "Designation", "DesignatorList",
-				"Designator", "ContinueStatement", "Expression"].contains(node.name)) {
+				"Designator", "ContinueStatement", "Expression", "SUETypeSpecifier",
+				"StructDeclarationList", "StructDeclaration", "StructDeclaringList", "StructDeclarator",
+				"IndirectSelection", "EmptyDefinition"].contains(node.name)) {
 			node
 		} else {
-			println
-			println('''------------------------------''')
-			println('''- ReconfigureDeclarationRule -''')
-			println('''------''')
+			debugln
+			debugln('''------------------------------''')
+			debugln('''- ReconfigureDeclarationRule -''')
+			debugln('''------''')
 			ancestors.forEach[
-				println('''- «it.name»''')]
-			println((node as GNode).printAST)
-			println
+				debugln('''- «it.name»''')]
+			debugln((node as GNode).printAST)
+			debugln
 			throw new Exception("ReconfigureDeclarationRule: unknown declaration : " + node.name + ".")
 		}
 	}
