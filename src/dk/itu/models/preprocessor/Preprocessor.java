@@ -184,10 +184,10 @@ public class Preprocessor {
 		bw.newLine();
 		
 		for (String reconfiguredFeature : mapFeatureAndTransformedFeatureNames.values()) {
-			bw.write("feature " + reconfiguredFeature + ";");
+			bw.write("extern feature " + reconfiguredFeature + ";");
 			bw.newLine();
 		}
-		bw.write("void* _reconfig_skip () { }");
+		bw.write("void* _reconfig_skip () { assert(0); return 0; }");
 		// AFLA: maybe undefined could be used later
 //		bw.write("void* _reconfig_undefined (char* value) { assert(0); }");
 		bw.close();
