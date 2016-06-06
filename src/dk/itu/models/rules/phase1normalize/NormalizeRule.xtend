@@ -36,6 +36,7 @@ class NormalizeRule extends Rule  {
 		tdn1.register(new ReorderSequentialMutexConditionalRule)
 		tdn1.register(new ExtractInitializerRule)
 		tdn1.register(new ExtractConditionalFromGlobalVariableInitializerRule)
+		tdn1.register(new ExtractConditionalFromArrayDeclaratorRule)
 		normalized = tdn1.transform(normalized) as Node
 		
 		val tdn2 = new TopDownStrategy

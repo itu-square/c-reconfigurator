@@ -501,5 +501,19 @@ class Extensions {
     		val tdn = new TopDownStrategy
 			tdn.register(new RewriteFunctionCallRule(fmap, pc, pcidmap))
 			tdn.transform(node) as GNode
+	}
+	
+	
+	
+	public static def Iterable<PresenceCondition> firstNestedPCs(Node node) {
+		if (node.name.equals("Conditional")) {
+			return node.filter(PresenceCondition)
+		} else {
+			for (GNode child : node.filter(GNode)) {
+				val res = child.firstNestedPCs
+				if (res != null) return res
+			}
+			return null
 		}
+	}
 }

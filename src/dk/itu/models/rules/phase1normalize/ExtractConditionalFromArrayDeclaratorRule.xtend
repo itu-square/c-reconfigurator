@@ -11,7 +11,7 @@ import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
 
-class ExtractConditionalFromGlobalVariableInitializerRule extends AncestorGuaranteedRule {
+class ExtractConditionalFromArrayDeclaratorRule extends AncestorGuaranteedRule {
 	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
 		cond
@@ -25,30 +25,26 @@ class ExtractConditionalFromGlobalVariableInitializerRule extends AncestorGuaran
 		pair
 	}
 	
-	override dispatch Object transform(GNode node) {		
+	override dispatch Object transform(GNode node) {
+		val arrayDeclarator = node.getDescendantNode("ArrayDeclarator")
+				
 		if (
 			node.name.equals("Declaration")
 			&& !ancestors.exists[anc | anc.name.equals("FunctionDefinition")]
-			
-			&& (node.get(0) instanceof GNode)
-			&& (node.get(0) as GNode).name.equals("DeclaringList")
-			
-			&& (node.get(0) as GNode).filter(GNode).exists[name.equals("InitializerOpt")]
-			&& (node.get(0) as GNode).firstNestedPCs != null
+			&& arrayDeclarator != null
+			&& arrayDeclarator.firstNestedPCs != null
 		) {
-			val declaringList = node.get(0) as GNode
-			
-			val pcs = declaringList.firstNestedPCs
+			val pcs = arrayDeclarator.firstNestedPCs
 			
 			var newNode = GNode::create("Conditional")
-			
 			var disjPC = Reconfigurator::presenceConditionManager.newPresenceCondition(false)
+			
 			for (PresenceCondition pc : pcs) {
 				newNode = newNode.add(pc).add(GNode::createFromPair("Declaration", node.toPair)) as GNode
 				disjPC = disjPC.or(pc)
 			}
 			newNode = newNode.add(disjPC.not).add(GNode::createFromPair("Declaration", node.toPair)) as GNode
-			
+				
 			val tdn1 = new TopDownStrategy
 			tdn1.register(new RemOneRule)
 			tdn1.register(new RemZeroRule)
