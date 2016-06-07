@@ -37,7 +37,7 @@ class Ifdef2IfRule extends AncestorGuaranteedRule {
 			&& (
 				#["AdditiveExpression", "Initializer", "ExpressionStatement", "ReturnStatement",
 					"MultiplicativeExpression", "PrimaryExpression", "ConditionalExpression", "ShiftExpression",
-					"RelationalExpression"].contains(ancestors.last.name)
+					"RelationalExpression", "ExpressionList", "FunctionCall"].contains(ancestors.last.name)
 				||
 				(ancestors.last.name.equals("SelectionStatement")
 					&& ancestors.last.indexOf(node) < ancestors.last.indexOf(ancestors.last.findFirst[it instanceof Language<?> && (it as Language<CTag>).tag.equals(CTag.RPAREN)]) )
@@ -171,6 +171,8 @@ class Ifdef2IfRule extends AncestorGuaranteedRule {
 			ancestors.forEach[
 				println('''- «it.name»''')]
 			println(node.printAST)
+			println("---------------")
+			println(ancestors.findFirst[name.equals("Declaration")].printAST)
 			throw new Exception("Ifdef2IfRule: unexpected Conditional context")
 		}
 		

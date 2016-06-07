@@ -101,7 +101,9 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"DesignatedInitializer", "Designation", "DesignatorList", "Designator",
 			"ContinueStatement", "Expression", "SUETypeSpecifier", "StructDeclarationList",
 			"StructDeclaration", "StructDeclaringList", "StructDeclarator", "IndirectSelection",
-			"EmptyDefinition"].contains(node.name)) {
+			"EmptyDefinition", "EnumSpecifier", "EnumeratorList", "Enumerator", "EnumeratorValueOpt",
+			"PostfixIdentifierDeclarator", "PostfixingAbstractDeclarator",
+			"CleanTypedefDeclarator", "CleanPostfixTypedefDeclarator", "DirectSelection"].contains(node.name)) {
 			// no scope
 		} else {
 			debugln
@@ -109,6 +111,13 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			debugln(node.printAST)
 			throw new Exception("ScopingRule: possible scope : " + node.name + ".")
 		}
+		
+		
+		
+		
+		
+		
+		
 		
 		if (
 			node.name.equals("Declaration")
@@ -130,14 +139,23 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			functionDeclarations.newDeclaration(declarator.get(0).toString)
 		} else if (
 			#["Declaration", "ParameterDeclaration"].contains(node.name)
-			//&& (!(node.get(0) instanceof Language<?>) || !(node.get(0) as Language<CTag>).tag.equals(CTag::VOID))
 			&& (node.size > 1 || node.get(0) instanceof GNode)
 			&& node.getDescendantNode("FunctionDeclarator") == null
+			&& node.getDescendantNode("EnumSpecifier") == null
+			&& (node.getDescendantNode("StructOrUnionSpecifier") == null
+				|| node.getDescendantNode("SimpleDeclarator") != null)
+			&& (node.getDescendantNode("TypedefTypeSpecifier") == null
+				|| node.getDescendantNode("SimpleDeclarator") != null)
 			&& !node.containsTypedef
 		) {
 			var declarator = node.getDescendantNode("SimpleDeclarator")
 			if (declarator == null)
 				declarator = node.getDescendantNode("ParameterTypedefDeclarator")
+			if (declarator == null) {
+				debugln(node.printAST)
+				throw new Exception("ScopingRule: unknown declarator.")
+			}
+			
 			val variableName = declarator.get(0).toString
 			if (!variableName.equals(Settings::reconfiguratorIncludePlaceholder))
 				addVariable(variableName)
@@ -171,8 +189,14 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"MatchedInitializerList", "DesignatedInitializer", "Designation", "DesignatorList",
 			"Designator", "ContinueStatement", "Expression", "SUETypeSpecifier",
 			"StructDeclarationList", "StructDeclaration", "StructDeclaringList", "StructDeclarator",
-			"IndirectSelection", "EmptyDefinition"].contains(node.name)
-			|| (node.name.equals("ParameterDeclaration") && (node.size == 1 || !(node instanceof GNode))) ) {
+			"IndirectSelection", "EmptyDefinition", "EnumSpecifier", "EnumeratorList",
+			"Enumerator", "EnumeratorValueOpt", "PostfixIdentifierDeclarator", "PostfixingAbstractDeclarator",
+			"CleanTypedefDeclarator", "CleanPostfixTypedefDeclarator", "DirectSelection"].contains(node.name)
+			|| (node.name.equals("ParameterDeclaration") && (node.size == 1 || !(node instanceof GNode)))
+			|| (node.name.equals("ParameterDeclaration") && node.getDescendantNode("EnumSpecifier") != null )
+			|| (node.name.equals("Declaration") && node.getDescendantNode("EnumSpecifier") != null )
+			|| (node.name.equals("Declaration") && node.getDescendantNode("StructOrUnionSpecifier") != null )
+		) {
 			// no declaration
 		} else {
 			debugln
