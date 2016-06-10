@@ -194,6 +194,7 @@ class Reconfigurator {
 		
 		flushConsole
 		
+		
 		Settings::systemOutPS.append(Settings::consoleBAOS.toString)
 		Settings::systemOutPS.flush
 		

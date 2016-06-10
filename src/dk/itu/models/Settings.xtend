@@ -15,6 +15,7 @@ class Settings {
 	static public var boolean minimize = true
 	static public var boolean parseOnly = false
 	static public var boolean printFullContent = false
+	static public var boolean useFullContent = false
 	
 	static public var String reconfiguratorIncludePlaceholder = "_reconfig_include"; 
 	static public var List<String> defineMacros
@@ -95,6 +96,8 @@ class Settings {
 					reconfigureIncludes = true
 				case "-parseOnly":
 					parseOnly = true
+				case "-useFullContent":
+					printFullContent = true
 				case "-printFullContent":
 					printFullContent = true
 				case "-ignore":

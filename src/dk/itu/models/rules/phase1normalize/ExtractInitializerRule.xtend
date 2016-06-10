@@ -34,13 +34,11 @@ class ExtractInitializerRule extends AncestorGuaranteedRule {
 			&& ((pair.head as GNode).get(0) as GNode).filter(GNode).exists[name.equals("InitializerOpt")]
 		) {
 			val declaringList = (pair.head as GNode).get(0) as GNode
-			val varName =
-				if ((declaringList.get(1) as GNode).name.equals("SimpleDeclarator"))
-					(declaringList.get(1) as GNode).get(0).toString
-				else ((declaringList.get(1) as GNode).get(1) as GNode).get(0).toString
+						
+			val varName = declaringList.getDescendantNode("SimpleDeclarator").get(0).toString
 			val initializer = declaringList.filter(GNode).findFirst[name.equals("InitializerOpt")].get(1) as GNode
 			
-			return
+			var Pair<Object> newPair =
 				new Pair<Object>(
 					GNode::createFromPair(
 						"Declaration",
@@ -50,16 +48,60 @@ class ExtractInitializerRule extends AncestorGuaranteedRule {
 								"DeclaringList",
 								(c as GNode).filter[d | !(d instanceof GNode) || !(d as GNode).name.equals("InitializerOpt")].toPair)
 						].toPair))
-				.add(GNode::create(
-					"ExpressionStatement",
-					GNode::create(
-						"AssignmentExpression",
-						GNode::create("PrimaryIdentifier", new Text(CTag::IDENTIFIER, varName)),
-						GNode::create("AssignmentOperator", new Language<CTag>(CTag::ASSIGN)),
-						initializer.get(0)),
-					new Language<CTag>(CTag::SEMICOLON)
-				))
-				.append(pair.tail)
+			
+			if (
+				initializer.get(0) instanceof GNode
+				&& (initializer.get(0) as GNode).name.equals("StringLiteralList")
+			) {
+				val stringLiteralList = initializer.get(0) as GNode
+				if (
+					stringLiteralList.size == 1
+					&& stringLiteralList.get(0) instanceof GNode
+					&& (stringLiteralList.get(0) as GNode).name.equals("Conditional")
+					&& (stringLiteralList.get(0) as GNode).size == 2
+					&& (stringLiteralList.get(0) as GNode).get(1) instanceof Text<?>
+					&& ((stringLiteralList.get(0) as GNode).get(1) as Text<CTag>).tag.equals(CTag::STRINGliteral)
+				) {
+					var str = (stringLiteralList.get(0) as GNode).get(1).toString
+					str = str.subSequence(1, str.length-1).toString
+					for (var int index = 0; index < str.length; index++) {
+						newPair = newPair.add(GNode::create(
+									"ExpressionStatement",
+									GNode::create(
+										"AssignmentExpression",
+										GNode::create(
+											"Subscript",
+											GNode::create("PrimaryIdentifier", new Text(CTag::IDENTIFIER, varName)),
+											new Language<CTag>(CTag::LBRACK),
+											new Text<CTag>(CTag::INTEGERconstant, index.toString),
+											new Language<CTag>(CTag::RBRACK)
+											),
+										GNode::create("AssignmentOperator", new Language<CTag>(CTag::ASSIGN)),
+										new Text<CTag>(CTag::CHARACTERconstant, "'" + str.charAt(index) + "'")),
+									new Language<CTag>(CTag::SEMICOLON)
+								))
+					}
+				}
+				else {
+					println
+					println(stringLiteralList.printAST)
+					throw new Exception("ExtractInitializerRule: unknown String Literal initialization pattern.")
+				}
+			} else {
+				newPair = newPair.add(GNode::create(
+							"ExpressionStatement",
+							GNode::create(
+								"AssignmentExpression",
+								GNode::create("PrimaryIdentifier", new Text(CTag::IDENTIFIER, varName)),
+								GNode::create("AssignmentOperator", new Language<CTag>(CTag::ASSIGN)),
+								initializer.get(0)),
+							new Language<CTag>(CTag::SEMICOLON)
+						))
+			}
+				
+			newPair = newPair.append(pair.tail)
+			
+			return newPair
 		}
 		
 		pair

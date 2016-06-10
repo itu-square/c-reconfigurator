@@ -164,14 +164,14 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				"CleanTypedefDeclarator", "CleanPostfixTypedefDeclarator", "DirectSelection"].contains(node.name)) {
 			node
 		} else {
-			debugln
-			debugln('''------------------------------''')
-			debugln('''- ReconfigureDeclarationRule -''')
-			debugln('''------''')
+			println
+			println('''------------------------------''')
+			println('''- ReconfigureDeclarationRule -''')
+			println('''------''')
 			ancestors.forEach[
-				debugln('''- «it.name»''')]
-			debugln((node as GNode).printAST)
-			debugln
+				println('''- «it.name»''')]
+			println((node as GNode).printAST)
+			println
 			throw new Exception("ReconfigureDeclarationRule: unknown declaration : " + node.name + ".")
 		}
 	}

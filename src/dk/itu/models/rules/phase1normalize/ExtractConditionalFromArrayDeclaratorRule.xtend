@@ -27,15 +27,15 @@ class ExtractConditionalFromArrayDeclaratorRule extends AncestorGuaranteedRule {
 	
 	override dispatch Object transform(GNode node) {
 		val arrayDeclarator = node.getDescendantNode("ArrayDeclarator")
+		val pcs = node.firstNestedPCs
 				
 		if (
 			node.name.equals("Declaration")
 			&& !ancestors.exists[anc | anc.name.equals("FunctionDefinition")]
 			&& arrayDeclarator != null
-			&& arrayDeclarator.firstNestedPCs != null
+			&& pcs.size != 0
+			&& !(pcs.size == 1 && pcs.get(0).isTrue)
 		) {
-			val pcs = arrayDeclarator.firstNestedPCs
-			
 			var newNode = GNode::create("Conditional")
 			var disjPC = Reconfigurator::presenceConditionManager.newPresenceCondition(false)
 			

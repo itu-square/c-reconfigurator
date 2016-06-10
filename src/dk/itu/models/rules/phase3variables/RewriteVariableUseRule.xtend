@@ -15,6 +15,7 @@ import xtc.tree.GNode
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
+import xtc.tree.Node
 
 class RewriteVariableUseRule extends AncestorGuaranteedRule {
 	
@@ -38,20 +39,17 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 		map.get(map.keySet.findFirst[is(pc)])
 	}
     
-    private def setHandled(GNode node) {
+    private def setHandled(Node node) {
     	node.setProperty("HandledByRewriteVariableUseRule", true)
-    	switch (true) {
-    		case (node.name.equals("Increment") && node.filter(GNode).head.name.equals("PrimaryIdentifier")):
-    			node.filter(GNode).head.setProperty("HandledByRewriteVariableUseRule", true)
-			case (node.name.equals("Subscript") && node.filter(GNode).head.name.equals("PrimaryIdentifier")):
-    			node.filter(GNode).head.setProperty("HandledByRewriteVariableUseRule", true)
-    	}
     }
     
 	protected def buildExp(GNode node, String varName, PresenceCondition guard, List<PresenceCondition> declarationPCs) {
 		
 		if (declarationPCs.empty) { // there are no declarations of this variable
-			node.setHandled
+			if (node.name.equals("PrimaryIdentifier"))
+				node.setHandled
+			else
+				node.getDescendantNode("PrimaryIdentifier").setHandled
 			return node
 		} else {
 			
@@ -65,7 +63,10 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 			// then the guard cannot be true in the same time with any of the PCs.
 			if (guard.and(disjunctionPC).isFalse) {
 				println('''Reconfigurator error: «varName» undefined under «guard».''')
+				if (node.name.equals("PrimaryIdentifier"))
 				node.setHandled
+			else
+				node.getDescendantNode("PrimaryIdentifier").setHandled
 				return node
  			}
 			
@@ -73,7 +74,10 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 			var GNode exp = null
 			
 			if (!guard.getBDD.imp(disjunctionPC.getBDD).isOne) {
+				if (node.name.equals("PrimaryIdentifier"))
 				node.setHandled
+			else
+				node.getDescendantNode("PrimaryIdentifier").setHandled
 				exp = node
 			}
 			
@@ -151,22 +155,33 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 	
 	override dispatch Object transform(GNode node) {
 		
-		if ( (
-				   (node.name.equals("PrimaryIdentifier"))
-				|| (node.name.equals("Increment") && node.filter(GNode).head.name.equals("PrimaryIdentifier"))
-				|| (node.name.equals("Subscript") && node.filter(GNode).head.name.equals("PrimaryIdentifier"))
+		if(
+			(
+				node.name.equals("PrimaryIdentifier")
+				&& !node.getBooleanProperty("HandledByRewriteVariableUseRule")
+			) || (
+				#["Increment", "Subscript", "AssignmentExpression", "UnaryExpression"].contains(node.name)
+				&& node.getDescendantNode("PrimaryIdentifier") != null
+				&& !node.getDescendantNode("PrimaryIdentifier").getBooleanProperty("HandledByRewriteVariableUseRule")
 			)
-			&& !node.getBooleanProperty("HandledByRewriteVariableUseRule") ) {
-				val varName =
-					if (node.name.equals("PrimaryIdentifier"))
-						(node.get(0) as Language<CTag>).toString
-					else if (node.name.equals("Increment") || node.name.equals("Subscript"))
-						(node.filter(GNode).head.get(0) as Language<CTag>).toString
-					else
-						throw new Exception("RewriteVariableUseRule: unknown location of variable name")
+		){
+				var newNode = node
+				
+				var String varName
+				
+				if (node.name.equals("PrimaryIdentifier"))
+					varName =(node.get(0) as Language<CTag>).toString
+				else if (#["Increment", "Subscript", "AssignmentExpression", "UnaryExpression"].contains(node.name)) {
+					varName = node.getDescendantNode("PrimaryIdentifier").get(0).toString
+					newNode = GNode::create("PrimaryExpression",
+							new Language<CTag>(CTag::LPAREN),
+							node,
+							new Language<CTag>(CTag::RPAREN))
+				} else
+					throw new Exception("RewriteVariableUseRule: unknown location of variable name")
 				
 				val declarationPCs = computePCs(varName, externalGuard.and(node.presenceCondition))
-				val exp = buildExp(node, varName, externalGuard.and(node.presenceCondition), declarationPCs)
+				val exp = buildExp(newNode, varName, externalGuard.and(node.presenceCondition), declarationPCs)
 				
 				if(exp != null)
 					return exp

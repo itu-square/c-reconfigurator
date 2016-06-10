@@ -46,7 +46,7 @@ class Extensions {
 	}
 	
 	public static def void writeToFile(String text, String file) {
-		debugln("Writing file: " + file)
+		println("Writing file: " + file)
 		val fileObject = new File(file)
 		if (!fileObject.parentFile.exists) {
 			Files.createParentDirs(fileObject)
@@ -82,7 +82,7 @@ class Extensions {
 	public static def void flushConsole() {
 		Settings::systemOutPS.print(Settings::consoleBAOS)
 		Settings::consoleBAOS.toString.writeToFile(Settings::consoleFile.path)
-		Settings::consoleBAOS.reset()
+		Settings::consoleBAOS.reset
 	}
 
 	public static def void debug(Object o) {
@@ -377,8 +377,12 @@ class Extensions {
         		conj = null;
 			} else if (!(current.toString).equals("'") && !(current.toString).equals(" ")) {
 				var id = varMap.get(current.toString)
-				if (id.startsWith("def_"))
-					id = Reconfigurator.transformedFeaturemap.get(id.substring(4))
+				if (id.startsWith("def_")) {
+					if (Reconfigurator::transformedFeaturemap.containsKey(id.substring(4)))
+						id = Reconfigurator::transformedFeaturemap.get(id.substring(4))
+					else
+						Reconfigurator::transformedFeaturemap.put(id.substring(4), "_reconfig_" + id.substring(4))
+				}	
 				var term = GNode::create("PrimaryIdentifier", new Text<CTag>(CTag.IDENTIFIER, id))
 				
 				if(i < input.length -1 && (input.get(i+1).toString).equals("'"))
@@ -513,7 +517,7 @@ class Extensions {
 				val res = child.firstNestedPCs
 				if (res != null) return res
 			}
-			return null
+			return #[]
 		}
 	}
 }

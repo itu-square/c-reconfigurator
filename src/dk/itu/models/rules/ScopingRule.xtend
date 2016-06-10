@@ -106,9 +106,9 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"CleanTypedefDeclarator", "CleanPostfixTypedefDeclarator", "DirectSelection"].contains(node.name)) {
 			// no scope
 		} else {
-			debugln
-			ancestors.forEach[debugln("- " + it.name)]
-			debugln(node.printAST)
+			println
+			ancestors.forEach[println("- " + it.name)]
+			println(node.printAST)
 			throw new Exception("ScopingRule: possible scope : " + node.name + ".")
 		}
 		
@@ -152,7 +152,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			if (declarator == null)
 				declarator = node.getDescendantNode("ParameterTypedefDeclarator")
 			if (declarator == null) {
-				debugln(node.printAST)
+				println(node.printAST)
 				throw new Exception("ScopingRule: unknown declarator.")
 			}
 			
@@ -199,8 +199,8 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		) {
 			// no declaration
 		} else {
-			debugln
-			debugln(node.printAST)
+			println
+			println(node.printAST)
 			throw new Exception("ScopingRule: possible declaration : " + node.name + ".")
 		}
 		

@@ -48,9 +48,9 @@ class SplitMultipleVariablesRule extends AncestorGuaranteedRule {
 				else if (simpleDeclarator != null)
 					simpleDeclarator
 				else {
-					debugln
-					debugln("----- SplitMultipleVariablesRule -----------------")
-					debugln(((pair.head as GNode)).printAST)
+					println
+					println("----- SplitMultipleVariablesRule -----------------")
+					println(((pair.head as GNode)).printAST)
 					throw new Exception("SplitMultipleVariableRule: unknown variable name.")
 				}
 			return

@@ -84,6 +84,11 @@ class PrintCode extends PrintMethod {
 			chld_idx != -1 && lpar_idx != -1 && rpar_idx != -1
 			&& lpar_idx < chld_idx && chld_idx < rpar_idx
 		
+		if(language.toString == null) {
+			ancestors.forEach[debugln("- " + it.name)]
+			debugln(ancestors.findFirst[it.name.equals("FunctionCall")].printAST)
+		}
+		
 		if (
 			(last_line.endsWith(";") && !iterationExpression)
 			|| last_line.endsWith("{") || last_line.endsWith("}")

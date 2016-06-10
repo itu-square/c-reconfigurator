@@ -21,6 +21,7 @@ class Test5 extends Test {
 	override transform(Node node) {
 		
 		println("PARSING DONE")
+		flushConsole
 		
 		if(Settings::parseOnly) {
 			writeToFile(node.printCode, file + ".phase0.c")
@@ -28,13 +29,14 @@ class Test5 extends Test {
 		}
 		
 		println("PHASE 0 - Print base")
-		
-//		writeToFile(node.printCode, file + ".phase0.c")
-//		writeToFile(node.printAST, file + ".phase0.ast")
+		flushConsole
+		writeToFile(node.printCode, file + ".phase0.c")
+		writeToFile(node.printAST, file + ".phase0.ast")
 		
 		
 		
 		println("PHASE 1 - Normalize")
+		flushConsole
 		var Node node1 = node
 		
 		val tdn1 = new TopDownStrategy
@@ -43,19 +45,20 @@ class Test5 extends Test {
 		
 //		if(node1.checkContainsIf1) return;
 		
-//		writeToFile(node1.printCode, file + ".phase1.c")
-//		writeToFile(node1.printAST, file + ".phase1.ast")
+		writeToFile(node1.printCode, file + ".phase1.c")
+		writeToFile(node1.printAST, file + ".phase1.ast")
 
 
 
 
 
 		println("PHASE 2 - Prepare for reconfiguration")
+		flushConsole
 		val tdn2 = new TopDownStrategy
 		tdn2.register(new IsolateDeclarationRule)
 		val Node node2 = tdn2.transform(node1) as Node
-//		writeToFile(node2.printCode, file + ".phase2.c")
-//		writeToFile(node2.printAST, file + ".phase2.ast")
+		writeToFile(node2.printCode, file + ".phase2.c")
+		writeToFile(node2.printAST, file + ".phase2.ast")
 
 
 
@@ -63,11 +66,12 @@ class Test5 extends Test {
 
 
 		println("PHASE ? - Reconfigure declarations")
+		flushConsole
 		val tdnQ = new TopDownStrategy
 		tdnQ.register(new ReconfigureDeclarationRule)
 		var Node node4 = tdnQ.transform(node2) as Node
-//		writeToFile(node4.printCode, file + ".phase4.c")
-//		writeToFile(node4.printAST, file + ".phase4.ast")
+		writeToFile(node4.printCode, file + ".phase4.c")
+		writeToFile(node4.printAST, file + ".phase4.ast")
 
 //		println("PHASE 3 - Reconfigure variables")
 //		val pcidmap = new HashMap<PresenceCondition, String>		
@@ -94,22 +98,24 @@ class Test5 extends Test {
 
 
 		println("PHASE 5 - Cleanup")
+		flushConsole
 		val tdn5 = new TopDownStrategy
 		tdn5.register(new RemergeConditionalsRule)
 		var Node node5 = tdn5.transform(node4) as Node
-//		writeToFile(node5.printCode, file + ".phase5.c")
-//		writeToFile(node5.printAST, file + ".phase5.ast")
+		writeToFile(node5.printCode, file + ".phase5.c")
+		writeToFile(node5.printAST, file + ".phase5.ast")
 
 
 
 
 
 		println("PHASE 6 - #ifdef to if")
+		flushConsole
 		val tdn6 = new TopDownStrategy
 		tdn6.register(new Ifdef2IfRule)
 		var Node node6 = tdn6.transform(node5) as Node
-//		writeToFile(node6.printCode, file + ".phase6.c")
-//		writeToFile(node6.printAST, file + ".phase6.ast")
+		writeToFile(node6.printCode, file + ".phase6.c")
+		writeToFile(node6.printAST, file + ".phase6.ast")
 
 
 
@@ -132,6 +138,7 @@ class Test5 extends Test {
 				else
 					println("oracle: fail")
 		}
+		flushConsole
 	}
 	
 }
