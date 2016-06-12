@@ -36,6 +36,10 @@ import dk.itu.models.rules.phase3variables.ReplaceIdentifierRule
 import dk.itu.models.rules.phase4functions.RewriteFunctionCallRule
 
 class Extensions {
+
+
+	static private var minimizeCache = new HashMap<String, String>
+
 	public static def String folder(String filePath) {
 		filePath.substring(0, filePath.lastIndexOf(File.separator) + 1)
 	}
@@ -352,13 +356,17 @@ class Extensions {
 		else if (condition.toString.equals("0")) "0"
 		else {
 			val varMap = new HashMap<String, String>
-			val mexp = condition.PCtoMexp(varMap)
-			val baos = new ByteArrayOutputStream
-			var ps = new PrintStream(baos)
-			if (Settings::minimize)
-				Minimize::process(mexp, ps).MexptoCPPexp(varMap)
-			else
-				mexp.MexptoCPPexp(varMap)
+			var mexp = condition.PCtoMexp(varMap)
+			if (Settings::minimize) {
+				if (minimizeCache.containsKey(mexp)) {
+					mexp = minimizeCache.get(mexp)
+				} else {		
+					val mini = Minimize::process(mexp, new PrintStream(new ByteArrayOutputStream))
+					minimizeCache.put(mexp, mini)
+					mexp = mini
+				}
+			}
+			mexp.MexptoCPPexp(varMap)
 		}
 	}
 
@@ -410,13 +418,17 @@ class Extensions {
 		else if (condition.toString.equals("0")) throw new Exception("Return a Language literal 0")
 		else {
 			val varMap = new HashMap<String, String>
-			val mexp = condition.PCtoMexp(varMap)
-			val baos = new ByteArrayOutputStream
-			var ps = new PrintStream(baos)
-			if (Settings::minimize)
-				Minimize::process(mexp, ps).MexptoCexp(varMap)
-			else
-				mexp.MexptoCexp(varMap)
+			var mexp = condition.PCtoMexp(varMap)
+			if (Settings::minimize) {
+				if (minimizeCache.containsKey(mexp)) {
+					mexp = minimizeCache.get(mexp)
+				} else {		
+					val mini = Minimize::process(mexp, new PrintStream(new ByteArrayOutputStream))
+					minimizeCache.put(mexp, mini)
+					mexp = mini
+				}
+			}
+			mexp.MexptoCexp(varMap)
 		}
 	}
 	

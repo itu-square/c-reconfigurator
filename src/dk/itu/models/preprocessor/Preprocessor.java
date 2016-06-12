@@ -19,6 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import dk.itu.models.Settings;
+import xtc.lang.cpp.Builtins;
 
 
 public class Preprocessor {
@@ -176,6 +177,16 @@ public class Preprocessor {
 		
 	private void writeTransformedFeatureNamesToFile() throws IOException {
 		BufferedWriter bw = new BufferedWriter(new FileWriter(context.getDestfile()));
+		
+//		bw.write(Builtins.builtin);
+//		for (String define : Settings.defineMacros) {
+//			bw.write("#define " + define + " 1");
+//			bw.newLine();
+//		}
+//		for (String undef : Settings.undefMacros) {
+//			bw.write("#undef " + undef);
+//			bw.newLine();
+//		}
 		
 		// header
 		bw.write("#include <assert.h>");

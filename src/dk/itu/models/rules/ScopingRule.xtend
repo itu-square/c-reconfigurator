@@ -146,6 +146,8 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 				|| node.getDescendantNode("SimpleDeclarator") != null)
 			&& (node.getDescendantNode("TypedefTypeSpecifier") == null
 				|| node.getDescendantNode("SimpleDeclarator") != null)
+			&& !(node.name.equals("ParameterDeclaration")
+				&& node.getDescendantNode("SimpleDeclarator") == null)
 			&& !node.containsTypedef
 		) {
 			var declarator = node.getDescendantNode("SimpleDeclarator")
@@ -196,6 +198,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			|| (node.name.equals("ParameterDeclaration") && node.getDescendantNode("EnumSpecifier") != null )
 			|| (node.name.equals("Declaration") && node.getDescendantNode("EnumSpecifier") != null )
 			|| (node.name.equals("Declaration") && node.getDescendantNode("StructOrUnionSpecifier") != null )
+			|| (node.name.equals("ParameterDeclaration") && node.getDescendantNode("SimpleDeclarator") == null)
 		) {
 			// no declaration
 		} else {

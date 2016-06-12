@@ -28,6 +28,7 @@ class Reconfigurator {
 //			"-naiveFMLR",
 //			"-lexer",
 			"-no-exit",
+			"-nobuiltins",
 //			"-showActions",
 //			"-verbose",
 //			"-follow-set",
@@ -142,7 +143,7 @@ class Reconfigurator {
 				println
 				println('''ignoring file    .«currentRelativePath»''')
 				//FileUtils.copyFile(file, new File(targetPath))
-				summaryln('''| ig    |       |       |       |       |       |       |       | .«currentRelativePath»''')
+//				summaryln('''| ig    |       |       |       |       |       |       |       | .«currentRelativePath»''')
 			}
 		}
 	}

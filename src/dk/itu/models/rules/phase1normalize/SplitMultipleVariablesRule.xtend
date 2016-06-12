@@ -34,6 +34,10 @@ class SplitMultipleVariablesRule extends AncestorGuaranteedRule {
 			val innermostDeclaringList = getInnermostDeclaringList((pair.head as GNode)) as GNode
 			val declaringList = (pair.head as GNode).get(0) as GNode
 			
+			val arrayDeclarator = declaringList.findFirst[
+				it instanceof GNode
+				&& (it as GNode).name.equals("ArrayDeclarator")]
+				
 			val unaryIdentifierDeclarator = declaringList.findFirst[
 				it instanceof GNode
 				&& (it as GNode).name.equals("UnaryIdentifierDeclarator")]
@@ -43,7 +47,9 @@ class SplitMultipleVariablesRule extends AncestorGuaranteedRule {
 				&& (it as GNode).name.equals("SimpleDeclarator")]
 			
 			val declarator =
-				if (unaryIdentifierDeclarator != null)
+				if (arrayDeclarator != null)
+					arrayDeclarator
+				else if (unaryIdentifierDeclarator != null)
 					unaryIdentifierDeclarator
 				else if (simpleDeclarator != null)
 					simpleDeclarator

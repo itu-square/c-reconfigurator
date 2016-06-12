@@ -562,9 +562,7 @@ public class SuperC extends Tool {
         e.printStackTrace();
       }
 
-      if (Settings.useFullContent) {
-    	  (new BufferedReader(commandline).lines()).forEach(x -> content.append(x+"\n"));
-      }
+      (new BufferedReader(commandline).lines()).forEach(x -> content.append(x+"\n"));
       
       fileManager = new HeaderFileManager(commandline,
                                           new File("<command-line>"),
