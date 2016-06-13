@@ -104,8 +104,8 @@ class Test5 extends Test {
 		tdn5.register(new RemergeConditionalsRule)
 		tdn5.register(new Specific_ExtractRParenFromConditionalRule)
 		var Node node5 = tdn5.transform(node4) as Node
-		writeToFile(node5.printCode, file + ".phase5.c")
-		writeToFile(node5.printAST, file + ".phase5.ast")
+//		writeToFile(node5.printCode, file + ".phase5.c")
+//		writeToFile(node5.printAST, file + ".phase5.ast")
 
 
 
@@ -125,7 +125,7 @@ class Test5 extends Test {
 
 		val Node result = node6
 		writeToFile('''#include "«Settings::reconfigFile»"«"\n" + result.printCode»''', file)
-		writeToFile(result.printAST, file + ".ast")
+//		writeToFile(result.printAST, file + ".ast")
 		
 		
 		// check #if elimination

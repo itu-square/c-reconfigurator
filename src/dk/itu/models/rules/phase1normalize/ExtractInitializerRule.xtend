@@ -87,6 +87,77 @@ class ExtractInitializerRule extends AncestorGuaranteedRule {
 					println(stringLiteralList.printAST)
 					throw new Exception("ExtractInitializerRule: unknown String Literal initialization pattern.")
 				}
+			} else if (
+				initializer.get(0) instanceof Language<?>
+				&& (initializer.get(0) as Language<CTag>).tag.equals(CTag::LBRACE)
+				
+				&& initializer.get(1) instanceof GNode
+				&& (initializer.get(1) as GNode).name.equals("MatchedInitializerList")
+				
+				&& initializer.get(2) instanceof GNode
+				&& (initializer.get(2) as GNode).name.equals("Initializer")
+				
+				&& (initializer.get(2) as GNode).get(0) instanceof Text<?>
+				&& ((initializer.get(2) as GNode).get(0) as Text<CTag>).tag.equals(CTag::OCTALconstant)
+				&& ((initializer.get(2) as GNode).get(0) as Text<CTag>).toString.equals("0")
+				
+				&& initializer.get(3) instanceof Language<?>
+				&& (initializer.get(3) as Language<CTag>).tag.equals(CTag::RBRACE)
+				
+				&& declaringList.getDescendantNode("ArrayAbstractDeclarator") != null
+			) {
+				newPair = newPair.add(
+					GNode::create("Declaration",
+						GNode::create("DeclaringList",
+							new Language<CTag>(CTag::INT),
+							GNode::create("SimpleDeclarator",
+								new Text<CTag>(CTag::IDENTIFIER, '''_reconfig_«varName»_index'''))),
+						new Language<CTag>(CTag::SEMICOLON)))
+						
+				newPair = newPair.add(
+					GNode::createFromPair("IterationStatement",
+						Pair::EMPTY
+							.add(new Language<CTag>(CTag::^FOR))
+							.add(new Language<CTag>(CTag::LPAREN))
+							.add(GNode::create("AssignmentExpression",
+								GNode::create("PrimaryIdentifier",
+									new Text<CTag>(CTag::IDENTIFIER, '''_reconfig_«varName»_index''')),
+								GNode::create("AssignmentOperator",
+									new Language<CTag>(CTag::ASSIGN)),
+								new Text<CTag>(CTag::OCTALconstant, "0")))
+							.add(new Language<CTag>(CTag::SEMICOLON))
+							.add(GNode::create("RelationalExpression",
+								GNode::create("PrimaryIdentifier",
+									new Text<CTag>(CTag::IDENTIFIER, '''_reconfig_«varName»_index''')),
+								new Language<CTag>(CTag::LT),
+								new Text<CTag>(CTag::INTEGERconstant, declaringList.getDescendantNode("ArrayAbstractDeclarator").get(1).toString)))
+							.add(new Language<CTag>(CTag::SEMICOLON))
+							.add(GNode::create("Increment",
+								GNode::create("PrimaryIdentifier",
+									new Text<CTag>(CTag::IDENTIFIER, '''_reconfig_«varName»_index''')),
+								new Language<CTag>(CTag::ICR)))
+							.add(new Language<CTag>(CTag::RPAREN))
+							.add(GNode::create("CompoundStatement",
+								new Language<CTag>(CTag::LBRACE),
+								GNode::create("DeclarationOrStatementList",
+									GNode::create("ExpressionStatement",
+										GNode::create("AssignmentExpression",
+											GNode::create("Subscript",
+												GNode::create("PrimaryIdentifier",
+													new Text<CTag>(CTag::IDENTIFIER, varName),
+													new Language<CTag>(CTag::LBRACK),
+													GNode::create("PrimaryIdentifier",
+														new Text<CTag>(CTag::IDENTIFIER, '''_reconfig_«varName»_index''')),
+													new Language<CTag>(CTag::RBRACK)
+												)
+											),
+											GNode::create("AssignmentOperator",
+												new Language<CTag>(CTag::ASSIGN)),
+											new Text<CTag>(CTag::OCTALconstant, "0")),
+										new Language<CTag>(CTag::SEMICOLON))),
+								new Language<CTag>(CTag::RBRACE)))
+					)
+				)
 			} else {
 				newPair = newPair.add(GNode::create(
 							"ExpressionStatement",
