@@ -5,6 +5,7 @@ import dk.itu.models.rules.ReconfigureDeclarationRule
 import dk.itu.models.rules.phase1normalize.NormalizeRule
 import dk.itu.models.rules.phase2prepare.IsolateDeclarationRule
 import dk.itu.models.rules.phase5cleanup.RemergeConditionalsRule
+import dk.itu.models.rules.phase5cleanup.Specific_ExtractRParenFromConditionalRule
 import dk.itu.models.rules.phase6ifdefs.Ifdef2IfRule
 import dk.itu.models.strategies.TopDownStrategy
 import java.io.File
@@ -101,9 +102,10 @@ class Test5 extends Test {
 		flushConsole
 		val tdn5 = new TopDownStrategy
 		tdn5.register(new RemergeConditionalsRule)
+		tdn5.register(new Specific_ExtractRParenFromConditionalRule)
 		var Node node5 = tdn5.transform(node4) as Node
-//		writeToFile(node5.printCode, file + ".phase5.c")
-//		writeToFile(node5.printAST, file + ".phase5.ast")
+		writeToFile(node5.printCode, file + ".phase5.c")
+		writeToFile(node5.printAST, file + ".phase5.ast")
 
 
 
