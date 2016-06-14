@@ -130,7 +130,7 @@ class ExtractInitializerRule extends AncestorGuaranteedRule {
 								GNode::create("PrimaryIdentifier",
 									new Text<CTag>(CTag::IDENTIFIER, '''_reconfig_«varName»_index''')),
 								new Language<CTag>(CTag::LT),
-								new Text<CTag>(CTag::INTEGERconstant, declaringList.getDescendantNode("ArrayAbstractDeclarator").get(1).toString)))
+								declaringList.getDescendantNode("ArrayAbstractDeclarator").get(1)))
 							.add(new Language<CTag>(CTag::SEMICOLON))
 							.add(GNode::create("Increment",
 								GNode::create("PrimaryIdentifier",

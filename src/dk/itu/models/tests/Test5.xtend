@@ -65,7 +65,6 @@ class Test5 extends Test {
 
 
 
-
 		println("PHASE ? - Reconfigure declarations")
 		flushConsole
 		val tdnQ = new TopDownStrategy
@@ -140,7 +139,6 @@ class Test5 extends Test {
 				else
 					println("oracle: fail")
 		}
-		flushConsole
 	}
 	
 }

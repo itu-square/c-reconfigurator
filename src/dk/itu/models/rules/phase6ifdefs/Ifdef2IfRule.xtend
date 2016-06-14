@@ -37,7 +37,7 @@ class Ifdef2IfRule extends AncestorGuaranteedRule {
 			&& (
 				#["AdditiveExpression", "Initializer", "ExpressionStatement", "ReturnStatement",
 					"MultiplicativeExpression", "PrimaryExpression", "ConditionalExpression", "ShiftExpression",
-					"RelationalExpression", "ExpressionList", "FunctionCall", "LabeledStatement"].contains(ancestors.last.name)
+					"RelationalExpression", "ExpressionList", "FunctionCall"].contains(ancestors.last.name)
 				||
 				(ancestors.last.name.equals("SelectionStatement")
 					&& ancestors.last.indexOf(node) < ancestors.last.indexOf(ancestors.last.findFirst[it instanceof Language<?> && (it as Language<CTag>).tag.equals(CTag.RPAREN)]) )
@@ -91,7 +91,8 @@ class Ifdef2IfRule extends AncestorGuaranteedRule {
 			return exp
 		} else if (
 			node.name.equals("Conditional")
-			&& #["DeclarationOrStatementList", "CompoundStatement", "SelectionStatement"].contains(ancestors.last.name)
+			&& #["DeclarationOrStatementList", "CompoundStatement", "SelectionStatement",
+				"LabeledStatement"].contains(ancestors.last.name)
 		) {
 			//            List<     Map<        OriginalPC,        SimplifiedPC>>
 			val pcs = new ArrayList<SimpleEntry<PresenceCondition, PresenceCondition>>

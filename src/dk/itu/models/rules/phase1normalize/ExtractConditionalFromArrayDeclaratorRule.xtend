@@ -28,11 +28,13 @@ class ExtractConditionalFromArrayDeclaratorRule extends AncestorGuaranteedRule {
 	override dispatch Object transform(GNode node) {
 		val arrayDeclarator = node.getDescendantNode("ArrayDeclarator")
 		val pcs = node.firstNestedPCs
-				
+		
 		if (
 			node.name.equals("Declaration")
-			&& !ancestors.exists[anc | anc.name.equals("FunctionDefinition")]
 			&& arrayDeclarator != null
+			&& (
+				!ancestors.exists[anc | anc.name.equals("FunctionDefinition")]
+				|| node.getDescendantNode("InitializerOpt") == null)
 			&& pcs.size != 0
 			&& !(pcs.size == 1 && pcs.get(0).isTrue)
 		) {
@@ -52,10 +54,10 @@ class ExtractConditionalFromArrayDeclaratorRule extends AncestorGuaranteedRule {
 			tdn1.register(new ConstrainNestedConditionalsRule)
 			newNode = tdn1.transform(newNode) as GNode
 			
-			return newNode
+			newNode
+		} else {
+			node
 		}
-		
-		node
 	}
 	
 }

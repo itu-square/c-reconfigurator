@@ -388,8 +388,10 @@ class Extensions {
 				if (id.startsWith("def_")) {
 					if (Reconfigurator::transformedFeaturemap.containsKey(id.substring(4)))
 						id = Reconfigurator::transformedFeaturemap.get(id.substring(4))
-					else
+					else {
 						Reconfigurator::transformedFeaturemap.put(id.substring(4), "_reconfig_" + id.substring(4))
+						id = "_reconfig_" + id.substring(4)
+					}
 				}	
 				var term = GNode::create("PrimaryIdentifier", new Text<CTag>(CTag.IDENTIFIER, id))
 				
@@ -527,7 +529,7 @@ class Extensions {
 		} else {
 			for (GNode child : node.filter(GNode)) {
 				val res = child.firstNestedPCs
-				if (res != null) return res
+				if (res.size != 0) return res
 			}
 			return #[]
 		}
