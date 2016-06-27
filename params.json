@@ -1,0 +1,6 @@
+{
+  "name": "C-reconfigurator",
+  "tagline": "",
+  "body": "# README #\r\n\r\nThis README would normally document whatever steps are necessary to get your application up and running.\r\n\r\n### What is this repository for? ###\r\n\r\n* Quick summary\r\n* Version\r\n* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)\r\n\r\n### How do I get set up? ###\r\n\r\n* Summary of set up\r\n* Configuration\r\n* Dependencies\r\n* Database configuration\r\n* How to run tests\r\n* Deployment instructions\r\n\r\n### Contribution guidelines ###\r\n\r\n* Writing tests\r\n* Code review\r\n* Other guidelines\r\n\r\n### Who do I talk to? ###\r\n\r\n+ Repo admins:\r\n    * Alex Lazar\r\n    * Jean Melo\r\n    * (modelsteam:administrators)\r\n* Other community or team contact\r\n    * (modelsteam:developers)",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
