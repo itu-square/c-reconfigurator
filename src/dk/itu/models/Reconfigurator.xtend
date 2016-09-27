@@ -7,6 +7,8 @@ import java.io.File
 import java.util.ArrayList
 import java.util.Map
 import xtc.lang.cpp.PresenceConditionManager
+import dk.itu.models.reporting.Report
+import dk.itu.models.reporting.FileRecord
 
 import static extension dk.itu.models.Extensions.*
 
@@ -19,6 +21,7 @@ class Reconfigurator {
 	static public var PresenceConditionManager presenceConditionManager
 	static public var Map<String, String> transformedFeaturemap
 	static public var Preprocessor preprocessor
+	static public var Report report
 	
 	def static void run(Test test) {
 		Reconfigurator::test = test
@@ -81,7 +84,7 @@ class Reconfigurator {
 			}
 			if (
 				(!Settings::oracleOnly || oracle != null && oracle.exists)
-				&& (currentFile.path.endsWith(".c") || currentFile.path.endsWith(".h"))
+				&& (currentFile.path.endsWith(".c")/* || currentFile.path.endsWith(".h")*/)
 				&& (Settings::ignorePattern == null || !Settings::ignorePattern.matcher(currentFile.path).matches)
 			) {
 				println
@@ -138,6 +141,11 @@ class Reconfigurator {
 					else "   -   "
 				
 				summaryln('''|«sum_header»|«sum_parse»|«sum_check1»|«sum_oracle»|«sum_result»|«preprocessingEstimate»|«parsingEstimate»|«recofiguringEstimate»| .«currentRelativePath»''')
+				
+				report.addFileRecord(currentRelativePath, sum_console)
+				sum_console.split("(\r\n|\n)").forEach[line | 
+					if (line.startsWith("error:") || line.startsWith("warning:"))
+						report.addErrorRecord(line, currentRelativePath)]
 			}
 			else {
 				println
@@ -170,12 +178,15 @@ class Reconfigurator {
 					Settings::reconfigFile.delete
 					Settings::consoleFile.delete
 					Settings::summaryFile.delete
+					Settings::fileReportFile.delete
+					Settings::errorReportFile.delete
 				}
 				Settings::targetFile.parentFile.mkdir
 			}
 			
 			preprocessor = new Preprocessor
 			transformedFeaturemap = preprocessor.mapFeatureAndTransformedFeatureNames
+			report = new Report
 			
 			summaryln('''----------------------------------------------------------------------------------------''')
 			summaryln('''| HEADR | PARSE | CHEK1 | ORACL | #IFS  | ¤prep | ¤pars | ¤reco | FILE -----------------''')
@@ -185,6 +196,9 @@ class Reconfigurator {
 			
 			println('''writing file     .«Settings::reconfigFile.path.relativeTo(Settings::targetFile.path)»''')
 			preprocessor.writeReconfig(Settings::reconfigFile.path)
+
+			report.writeFiles(Settings::fileReportFile.path)
+			report.writeErrors(Settings::errorReportFile.path)
 		} catch (Exception ex) {
 			print(ex)
 		}

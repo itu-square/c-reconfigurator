@@ -29,6 +29,8 @@ class Settings {
 	static public var File reconfigFile
 	static public var File consoleFile
 	static public var File summaryFile
+	static public var File fileReportFile
+	static public var File errorReportFile
 	
 	static public var Pattern ignorePattern
 	
@@ -105,6 +107,8 @@ class Settings {
 		reconfigFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REconfig.c")
 		consoleFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REconsole.txt")
 		summaryFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REsummary.txt")
+		fileReportFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REFileReport.htm")
+		errorReportFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REErrorReport.htm")
 		
 		println('''  Source: «sourceFile»''')
 		println('''  Target: «targetFile»''')
