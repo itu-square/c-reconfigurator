@@ -16,11 +16,15 @@ class Settings {
 	static public var boolean parseOnly = false
 	static public var boolean printFullContent = false
 	
+	
+	static public var int maxProcessedFiles = 100
+	
 	static public var String reconfiguratorIncludePlaceholder = "_reconfig_include"; 
 	static public var List<String> defineMacros
 	static public var List<String> undefMacros
 	
 	static public var File sourceFile
+	static public var File fileList
 	static public var File targetFile
 	static public var File oracleFile
 	static public var List<File> includeFolders
@@ -29,7 +33,8 @@ class Settings {
 	static public var File reconfigFile
 	static public var File consoleFile
 	static public var File summaryFile
-	static public var File fileReportFile
+	static public var File processedFilesReportFile
+	static public var File ignoredFilesReportFile
 	static public var File errorReportFile
 	
 	static public var Pattern ignorePattern
@@ -99,16 +104,20 @@ class Settings {
 					parseOnly = true
 				case "-printFullContent":
 					printFullContent = true
+				case "-fileList":
+					if(i < args.size-1) { fileList = new File(args.get(i+1)) }
+					else {println("-fileList argument has no value."); return false}
 				case "-ignore":
 					if(i < args.size-1) { ignorePattern = Pattern.compile(args.get(i+1), Pattern.CASE_INSENSITIVE) }
 					else {println("-ignore argument has no value."); return false}
 			}}
 		
-		reconfigFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REconfig.c")
-		consoleFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REconsole.txt")
-		summaryFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REsummary.txt")
-		fileReportFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REFileReport.htm")
-		errorReportFile = new File((if(sourceFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REErrorReport.htm")
+		reconfigFile = new File((if(targetFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REconfig.c")
+		consoleFile = new File((if(targetFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REconsole.txt")
+		summaryFile = new File((if(targetFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REsummary.txt")
+		processedFilesReportFile = new File((if(targetFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REProcessedFilesReport.htm")
+		ignoredFilesReportFile = new File((if(targetFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REIgnoredFilesReport.htm")
+		errorReportFile = new File((if(targetFile.isDirectory) {targetFile} else {targetFile.parent}) + File.separator + "REErrorReport.htm")
 		
 		println('''  Source: «sourceFile»''')
 		println('''  Target: «targetFile»''')
@@ -125,8 +134,8 @@ class Settings {
 		if(sourceFile.isDirectory && targetFile.exists && targetFile.isFile) { println("Source is directory, but target is file."); return false }
 		if(sourceFile.isDirectory && oracleFile != null && oracleFile.exists && oracleFile.isFile) { println("Source is directory, but oracle is file."); return false }
 		
-		if(sourceFile.isFile && targetFile.exists && targetFile.isDirectory) { println("Source is file, but target is directory."); return false }
-		if(sourceFile.isFile && oracleFile != null && oracleFile.exists && oracleFile.isDirectory) { println("Source is file, but oracle is directory."); return false }
+		if(sourceFile.isFile && targetFile.exists && targetFile.isDirectory && fileList==null) { println("Source is file, but target is directory."); return false }
+		if(sourceFile.isFile && oracleFile != null && oracleFile.exists && oracleFile.isDirectory && fileList==null) { println("Source is file, but oracle is directory."); return false }
 
 		if (!systemIncludeFolders.forall[if(!exists || !directory) { println("ISystem does not exist or is not directory: " + it); false} else true])
 			return false

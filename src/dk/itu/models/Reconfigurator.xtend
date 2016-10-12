@@ -1,16 +1,22 @@
 package dk.itu.models
 
 import dk.itu.models.preprocessor.Preprocessor
+import dk.itu.models.reporting.FileRecord
+import dk.itu.models.reporting.Report
 import dk.itu.models.tests.Test
 import dk.itu.models.tests.Test5
 import java.io.File
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.ArrayList
 import java.util.Map
+import org.apache.commons.io.FileUtils
 import xtc.lang.cpp.PresenceConditionManager
-import dk.itu.models.reporting.Report
-import dk.itu.models.reporting.FileRecord
 
 import static extension dk.itu.models.Extensions.*
+import java.io.BufferedReader
+import java.io.FileReader
+import org.eclipse.xtend.lib.macro.file.Path
 
 class Reconfigurator {
 	
@@ -22,6 +28,8 @@ class Reconfigurator {
 	static public var Map<String, String> transformedFeaturemap
 	static public var Preprocessor preprocessor
 	static public var Report report
+	
+	static public var int processedFiles = 0
 	
 	def static void run(Test test) {
 		Reconfigurator::test = test
@@ -63,7 +71,143 @@ class Reconfigurator {
 		test.run(newArgs)
 	}
 	
-	def static void reconfigure(File currentFile, (String)=>Test test) {
+	
+	
+	def static FileRecord reconfigureFileList (File currentFile, (String)=>Test test) {
+		
+		flushConsole
+		Settings::consolePS.flush
+		
+		val rootFileRecord = new FileRecord("", "", true, true, 0)
+		val BufferedReader brin = new BufferedReader(new FileReader(Settings::fileList.path))
+		
+		brin.lines.sorted.forEach[
+			
+			if (processedFiles < Settings::maxProcessedFiles)
+			{
+				processedFiles++
+				var path = ""
+				var fileRecord = rootFileRecord
+				
+				println('''[«processedFiles»] «it»''')
+				for (String segment : new Path(it).segments) {
+//					println("segment: " + segment)
+					path +=  "/" + segment
+//					println("path: " + path)
+					val targetPath = Settings::targetFile.path + path
+//					println("targetPath: " + targetPath)
+					
+					if (!segment.endsWith(".c")) {
+						val currentPath = path
+						var childRecord = fileRecord.files.findFirst[filename.equals(currentPath)]
+						if (childRecord == null) {
+							childRecord = new FileRecord(path, "", true, true, 0)
+							fileRecord.files.add(childRecord)
+						}
+						fileRecord = childRecord
+					} else {
+					
+						val sourcePath = Settings::sourceFile.path + path
+						
+						println
+						println("source: " + sourcePath)
+						println("target: " + targetPath)
+						
+						flushConsole
+						Settings::consolePS.flush
+						
+						preprocessor.runFile(sourcePath).toString.writeToFile(targetPath)
+						test.apply(targetPath).run
+						
+						val console_log = Settings::consoleBAOS.toString
+						
+						
+						//get errors
+						val errorCount = console_log.split("\\r?\\n").filter[toLowerCase.contains("error")].length
+						
+						
+						
+						
+						var childRecord = new FileRecord(path, console_log, true, false, errorCount)
+						fileRecord.files.add(childRecord)
+						val targetDir = new File(targetPath).parentFile
+						if (!targetDir.exists) targetDir.mkdirs
+					}
+				}
+				println
+			}
+		]
+		
+		return rootFileRecord
+	}
+	
+	
+	
+	
+	
+	def static FileRecord reconfigure (File currentFile, (String)=>Test test) {
+		
+		flushConsole
+		Settings::consolePS.flush
+		
+		val currentFilePath = currentFile.path
+		val currentRelativePath = currentFilePath.relativeTo(Settings::sourceFile.path)
+		val currentTargetPath = Settings::targetFile + currentRelativePath
+		
+		if (currentFile.isDirectory
+			&& (Settings::ignorePattern == null || !Settings::ignorePattern.matcher(currentRelativePath).matches)) {
+			
+			println('''processing directory [«processedFiles+1»] .«currentRelativePath»/''')
+			
+			val targetDir = new File(currentTargetPath)
+			if (!targetDir.exists) targetDir.mkdirs
+			
+			val fileRecord = new FileRecord(currentRelativePath, Settings::consoleBAOS.toString, true, true, 0)
+			
+			currentFile.listFiles.filter[isFile].sort.forEach[
+				if (processedFiles < Settings::maxProcessedFiles) fileRecord.addFile(reconfigure(test)) ]
+			
+			currentFile.listFiles.filter[isDirectory].sort.forEach[
+				if (processedFiles < Settings::maxProcessedFiles) fileRecord.addFile(reconfigure(test)) ]
+			
+			fileRecord.updateFileCount
+			fileRecord.writeHTMLFile(currentTargetPath + ".htm")
+			return fileRecord
+			
+		} else if ((Settings::ignorePattern == null || !Settings::ignorePattern.matcher(currentRelativePath).matches)
+			&& (currentFile.path.endsWith(".c"))) {
+			
+			println('''processing file [«processedFiles+1»] .«currentRelativePath»''')
+			
+			processedFiles++
+
+			val fileRecord = new FileRecord(currentRelativePath, Settings::consoleBAOS.toString, true, false, 0)
+			fileRecord.writeHTMLFile(currentTargetPath + ".htm")
+			return fileRecord
+			
+		} else {
+			
+			if (currentFile.isDirectory) {
+				println('''ignoring directory [«processedFiles+1»] .«currentRelativePath»/''')
+				return new FileRecord(currentRelativePath, Settings::consoleBAOS.toString, false, true, 0)
+			} else {
+				println('''ignoring file [«processedFiles+1»] .«currentRelativePath»''')
+				return new FileRecord(currentRelativePath, Settings::consoleBAOS.toString, false, false, 0)
+			}
+			
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	def static void reconfigure2(File currentFile, (String)=>Test test) {
 		val currentRelativePath = currentFile.path.relativeTo(Settings::sourceFile.path)
 		val currentTargetPath = Settings::targetFile + currentRelativePath
 
@@ -74,8 +218,11 @@ class Reconfigurator {
 				targetDir.mkdirs
 				summaryln('''| md    |       |       |       |       |       |       |       | .«currentRelativePath»''')
 			}
-			currentFile.listFiles.filter[isFile].sort.forEach[reconfigure(test)]
-			currentFile.listFiles.filter[isDirectory].sort.forEach[reconfigure(test)]
+			
+			currentFile.listFiles.filter[isFile].sort.forEach[
+				if (processedFiles < Settings::maxProcessedFiles) reconfigure(test) ]
+			currentFile.listFiles.filter[isDirectory].sort.forEach[
+				if (processedFiles < Settings::maxProcessedFiles) reconfigure(test) ]
 		}
 		else {
 			var File oracle = null
@@ -85,10 +232,10 @@ class Reconfigurator {
 			if (
 				(!Settings::oracleOnly || oracle != null && oracle.exists)
 				&& (currentFile.path.endsWith(".c")/* || currentFile.path.endsWith(".h")*/)
-				&& (Settings::ignorePattern == null || !Settings::ignorePattern.matcher(currentFile.path).matches)
+				&& (Settings::ignorePattern == null || !Settings::ignorePattern.matcher(currentRelativePath).matches)
 			) {
 				println
-				println('''processing file  .«currentRelativePath»''')
+				println('''processing file [«processedFiles+1»] .«currentRelativePath»''')
 				flushConsole
 				Settings::consolePS.flush
 				
@@ -142,14 +289,16 @@ class Reconfigurator {
 				
 				summaryln('''|«sum_header»|«sum_parse»|«sum_check1»|«sum_oracle»|«sum_result»|«preprocessingEstimate»|«parsingEstimate»|«recofiguringEstimate»| .«currentRelativePath»''')
 				
-				report.addFileRecord(currentRelativePath, sum_console)
-				sum_console.split("(\r\n|\n)").forEach[line | 
-					if (line.startsWith("error:") || line.startsWith("warning:"))
-						report.addErrorRecord(line, currentRelativePath)]
+//				report.addFileRecord(currentRelativePath, sum_console, false, false)
+//				sum_console.split("(\r\n|\n)").forEach[line | 
+//					if (line.startsWith("error:") || line.startsWith("warning:"))
+//						report.addErrorRecord(line, currentRelativePath)]
+				
+				processedFiles++
 			}
 			else {
 				println
-				println('''ignoring file    .«currentRelativePath»''')
+				println('''ignoring file [«processedFiles+1»] .«currentRelativePath»''')
 				//FileUtils.copyFile(file, new File(targetPath))
 //				summaryln('''| ig    |       |       |       |       |       |       |       | .«currentRelativePath»''')
 			}
@@ -168,7 +317,22 @@ class Reconfigurator {
 			if (!Settings::init(args)) throw new Exception("Settings initialization error.");
 			
 			if (Settings::targetFile.isDirectory) {
-				Settings::targetFile.listFiles.forEach[delete]
+				Settings::targetFile.listFiles.forEach[
+					if (it.isDirectory)
+						FileUtils.deleteDirectory(it)
+					else
+						Files.delete(Paths.get(it.path))
+//					try {
+//					    Files.delete(Paths.get(it.path));
+//					} catch (NoSuchFileException x) {
+//					    System.err.format("%s: no such" + " file or directory%n", path);
+//					} catch (DirectoryNotEmptyException x) {
+//					    System.err.format("%s not empty%n", path);
+//					} catch (IOException x) {
+//					    // File permission problems are caught here.
+//					    System.err.println(x);
+//					}
+				]
 				}
 			else {
 				if(Settings::targetFile.parentFile.exists) {
@@ -178,7 +342,8 @@ class Reconfigurator {
 					Settings::reconfigFile.delete
 					Settings::consoleFile.delete
 					Settings::summaryFile.delete
-					Settings::fileReportFile.delete
+					Settings::processedFilesReportFile.delete
+					Settings::ignoredFilesReportFile.delete
 					Settings::errorReportFile.delete
 				}
 				Settings::targetFile.parentFile.mkdir
@@ -191,14 +356,22 @@ class Reconfigurator {
 			summaryln('''----------------------------------------------------------------------------------------''')
 			summaryln('''| HEADR | PARSE | CHEK1 | ORACL | #IFS  | ¤prep | ¤pars | ¤reco | FILE -----------------''')
 			summaryln('''----------------------------------------------------------------------------------------''')
-			reconfigure(Settings::sourceFile, test)
+			
+			
+			if (Settings::fileList!=null)
+				reconfigureFileList(Settings::fileList, test).writeAllFiles(Settings::targetFile)
+			else
+				reconfigure(Settings::sourceFile, test)
+			
+			
 			summaryln('''----------------------------------------------------------------------------------------''')
 			
 			println('''writing file     .«Settings::reconfigFile.path.relativeTo(Settings::targetFile.path)»''')
 			preprocessor.writeReconfig(Settings::reconfigFile.path)
 
-			report.writeFiles(Settings::fileReportFile.path)
-			report.writeErrors(Settings::errorReportFile.path)
+//			report.writeProcessedFiles(Settings::processedFilesReportFile.path)
+//			report.writeIgnoredFiles(Settings::ignoredFilesReportFile.path)
+//			report.writeErrors(Settings::errorReportFile.path)
 		} catch (Exception ex) {
 			print(ex)
 		}
