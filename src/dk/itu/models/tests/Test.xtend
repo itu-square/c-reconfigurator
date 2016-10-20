@@ -31,6 +31,9 @@ abstract class Test {
 		var newArgs = new ArrayList<String>
 		newArgs.addAll(args)
 		newArgs.add(file)
+		
+		println ("command: " + newArgs.join(" "))
+		
 		new SuperC().run(newArgs)
 	}
 

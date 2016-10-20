@@ -17,6 +17,7 @@ import static extension dk.itu.models.Extensions.*
 import java.io.BufferedReader
 import java.io.FileReader
 import org.eclipse.xtend.lib.macro.file.Path
+import xtc.lang.cpp.SuperC
 
 class Reconfigurator {
 	
@@ -305,7 +306,7 @@ class Reconfigurator {
 		}
 	}
 	
-	def static void main(String[] args) {
+	def static void old_main(String[] args) {
 		Settings::captureOutput
 		println("Reconfigurator START")
 		println("-- Models Team : ITU.dk (2016) --")
@@ -390,5 +391,117 @@ class Reconfigurator {
 		Settings::systemOutPS.append(Settings::summaryBAOS.toString)
 		Settings::systemOutPS.flush
 	}
+	
+	
+	
+	
+	
+	
+	def static void main(String[] args) {
+		Settings::captureOutput
+		println("Reconfigurator START")
+		println("-- Models Team : ITU.dk (2016) --")
+		println
+		
+		
+		
+		try {
+			
+			if (!Settings::init(args)) throw new Exception("Settings initialization error.");
+			
+			if (Settings::targetFile.isDirectory) {
+				Settings::targetFile.listFiles.forEach[
+					if (it.isDirectory)
+						FileUtils.deleteDirectory(it)
+					else
+						Files.delete(Paths.get(it.path))
+//					try {
+//					    Files.delete(Paths.get(it.path));
+//					} catch (NoSuchFileException x) {
+//					    System.err.format("%s: no such" + " file or directory%n", path);
+//					} catch (DirectoryNotEmptyException x) {
+//					    System.err.format("%s not empty%n", path);
+//					} catch (IOException x) {
+//					    // File permission problems are caught here.
+//					    System.err.println(x);
+//					}
+				]
+				}
+			else {
+				if(Settings::targetFile.parentFile.exists) {
+					new File(Settings::targetFile.parent).listFiles()
+						.filter[name.startsWith(Settings::targetFile.name)]
+						.forEach[delete]
+					Settings::reconfigFile.delete
+					Settings::consoleFile.delete
+					Settings::summaryFile.delete
+					Settings::processedFilesReportFile.delete
+					Settings::ignoredFilesReportFile.delete
+					Settings::errorReportFile.delete
+				}
+				Settings::targetFile.parentFile.mkdir
+			}
+			
+			preprocessor = new Preprocessor
+			transformedFeaturemap = preprocessor.mapFeatureAndTransformedFeatureNames
+			report = new Report
+			
+			
+			
+			
+			
+			
+			
+			
+			
+			var runArgs = new ArrayList<String>
+			runArgs.add("-no-exit")
+			runArgs.add("-nobuiltins")
+			runArgs.add("-showErrors")
+			runArgs.add("-nostdinc")
+			
+			for (String defineMacro : Settings.defineMacros) {
+				runArgs.addAll("-D", defineMacro) }
+			for (String undefMacro : Settings::undefMacros) {
+				runArgs.addAll("-U", undefMacro) }
+			for (File include : Settings::systemIncludeFolders) {
+				runArgs.addAll("-isystem", include.path) }
+			for (File include : Settings::includeFolders) {
+				runArgs.addAll("-I", include.path) }
+			for (File header : Settings::headerFiles) {
+				runArgs.addAll("-include", header.path.replace("\\", "\\\\")) }				
+			
+			runArgs.add(Settings::sourceFile.path)
+			
+			val superc = new SuperC
+			superc.run(runArgs)
+			
+			println(superc.outputAST.printAST)
+			
+			
+			
+			
+			
+		} catch (Exception ex) {
+			print(ex)
+		}
+		
+		
+		
+		println
+		println("Reconfigurator DONE")
+		flushConsole
+		
+		
+		Settings::systemOutPS.append(Settings::consoleBAOS.toString)
+		Settings::systemOutPS.flush
+		
+		Settings::summaryBAOS.toString.writeToFile(Settings.summaryFile.path)
+		Settings::systemOutPS.append(Settings::summaryBAOS.toString)
+		Settings::systemOutPS.flush
+		
+	}
+
+
 
 }

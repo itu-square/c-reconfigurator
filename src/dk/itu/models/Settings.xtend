@@ -17,7 +17,7 @@ class Settings {
 	static public var boolean printFullContent = false
 	
 	
-	static public var int maxProcessedFiles = 100
+	static public var int maxProcessedFiles = 10
 	
 	static public var String reconfiguratorIncludePlaceholder = "_reconfig_include"; 
 	static public var List<String> defineMacros
