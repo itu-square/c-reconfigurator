@@ -22,7 +22,6 @@ class Test5 extends Test {
 	override transform(Node node) {
 		
 		println("PARSING DONE")
-		flushConsole
 		
 		if(Settings::parseOnly) {
 			writeToFile(node.printCode, file + ".phase0.c")
@@ -30,14 +29,12 @@ class Test5 extends Test {
 		}
 		
 		println("PHASE 0 - Print base")
-		flushConsole
 //		writeToFile(node.printCode, file + ".phase0.c")
 //		writeToFile(node.printAST, file + ".phase0.ast")
 		
 		
 		
 		println("PHASE 1 - Normalize")
-		flushConsole
 		var Node node1 = node
 		
 		val tdn1 = new TopDownStrategy
@@ -54,7 +51,6 @@ class Test5 extends Test {
 
 
 		println("PHASE 2 - Prepare for reconfiguration")
-		flushConsole
 		val tdn2 = new TopDownStrategy
 		tdn2.register(new IsolateDeclarationRule)
 		val Node node2 = tdn2.transform(node1) as Node
@@ -66,7 +62,6 @@ class Test5 extends Test {
 
 
 		println("PHASE ? - Reconfigure declarations")
-		flushConsole
 		val tdnQ = new TopDownStrategy
 		tdnQ.register(new ReconfigureDeclarationRule)
 		var Node node4 = tdnQ.transform(node2) as Node
@@ -98,7 +93,6 @@ class Test5 extends Test {
 
 
 		println("PHASE 5 - Cleanup")
-		flushConsole
 		val tdn5 = new TopDownStrategy
 		tdn5.register(new RemergeConditionalsRule)
 //		tdn5.register(new Specific_ExtractRParenFromConditionalRule)
@@ -111,7 +105,6 @@ class Test5 extends Test {
 
 
 		println("PHASE 6 - #ifdef to if")
-		flushConsole
 		val tdn6 = new TopDownStrategy
 		tdn6.register(new Ifdef2IfRule)
 		var Node node6 = tdn6.transform(node5) as Node

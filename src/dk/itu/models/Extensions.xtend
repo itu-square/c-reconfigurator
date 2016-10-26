@@ -62,7 +62,8 @@ class Extensions {
 			file_output.flush();
 			file_output.close();
 		} catch (IOException e) {
-			System.err.println('''Can not recover from the input or output fault: «e.message» {«fileObject.parentFile.exists»}''');
+			throw new Exception(
+				'''Can not recover from the input or output fault: «e.message» {«fileObject.parentFile.exists»}''', e);
 		}
 	}
 	
@@ -81,36 +82,6 @@ class Extensions {
 	    } finally {
 	        br.close();
 	    }
-	}
-	
-	public static def void flushConsole() {
-		Settings::systemOutPS.print(Settings::consoleBAOS)
-		Settings::consoleBAOS.toString.writeToFile(Settings::consoleFile.path)
-		Settings::consoleBAOS.reset
-	}
-
-	public static def void debug(Object o) {
-		Settings::consolePS.print(o)
-	}
-	
-	public static def void debugln(Object o) {
-		Settings::consolePS.print(o + "\n")
-	}
-	
-	public static def void debugln() {
-		Settings::consolePS.print("\n")
-	}
-	
-	public static def void summary(Object o) {
-		Settings::summaryPS.print(o)
-	}
-	
-	public static def void summaryln(Object o) {
-		Settings::summaryPS.print(o + "\n")
-	}
-	
-	public static def void summaryln() {
-		Settings::summaryPS.print("\n")
 	}
 	
 	public static def printCode(Object o) {

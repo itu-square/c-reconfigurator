@@ -85,8 +85,8 @@ class PrintCode extends PrintMethod {
 			&& lpar_idx < chld_idx && chld_idx < rpar_idx
 		
 		if(language.toString == null) {
-			ancestors.forEach[debugln("- " + it.name)]
-			debugln(ancestors.findFirst[it.name.equals("FunctionCall")].printAST)
+			ancestors.forEach[println("- " + it.name)]
+			println(ancestors.findFirst[it.name.equals("FunctionCall")].printAST)
 		}
 		
 		if (

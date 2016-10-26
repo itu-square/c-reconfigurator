@@ -7,8 +7,16 @@ import java.io.PrintStream
 
 class Report {
 	
-	var fileRecords = new ArrayList<FileRecord>
-	var errorRecords = new ArrayList<ErrorRecord>
+	public val fileRecords = new ArrayList<FileRecord>
+//	val errorRecords = new ArrayList<ErrorRecord>
+	
+	def void addFile(String filename, ArrayList<ErrorRecord> errors) {
+		fileRecords.add(new FileRecord(filename, false, errors))
+	}
+	
+	def void addFolder(String filename) {
+		fileRecords.add(new FileRecord(filename, true, null))
+	}
 	
 //	def void addFileRecord(String filename, String consoleOutput, boolean processed, boolean folder) {
 //		fileRecords.add(new FileRecord(filename, consoleOutput, processed, folder))
