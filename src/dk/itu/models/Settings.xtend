@@ -14,7 +14,7 @@ class Settings {
 	static public var boolean reconfigureIncludes = false
 	static public var boolean minimize = false
 	static public var boolean parseOnly = false
-//	static public var boolean printFullContent = false
+	static public var boolean printFullContent = false
 //	
 //	
 //	static public var int maxProcessedFiles = 10
@@ -29,7 +29,7 @@ class Settings {
 	static public var File oracleFile
 	static public var List<File> includeFolders
 //	static public var List<File> systemIncludeFolders
-//	static public var List<File> headerFiles
+	static public var List<File> headerFiles
 	static public var File reconfigFile
 //	static public var File consoleFile
 //	static public var File summaryFile
@@ -59,7 +59,7 @@ class Settings {
 	static public def boolean init(String[] args) {
 //		systemIncludeFolders = new ArrayList<File>
 		includeFolders = new ArrayList<File>
-//		headerFiles = new ArrayList<File>
+		headerFiles = new ArrayList<File>
 //		defineMacros = new ArrayList<String>
 //		undefMacros = new ArrayList<String>
 //		
@@ -82,12 +82,12 @@ class Settings {
 //				case "-isystem":
 //					if(i < args.size-1) { systemIncludeFolders.add(new File(args.get(i+1))) }
 //					else {println("-isystem argument has no value."); return false}
-				case "-include":
+				case "-I":
 					if(i < args.size-1) { includeFolders.add(new File(args.get(i+1))) }
+					else {println("-I argument has no value."); return false}
+				case "-include":
+					if(i < args.size-1) { headerFiles.add(new File(args.get(i+1))) }
 					else {println("-include argument has no value."); return false}
-//				case "-hdFile":
-//					if(i < args.size-1) { headerFiles.add(new File(args.get(i+1))) }
-//					else {println("-hdFile argument has no value."); return false}
 //				case "-define":
 //					if(i < args.size-1) { defineMacros.add(args.get(i+1)) }
 //					else {println("-define argument has no value."); return false}
@@ -102,8 +102,8 @@ class Settings {
 					reconfigureIncludes = true
 				case "-parseOnly":
 					parseOnly = true
-//				case "-printFullContent":
-//					printFullContent = true
+				case "-printFullContent":
+					printFullContent = true
 //				case "-fileList":
 //					if(i < args.size-1) { fileList = new File(args.get(i+1)) }
 //					else {println("-fileList argument has no value."); return false}

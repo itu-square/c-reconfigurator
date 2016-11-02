@@ -18,9 +18,6 @@ import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import dk.itu.models.Settings;
-import xtc.lang.cpp.Builtins;
-
 
 public class Preprocessor {
 
@@ -91,9 +88,9 @@ public class Preprocessor {
 					String dir = result.group(1).toLowerCase().replace(" ", ""); // cpp directive
 					String param = result.group(2); // feature expression
 					
-					if (Tag.INCLUDE.equals(dir)) {
-						out.append("char " + Settings.reconfiguratorIncludePlaceholder + "[] = \"" + line.replace("\"", "\\\"") + "\";\n");
-					}
+//					if (Tag.INCLUDE.equals(dir)) {
+//						out.append("char " + Settings.reconfiguratorIncludePlaceholder + "[] = \"" + line.replace("\"", "\\\"") + "\";\n");
+//					}
 					out.append(line + "\n");
 					
 					if (Tag.IFDEF.equals(dir) || Tag.IF.equals(dir) || Tag.ELIF.equals(dir)) {

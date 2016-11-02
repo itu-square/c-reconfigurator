@@ -63,43 +63,45 @@ class FileRecord {
 //	
 //	
 //	
-//	def void writeHTMLFile (String outputFilename) {
-//		
-//		val baos = new ByteArrayOutputStream()
-//		val ps = new PrintStream(baos)
-//		
-//		ps.print(
-//'''<html>
-//<head>
-//<style>
-//table, th, td {
-//    border: 1px solid black;
-//}
-//</style>
-//</head>
-//<body>
+	def void writeFile (String outputFilename, Report report) {
+		
+		val baos = new ByteArrayOutputStream()
+		val ps = new PrintStream(baos)
+		
+		ps.print(
+'''<html>
+<head>
+<style>
+table, th, td {
+    border: 1px solid black;
+}
+</style>
+</head>
+<body>''')
 //<a href="file:///«Settings::targetFile»/index.htm">ROOT</a><br/>''')
-//
-//		if (!folder) {
+
+
+		if (!folder) {
+			errors.forEach[ps.println(error.replaceAll("(\r\n|\n)", "<br />") + "<br />")]
 //			ps.println(consoleOutput.replaceAll("(\r\n|\n)", "<br />"))
-//		} else {
-//			ps.println("<table>")
-//			files.sortBy[!it.folder].sortBy[!it.processed].forEach[ps.println(
-//'''
-//<tr>
-//	<td>«IF it.processed»<a href="file:///«Settings::targetFile + it.filename»«IF it.folder»/index«ENDIF».htm">«ENDIF».«filename»«IF it.folder»/«ENDIF»«IF it.processed»</a>«ENDIF»</td>
-//	<td>«IF it.folder»«it.fileCount»«ENDIF»</td>
-//	<td>«IF !it.folder»«it.errorCount»«ENDIF»</td>
-//<tr>''')]
-//			ps.println("</table>")
-//		}
-//
-//		ps.print(
-//'''</body>
-//</html>''')
-//
-//		baos.toString.writeToFile(outputFilename)
-//	}
+		} else {
+			ps.println("<table>")
+			report.fileRecords.filter[filename.startsWith(this.filename)].sortBy[filename].forEach[ps.println(
+'''
+<tr>
+	<td>.«filename»</td>
+	«IF folder»<td></td>«ELSE»<td>«IF errors.exists[error.contains("Reconfigurator no AST")]»No AST«ENDIF»</td>«ENDIF»
+	«IF folder»<td></td>«ELSE»<td>«errors.size» errors: «errors.filter[error.startsWith("error:(1)")].size» x (1), «errors.filter[error.startsWith("error:(5)")].size» x (5), «errors.filter[error.startsWith("error:(9)")].size» x (9), «errors.filter[error.startsWith("Exception")].size» x Exception(s)</td>«ENDIF»
+<tr>''')]
+			ps.println("</table>")
+		}
+
+		ps.print(
+'''</body>
+</html>''')
+
+		baos.toString.writeToFile(outputFilename)
+	}
 //	
 //	
 //	def void updateFileCount () {

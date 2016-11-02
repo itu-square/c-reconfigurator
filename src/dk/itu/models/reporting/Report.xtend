@@ -4,6 +4,7 @@ import java.util.ArrayList
 import static extension dk.itu.models.Extensions.*
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
+import java.io.File
 
 class Report {
 	
@@ -34,15 +35,22 @@ class Report {
 //	}
 	
 	
-//	def void writeProcessedFiles(String outputFilename) {
-//		writeFiles(outputFilename, true)
-//	}
-//	
-//	def void writeIgnoredFiles(String outputFilename) {
-//		writeFiles(outputFilename, false)
-//	}
-//	
-//	def void writeFiles(String outputFilename, boolean processed) {
+	def void writeFiles(File sourceRoot, File targetRoot) {
+		
+		println("\n\n\n")
+		println("Writing report")
+		
+		fileRecords.sortBy[filename].forEach[
+			if(folder) {
+				println('''reporting folder «targetRoot»«filename»/index.htm''')
+				writeFile('''«targetRoot»«filename»/index.htm''', this)
+			} else {
+				println('''reporting file   «targetRoot»«filename».htm''')
+				writeFile('''«targetRoot»«filename».htm''', this)
+			}
+		]
+		
+		
 //		val baos = new ByteArrayOutputStream()
 //		val ps = new PrintStream(baos)
 //		
@@ -101,5 +109,5 @@ class Report {
 //</html>''')
 //		
 //		baos.toString.writeToFile(outputFilename)
-//	}
+	}
 }

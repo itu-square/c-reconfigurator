@@ -55,6 +55,10 @@ class Extensions {
 		if (!fileObject.parentFile.exists) {
 			Files.createParentDirs(fileObject)
 		}
+		
+		if (fileObject.exists) {
+			fileObject.delete
+		}
 			
 		try {
 			var PrintWriter file_output = new PrintWriter(new FileOutputStream(file, true));

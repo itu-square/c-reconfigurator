@@ -51,7 +51,15 @@ class LinuxTest {
 			runArgs.addAll(
 				 "-source",	 currentFilePath
 				,"-target",  currentTargetPath
-				,"-include", "/home/alex/linux_kernel/linux-4.7/include"
+//				,"-I",       "/home/alex/linux_kernel/linux-4.7/include"
+//				,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include"
+//				,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include/generated/uapi" 
+//				,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include/generated"
+//				,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include/uapi"
+//				,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include/generated/uapi" 
+//				,"-I",       "/home/alex/linux_kernel/linux-4.7/include/uapi"
+//				,"-I",       "/home/alex/linux_kernel/linux-4.7/include/generated/uapi"
+				,"-include", "test.h"		
 				)
 			Reconfigurator::main(runArgs)
 			
@@ -80,8 +88,8 @@ class LinuxTest {
 		
 		println("Begin LinuxTest")
 		
-		val source = new File("/home/alex/linux_kernel/linux-4.7/mm/balloon_compaction.c")
-		val target = new File("/home/alex/linux_kernel/linux-4.7-target/mm/balloon_compaction.c")
+		val source = new File("/home/alex/linux_kernel/linux-4.7/drivers/message")//balloon_compaction.c")
+		val target = new File("/home/alex/linux_kernel/linux-4.7-target/drivers/message")//balloon_compaction.c")
 
 		process(source, source, target)
 		
@@ -90,16 +98,18 @@ class LinuxTest {
 		println("folders " + report.fileRecords.filter[folder].size)
 		
 		println("OK      " + report.fileRecords
-			.filter[!folder && errors.forall[e | !e.error.startsWith("error:(1)")]].size)
+			.filter[!folder && errors.forall[e | !e.error.startsWith("Exception")]].size)
 			
 			
-		report.fileRecords
-			.filter[!folder]// && errors.forall[e | !e.error.startsWith("error:(1)")]]
-			.forEach[
-			println(filename + " " + errors.size)
-			errors.forEach[println(error)]
-			println
-		]
+//		report.fileRecords
+//			.filter[!folder]// && errors.forall[e | !e.error.startsWith("error:(1)")]]
+//			.forEach[
+//			println(filename + " " + errors.size)
+//			errors.forEach[println(error)]
+//			println
+//		]
+
+		report.writeFiles(source, target)
 		
 		println("End LinuxTest")
 		

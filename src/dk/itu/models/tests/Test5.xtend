@@ -1,33 +1,17 @@
 package dk.itu.models.tests
 
-import dk.itu.models.Settings
 import dk.itu.models.rules.ReconfigureDeclarationRule
 import dk.itu.models.rules.phase1normalize.NormalizeRule
 import dk.itu.models.rules.phase2prepare.IsolateDeclarationRule
 import dk.itu.models.rules.phase5cleanup.RemergeConditionalsRule
-//import dk.itu.models.rules.phase5cleanup.Specific_ExtractRParenFromConditionalRule
 import dk.itu.models.rules.phase6ifdefs.Ifdef2IfRule
 import dk.itu.models.strategies.TopDownStrategy
-import java.io.File
 import xtc.tree.Node
-
-import static extension dk.itu.models.Extensions.*
 
 class Test5 extends Test {
 	
-	new(String inputFile) {
-		super(inputFile)
-	}
-	
-	override transform(Node node) {
-		
-		println("PARSING DONE")
-		
-		if(Settings::parseOnly) {
-			writeToFile(node.printCode, file + ".phase0.c")
-			return
-		}
-		
+	override Node transform(Node node) {
+						
 		println("PHASE 0 - Print base")
 //		writeToFile(node.printCode, file + ".phase0.c")
 //		writeToFile(node.printAST, file + ".phase0.ast")
@@ -116,22 +100,24 @@ class Test5 extends Test {
 
 
 		val Node result = node6
-		writeToFile('''#include "«Settings::reconfigFile»"«"\n" + result.printCode»''', file)
+//		writeToFile('''#include "«Settings::reconfigFile»"«"\n" + result.printCode»''', file)
 //		writeToFile(result.printAST, file + ".ast")
 		
 		
 		// check #if elimination
-		println('''result: «IF result.containsConditional»#if«ELSE»no#if«ENDIF»''')
+//		println('''result: «IF result.containsConditional»#if«ELSE»no#if«ENDIF»''')
 
 		// check oracle
-		if(Settings::oracleFile != null) {
-			val oracle = file.replace(Settings::targetFile.path, Settings::oracleFile.path) + ".ast"
-			if((new File(oracle)).exists)
-				if(result.printAST.equals(readFile(oracle)))
-					println("oracle: pass")
-				else
-					println("oracle: fail")
-		}
+//		if(Settings::oracleFile != null) {
+//			val oracle = file.replace(Settings::targetFile.path, Settings::oracleFile.path) + ".ast"
+//			if((new File(oracle)).exists)
+//				if(result.printAST.equals(readFile(oracle)))
+//					println("oracle: pass")
+//				else
+//					println("oracle: fail")
+//		}
+
+		return result
 	}
 	
 }

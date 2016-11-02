@@ -1,23 +1,15 @@
 package dk.itu.models
 
 import dk.itu.models.preprocessor.Preprocessor
-import dk.itu.models.reporting.FileRecord
-import dk.itu.models.reporting.Report
-import dk.itu.models.tests.Test
 import dk.itu.models.tests.Test5
 import java.io.File
-import java.nio.file.Files
-import java.nio.file.Paths
 import java.util.ArrayList
 import java.util.Map
-import org.apache.commons.io.FileUtils
 import xtc.lang.cpp.PresenceConditionManager
+import xtc.lang.cpp.SuperC
+import xtc.tree.Node
 
 import static extension dk.itu.models.Extensions.*
-import java.io.BufferedReader
-import java.io.FileReader
-import org.eclipse.xtend.lib.macro.file.Path
-import xtc.lang.cpp.SuperC
 
 class Reconfigurator {
 	
@@ -495,10 +487,10 @@ class Reconfigurator {
 //			runArgs.addAll("-isystem", include.path) }
 		for (File include : Settings::includeFolders) {
 			runArgs.addAll("-I", include.path) }
-//		for (File header : Settings::headerFiles) {
-//			runArgs.addAll("-include", header.path.replace("\\", "\\\\")) }				
+		for (File header : Settings::headerFiles) {
+			runArgs.addAll("-include", header.path.replace("\\", "\\\\")) }				
 		
-		runArgs.add(Settings::sourceFile.path)
+		runArgs.add(Settings::targetFile.path)
 		
 		runArgs
 	}
@@ -524,9 +516,23 @@ class Reconfigurator {
 			
 			Reconfigurator::errors.addAll(SuperC::outputErrors)
 			
-			SuperC::outputAST.printCode.writeToFile(Settings::targetFile.path)
+			SuperC::outputFullContent.writeToFile(Settings::targetFile.path + ".full.c")
+			
+			if (SuperC::outputAST != null) {
+				println(SuperC::outputAST.printAST)
+				SuperC::outputAST.printAST.writeToFile(Settings::targetFile.path + ".ast")
+				
+				SuperC::outputAST.printCode.writeToFile(Settings::targetFile.path)
+				
+				val Node txd = new Test5().transform(SuperC::outputAST)
+//				println(txd.printCode)
+				txd.printCode.writeToFile(Settings::targetFile.path)
+			} else {
+				throw new Exception("Reconfigurator no AST")
+			}
 		} catch (Exception e) {
-			Reconfigurator::errors.add(e.message)
+			Reconfigurator::errors.add("Exception: " + e.message + "\n"
+				+ "at: " + e.stackTrace.map[t | t.toString].join("\nat: ") )
 		}
 		
 		println("new Reconfigurator END")

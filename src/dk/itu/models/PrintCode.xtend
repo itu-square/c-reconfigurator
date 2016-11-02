@@ -337,4 +337,8 @@ class PrintCode extends PrintMethod {
 			ancestors.remove(node)
 		}
 	}
+
+	static def private dispatch void t(Object o) {
+		throw new Exception("PrintCode unhandled object type: " + o.class)
+	}
 }
