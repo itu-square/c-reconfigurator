@@ -1,14 +1,18 @@
-package dk.itu.models.tests
+package dk.itu.models.transformations
 
+import dk.itu.models.Settings
 import dk.itu.models.rules.ReconfigureDeclarationRule
 import dk.itu.models.rules.phase1normalize.NormalizeRule
+import dk.itu.models.rules.phase1normalize.RemActionRule
 import dk.itu.models.rules.phase2prepare.IsolateDeclarationRule
 import dk.itu.models.rules.phase5cleanup.RemergeConditionalsRule
 import dk.itu.models.rules.phase6ifdefs.Ifdef2IfRule
 import dk.itu.models.strategies.TopDownStrategy
 import xtc.tree.Node
 
-class Test5 extends Test {
+import static extension dk.itu.models.Extensions.*
+
+class TxMain extends Transformation {
 	
 	override Node transform(Node node) {
 						
@@ -22,13 +26,14 @@ class Test5 extends Test {
 		var Node node1 = node
 		
 		val tdn1 = new TopDownStrategy
+		tdn1.register(new RemActionRule)
 		tdn1.register(new NormalizeRule)
 		node1 = tdn1.transform(node1) as Node
 		
 //		if(node1.checkContainsIf1) return;
 		
 //		writeToFile(node1.printCode, file + ".phase1.c")
-//		writeToFile(node1.printAST, file + ".phase1.ast")
+		writeToFile(node1.printAST, Settings::targetFile + ".phase1.ast")
 
 
 
@@ -39,7 +44,7 @@ class Test5 extends Test {
 		tdn2.register(new IsolateDeclarationRule)
 		val Node node2 = tdn2.transform(node1) as Node
 //		writeToFile(node2.printCode, file + ".phase2.c")
-//		writeToFile(node2.printAST, file + ".phase2.ast")
+		writeToFile(node2.printAST, Settings::targetFile + ".phase2.ast")
 
 
 
@@ -50,7 +55,7 @@ class Test5 extends Test {
 		tdnQ.register(new ReconfigureDeclarationRule)
 		var Node node4 = tdnQ.transform(node2) as Node
 //		writeToFile(node4.printCode, file + ".phase4.c")
-//		writeToFile(node4.printAST, file + ".phase4.ast")
+		writeToFile(node4.printAST, Settings::targetFile + ".phase_.ast")
 
 //		println("PHASE 3 - Reconfigure variables")
 //		val pcidmap = new HashMap<PresenceCondition, String>		
@@ -82,7 +87,7 @@ class Test5 extends Test {
 //		tdn5.register(new Specific_ExtractRParenFromConditionalRule)
 		var Node node5 = tdn5.transform(node4) as Node
 //		writeToFile(node5.printCode, file + ".phase5.c")
-//		writeToFile(node5.printAST, file + ".phase5.ast")
+		writeToFile(node5.printAST, Settings::targetFile + ".phase5.ast")
 
 
 
@@ -93,7 +98,7 @@ class Test5 extends Test {
 		tdn6.register(new Ifdef2IfRule)
 		var Node node6 = tdn6.transform(node5) as Node
 //		writeToFile(node6.printCode, file + ".phase6.c")
-//		writeToFile(node6.printAST, file + ".phase6.ast")
+		writeToFile(node6.printAST, Settings::targetFile + ".phase6.ast")
 
 
 

@@ -103,7 +103,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"StructDeclaration", "StructDeclaringList", "StructDeclarator", "IndirectSelection",
 			"EmptyDefinition", "EnumSpecifier", "EnumeratorList", "Enumerator", "EnumeratorValueOpt",
 			"PostfixIdentifierDeclarator", "PostfixingAbstractDeclarator",
-			"CleanTypedefDeclarator", "CleanPostfixTypedefDeclarator", "DirectSelection"].contains(node.name)) {
+			"CleanTypedefDeclarator", "CleanPostfixTypedefDeclarator", "DirectSelection", "AssemblyExpressionOpt"].contains(node.name)) {
 			// no scope
 		} else {
 			println
@@ -193,7 +193,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"StructDeclarationList", "StructDeclaration", "StructDeclaringList", "StructDeclarator",
 			"IndirectSelection", "EmptyDefinition", "EnumSpecifier", "EnumeratorList",
 			"Enumerator", "EnumeratorValueOpt", "PostfixIdentifierDeclarator", "PostfixingAbstractDeclarator",
-			"CleanTypedefDeclarator", "CleanPostfixTypedefDeclarator", "DirectSelection"].contains(node.name)
+			"CleanTypedefDeclarator", "CleanPostfixTypedefDeclarator", "DirectSelection", "AssemblyExpressionOpt"].contains(node.name)
 			|| (node.name.equals("ParameterDeclaration") && (node.size == 1 || !(node instanceof GNode)))
 			|| (node.name.equals("ParameterDeclaration") && node.getDescendantNode("EnumSpecifier") != null )
 			|| (node.name.equals("Declaration") && node.getDescendantNode("EnumSpecifier") != null )

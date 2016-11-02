@@ -1,7 +1,8 @@
 package dk.itu.models
 
 import dk.itu.models.preprocessor.Preprocessor
-import dk.itu.models.tests.Test5
+import dk.itu.models.transformations.TxMain
+import dk.itu.models.transformations.TxRemActions
 import java.io.File
 import java.util.ArrayList
 import java.util.Map
@@ -478,6 +479,7 @@ class Reconfigurator {
 		runArgs.add("-nobuiltins")
 		runArgs.add("-showErrors")
 		runArgs.add("-nostdinc")
+		runArgs.add("-saveLayoutTokens")
 		
 //		for (String defineMacro : Settings.defineMacros) {
 //			runArgs.addAll("-D", defineMacro) }
@@ -519,14 +521,20 @@ class Reconfigurator {
 			SuperC::outputFullContent.writeToFile(Settings::targetFile.path + ".full.c")
 			
 			if (SuperC::outputAST != null) {
-				println(SuperC::outputAST.printAST)
-				SuperC::outputAST.printAST.writeToFile(Settings::targetFile.path + ".ast")
+				var Node node = SuperC::outputAST
 				
-				SuperC::outputAST.printCode.writeToFile(Settings::targetFile.path)
+				node.printAST.writeToFile(Settings::targetFile.path + ".0.ast")
+				node.printCode.writeToFile(Settings::targetFile.path)
 				
-				val Node txd = new Test5().transform(SuperC::outputAST)
-//				println(txd.printCode)
-				txd.printCode.writeToFile(Settings::targetFile.path)
+				node = new TxRemActions().transform(node)
+				
+				node.printAST.writeToFile(Settings::targetFile.path + ".1.ast")
+				node.printCode.writeToFile(Settings::targetFile.path)
+				
+				node = new TxMain().transform(node)
+
+				node.printAST.writeToFile(Settings::targetFile.path + ".2.ast")
+				node.printCode.writeToFile(Settings::targetFile.path)
 			} else {
 				throw new Exception("Reconfigurator no AST")
 			}

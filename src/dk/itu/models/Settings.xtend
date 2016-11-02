@@ -1,11 +1,8 @@
 package dk.itu.models
 
-import java.io.ByteArrayOutputStream
 import java.io.File
-import java.io.PrintStream
 import java.util.ArrayList
 import java.util.List
-import java.util.regex.Pattern
 
 class Settings {
 	
