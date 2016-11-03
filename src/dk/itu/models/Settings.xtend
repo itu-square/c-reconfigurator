@@ -17,9 +17,9 @@ class Settings {
 //	static public var int maxProcessedFiles = 10
 //	
 	static public var String reconfiguratorIncludePlaceholder = "_reconfig_include"; 
-//	static public var List<String> defineMacros
-//	static public var List<String> undefMacros
-//	
+	static public var List<String> defineMacros
+	static public var List<String> undefMacros
+	
 	static public var File sourceFile
 //	static public var File fileList
 	static public var File targetFile
@@ -57,11 +57,9 @@ class Settings {
 //		systemIncludeFolders = new ArrayList<File>
 		includeFolders = new ArrayList<File>
 		headerFiles = new ArrayList<File>
-//		defineMacros = new ArrayList<String>
-//		undefMacros = new ArrayList<String>
-//		
-//		undefMacros.add("__cplusplus")
-//		
+		defineMacros = new ArrayList<String>
+		undefMacros = new ArrayList<String>
+		
 		if(!args.contains("-source")) { println("-source argument is missing."); return false }
 		if(!args.contains("-target")) { println("-target argument is missing."); return false }
 		
@@ -85,12 +83,12 @@ class Settings {
 				case "-include":
 					if(i < args.size-1) { headerFiles.add(new File(args.get(i+1))) }
 					else {println("-include argument has no value."); return false}
-//				case "-define":
-//					if(i < args.size-1) { defineMacros.add(args.get(i+1)) }
-//					else {println("-define argument has no value."); return false}
-//				case "-undef":
-//					if(i < args.size-1) { undefMacros.add(args.get(i+1)) }
-//					else {println("-undef argument has no value."); return false}
+				case "-define":
+					if(i < args.size-1) { defineMacros.add(args.get(i+1)) }
+					else {println("-define argument has no value."); return false}
+				case "-undef":
+					if(i < args.size-1) { undefMacros.add(args.get(i+1)) }
+					else {println("-undef argument has no value."); return false}
 //				case "-oracleOnly":
 //					oracleOnly = true
 				case "-printIncludes":

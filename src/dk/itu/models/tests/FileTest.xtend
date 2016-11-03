@@ -16,17 +16,16 @@ class FileTest {
 		var runArgs = new ArrayList<String>
 		
 		runArgs.addAll(
-			 "-source",	 source + "include/uapi/asm-generic/int-ll64.h"
-			,"-target",  target + "include/uapi/asm-generic/int-ll64.h"
+			 "-source",	 source + "test.c"
+			,"-target",  target + "test.c"
 			,"-I",		 source + "include/"
-			,"-I",		 source + "./arch/x86/include/uapi/"
+			,"-I",       source + "include/uapi"
+			,"-I",		 source + "arch/x86/include/uapi/"
 //			,"-I",       "/home/alex/linux_kernel/linux-4.7/include"
 //			,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include"
 //			,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include/generated/uapi" 
 //			,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include/generated"
-//			,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include/uapi"
 //			,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include/generated/uapi" 
-//			,"-I",       "/home/alex/linux_kernel/linux-4.7/include/uapi"
 //			,"-I",       "/home/alex/linux_kernel/linux-4.7/include/generated/uapi"
 //			,"-include", "/home/alex/linux_kernel/linux-4.7/include/linux/mutex.h"
 //			,"-include", "/home/alex/linux_kernel/linux-4.7/include/linux/mutex-debug.h"
@@ -34,7 +33,13 @@ class FileTest {
 //			,"-include", "/home/alex/linux_kernel/linux-4.7/include/linux/types.h"
 //			,"-include", "/home/alex/linux_kernel/linux-4.7/include/linux/spinlock_types_up.h"
 //			,"-include", "/home/alex/linux_kernel/linux-4.7/include/linux/spinlock_types.h"
+			,"-define",  "__GNUC__=5"
+			,"-define",  "__GNUC_MINOR__=4"
+			,"-define",  "__GNUC_PATCHLEVEL__=0"
+			,"-undef",   "__INTEL_COMPILER"	
 			,"-printFullContent"
+			,"-printIncludes"
+			,"-reconfigureIncludes"
 			)
 		Reconfigurator::main(runArgs)
 		
