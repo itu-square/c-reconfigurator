@@ -57,7 +57,8 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				if (declarator == null)
 					declarator = node.getDescendantNode("ParameterTypedefDeclarator")
 				val id = declarator.get(0).toString
-				typeDeclarations.putPC(id, pc)
+				if(true) throw new UnsupportedOperationException("putPC")
+//				typeDeclarations.putPC(id, pc)
 				
 				val newId = id + "_V" + pcidmap.getId(pc)
 				var newNode = (node.get(1) as GNode).replaceDeclaratorTextWithNewId(newId)
@@ -78,7 +79,8 @@ class ReconfigureDeclarationRule extends ScopingRule {
 					declarator = node.getDescendantNode("ParameterTypedefDeclarator")
 				val id = declarator.get(0).toString
 				
-				variableDeclarationScopes.last.value.putPC(id, pc)
+				if(true) throw new UnsupportedOperationException("putPC")
+//				variableDeclarationScopes.last.value.putPC(id, pc)
 				
 				val newId = id + "_V" + pcidmap.getId(pc)
 				var newNode = (node.get(1) as GNode).replaceDeclaratorTextWithNewId(newId)
@@ -96,7 +98,8 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				val pc = node.get(0) as PresenceCondition
 				var declarator = node.getDescendantNode("SimpleDeclarator")
 				val functionName = declarator.get(0).toString
-				functionDeclarations.putPC(functionName, pc)
+				if(true) throw new UnsupportedOperationException("putPC")
+//				functionDeclarations.putPC(functionName, pc)
 				
 				val newName = functionName + "_V" + pcidmap.getId(pc)
 				var newNode = (node.get(1) as GNode).renameFunctionWithNewId(newName)

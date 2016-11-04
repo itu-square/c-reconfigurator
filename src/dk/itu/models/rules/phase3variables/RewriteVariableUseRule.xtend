@@ -1,9 +1,9 @@
 package dk.itu.models.rules.phase3variables
 
-import dk.itu.models.DeclarationPCMap
 import dk.itu.models.PresenceConditionIdMap
 import dk.itu.models.Reconfigurator
 import dk.itu.models.rules.AncestorGuaranteedRule
+import dk.itu.models.utils.DeclarationPCMap
 import java.util.AbstractMap.SimpleEntry
 import java.util.ArrayList
 import java.util.HashMap
@@ -12,10 +12,10 @@ import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
+import xtc.tree.Node
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
-import xtc.tree.Node
 
 class RewriteVariableUseRule extends AncestorGuaranteedRule {
 	

@@ -6,7 +6,12 @@ import com.google.common.collect.UnmodifiableIterator
 import com.google.common.io.Files
 import dk.itu.models.checks.CheckContainsIf1
 import dk.itu.models.rules.phase3variables.ReplaceDeclaratorTextRule
+import dk.itu.models.rules.phase3variables.ReplaceIdentifierRule
+import dk.itu.models.rules.phase3variables.RewriteVariableUseRule
+import dk.itu.models.rules.phase4functions.RenameFunctionRule
+import dk.itu.models.rules.phase4functions.RewriteFunctionCallRule
 import dk.itu.models.strategies.TopDownStrategy
+import dk.itu.models.utils.DeclarationPCMap
 import java.io.BufferedReader
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -15,6 +20,7 @@ import java.io.FileReader
 import java.io.IOException
 import java.io.PrintStream
 import java.io.PrintWriter
+import java.util.AbstractMap.SimpleEntry
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.Iterator
@@ -29,11 +35,6 @@ import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 import xtc.tree.Node
 import xtc.util.Pair
-import dk.itu.models.rules.phase4functions.RenameFunctionRule
-import dk.itu.models.rules.phase3variables.RewriteVariableUseRule
-import java.util.AbstractMap.SimpleEntry
-import dk.itu.models.rules.phase3variables.ReplaceIdentifierRule
-import dk.itu.models.rules.phase4functions.RewriteFunctionCallRule
 
 class Extensions {
 

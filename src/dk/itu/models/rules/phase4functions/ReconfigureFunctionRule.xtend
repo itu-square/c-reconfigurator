@@ -1,7 +1,9 @@
 package dk.itu.models.rules.phase4functions
 
+import dk.itu.models.PresenceConditionIdMap
 import dk.itu.models.rules.AncestorGuaranteedRule
 import dk.itu.models.strategies.TopDownStrategy
+import dk.itu.models.utils.DeclarationPCMap
 import java.util.HashMap
 import java.util.List
 import xtc.lang.cpp.CTag
@@ -10,8 +12,6 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.tree.Node
 import xtc.util.Pair
-import dk.itu.models.DeclarationPCMap
-import dk.itu.models.PresenceConditionIdMap
 
 class ReconfigureFunctionRule extends AncestorGuaranteedRule {
 	

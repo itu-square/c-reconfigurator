@@ -1,7 +1,9 @@
 package dk.itu.models.rules.phase4functions
 
+import dk.itu.models.PresenceConditionIdMap
 import dk.itu.models.Reconfigurator
 import dk.itu.models.rules.AncestorGuaranteedRule
+import dk.itu.models.utils.DeclarationPCMap
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.List
@@ -13,8 +15,6 @@ import xtc.tree.GNode
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
-import dk.itu.models.DeclarationPCMap
-import dk.itu.models.PresenceConditionIdMap
 
 class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 
