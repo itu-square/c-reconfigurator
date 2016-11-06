@@ -1,19 +1,22 @@
 package dk.itu.models.rules.phase3variables
 
+import dk.itu.models.PresenceConditionIdMap
+import dk.itu.models.Settings
+import dk.itu.models.rules.ScopingRule
 import dk.itu.models.strategies.TopDownStrategy
+import dk.itu.models.utils.TypeDeclaration
+import dk.itu.models.utils.VariableDeclaration
 import java.util.HashMap
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
+import xtc.tree.Node
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
-import xtc.tree.Node
-import dk.itu.models.Settings
-import dk.itu.models.PresenceConditionIdMap
 
-class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
+class ReconfigureVariableRule extends ScopingRule {
 	
 	private val PresenceConditionIdMap pcidmap
 	
@@ -46,7 +49,7 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 	
 	override dispatch Object transform(GNode node) {
 		// Update the variable scopes and declarations.
-		(this as dk.itu.models.rules.ScopingRule).transform(node)
+		(this as ScopingRule).transform(node)
 
 		// Visit a variable Declaration under a Conditional.
 		if	(
@@ -79,7 +82,7 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 			&& ((node.get(1) as GNode).get(0) instanceof GNode)
 			&& ((node.get(1) as GNode).get(0) as GNode).name.equals("DeclaringList")
 		) {
-			
+			println('''here''')
 			val presenceCondition = node.presenceCondition.and(node.get(0) as PresenceCondition)
 			
 			// Put the current PresenceCondition into the PC-ID map (if it does not already exist)
@@ -135,15 +138,23 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 			if (!variableName.empty && !variableName.equals(Settings::reconfiguratorIncludePlaceholder)) {
 				val newName = variableName + "_V" + pcidmap.getId(presenceCondition)
 				
+				val varType = typeDeclarations.get(
+					(declaringList.get(0) as Language<?>).toString,
+					presenceCondition) as TypeDeclaration
+				
+				val varDecl = new VariableDeclaration(variableName, varType)
+								
 				// Add the variable in the declaration to the variable scope
 				// because this Declaration node hasn't been visited yet.
 				if(!variableExists(variableName)) {
-					addVariable(variableName)
+					addVariable(varDecl, presenceCondition)
 				}
 				
 				// Find the bottom-most declaration of the current variable name (bottom-most scope)
 				// and add the current PresenceCondition to it.
-				getPCListForLastDeclaration(variableName).add(node.presenceCondition.and(node.get(0) as PresenceCondition))
+				getPCListForLastDeclaration(variableName).add(
+					new org.eclipse.xtext.xbase.lib.Pair(
+						varDecl, node.presenceCondition.and(node.get(0) as PresenceCondition)))
 				
 				// Create a TopDownStrategy to
 				// rename the declared variable and
@@ -178,7 +189,7 @@ class ReconfigureVariableRule extends dk.itu.models.rules.ScopingRule {
 						if (node.indexOf(it) == 2) newNode
 						else it].toPair)
 				else return node
-		}
+		} else println('''---- unhandled «node.name»''')
 		
 		node
 	}

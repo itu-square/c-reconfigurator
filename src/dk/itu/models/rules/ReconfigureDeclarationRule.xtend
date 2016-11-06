@@ -40,9 +40,9 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			// declarations without variability
 			ancestors.size >= 1
 			&& #["ExternalDeclarationList", "DeclarationExtension", "DeclarationOrStatementList"].contains(ancestors.last.name)
-			&& #["Declaration", "DeclarationExtension"].contains(node.name) ) {
-				// TODO: rewrite variable names and function calls
-				node.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition, pcidmap)
+			&& #["Declaration", "DeclarationExtension"].contains(node.name)
+		) {
+			node.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition, pcidmap)
 		} else if (
 			// type declarations with variability
 			ancestors.size >= 1

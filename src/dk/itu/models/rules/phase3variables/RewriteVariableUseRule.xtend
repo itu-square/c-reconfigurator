@@ -45,7 +45,10 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
     
 	protected def buildExp(GNode node, String varName, PresenceCondition guard, List<PresenceCondition> declarationPCs) {
 		
-		if (declarationPCs.empty) { // there are no declarations of this variable
+		if (
+			declarationPCs.empty
+			|| (declarationPCs.size == 1 && declarationPCs.get(0).isTrue)
+		) { // there are no declarations of this variable
 			if (node.name.equals("PrimaryIdentifier"))
 				node.setHandled
 			else
@@ -63,10 +66,11 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 			// then the guard cannot be true in the same time with any of the PCs.
 			if (guard.and(disjunctionPC).isFalse) {
 				println('''Reconfigurator error: «varName» undefined under «guard».''')
-				if (node.name.equals("PrimaryIdentifier"))
-				node.setHandled
-			else
-				node.getDescendantNode("PrimaryIdentifier").setHandled
+				if (node.name.equals("PrimaryIdentifier")) {
+					node.setHandled
+				} else {
+					node.getDescendantNode("PrimaryIdentifier").setHandled
+				}
 				return node
  			}
 			
@@ -74,10 +78,11 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 			var GNode exp = null
 			
 			if (!guard.getBDD.imp(disjunctionPC.getBDD).isOne) {
-				if (node.name.equals("PrimaryIdentifier"))
-				node.setHandled
-			else
-				node.getDescendantNode("PrimaryIdentifier").setHandled
+				if (node.name.equals("PrimaryIdentifier")) {
+					node.setHandled
+				} else {
+					node.getDescendantNode("PrimaryIdentifier").setHandled
+				}
 				exp = node
 			}
 			
@@ -123,7 +128,7 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 			
 			if (variables.containsDeclaration(varName)) {				// if the variable is declared in the current scope
 				val scopePCs = variables.pcList(varName)
-				if (scopePCs.exists[it.is(varPC)]) {				// if the current scope pcs contain the exact variable pc
+				if (scopePCs.exists[it.value.is(varPC)]) {				// if the current scope pcs contain the exact variable pc
 					declarationPCs.add(varPC)						// add the one and return
 					return declarationPCs
 				} else {											// otherwise
@@ -131,7 +136,8 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 					// AFLA: this filter doesn't seem to be working
 					// neither this way or reversed
 					// just add all instead
-					for (PresenceCondition pc : scopePCs) {
+					for (org.eclipse.xtext.xbase.lib.Pair<?, ?> pair : scopePCs) {
+						val PresenceCondition pc = pair.value as PresenceCondition
 						if (!varPC.and(pc).isFalse) {
 							declarationPCs.add(pc)					// add the ones that are not falsified by the var PC
 						}
@@ -165,28 +171,32 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 				&& !node.getDescendantNode("PrimaryIdentifier").getBooleanProperty("HandledByRewriteVariableUseRule")
 			)
 		){
-				var newNode = node
-				
-				var String varName
-				
-				if (node.name.equals("PrimaryIdentifier"))
-					varName =(node.get(0) as Language<CTag>).toString
-				else if (#["Increment", "Subscript", "AssignmentExpression", "UnaryExpression"].contains(node.name)) {
-					varName = node.getDescendantNode("PrimaryIdentifier").get(0).toString
-					newNode = GNode::create("PrimaryExpression",
-							new Language<CTag>(CTag::LPAREN),
-							node,
-							new Language<CTag>(CTag::RPAREN))
-				} else
-					throw new Exception("RewriteVariableUseRule: unknown location of variable name")
-				
-				val declarationPCs = computePCs(varName, externalGuard.and(node.presenceCondition))
-				val exp = buildExp(newNode, varName, externalGuard.and(node.presenceCondition), declarationPCs)
-				
-				if(exp != null)
-					return exp
-				else
-					return node
+			var newNode = node
+			var String varName
+			
+			if (node.name.equals("PrimaryIdentifier")) {
+				varName =(node.get(0) as Language<CTag>).toString
+			} else if (
+				#["Increment", "Subscript", "AssignmentExpression", "UnaryExpression"]
+					.contains(node.name)
+			) {
+				varName = node.getDescendantNode("PrimaryIdentifier").get(0).toString
+				newNode = GNode::create("PrimaryExpression",
+						new Language<CTag>(CTag::LPAREN),
+						node,
+						new Language<CTag>(CTag::RPAREN))
+			} else {
+				throw new Exception("RewriteVariableUseRule: unknown location of variable name")
+			}
+			
+			val declarationPCs = computePCs(varName, externalGuard.and(node.presenceCondition))
+			val exp = buildExp(newNode, varName, externalGuard.and(node.presenceCondition), declarationPCs)
+			
+			if(exp != null) {
+				return exp
+			} else {
+				return node
+			}
 		}
 		node
 	}

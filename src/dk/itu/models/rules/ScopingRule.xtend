@@ -1,10 +1,13 @@
 package dk.itu.models.rules
 
+import dk.itu.models.Reconfigurator
 import dk.itu.models.Settings
 import dk.itu.models.utils.DeclarationPCMap
+import dk.itu.models.utils.TypeDeclaration
 import dk.itu.models.utils.VariableDeclaration
 import java.util.AbstractMap.SimpleEntry
 import java.util.ArrayList
+import java.util.List
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
@@ -13,8 +16,7 @@ import xtc.tree.GNode
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
-import dk.itu.models.utils.TypeDeclaration
-import dk.itu.models.Reconfigurator
+import dk.itu.models.utils.Declaration
 
 abstract class ScopingRule extends AncestorGuaranteedRule {
 	
@@ -50,19 +52,19 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		variableDeclarationScopes.last.value.put(variable, pc)
 	}
 	
-//	protected def variableExists(String name) {
-//		variableDeclarationScopes.exists[ se |
-//			se.value.containsDeclaration(name)
-//		]
-//	}
+	protected def variableExists(String name) {
+		variableDeclarationScopes.exists[ se |
+			se.value.containsDeclaration(name)
+		]
+	}
 	
-//	protected def List<PresenceCondition> getPCListForLastDeclaration(String name) {
-//		val scope = variableDeclarationScopes.findLast[scope | scope.value.containsDeclaration(name)]
-//		if (scope != null)
-//			scope.value.pcList(name)
-//		else
-//			null
-//	}
+	protected def List<org.eclipse.xtext.xbase.lib.Pair<Declaration, PresenceCondition>> getPCListForLastDeclaration(String name) {
+		val scope = variableDeclarationScopes.findLast[scope | scope.value.containsDeclaration(name)]
+		if (scope != null)
+			scope.value.pcList(name)
+		else
+			null
+	}
 	
 	def PresenceCondition transform(PresenceCondition cond) {
 		clearVariableDeclarationScopes
@@ -113,9 +115,6 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"CleanTypedefDeclarator", "CleanPostfixTypedefDeclarator", "DirectSelection", "AssemblyExpressionOpt"].contains(node.name)) {
 			// no scope
 		} else {
-			println
-			ancestors.forEach[println("- " + it.name)]
-			println(node.printAST)
 			throw new Exception("ScopingRule: possible scope : " + node.name + ".")
 		}
 		
@@ -163,23 +162,12 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			&& (((node.get(0) as GNode).get(1) as GNode).get(0) instanceof Text<?>)
 		) {
 			
-			println
-			println(node.printAST)
-			
 			val varName = (((node.get(0) as GNode).get(1) as GNode).get(0) as Text<?>).toString
 			val varTypeName = ((node.get(0) as GNode).get(0) as Language<?>).toString
 			val varPC = guard(node)
 			val varType = typeDeclarations.get(varTypeName, varPC) as TypeDeclaration
 			
-			println ('''variable: «varTypeName» «varName»''')
-			println ('''PC: «varPC»''')
-			println ('''type: «varType.name»''')
-			println ("STOP")
-			println
-			
 			addVariable(new VariableDeclaration(varName, varType), varPC)
-			
-			throw new UnsupportedOperationException("Found")
 		}
 		
 		
@@ -200,7 +188,6 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			if (declarator == null)
 				declarator = node.getDescendantNode("ParameterTypedefDeclarator")
 			if (declarator == null) {
-				println(node.printAST)
 				throw new Exception("ScopingRule: unknown declarator.")
 			}
 			

@@ -56,18 +56,14 @@ class TxMain extends Transformation {
 		writeToFile(node4.printAST, Settings::targetFile + ".phase_.ast")
 
 //		println("PHASE 3 - Reconfigure variables")
-//		val pcidmap = new HashMap<PresenceCondition, String>		
+//		val pcidmap = new PresenceConditionIdMap		
 //		val reconfigureVariableRule = new ReconfigureVariableRule(pcidmap)
 //		val tdn3 = new TopDownStrategy
 //		tdn3.register(reconfigureVariableRule)
 //		var Node node3 = tdn3.transform(node2) as Node
-////		writeToFile(node3.printCode, file + ".phase3.c")
-////		writeToFile(node3.printAST, file + ".phase3.ast")
-//
-//
-//
-//
-//
+//		writeToFile(node3.printCode, Settings::targetFile + ".phase3.c")
+//		writeToFile(node3.printAST, Settings::targetFile + ".phase3.ast")
+
 //		println("PHASE 4 - Reconfigure functions")
 //		val tdn4 = new TopDownStrategy
 //		tdn4.register(new ReconfigureFunctionRule(pcidmap))
