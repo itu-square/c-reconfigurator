@@ -58,7 +58,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		]
 	}
 	
-	protected def List<org.eclipse.xtext.xbase.lib.Pair<Declaration, PresenceCondition>> getPCListForLastDeclaration(String name) {
+	protected def List<SimpleEntry<Declaration, PresenceCondition>> getPCListForLastDeclaration(String name) {
 		val scope = variableDeclarationScopes.findLast[scope | scope.value.containsDeclaration(name)]
 		if (scope != null)
 			scope.value.pcList(name)

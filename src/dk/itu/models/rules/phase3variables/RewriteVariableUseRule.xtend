@@ -136,7 +136,7 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 					// AFLA: this filter doesn't seem to be working
 					// neither this way or reversed
 					// just add all instead
-					for (org.eclipse.xtext.xbase.lib.Pair<?, ?> pair : scopePCs) {
+					for (SimpleEntry<?, ?> pair : scopePCs) {
 						val PresenceCondition pc = pair.value as PresenceCondition
 						if (!varPC.and(pc).isFalse) {
 							declarationPCs.add(pc)					// add the ones that are not falsified by the var PC

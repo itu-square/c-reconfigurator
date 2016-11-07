@@ -11,6 +11,8 @@ import xtc.tree.Node
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
+import dk.itu.models.utils.VariableDeclaration
+import dk.itu.models.utils.TypeDeclaration
 
 class ReconfigureDeclarationRule extends ScopingRule {
 	
@@ -71,22 +73,24 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			&& node.name.equals("Conditional")
 			&& node.get(1) instanceof GNode
 			&& #["Declaration", "DeclarationExtension"].contains((node.get(1) as GNode).name)
-			&& !(node.get(1) as GNode).containsTypedef ) {
-//			&& !(node.get(1) as GNode).containsConditional
-				val pc = node.get(0) as PresenceCondition
+			&& !(node.get(1) as GNode).containsTypedef
+		) {
+				val varPC = node.get(0) as PresenceCondition
 				var declarator = node.getDescendantNode("SimpleDeclarator")
 				if (declarator == null)
 					declarator = node.getDescendantNode("ParameterTypedefDeclarator")
-				val id = declarator.get(0).toString
+				val varName = declarator.get(0).toString
+				val varType = typeDeclarations.get(
+					node.getDescendantNode("DeclaringList").get(0).toString, varPC) as TypeDeclaration
+				val varDecl = new VariableDeclaration(varName, varType)
 				
-				if(true) throw new UnsupportedOperationException("putPC")
-//				variableDeclarationScopes.last.value.putPC(id, pc)
+				variableDeclarationScopes.last.value.put(varDecl, varPC)
 				
-				val newId = id + "_V" + pcidmap.getId(pc)
-				var newNode = (node.get(1) as GNode).replaceDeclaratorTextWithNewId(newId)
-				newNode = newNode.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition.and(pc), pcidmap)
-				newNode = newNode.rewriteFunctionCall(functionDeclarations, node.presenceCondition.and(pc), pcidmap)
-				newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
+				val newName = varName + "_V" + pcidmap.getId(varPC)
+				var newNode = (node.get(1) as GNode).replaceDeclaratorTextWithNewId(newName)
+				newNode = newNode.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition.and(varPC), pcidmap)
+				newNode = newNode.rewriteFunctionCall(functionDeclarations, node.presenceCondition.and(varPC), pcidmap)
+				newNode.setProperty("OriginalPC", node.presenceCondition.and(varPC))
 				newNode
 		} else if (
 			// function definition with variability

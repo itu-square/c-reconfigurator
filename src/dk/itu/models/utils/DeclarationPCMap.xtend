@@ -4,19 +4,20 @@ import java.util.ArrayList
 import java.util.HashMap
 import java.util.List
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
+import java.util.AbstractMap.SimpleEntry
 
 class DeclarationPCMap {
 	
-	protected val HashMap<String, List<Pair<Declaration,PresenceCondition>>> map
+	protected val HashMap<String, List<SimpleEntry<Declaration,PresenceCondition>>> map
 	
 	new () {
-		map = new HashMap<String, List<Pair<Declaration,PresenceCondition>>>
+		map = new HashMap<String, List<SimpleEntry<Declaration,PresenceCondition>>>
 	}
 	
 	public def void put (Declaration declaration, PresenceCondition pc) {
-		map.putIfAbsent(declaration.name, new ArrayList<Pair<Declaration, PresenceCondition>>)
+		map.putIfAbsent(declaration.name, new ArrayList<SimpleEntry<Declaration, PresenceCondition>>)
 		
-		map.get(declaration.name).add(new Pair(declaration, pc))
+		map.get(declaration.name).add(new SimpleEntry(declaration, pc))
 	}
 	
 	public def Declaration get (String name, PresenceCondition pc) {
@@ -32,7 +33,7 @@ class DeclarationPCMap {
 		map.keySet.contains(name)
 	}
 	
-	public def List<Pair<Declaration, PresenceCondition>> pcList (String name) {
+	public def List<SimpleEntry<Declaration, PresenceCondition>> pcList (String name) {
 		map.get(name)
 	}
 }
