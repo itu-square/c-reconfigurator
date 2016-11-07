@@ -13,6 +13,7 @@ import xtc.util.Pair
 import static extension dk.itu.models.Extensions.*
 import dk.itu.models.utils.VariableDeclaration
 import dk.itu.models.utils.TypeDeclaration
+import xtc.lang.cpp.Syntax.Text
 
 class ReconfigureDeclarationRule extends ScopingRule {
 	
@@ -54,17 +55,54 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			&& #["Declaration", "DeclarationExtension"].contains((node.get(1) as GNode).name)
 			&& (node.get(1) as GNode).containsTypedef
 			&& !(node.get(1) as GNode).containsConditional ) {
-				val pc = node.get(0) as PresenceCondition
+				val varPC = node.get(0) as PresenceCondition
 				var declarator = node.getDescendantNode("SimpleDeclarator")
 				if (declarator == null)
 					declarator = node.getDescendantNode("ParameterTypedefDeclarator")
-				val id = declarator.get(0).toString
+				val varName = declarator.get(0).toString
+				
+				val declaringList = node.getDescendantNode("DeclaringList")
+				var typeName = ""
+				var bds = declaringList.get(0) as GNode
+				while (
+					bds.name.equals("BasicDeclarationSpecifier")
+				){
+//					typeName = bds.last.toString + " " + typeName
+					if (
+						(bds.last instanceof GNode)
+						&& (bds.last as GNode).name.equals("SignedKeyword")
+					) {
+						typeName = (bds.last as GNode).head.toString + " " + typeName
+					} else if (bds.last instanceof Language<?>) {
+						typeName = (bds.last as Language<CTag>).toString + " " + typeName
+					}
+					bds = bds.get(0) as GNode
+				}
+				if (typeName.equals("")) {
+					throw new Exception("Unhandled type")
+				}
+				
+				println
+				println('''varName «varName»''')
+				println('''varPC «varPC»''')
+				println('''typeName «typeName»''')
+				println
+				println(node.printCode)
+				println(node.printAST)
+				println
+				
+				
+				val typeDecl = new TypeDeclaration
+				
+				typeDeclarations.put()
+				
+				
 				if(true) throw new UnsupportedOperationException("putPC")
 //				typeDeclarations.putPC(id, pc)
 				
-				val newId = id + "_V" + pcidmap.getId(pc)
-				var newNode = (node.get(1) as GNode).replaceDeclaratorTextWithNewId(newId)
-				newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
+				val newName = varName + "_V" + pcidmap.getId(varPC)
+				var newNode = (node.get(1) as GNode).replaceDeclaratorTextWithNewId(newName)
+				newNode.setProperty("OriginalPC", node.presenceCondition.and(varPC))
 				newNode
 		} else if (
 			// variable declarations with variability
