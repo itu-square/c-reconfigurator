@@ -52,7 +52,7 @@ class TxMain extends Transformation {
 		val tdnQ = new TopDownStrategy
 		tdnQ.register(new ReconfigureDeclarationRule)
 		var Node node4 = tdnQ.transform(node2) as Node
-		writeToFile(node4.printCode, Settings::targetFile + ".phase4.c")
+		writeToFile(node4.printCode, Settings::targetFile + ".phase_.c")
 		writeToFile(node4.printAST, Settings::targetFile + ".phase_.ast")
 
 //		println("PHASE 3 - Reconfigure variables")

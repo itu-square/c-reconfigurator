@@ -3,6 +3,8 @@ package dk.itu.models.rules
 import dk.itu.models.PresenceConditionIdMap
 import dk.itu.models.rules.phase3variables.RewriteVariableUseRule
 import dk.itu.models.strategies.TopDownStrategy
+import dk.itu.models.utils.TypeDeclaration
+import dk.itu.models.utils.VariableDeclaration
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
@@ -11,9 +13,6 @@ import xtc.tree.Node
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
-import dk.itu.models.utils.VariableDeclaration
-import dk.itu.models.utils.TypeDeclaration
-import xtc.lang.cpp.Syntax.Text
 
 class ReconfigureDeclarationRule extends ScopingRule {
 	
@@ -54,7 +53,8 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			&& node.get(1) instanceof GNode
 			&& #["Declaration", "DeclarationExtension"].contains((node.get(1) as GNode).name)
 			&& (node.get(1) as GNode).containsTypedef
-			&& !(node.get(1) as GNode).containsConditional ) {
+			&& !(node.get(1) as GNode).containsConditional
+		) {
 				val varPC = node.get(0) as PresenceCondition
 				var declarator = node.getDescendantNode("SimpleDeclarator")
 				if (declarator == null)
@@ -82,23 +82,16 @@ class ReconfigureDeclarationRule extends ScopingRule {
 					throw new Exception("Unhandled type")
 				}
 				
-				println
-				println('''varName «varName»''')
-				println('''varPC «varPC»''')
-				println('''typeName «typeName»''')
-				println
-				println(node.printCode)
-				println(node.printAST)
-				println
+				var varType = typeDeclarations.get(typeName, varPC) as TypeDeclaration
+				// if the type does not exist, then add it
+				if (varType == null) {
+					varType = new TypeDeclaration(typeName, null)
+					typeDeclarations.put(varType, varPC)
+				}
 				
 				
-				val typeDecl = new TypeDeclaration
-				
-				typeDeclarations.put()
-				
-				
-				if(true) throw new UnsupportedOperationException("putPC")
-//				typeDeclarations.putPC(id, pc)
+				val typeDecl = new TypeDeclaration(varName, varType)
+				typeDeclarations.put(typeDecl, varPC)
 				
 				val newName = varName + "_V" + pcidmap.getId(varPC)
 				var newNode = (node.get(1) as GNode).replaceDeclaratorTextWithNewId(newName)
@@ -118,8 +111,13 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				if (declarator == null)
 					declarator = node.getDescendantNode("ParameterTypedefDeclarator")
 				val varName = declarator.get(0).toString
-				val varType = typeDeclarations.get(
-					node.getDescendantNode("DeclaringList").get(0).toString, varPC) as TypeDeclaration
+				val varTypeName = node.getDescendantNode("DeclaringList").get(0).toString
+				var varType = typeDeclarations.get(varTypeName, varPC) as TypeDeclaration
+				// if the type does not exist, then add it
+				if (varType == null) {
+					varType = new TypeDeclaration(varTypeName, null)
+					typeDeclarations.put(varType, varPC)
+				}
 				val varDecl = new VariableDeclaration(varName, varType)
 				
 				variableDeclarationScopes.last.value.put(varDecl, varPC)

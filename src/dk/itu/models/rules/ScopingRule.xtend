@@ -1,7 +1,7 @@
 package dk.itu.models.rules
 
-import dk.itu.models.Reconfigurator
 import dk.itu.models.Settings
+import dk.itu.models.utils.Declaration
 import dk.itu.models.utils.DeclarationPCMap
 import dk.itu.models.utils.TypeDeclaration
 import dk.itu.models.utils.VariableDeclaration
@@ -16,7 +16,7 @@ import xtc.tree.GNode
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
-import dk.itu.models.utils.Declaration
+import static extension dk.itu.models.Patterns.*
 
 abstract class ScopingRule extends AncestorGuaranteedRule {
 	
@@ -30,9 +30,9 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		this.typeDeclarations = new DeclarationPCMap
 		this.functionDeclarations = new DeclarationPCMap
 		
-		this.typeDeclarations.put(
-			new TypeDeclaration("int", null),
-			Reconfigurator::presenceConditionManager.newPresenceCondition(true))
+//		this.typeDeclarations.put(
+//			new TypeDeclaration("int", null),
+//			Reconfigurator::presenceConditionManager.newPresenceCondition(true))
 	}
 	
 	protected def addVariableDeclarationScope(GNode node) {
@@ -65,6 +65,10 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		else
 			null
 	}
+	
+//	protected def getType(TypeDeclaration type, PresenceCondition pc) {
+//		var type
+//	}
 	
 	def PresenceCondition transform(PresenceCondition cond) {
 		clearVariableDeclarationScopes
@@ -125,20 +129,13 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		
 		
 		
-		if (
-			node.name.equals("Declaration")
-			&& node.containsTypedef
-		) {
-			var declarator = node.getDescendantNode("SimpleDeclarator")
-			if (declarator == null)
-				declarator = node.getDescendantNode("ParameterTypedefDeclarator")
+		if (node.isTypeDeclaration) {
+			val pc = node.guard
+			val newTypeDeclaration = node.getTypeDeclaration(typeDeclarations, pc)
 			
-			throw new UnsupportedOperationException("Type Declaration")
-//			typeDeclarations.newDeclaration(declarator.get(0).toString)
-		} else if (
-			node.name.equals("Declaration")
-			&& node.getDescendantNode("FunctionDeclarator") != null
-		) {
+			typeDeclarations.put(newTypeDeclaration, pc)
+			
+		} else if (node.isFunctionDeclaration) {
 			var declarator = node.getDescendantNode("SimpleDeclarator")
 			if (declarator == null)
 				declarator = node.getDescendantNode("ParameterTypedefDeclarator")
