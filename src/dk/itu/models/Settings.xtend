@@ -12,8 +12,9 @@ class Settings {
 	static public var boolean minimize = false
 	static public var boolean parseOnly = false
 	static public var boolean printFullContent = false
-//	
-//	
+	
+	static public var boolean printIntermediaryFiles = false
+	
 //	static public var int maxProcessedFiles = 10
 //	
 	static public var String reconfiguratorIncludePlaceholder = "_reconfig_include"; 
@@ -99,6 +100,8 @@ class Settings {
 					parseOnly = true
 				case "-printFullContent":
 					printFullContent = true
+				case "-printIntermediaryFiles":
+					printIntermediaryFiles = true
 //				case "-fileList":
 //					if(i < args.size-1) { fileList = new File(args.get(i+1)) }
 //					else {println("-fileList argument has no value."); return false}

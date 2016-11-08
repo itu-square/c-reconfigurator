@@ -523,18 +523,25 @@ class Reconfigurator {
 			if (SuperC::outputAST != null) {
 				var Node node = SuperC::outputAST
 				
-				node.printAST.writeToFile(Settings::targetFile.path + ".0.ast")
-				node.printCode.writeToFile(Settings::targetFile.path)
+				if (Settings::printIntermediaryFiles) {
+					node.printAST.writeToFile(Settings::targetFile.path + ".0.parse.ast")
+					node.printCode.writeToFile(Settings::targetFile.path + ".0.parse.c")
+				}
 				
 				node = new TxRemActions().transform(node)
 				
-				node.printAST.writeToFile(Settings::targetFile.path + ".1.ast")
-				node.printCode.writeToFile(Settings::targetFile.path)
+				if (Settings::printIntermediaryFiles) {
+					node.printAST.writeToFile(Settings::targetFile.path + ".1.remact.ast")
+					node.printCode.writeToFile(Settings::targetFile.path + ".1.remact.c")
+				}
 				
 				node = new TxMain().transform(node)
 
-				node.printAST.writeToFile(Settings::targetFile.path + ".2.ast")
-				node.printCode.writeToFile(Settings::targetFile.path)
+				if (Settings::printIntermediaryFiles) {
+					node.printAST.writeToFile(Settings::targetFile.path + ".2.txd.ast")
+					node.printCode.writeToFile(Settings::targetFile.path)
+					
+				}
 			} else {
 				throw new Exception("Reconfigurator no AST")
 			}
