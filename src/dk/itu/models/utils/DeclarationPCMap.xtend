@@ -1,10 +1,11 @@
 package dk.itu.models.utils
 
+import java.util.AbstractMap.SimpleEntry
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.List
+import java.util.Set
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
-import java.util.AbstractMap.SimpleEntry
 
 class DeclarationPCMap {
 	
@@ -33,7 +34,15 @@ class DeclarationPCMap {
 		map.keySet.contains(name)
 	}
 	
-	public def List<SimpleEntry<Declaration, PresenceCondition>> pcList (String name) {
+	public def List<SimpleEntry<Declaration, PresenceCondition>> pcList(String name) {
 		map.get(name)
+	}
+	
+	public def int size() {
+		map.size
+	}
+	
+	public def Set<String> names() {
+		map.keySet
 	}
 }

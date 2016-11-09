@@ -538,10 +538,9 @@ class Reconfigurator {
 				node = new TxMain().transform(node)
 
 				if (Settings::printIntermediaryFiles) {
-					node.printAST.writeToFile(Settings::targetFile.path + ".2.txd.ast")
-					node.printCode.writeToFile(Settings::targetFile.path)
-					
+					node.printAST.writeToFile(Settings::targetFile.path + ".ast")
 				}
+				node.printCode.writeToFile(Settings::targetFile.path)
 			} else {
 				throw new Exception("Reconfigurator no AST")
 			}

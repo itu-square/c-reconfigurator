@@ -1,14 +1,15 @@
 package dk.itu.models
 
+import dk.itu.models.utils.DeclarationPCMap
 import dk.itu.models.utils.TypeDeclaration
+import java.util.List
+import xtc.lang.cpp.CTag
+import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
+import xtc.lang.cpp.Syntax.Language
+import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 
 import static extension dk.itu.models.Extensions.*
-import xtc.lang.cpp.Syntax.Language
-import xtc.lang.cpp.CTag
-import dk.itu.models.utils.DeclarationPCMap
-import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
-import xtc.lang.cpp.Syntax.Text
 
 class Patterns {
 	
@@ -74,9 +75,41 @@ class Patterns {
 		return new TypeDeclaration(newTypeName, oldTypeDeclaration)
 	}
 	
+	
+	public static def boolean isStructDeclarationWithVariability(GNode node) {
+		   node.name.equals("Conditional")
+		&& node.size == 2
+		
+		&& (node.get(1) instanceof GNode)
+		&& (node.get(1) as GNode).name.equals("Declaration")
+		&& (node.get(1) as GNode).size == 2
+		
+		&& ((node.get(1) as GNode).get(0) instanceof GNode)
+		&& ((node.get(1) as GNode).get(0) as GNode).name.equals("SUETypeSpecifier")
+		&& ((node.get(1) as GNode).get(0) as GNode).size == 1
+
+		&& (((node.get(1) as GNode).get(0) as GNode).get(0) instanceof GNode)
+		&& (((node.get(1) as GNode).get(0) as GNode).get(0) as GNode).name.equals("StructSpecifier")
+	} 
+	
+	
+	
+	
+	
+	
 	public static def boolean isFunctionDeclaration(GNode node) {
 		node.name.equals("Declaration")
 		&& node.getDescendantNode("FunctionDeclarator") != null
 	}
 	
+	public static def boolean isVariableDeclarationWithVariability(GNode node, List<GNode> ancestors) {
+		ancestors.size >= 1
+		&& #["ExternalDeclarationList", "DeclarationOrStatementList"].contains(ancestors.last.name)
+		&& node.name.equals("Conditional")
+		&& node.get(1) instanceof GNode
+		&& #["Declaration", "DeclarationExtension"].contains((node.get(1) as GNode).name)
+		&& !(node.get(1) as GNode).containsTypedef
+		&& node.getDescendantNode("SUETypeSpecifier") == null
+	}
+		
 }

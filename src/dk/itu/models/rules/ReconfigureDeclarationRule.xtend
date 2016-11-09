@@ -13,6 +13,7 @@ import xtc.tree.Node
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
+import static extension dk.itu.models.Patterns.*
 
 class ReconfigureDeclarationRule extends ScopingRule {
 	
@@ -98,13 +99,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				newNode.setProperty("OriginalPC", node.presenceCondition.and(varPC))
 				newNode
 		} else if (
-			// variable declarations with variability
-			ancestors.size >= 1
-			&& #["ExternalDeclarationList", "DeclarationOrStatementList"].contains(ancestors.last.name)
-			&& node.name.equals("Conditional")
-			&& node.get(1) instanceof GNode
-			&& #["Declaration", "DeclarationExtension"].contains((node.get(1) as GNode).name)
-			&& !(node.get(1) as GNode).containsTypedef
+			node.isVariableDeclarationWithVariability(ancestors)
 		) {
 				val varPC = node.get(0) as PresenceCondition
 				var declarator = node.getDescendantNode("SimpleDeclarator")

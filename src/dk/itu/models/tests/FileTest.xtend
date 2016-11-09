@@ -39,7 +39,7 @@ class FileTest {
 			,"-undef",   "__INTEL_COMPILER"
 			,"-undef",	 "__CHECKER__"
 			,"-printFullContent"
-//			,"-printIntermediaryFiles"
+			,"-printIntermediaryFiles"
 			,"-printIncludes"
 			,"-reconfigureIncludes"
 			)

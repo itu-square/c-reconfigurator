@@ -180,6 +180,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			&& !(node.name.equals("ParameterDeclaration")
 				&& node.getDescendantNode("SimpleDeclarator") == null)
 			&& !node.containsTypedef
+			&& node.getDescendantNode("SUETypeSpecifier") == null
 		) {
 			var declarator = node.getDescendantNode("SimpleDeclarator")
 			if (declarator == null)
@@ -200,6 +201,23 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			val functionName = declarator.get(0).toString
 			throw new UnsupportedOperationException("Function Declaration")
 //			functionDeclarations.newDeclaration(functionName)
+		} else if (
+			node.isStructDeclarationWithVariability
+		) {
+			
+			println
+			
+			println('''before «typeDeclarations.size»''')
+			println(typeDeclarations.names)
+			
+			println("found isStructDeclarationWithVariability")
+			println(node.printCode)
+			println(node.printAST)
+
+			println('''after «typeDeclarations.size»''')
+			
+			throw new Exception
+			
 		} else if (#["TranslationUnit", "ExternalDeclarationList", "DeclaringList",
 			"SUEDeclarationSpecifier", "DeclarationQualifierList", "StructOrUnionSpecifier",
 			"StructOrUnion", "IdentifierOrTypedefName", "SimpleDeclarator", "ArrayDeclarator",
