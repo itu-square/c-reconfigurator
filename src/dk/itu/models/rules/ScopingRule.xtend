@@ -1,5 +1,6 @@
 package dk.itu.models.rules
 
+import dk.itu.models.Reconfigurator
 import dk.itu.models.Settings
 import dk.itu.models.utils.Declaration
 import dk.itu.models.utils.DeclarationPCMap
@@ -29,10 +30,6 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		this.variableDeclarationScopes = new ArrayList<SimpleEntry<GNode,DeclarationPCMap>>
 		this.typeDeclarations = new DeclarationPCMap
 		this.functionDeclarations = new DeclarationPCMap
-		
-//		this.typeDeclarations.put(
-//			new TypeDeclaration("int", null),
-//			Reconfigurator::presenceConditionManager.newPresenceCondition(true))
 	}
 	
 	protected def addVariableDeclarationScope(GNode node) {
@@ -89,7 +86,31 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		clearVariableDeclarationScopes
 		if (#["ExternalDeclarationList", "FunctionDefinition", "FunctionDeclarator", "CompoundStatement"].contains(node.name)) {
 			addVariableDeclarationScope(node)
-		} else if(#["TranslationUnit", "Declaration", "DeclaringList", "SUEDeclarationSpecifier",
+		} else if (node.name.equals("TranslationUnit")) {
+			
+			println
+			println("TranslationUnit")
+			
+			println('''before types «typeDeclarations.size»''')
+			typeDeclarations.names.forEach[
+				println('''- «it»      «typeDeclarations.pcList(it).size»''')
+				typeDeclarations.pcList(it).forEach[pair | println("    - " + pair.value)]
+			]
+			println
+			
+			this.typeDeclarations.clear
+			this.typeDeclarations.put(
+				new TypeDeclaration("int", null),
+				Reconfigurator::presenceConditionManager.newPresenceCondition(true))
+			
+			println('''after types «typeDeclarations.size»''')
+			typeDeclarations.names.forEach[
+				println('''- «it»      «typeDeclarations.pcList(it).size»''')
+				typeDeclarations.pcList(it).forEach[pair | println("    - " + pair.value)]
+			]
+			println
+			
+		} else if(#["Declaration", "DeclaringList", "SUEDeclarationSpecifier",
 			"DeclarationQualifierList", "StructOrUnionSpecifier", "StructOrUnion",
 			"IdentifierOrTypedefName", "SimpleDeclarator", "ArrayDeclarator",
 			"ArrayAbstractDeclarator", "InitializerOpt", "Initializer", "StringLiteralList",
@@ -115,8 +136,10 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"ContinueStatement", "Expression", "SUETypeSpecifier", "StructDeclarationList",
 			"StructDeclaration", "StructDeclaringList", "StructDeclarator", "IndirectSelection",
 			"EmptyDefinition", "EnumSpecifier", "EnumeratorList", "Enumerator", "EnumeratorValueOpt",
-			"PostfixIdentifierDeclarator", "PostfixingAbstractDeclarator",
-			"CleanTypedefDeclarator", "CleanPostfixTypedefDeclarator", "DirectSelection", "AssemblyExpressionOpt"].contains(node.name)) {
+			"PostfixIdentifierDeclarator", "PostfixingAbstractDeclarator", "CleanTypedefDeclarator",
+			"CleanPostfixTypedefDeclarator", "DirectSelection", "AssemblyExpressionOpt"]
+				.contains(node.name)
+		) {
 			// no scope
 		} else {
 			throw new Exception("ScopingRule: possible scope : " + node.name + ".")
@@ -130,10 +153,15 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		
 		
 		if (node.isTypeDeclaration) {
-			val pc = node.guard
-			val newTypeDeclaration = node.getTypeDeclaration(typeDeclarations, pc)
 			
-			typeDeclarations.put(newTypeDeclaration, pc)
+			println("VARIABLE DECLARATION")
+			println
+			println(node.printAST)
+			println('''getNameOfTypeDeclaration «node.getNameOfTypeDeclaration»''')
+//			println('''getTypeOfTypeDeclaration «node.getTypeOfTypeDeclaration»''')
+			println('''guard «node.guard»''')
+			
+			throw new UnsupportedOperationException("Type Declaration")
 			
 		} else if (node.isFunctionDeclaration) {
 			var declarator = node.getDescendantNode("SimpleDeclarator")
@@ -165,22 +193,22 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			val varType = typeDeclarations.get(varTypeName, varPC) as TypeDeclaration
 			
 			addVariable(new VariableDeclaration(varName, varType), varPC)
-		}
-		
-		
-		else if (
-			#["Declaration", "ParameterDeclaration"].contains(node.name)
-			&& (node.size > 1 || node.get(0) instanceof GNode)
-			&& node.getDescendantNode("FunctionDeclarator") == null
-			&& node.getDescendantNode("EnumSpecifier") == null
-			&& (node.getDescendantNode("StructOrUnionSpecifier") == null
-				|| node.getDescendantNode("SimpleDeclarator") != null)
-			&& (node.getDescendantNode("TypedefTypeSpecifier") == null
-				|| node.getDescendantNode("SimpleDeclarator") != null)
-			&& !(node.name.equals("ParameterDeclaration")
-				&& node.getDescendantNode("SimpleDeclarator") == null)
-			&& !node.containsTypedef
-			&& node.getDescendantNode("SUETypeSpecifier") == null
+			
+		} else if (node.isVariableDeclaration) {
+			
+			println("VARIABLE DECLARATION")
+			println
+			println(node.printAST)
+			println('''getNameOfVariableDeclaration «node.getNameOfVariableDeclaration»''')
+			println('''getTypeOfVariableDeclaration «node.getTypeOfVariableDeclaration»''')
+			println('''guard «node.guard»''')
+			
+			// addvar
+			
+			throw new UnsupportedOperationException("Variable Declaration")
+			
+		} else if (
+			node.isVariableDeclarationOrParamenter
 		) {
 			var declarator = node.getDescendantNode("SimpleDeclarator")
 			if (declarator == null)
@@ -188,6 +216,9 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			if (declarator == null) {
 				throw new Exception("ScopingRule: unknown declarator.")
 			}
+			
+			println
+			println(node.printAST)
 			
 			val variableName = declarator.get(0).toString
 			if (!variableName.equals(Settings::reconfiguratorIncludePlaceholder)) {

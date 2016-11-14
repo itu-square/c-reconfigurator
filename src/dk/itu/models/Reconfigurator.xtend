@@ -141,68 +141,7 @@ class Reconfigurator {
 //	
 //	
 //	
-//	def static FileRecord reconfigure (File currentFile, (String)=>Test test) {
-//		
-//		flushConsole
-//		Settings::consolePS.flush
-//		
-//		val currentFilePath = currentFile.path
-//		val currentRelativePath = currentFilePath.relativeTo(Settings::sourceFile.path)
-//		val currentTargetPath = Settings::targetFile + currentRelativePath
-//		
-//		if (currentFile.isDirectory
-//			&& (Settings::ignorePattern == null || !Settings::ignorePattern.matcher(currentRelativePath).matches)) {
-//			
-//			println('''processing directory [«processedFiles+1»] .«currentRelativePath»/''')
-//			
-//			val targetDir = new File(currentTargetPath)
-//			if (!targetDir.exists) targetDir.mkdirs
-//			
-//			val fileRecord = new FileRecord(currentRelativePath, Settings::consoleBAOS.toString, true, true, 0)
-//			
-//			currentFile.listFiles.filter[isFile].sort.forEach[
-//				if (processedFiles < Settings::maxProcessedFiles) fileRecord.addFile(reconfigure(test)) ]
-//			
-//			currentFile.listFiles.filter[isDirectory].sort.forEach[
-//				if (processedFiles < Settings::maxProcessedFiles) fileRecord.addFile(reconfigure(test)) ]
-//			
-//			fileRecord.updateFileCount
-//			fileRecord.writeHTMLFile(currentTargetPath + ".htm")
-//			return fileRecord
-//			
-//		} else if ((Settings::ignorePattern == null || !Settings::ignorePattern.matcher(currentRelativePath).matches)
-//			&& (currentFile.path.endsWith(".c"))) {
-//			
-//			println('''processing file [«processedFiles+1»] .«currentRelativePath»''')
-//			
-//			processedFiles++
-//
-//			val fileRecord = new FileRecord(currentRelativePath, Settings::consoleBAOS.toString, true, false, 0)
-//			fileRecord.writeHTMLFile(currentTargetPath + ".htm")
-//			return fileRecord
-//			
-//		} else {
-//			
-//			if (currentFile.isDirectory) {
-//				println('''ignoring directory [«processedFiles+1»] .«currentRelativePath»/''')
-//				return new FileRecord(currentRelativePath, Settings::consoleBAOS.toString, false, true, 0)
-//			} else {
-//				println('''ignoring file [«processedFiles+1»] .«currentRelativePath»''')
-//				return new FileRecord(currentRelativePath, Settings::consoleBAOS.toString, false, false, 0)
-//			}
-//			
-//		}
-//	}
-//	
-//	
-//	
-//	
-//	
-//	
-//	
-//	
-//	
-//	
+
 //	def static void reconfigure2(File currentFile, (String)=>Test test) {
 //		val currentRelativePath = currentFile.path.relativeTo(Settings::sourceFile.path)
 //		val currentTargetPath = Settings::targetFile + currentRelativePath

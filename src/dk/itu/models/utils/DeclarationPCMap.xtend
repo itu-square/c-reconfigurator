@@ -24,7 +24,7 @@ class DeclarationPCMap {
 	public def Declaration get (String name, PresenceCondition pc) {
 		val list = map.get(name)
 		if (list != null) {
-			val pair = list.findFirst[pair | pair.value.is(pc)]
+			val pair = list.findFirst[pair | pair.value.BDD.imp(pc.BDD).isOne]
 			if (pair != null)
 				pair.key
 		}
@@ -44,5 +44,9 @@ class DeclarationPCMap {
 	
 	public def Set<String> names() {
 		map.keySet
+	}
+	
+	public def void clear() {
+		map.clear
 	}
 }
