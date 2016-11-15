@@ -222,17 +222,31 @@ class Patterns {
 		
 		&& (node.get(0) instanceof Language<?>)
 		
-		&& (node.get(1) instanceof GNode)
-		&& (node.get(1) as GNode).name.equals("SimpleDeclarator")
+		&& (
+			(  (node.get(1) instanceof GNode)
+			&& (node.get(1) as GNode).name.equals("SimpleDeclarator") )
+		||
+			(  (node.get(1) instanceof GNode)
+			&& (node.get(1) as GNode).name.equals("UnaryIdentifierDeclarator") )
+		   )
 	}
 	
 	public static def String getNameOfParameterDeclaration(GNode node) {
-		val simpleDeclarator = (node.get(1) as GNode)
-		return (simpleDeclarator.get(0) as Text<?>).toString
+		var declarator = (node.get(1) as GNode)
+		while (!declarator.name.equals("SimpleDeclarator")) {
+			declarator = (declarator.get(1) as GNode)
+		}
+		return (declarator.get(0) as Text<?>).toString
 	}
 	
 	public static def String getTypeOfParameterDeclaration(GNode node) {
-		return (node.get(0) as Language<CTag>).toString
+		var typeName = (node.get(0) as Language<CTag>).toString
+		var declarator = (node.get(1) as GNode)
+		while (declarator.name.equals("UnaryIdentifierDeclarator")) {
+			typeName = typeName + (declarator.get(0)).toString
+			declarator = (declarator.get(1) as GNode)
+		}
+		return typeName
 	}
 	
 	

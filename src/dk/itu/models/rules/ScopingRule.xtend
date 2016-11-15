@@ -91,10 +91,18 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			
 			this.typeDeclarations.clear
 			
-			#["int", "long"].forEach[ typeName |
+			#["char", "int", "long"].forEach[ typeName |
 				this.typeDeclarations.put(
 					typeName,
 					new TypeDeclaration(typeName, null),
+					Reconfigurator::presenceConditionManager.newPresenceCondition(true))
+				this.typeDeclarations.put(
+					typeName + "*",
+					new TypeDeclaration(typeName + "*", null),
+					Reconfigurator::presenceConditionManager.newPresenceCondition(true))
+				this.typeDeclarations.put(
+					typeName + "**",
+					new TypeDeclaration(typeName + "**", null),
 					Reconfigurator::presenceConditionManager.newPresenceCondition(true))]
 			
 		} else if(#["Declaration", "DeclaringList", "SUEDeclarationSpecifier",
