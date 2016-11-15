@@ -15,26 +15,26 @@ class DeclarationPCMap {
 		map = new HashMap<String, List<SimpleEntry<Declaration,PresenceCondition>>>
 	}
 	
-	public def void put (Declaration declaration, PresenceCondition pc) {
-		map.putIfAbsent(declaration.name, new ArrayList<SimpleEntry<Declaration, PresenceCondition>>)
+	public def void put (String name, Declaration declaration, PresenceCondition pc) {
+		map.putIfAbsent(name, new ArrayList<SimpleEntry<Declaration, PresenceCondition>>)
 		
-		map.get(declaration.name).add(new SimpleEntry(declaration, pc))
+		map.get(name).add(new SimpleEntry(declaration, pc))
 	}
 	
-	public def Declaration get (String name, PresenceCondition pc) {
-		val list = map.get(name)
-		if (list != null) {
-			val pair = list.findFirst[pair | pair.value.BDD.imp(pc.BDD).isOne]
-			if (pair != null)
-				pair.key
-		}
-	} 
+//	public def Declaration get (String name, PresenceCondition pc) {
+//		val list = map.get(name)
+//		if (list != null) {
+//			val pair = list.findFirst[pair | !pair.value.BDD.imp(pc.BDD).isZero]
+//			if (pair != null)
+//				pair.key
+//		}
+//	} 
 	
 	public def boolean containsDeclaration(String name) {
-		map.keySet.contains(name)
+		map.containsKey(name)
 	}
 	
-	public def List<SimpleEntry<Declaration, PresenceCondition>> pcList(String name) {
+	public def List<SimpleEntry<Declaration, PresenceCondition>> declarationList(String name) {
 		map.get(name)
 	}
 	

@@ -32,7 +32,9 @@ class ExtractInitializerRule extends AncestorGuaranteedRule {
 			&& ((pair.head as GNode).get(0) as GNode).name.equals("DeclaringList")
 			
 			&& ((pair.head as GNode).get(0) as GNode).filter(GNode).exists[name.equals("InitializerOpt")]
+			&& ((pair.head as GNode).get(0) as GNode).filter(GNode).findFirst[name.equals("InitializerOpt")].size > 0
 		) {
+			
 			val declaringList = (pair.head as GNode).get(0) as GNode
 						
 			val varName = declaringList.getDescendantNode("SimpleDeclarator").get(0).toString

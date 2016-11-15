@@ -3,7 +3,9 @@ package dk.itu.models.rules.phase4functions
 import dk.itu.models.PresenceConditionIdMap
 import dk.itu.models.Reconfigurator
 import dk.itu.models.rules.AncestorGuaranteedRule
+import dk.itu.models.utils.Declaration
 import dk.itu.models.utils.DeclarationPCMap
+import java.util.AbstractMap.SimpleEntry
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.List
@@ -96,8 +98,8 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 		val declarationPCs = new ArrayList<PresenceCondition>
 		
 			if (fmap.containsDeclaration(funcName)) {				// if the variable is declared in the current scope
-				val scopePCs = fmap.pcList(funcName)
-				if (scopePCs.exists[it.is(callPC)]) {				// if the current scope pcs contain the exact variable pc
+				val scopePCs = fmap.declarationList(funcName)
+				if (scopePCs.exists[it.value.is(callPC)]) {			// if the current scope pcs contain the exact variable pc
 					declarationPCs.add(callPC)						// add the one and return
 					return declarationPCs
 				} else {											// otherwise
@@ -105,7 +107,8 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 					// AFLA: this filter doesn't seem to be working
 					// neither this way or reversed
 					// just add all instead
-					for (PresenceCondition pc : scopePCs) {
+					for (SimpleEntry<Declaration, PresenceCondition> pair : scopePCs) {
+						val pc = pair.value
 						if (!callPC.and(pc).isFalse) {
 							declarationPCs.add(pc)					// add the ones that are not falsified by the var PC
 						}
