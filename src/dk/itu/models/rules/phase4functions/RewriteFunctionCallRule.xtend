@@ -5,6 +5,7 @@ import dk.itu.models.Reconfigurator
 import dk.itu.models.rules.AncestorGuaranteedRule
 import dk.itu.models.utils.Declaration
 import dk.itu.models.utils.DeclarationPCMap
+import dk.itu.models.utils.FunctionDeclaration
 import java.util.AbstractMap.SimpleEntry
 import java.util.ArrayList
 import java.util.HashMap
@@ -20,7 +21,7 @@ import static extension dk.itu.models.Extensions.*
 
 class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 
-	private val DeclarationPCMap fmap
+	private val DeclarationPCMap functionDeclarations
 	private val PresenceConditionIdMap pcidmap
 	static def String get_id (HashMap<PresenceCondition, String> map, PresenceCondition pc) {
 		map.get(map.keySet.findFirst[is(pc)])
@@ -29,8 +30,8 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 	
 	protected val PresenceCondition externalGuard
 	
-	new (DeclarationPCMap fmap, PresenceCondition externalGuard, PresenceConditionIdMap pcidmap) {
-		this.fmap = fmap
+	new (DeclarationPCMap functionDeclarations, PresenceCondition externalGuard, PresenceConditionIdMap pcidmap) {
+		this.functionDeclarations = functionDeclarations
 		this.pcidmap = pcidmap
 		this.externalGuard = externalGuard
 	}
@@ -47,34 +48,25 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 		pair
 	}
 	
-	def buildExp (GNode node, String fname, List<PresenceCondition> declarationPCs, Pair<?> args, PresenceCondition guard) {
-		
-		if (declarationPCs.empty) { // there are no declarations of this variable
+	def buildExp (
+		GNode node,
+		List<SimpleEntry<Declaration, PresenceCondition>> declarations,
+		Pair<?> args
+	) {
+		if (declarations.empty) {
 			node.setProperty("HandledByRewriteFunctionCallRule", true)
 			return node
 		} else {
-			var PresenceCondition disjunctionPC = null
-			for (PresenceCondition pc : declarationPCs.reverseView) {
-				disjunctionPC = if (disjunctionPC == null) pc else pc.or(disjunctionPC)
-			}
-			
-			if (guard.and(disjunctionPC).isFalse) {
-				println('''Reconfigurator error: «fname» undefined under «guard».''')
-				node.setProperty("HandledByRewriteFunctionCallRule", true)
-				return node
-			}
-			
 			var GNode exp = null
-			
-			if (!guard.getBDD.imp(disjunctionPC.getBDD).isOne) {
-				node.setProperty("HandledByRewriteFunctionCallRule", true)
-				exp = node
-			}
-			
-			for (PresenceCondition pc : declarationPCs.reverseView) {
-				val newCall = GNode::create("FunctionCall",
-			 				GNode::create("PrimaryIdentifier", new Text(CTag.IDENTIFIER, fname + "_V" + pcidmap.getId(pc))),
-			 				GNode::createFromPair("ExpressionList", args));
+			for (SimpleEntry<Declaration, PresenceCondition> pair : declarations.reverseView) {
+				val funcName = pair.key.name
+				val pc = pair.value
+				
+				val newCall = GNode::create(
+					"FunctionCall",
+			 		GNode::create("PrimaryIdentifier", new Text(CTag.IDENTIFIER, funcName)),
+			 		GNode::createFromPair("ExpressionList", args))
+			 	newCall.setProperty("HandledByRewriteFunctionCallRule", true)
 				
 				exp = if (exp == null) newCall else
 				 GNode::create("PrimaryExpression",
@@ -84,66 +76,61 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 			 			new Language<CTag>(CTag.QUESTION),
 			 			newCall,
 			 			new Language<CTag>(CTag.COLON),
-			 			exp
-			 			),
-			 		new Language<CTag>(CTag.RPAREN)
-				)
+			 			exp),
+			 		new Language<CTag>(CTag.RPAREN))
 			}
-			
-			exp
+			return exp
 		}
 	}
 	
-	private def computePCs (String funcName, PresenceCondition callPC){
-		val declarationPCs = new ArrayList<PresenceCondition>
+	private def filterDeclarations(String funcName, PresenceCondition callPC) {
 		
-			if (fmap.containsDeclaration(funcName)) {				// if the variable is declared in the current scope
-				val scopePCs = fmap.declarationList(funcName)
-				if (scopePCs.exists[it.value.is(callPC)]) {			// if the current scope pcs contain the exact variable pc
-					declarationPCs.add(callPC)						// add the one and return
-					return declarationPCs
-				} else {											// otherwise
-					
-					// AFLA: this filter doesn't seem to be working
-					// neither this way or reversed
-					// just add all instead
-					for (SimpleEntry<Declaration, PresenceCondition> pair : scopePCs) {
-						val pc = pair.value
-						if (!callPC.and(pc).isFalse) {
-							declarationPCs.add(pc)					// add the ones that are not falsified by the var PC
-						}
-					}
-//					declarationPCs.addAll(scopePCs)
-					
-					// compute the disjunction of all declaration PCs up to this point
-					var PresenceCondition disjunctionPC = Reconfigurator::presenceConditionManager.newPresenceCondition(false)
-					for (PresenceCondition pc : declarationPCs) {
-						disjunctionPC = if (disjunctionPC == null) pc else pc.or(disjunctionPC)
-					}
-					if (disjunctionPC.isTrue) {						// if the PCs collected so far cover the universe
-						return declarationPCs							// return
-					}
-				}
-			}													// otherwise move to the next scope
+		val declarations = new ArrayList<SimpleEntry<Declaration,PresenceCondition>>
 		
+		if (!functionDeclarations.containsDeclaration(funcName)) {
+			return declarations
+		}
 		
-		return declarationPCs
+		var exactDeclaration = functionDeclarations.declarationList(funcName).findFirst[it.value.is(callPC)]
+		if (exactDeclaration != null) {
+			declarations.add(exactDeclaration)
+			return declarations
+		}
+		
+		var disjunctionPC = Reconfigurator::presenceConditionManager.newPresenceCondition(false)
+		for (SimpleEntry<Declaration, PresenceCondition> pair : functionDeclarations.declarationList(funcName)) {
+			val pc = pair.value
+			if (!callPC.and(pc).isFalse) {
+				declarations.add(pair)
+				disjunctionPC = pc.or(disjunctionPC)
+			}
+		}
+		
+		if (!disjunctionPC.isTrue) {
+			declarations.add(new SimpleEntry<Declaration, PresenceCondition>(
+				new FunctionDeclaration(funcName, null),
+				disjunctionPC.not
+			))
+		}
+		
+		return declarations
 	}
 	
 	override dispatch Object transform(GNode node) {
 		if (node.name.equals("FunctionCall")
-			&& fmap.containsDeclaration((node.get(0) as GNode).get(0).toString)
+			&& functionDeclarations.containsDeclaration((node.get(0) as GNode).get(0).toString)
 			&& !node.getBooleanProperty("HandledByRewriteFunctionCallRule")
 		) {
-			val fcall = (node.get(0) as GNode).get(0).toString
 			
-			val declarationPCs = computePCs(fcall, externalGuard.and(node.presenceCondition))
-			val exp = buildExp(node, fcall, declarationPCs, node.toPair.tail, externalGuard.and(node.presenceCondition))
-
-			if(exp != null)
+			val fcall = (node.get(0) as GNode).get(0).toString
+			val declarations = filterDeclarations(fcall, externalGuard.and(node.presenceCondition))
+			val exp = buildExp(node, declarations, node.toPair.tail)
+			
+			if(exp != null) {
 				return exp
-			else
+			} else {
 				return node
+			}
 		}
 		node
 	}
