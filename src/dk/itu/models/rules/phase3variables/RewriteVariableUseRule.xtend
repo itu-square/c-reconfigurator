@@ -3,7 +3,9 @@ package dk.itu.models.rules.phase3variables
 import dk.itu.models.PresenceConditionIdMap
 import dk.itu.models.Reconfigurator
 import dk.itu.models.rules.AncestorGuaranteedRule
+import dk.itu.models.utils.Declaration
 import dk.itu.models.utils.DeclarationPCMap
+import dk.itu.models.utils.VariableDeclaration
 import java.util.AbstractMap.SimpleEntry
 import java.util.ArrayList
 import java.util.HashMap
@@ -43,54 +45,32 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
     	node.setProperty("HandledByRewriteVariableUseRule", true)
     }
     
-	protected def buildExp(GNode node, String varName, PresenceCondition guard, List<PresenceCondition> declarationPCs) {
+	protected def buildExp(
+		String varName,
+		GNode node,
+		List<SimpleEntry<Declaration, PresenceCondition>> declarations) {
 		
 		if (
-			declarationPCs.empty
-			|| (declarationPCs.size == 1 && declarationPCs.get(0).isTrue)
-		) { // there are no declarations of this variable
+			declarations.empty
+			|| (declarations.size == 1 && declarations.get(0).value.isTrue)
+		) {
 			if (node.name.equals("PrimaryIdentifier"))
 				node.setHandled
 			else
 				node.getDescendantNode("PrimaryIdentifier").setHandled
 			return node
 		} else {
-			
-			// compute the disjunction of all declaration PCs
-			var PresenceCondition disjunctionPC = null
-			for (PresenceCondition pc : declarationPCs.reverseView) {
-				disjunctionPC = if (disjunctionPC == null) pc else pc.or(disjunctionPC)
-			}
-			
-			// If the guard and the PC disjunction cannot be true in the same time
-			// then the guard cannot be true in the same time with any of the PCs.
-			if (guard.and(disjunctionPC).isFalse) {
-				println('''Reconfigurator error: «varName» undefined under «guard».''')
-				if (node.name.equals("PrimaryIdentifier")) {
-					node.setHandled
-				} else {
-					node.getDescendantNode("PrimaryIdentifier").setHandled
-				}
-				return node
- 			}
-			
-			// Initialize the expression to null.
 			var GNode exp = null
-			
-			if (!guard.getBDD.imp(disjunctionPC.getBDD).isOne) {
-				if (node.name.equals("PrimaryIdentifier")) {
-					node.setHandled
-				} else {
-					node.getDescendantNode("PrimaryIdentifier").setHandled
-				}
-				exp = node
-			}
-			
-			for (PresenceCondition pc : declarationPCs.reverseView) {
-				// For each PC create a new Identifier.
-				val newExp = node.replaceIdentifierVarName(varName, varName + "_V" + pcidmap.getId(pc))
+			for (SimpleEntry<Declaration, PresenceCondition> pair : declarations.reverseView) {
+				val newVarName = pair.key.name
+				val pc = pair.value
 				
-				// wrap the new Identifier around the conditional expression.
+				val newExp = if(newVarName.equals(varName)) node else node.replaceIdentifierVarName(varName, newVarName)
+				if (newExp.name.equals("PrimaryIdentifier"))
+					newExp.setHandled
+				else
+					newExp.getDescendantNode("PrimaryIdentifier").setHandled
+				
 				exp = if (exp == null) newExp else
 				 GNode::create("PrimaryExpression",
 					new Language<CTag>(CTag.LPAREN),
@@ -104,7 +84,7 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 			 		new Language<CTag>(CTag.RPAREN)
 				)
 			}
-			exp
+			return exp
 		}
 	}
 	
@@ -120,43 +100,43 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 		pair
 	}
 	
-	private def computePCs (String varName, PresenceCondition varPC){
-		val declarationPCs = new ArrayList<PresenceCondition>
+	private def filterDeclarations (String varName, PresenceCondition varPC){
+		val declarations = new ArrayList<SimpleEntry<Declaration,PresenceCondition>>
+		var disjunctionPC = Reconfigurator::presenceConditionManager.newPresenceCondition(false)
 		
 		for (SimpleEntry<GNode,DeclarationPCMap> scope : variableDeclarationScopes.toList.reverseView) {
-			val variables = scope.value
+			val variableDeclarationPCMap = scope.value
 			
-			if (variables.containsDeclaration(varName)) {				// if the variable is declared in the current scope
-				val scopePCs = variables.pcList(varName)
-				if (scopePCs.exists[it.value.is(varPC)]) {				// if the current scope pcs contain the exact variable pc
-					declarationPCs.add(varPC)						// add the one and return
-					return declarationPCs
-				} else {											// otherwise
+			if (variableDeclarationPCMap.containsDeclaration(varName)) {				// if the variable is declared in the current scope
 				
-					// AFLA: this filter doesn't seem to be working
-					// neither this way or reversed
-					// just add all instead
-					for (SimpleEntry<?, ?> pair : scopePCs) {
-						val PresenceCondition pc = pair.value as PresenceCondition
-						if (!varPC.and(pc).isFalse) {
-							declarationPCs.add(pc)					// add the ones that are not falsified by the var PC
-						}
-					}
-//					declarationPCs.addAll(scopePCs)
-					
-					// compute the disjunction of all declaration PCs up to this point
-					var PresenceCondition disjunctionPC = Reconfigurator::presenceConditionManager.newPresenceCondition(false)
-					for (PresenceCondition pc : declarationPCs) {
-						disjunctionPC = if (disjunctionPC == null) pc else pc.or(disjunctionPC)
-					}
-					if (disjunctionPC.isTrue) {						// if the PCs collected so far cover the universe
-						return declarationPCs							// return
+				var exactDeclaration = variableDeclarationPCMap.declarationList(varName).findFirst[it.value.is(varPC)]
+				if (exactDeclaration != null) {											// if the current scope pcs contain the exact variable pc
+					declarations.add(exactDeclaration)									// add the one and return
+					return declarations
+				}
+				
+				for (SimpleEntry<Declaration, PresenceCondition> pair : variableDeclarationPCMap.declarationList(varName)) {
+					val pc = pair.value
+					if (!varPC.and(pc).isFalse) {
+						declarations.add(pair)											// add the ones that are not falsified by the var PC
+						disjunctionPC = pc.or(disjunctionPC)
 					}
 				}
-			}													// otherwise move to the next scope
+					
+				if (disjunctionPC.isTrue) {												// if the PCs collected so far cover the universe
+					return declarations													// return
+				}
+			}																			// otherwise move to the next scope
+		}
+					
+		if (!disjunctionPC.isTrue) {												// if the PCs collected so far cover the universe
+			declarations.add(new SimpleEntry<Declaration, PresenceCondition>(
+				new VariableDeclaration(varName, null),
+				disjunctionPC.not
+			))
 		}
 		
-		return declarationPCs
+		return declarations
 	}
 	
 	override dispatch Object transform(GNode node) {
@@ -189,8 +169,9 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 				throw new Exception("RewriteVariableUseRule: unknown location of variable name")
 			}
 			
-			val declarationPCs = computePCs(varName, externalGuard.and(node.presenceCondition))
-			val exp = buildExp(newNode, varName, externalGuard.and(node.presenceCondition), declarationPCs)
+			val declarations = filterDeclarations(varName, externalGuard.and(node.presenceCondition))
+			
+			val exp = buildExp(varName, node, declarations)
 			
 			if(exp != null) {
 				return exp

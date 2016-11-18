@@ -1,6 +1,9 @@
 package dk.itu.models.rules
 
 import dk.itu.models.PresenceConditionIdMap
+import dk.itu.models.utils.FunctionDeclaration
+import dk.itu.models.utils.TypeDeclaration
+import dk.itu.models.utils.VariableDeclaration
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
@@ -9,8 +12,6 @@ import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
 import static extension dk.itu.models.Patterns.*
-import dk.itu.models.utils.TypeDeclaration
-import dk.itu.models.utils.VariableDeclaration
 
 class ReconfigureDeclarationRule extends ScopingRule {
 	
@@ -70,6 +71,8 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		if (
 			node.isVariableDeclarationWithVariability
 		) {
+			debug("VariableDeclarationWithVariability")
+			
 			val varPC = node.get(0) as PresenceCondition
 			val varDeclarationNode = node.get(1) as GNode
 			val varName = varDeclarationNode.getNameOfVariableDeclaration
@@ -88,7 +91,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				val varDeclaration = new VariableDeclaration(newName, typeDeclaration)
 				addVariable(varName, varDeclaration, varPC)
 
-				var newNode = (node.get(1) as GNode).replaceDeclaratorTextWithNewId(newName)
+				var newNode = varDeclarationNode.replaceDeclaratorTextWithNewId(newName)
 				newNode = newNode.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition.and(varPC), pcidmap)
 				newNode = newNode.rewriteFunctionCall(functionDeclarations, node.presenceCondition.and(varPC), pcidmap)
 				newNode.setProperty("OriginalPC", node.presenceCondition.and(varPC))
@@ -97,31 +100,44 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				throw new Exception("ReconfigureDeclarationRule: not handled: multiple type declarations.")
 			}
 		} else
-//		if (
-//			// function definition with variability
-//			ancestors.size >= 1
-//			&& ancestors.last.name.equals("ExternalDeclarationList")
-//			&& node.name.equals("Conditional")
-//			&& node.get(1) instanceof GNode
-//			&& (node.get(1) as GNode).name.equals("FunctionDefinition") ) {
-//				val pc = node.get(0) as PresenceCondition
-//				var declarator = node.getDescendantNode("SimpleDeclarator")
-//				val functionName = declarator.get(0).toString
-//				if(true) throw new UnsupportedOperationException("putPC")
-////				functionDeclarations.putPC(functionName, pc)
-//				
-//				val newName = functionName + "_V" + pcidmap.getId(pc)
-//				var newNode = (node.get(1) as GNode).renameFunctionWithNewId(newName)
-//				newNode = newNode.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition.and(pc), pcidmap)
-//				newNode = newNode.rewriteFunctionCall(functionDeclarations, node.presenceCondition.and(pc), pcidmap)
-//				newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
-//				
-//				newNode
-//		} else
+		if (
+			node.isFunctionDefinitionWithVariability
+		) {
+			debug("\n" + "FunctionDefinitionWithVariability")
+			
+			val funcPC = node.get(0) as PresenceCondition
+			val funcDefinitionNode = node.get(1) as GNode
+			val funcName = funcDefinitionNode.getNameOfFunctionDefinition
+			val funcType = funcDefinitionNode.getTypeOfFunctionDefinition
+
+			// get registered type declaration
+			if (!typeDeclarations.containsDeclaration(funcType))
+				throw new Exception('''ReconfigureDeclarationRule: type declaration «funcType» not found.''')
+			
+			val typeDeclarationList = typeDeclarations.declarationList(funcType)
+			
+			if (typeDeclarationList.size == 1) {
+				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
+
+				val newName = funcName + "_V" + pcidmap.getId(funcPC)
+				val funcDeclaration = new FunctionDeclaration(newName, typeDeclaration)
+				functionDeclarations.put(funcName, funcDeclaration, funcPC)
+				
+				var newNode = funcDefinitionNode.renameFunctionWithNewId(newName)
+				newNode = newNode.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition.and(funcPC), pcidmap)
+				newNode = newNode.rewriteFunctionCall(functionDeclarations, node.presenceCondition.and(funcPC), pcidmap)
+				newNode.setProperty("OriginalPC", node.presenceCondition.and(funcPC))
+				
+				return newNode
+			} else {
+				throw new Exception("ReconfigureDeclarationRule: not handled: multiple type declarations.")
+			}
+		} else
 		if (
 			node.isFunctionDefinition
 			&& !ancestors.last.name.equals("Conditional")
 		) {
+			debug("FunctionDefinition")
 			node.rewriteFunctionCall(functionDeclarations, node.presenceCondition, pcidmap)
 		} else
 //		if(
@@ -133,21 +149,20 @@ class ReconfigureDeclarationRule extends ScopingRule {
 //				val newNode = tdn.transform(node) as GNode
 //		
 //				return newNode
-//		} else if (
-//			// other places to rewrite variable names and function calls
-//			node.name.equals("SelectionStatement") ) {
-//				val tdn = new TopDownStrategy
-//				tdn.register(new RewriteVariableUseRule(variableDeclarationScopes, node.presenceCondition, pcidmap))
-//				val newNode = tdn.transform(node.get(2)) as Node
-//				
-//				if (!newNode.printAST.equals(node.get(2).printAST))
-//					return GNode::createFromPair(
-//						"SelectionStatement",
-//						node.map[
-//							if (node.indexOf(it) == 2) newNode
-//							else it].toPair)
-//					else return node
 //		} else
+		if (
+			// other places to rewrite variable names and function calls
+			node.name.equals("SelectionStatement") ) {
+				val newNode = (node.get(2) as GNode).rewriteVariableUse(variableDeclarationScopes, node.presenceCondition, pcidmap)
+				
+				if (!newNode.printAST.equals(node.get(2).printAST))
+					return GNode::createFromPair(
+						"SelectionStatement",
+						node.map[
+							if (node.indexOf(it) == 2) newNode
+							else it].toPair)
+					else return node
+		} else
 		if (
 			// the rest
 			#["TranslationUnit", "ExternalDeclarationList", "DeclaringList",

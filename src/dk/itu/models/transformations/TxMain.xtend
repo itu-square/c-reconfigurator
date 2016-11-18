@@ -16,13 +16,7 @@ class TxMain extends Transformation {
 	
 	override Node transform(Node node) {
 						
-		println("PHASE 0 - Print base")
-//		writeToFile(node.printCode, file + ".phase0.c")
-//		writeToFile(node.printAST, file + ".phase0.ast")
-		
-		
-		
-		println("PHASE 1 - Normalize")
+		debug("PHASE 1 - Normalize")
 		var Node node1 = node
 		
 		val tdn1 = new TopDownStrategy
@@ -38,7 +32,7 @@ class TxMain extends Transformation {
 
 
 
-		println("PHASE 2 - Prepare for reconfiguration")
+		debug("PHASE 2 - Prepare for reconfiguration")
 		val tdn2 = new TopDownStrategy
 		tdn2.register(new IsolateDeclarationRule)
 		val Node node2 = tdn2.transform(node1) as Node
@@ -51,7 +45,7 @@ class TxMain extends Transformation {
 
 
 
-		println("PHASE ? - Reconfigure declarations")
+		debug("PHASE ? - Reconfigure declarations")
 		val tdnQ = new TopDownStrategy
 		tdnQ.register(new ReconfigureDeclarationRule)
 		var Node node4 = tdnQ.transform(node2) as Node
@@ -81,7 +75,7 @@ class TxMain extends Transformation {
 
 
 
-		println("PHASE 5 - Cleanup")
+		debug("PHASE 5 - Cleanup")
 		val tdn5 = new TopDownStrategy
 		tdn5.register(new RemergeConditionalsRule)
 //		tdn5.register(new Specific_ExtractRParenFromConditionalRule)
@@ -95,7 +89,7 @@ class TxMain extends Transformation {
 
 
 
-		println("PHASE 6 - #ifdef to if")
+		debug("PHASE 6 - #ifdef to if")
 		val tdn6 = new TopDownStrategy
 		tdn6.register(new Ifdef2IfRule)
 		var Node node6 = tdn6.transform(node5) as Node

@@ -52,18 +52,6 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		]
 	}
 	
-//	protected def List<SimpleEntry<Declaration, PresenceCondition>> getPCListForLastDeclaration(String name) {
-//		val scope = variableDeclarationScopes.findLast[scope | scope.value.containsDeclaration(name)]
-//		if (scope != null)
-//			scope.value.declarationsList(name)
-//		else
-//			null
-//	}
-	
-//	protected def getType(TypeDeclaration type, PresenceCondition pc) {
-//		var type
-//	}
-	
 	def PresenceCondition transform(PresenceCondition cond) {
 		clearVariableDeclarationScopes
 		cond

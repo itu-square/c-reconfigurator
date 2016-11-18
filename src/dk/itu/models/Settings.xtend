@@ -7,6 +7,7 @@ import java.util.List
 class Settings {
 	
 //	static public var boolean oracleOnly = false
+	static public var boolean printDebugInfo = false
 	static public var boolean printIncludes = false
 	static public var boolean reconfigureIncludes = false
 	static public var boolean minimize = false
@@ -102,6 +103,8 @@ class Settings {
 					printFullContent = true
 				case "-printIntermediaryFiles":
 					printIntermediaryFiles = true
+				case "-printDebugInfo":
+					printDebugInfo = true
 //				case "-fileList":
 //					if(i < args.size-1) { fileList = new File(args.get(i+1)) }
 //					else {println("-fileList argument has no value."); return false}

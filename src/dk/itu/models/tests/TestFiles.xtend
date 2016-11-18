@@ -11,7 +11,7 @@ class TestFiles {
 	static val source = new File("/home/alex/linux_kernel/test-files")
 	static val target = new File("/home/alex/linux_kernel/test-files-target")
 	
-	static def process (File currentFile) {
+	static def void process (File currentFile) {
 
 		val currentFilePath = currentFile.path
 		val currentRelativePath = currentFilePath.relativeTo(source.path)
@@ -45,7 +45,8 @@ class TestFiles {
 //				,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include/generated/uapi" 
 //				,"-I",       "/home/alex/linux_kernel/linux-4.7/include/uapi"
 //				,"-I",       "/home/alex/linux_kernel/linux-4.7/include/generated/uapi"
-//				,"-include", "test.h"		
+//				,"-include", "test.h"
+//				,"-printDebugInfo"		
 				)
 			Reconfigurator::main(runArgs)
 			Reconfigurator::errors.forEach[println(it)]
