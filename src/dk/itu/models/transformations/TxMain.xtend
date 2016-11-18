@@ -29,6 +29,7 @@ class TxMain extends Transformation {
 		tdn1.register(new RemActionRule)
 		tdn1.register(new NormalizeRule)
 		node1 = tdn1.transform(node1) as Node
+		writeToFile(node1.printCode, Settings::targetFile.path)
 		if (Settings::printIntermediaryFiles) {
 			writeToFile(node1.printCode, Settings::targetFile + ".phase1.c")
 			writeToFile(node1.printAST, Settings::targetFile + ".phase1.ast")
@@ -41,6 +42,7 @@ class TxMain extends Transformation {
 		val tdn2 = new TopDownStrategy
 		tdn2.register(new IsolateDeclarationRule)
 		val Node node2 = tdn2.transform(node1) as Node
+		writeToFile(node2.printCode, Settings::targetFile.path)
 		if (Settings::printIntermediaryFiles) {
 			writeToFile(node2.printCode, Settings::targetFile + ".phase2.c")
 			writeToFile(node2.printAST, Settings::targetFile + ".phase2.ast")
@@ -53,6 +55,7 @@ class TxMain extends Transformation {
 		val tdnQ = new TopDownStrategy
 		tdnQ.register(new ReconfigureDeclarationRule)
 		var Node node4 = tdnQ.transform(node2) as Node
+		writeToFile(node4.printCode, Settings::targetFile.path)
 		if (Settings::printIntermediaryFiles) {
 			writeToFile(node4.printCode, Settings::targetFile + ".phase_.c")
 			writeToFile(node4.printAST, Settings::targetFile + ".phase_.ast")
@@ -83,6 +86,7 @@ class TxMain extends Transformation {
 		tdn5.register(new RemergeConditionalsRule)
 //		tdn5.register(new Specific_ExtractRParenFromConditionalRule)
 		var Node node5 = tdn5.transform(node4) as Node
+		writeToFile(node5.printCode, Settings::targetFile.path)
 		if (Settings::printIntermediaryFiles) {
 			writeToFile(node5.printCode, Settings::targetFile + ".phase5.c")
 			writeToFile(node5.printAST, Settings::targetFile + ".phase5.ast")
@@ -95,6 +99,7 @@ class TxMain extends Transformation {
 		val tdn6 = new TopDownStrategy
 		tdn6.register(new Ifdef2IfRule)
 		var Node node6 = tdn6.transform(node5) as Node
+		writeToFile(node6.printCode, Settings::targetFile.path)
 		if (Settings::printIntermediaryFiles) {
 			writeToFile(node6.printCode, Settings::targetFile + ".phase6.c")
 			writeToFile(node6.printAST, Settings::targetFile + ".phase6.ast")

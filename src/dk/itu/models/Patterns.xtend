@@ -12,23 +12,22 @@ import static extension dk.itu.models.Extensions.*
 class Patterns {
 	
 	public static def boolean isTypeDeclaration(GNode node) {
-		node.name.equals("Declaration")
-		&& node.size == 2
+		      node.name.equals("Declaration")
+		&&    node.size == 2
 		
-		&& (node.get(0) instanceof GNode)
-		&& (node.get(0) as GNode).name.equals("DeclaringList")
+		&&   (node.get(0) instanceof GNode)
+		&&   (node.get(0) as GNode).name.equals("DeclaringList")
 		
-		&& ((node.get(0) as GNode).get(0) instanceof GNode)
-		&& ((node.get(0) as GNode).get(0) as GNode).name.equals("BasicDeclarationSpecifier")
+		&&  ((node.get(0) as GNode).get(0) instanceof GNode)
+		&&  ((node.get(0) as GNode).get(0) as GNode).name.equals("BasicDeclarationSpecifier")
 		
-		&& (((node.get(0) as GNode).get(0) as GNode).get(0) instanceof GNode)
-		&& (((node.get(0) as GNode).get(0) as GNode).get(0) as GNode).name.equals("DeclarationQualifierList")
+		&&  ((node.get(0) as GNode).get(0) as GNode).getDescendantNode("DeclarationQualifierList") != null
 		
-		&& ((((node.get(0) as GNode).get(0) as GNode).get(0) as GNode).get(0) instanceof Language<?>)
-		&& ((((node.get(0) as GNode).get(0) as GNode).get(0) as GNode).get(0) as Language<CTag>).tag.equals(CTag::TYPEDEF)
+		&& (((node.get(0) as GNode).get(0) as GNode).getDescendantNode("DeclarationQualifierList").get(0) instanceof Language<?>)
+		&& (((node.get(0) as GNode).get(0) as GNode).getDescendantNode("DeclarationQualifierList").get(0) as Language<CTag>).tag.equals(CTag::TYPEDEF)
 		
-		&& ((node.get(0) as GNode).get(1) instanceof GNode)
-		&& ((node.get(0) as GNode).get(1) as GNode).name.equals("SimpleDeclarator")
+		&&  ((node.get(0) as GNode).get(1) instanceof GNode)
+		&&  ((node.get(0) as GNode).get(1) as GNode).name.equals("SimpleDeclarator")
 	}
 	
 	public static def boolean isTypeDeclarationWithVariability(GNode node) {
@@ -155,61 +154,39 @@ class Patterns {
 	}
 		
 
-	public static def boolean isVariableDeclarationOrParamenter(GNode node) {
-		#["Declaration", "ParameterDeclaration"].contains(node.name)
-		&& (node.size > 1 || node.get(0) instanceof GNode)
-		&& node.getDescendantNode("FunctionDeclarator") == null
-		&& node.getDescendantNode("EnumSpecifier") == null
-		&& (node.getDescendantNode("StructOrUnionSpecifier") == null || node.getDescendantNode("SimpleDeclarator") != null)
-		&& (node.getDescendantNode("TypedefTypeSpecifier") == null || node.getDescendantNode("SimpleDeclarator") != null)
-		&& !(node.name.equals("ParameterDeclaration") && node.getDescendantNode("SimpleDeclarator") == null)
-		&& !node.containsTypedef
-		&& node.getDescendantNode("SUETypeSpecifier") == null
-	}
-	
-	
 	
 	
 	
 	
 	public static def boolean isVariableDeclaration(GNode node) {
-		   node.name.equals("Declaration")
+		node.name.equals("Declaration")
+	}
+	
+	public static def boolean isVariableDeclarationWithVariability(GNode node) {
+		node.name.equals("Conditional")
 		&& node.size == 2
 		
-		&& (node.get(0) instanceof GNode)
-		&& (node.get(0) as GNode).name.equals("DeclaringList")
-		&& (node.get(0) as GNode).size == 5
+		&& (node.get(0) instanceof PresenceCondition)
 		
-		&& (
-			(  ((node.get(0) as GNode).get(0) instanceof GNode)
-			&& ((node.get(0) as GNode).get(0) as GNode).name.equals("TypedefTypeSpecifier"))
-		||
-			(  ((node.get(0) as GNode).get(0) instanceof Language<?>))
-		   )
-		   
-		&& ((node.get(0) as GNode).get(1) instanceof GNode)
-		&& ((node.get(0) as GNode).get(1) as GNode).name.equals("SimpleDeclarator")
+		&& (node.get(1) instanceof GNode)
+		&& (node.get(1) as GNode).isVariableDeclaration
 	}
 	
 	public static def String getNameOfVariableDeclaration(GNode node) {
-		val simpleDeclarator = ((node.get(0) as GNode).get(1) as GNode)
+		val simpleDeclarator = node.getDescendantNode("SimpleDeclarator")
 		return (simpleDeclarator.get(0) as Text<?>).toString
 	}
 	
 	public static def String getTypeOfVariableDeclaration(GNode node) {
-		if 	(  ((node.get(0) as GNode).get(0) instanceof GNode)
-			&& ((node.get(0) as GNode).get(0) as GNode).name.equals("TypedefTypeSpecifier")
-		) {
-			val typedefTypeSpecifier = ((node.get(0) as GNode).get(0) as GNode)
-			return (typedefTypeSpecifier.get(0) as Text<?>).toString
+		val declaringList = node.getDescendantNode("DeclaringList")
+		var typeNode = declaringList.get(0)
+		if (typeNode instanceof Language<?>) {
+			(declaringList.get(0) as Language<CTag>).toString
 		} else
-		
-		if (  ((node.get(0) as GNode).get(0) instanceof Language<?>)
-		) {
-			return ((node.get(0) as GNode).get(0) as Language<CTag>).toString
+		if (typeNode instanceof GNode && (typeNode as GNode).name.equals("TypedefTypeSpecifier") ) {
+			((typeNode as GNode).get(0) as Text<?>).toString
 		} else
-		
-		throw new Exception("case not handled")
+		throw new Exception("Patterns: case not handled.")
 	}
 	
 	
@@ -222,13 +199,13 @@ class Patterns {
 		
 		&& (node.get(0) instanceof Language<?>)
 		
-		&& (
-			(  (node.get(1) instanceof GNode)
-			&& (node.get(1) as GNode).name.equals("SimpleDeclarator") )
-		||
-			(  (node.get(1) instanceof GNode)
-			&& (node.get(1) as GNode).name.equals("UnaryIdentifierDeclarator") )
-		   )
+		&& ((
+			   (node.get(1) instanceof GNode)
+			&& (node.get(1) as GNode).name.equals("SimpleDeclarator")
+		) || (
+			   (node.get(1) instanceof GNode)
+			&& (node.get(1) as GNode).name.equals("UnaryIdentifierDeclarator")
+		))
 	}
 	
 	public static def String getNameOfParameterDeclaration(GNode node) {

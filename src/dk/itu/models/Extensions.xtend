@@ -430,33 +430,29 @@ class Extensions {
 		return locations
 	}
 	
-	public static def Node getDescendantNode(Node node, String nodeName) {
+	public static def Node getDescendantNode(Node node, Function1<Node, Boolean> test) {
 		for(Object child : node) {
 			if (child instanceof Node) {
-				if ((child as Node).name.equals(nodeName))
+				if (test.apply(child))
 					return child
 				else {
-					val r = getDescendantNode(child as Node, nodeName)
+					val r = (child as Node).getDescendantNode(test)
 					if (r != null) return r
 				}
-			}	
+			}
 		}
 		return null
 	}
 	
+	public static def Node getDescendantNode(Node node, String nodeName) {
+		node.getDescendantNode[name.equals(nodeName)]
+	}
+	
 	public static def boolean containsTypedef(Node node) {
-		for(Object child : node) {
-			if (
-				child instanceof Language<?>
-				&& (child as Language<CTag>).tag.equals(CTag::TYPEDEF)
-			) {
-				return true
-			} else if (child instanceof Node) {
-				val r = containsTypedef(child as Node)
-				if (r == true) return true
-			}	
-		}
-		return false
+		node.getDescendantNode[
+			it instanceof Language<?>
+			&& (it as Language<CTag>).tag.equals(CTag::TYPEDEF)
+		] != null
 	}
 	
 	public static def replaceDeclaratorTextWithNewId (GNode node, String newId) {

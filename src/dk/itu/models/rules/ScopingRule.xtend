@@ -1,24 +1,20 @@
 package dk.itu.models.rules
 
 import dk.itu.models.Reconfigurator
-import dk.itu.models.Settings
-import dk.itu.models.utils.Declaration
 import dk.itu.models.utils.DeclarationPCMap
+import dk.itu.models.utils.FunctionDeclaration
 import dk.itu.models.utils.TypeDeclaration
 import dk.itu.models.utils.VariableDeclaration
 import java.util.AbstractMap.SimpleEntry
 import java.util.ArrayList
-import java.util.List
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
-import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
 import static extension dk.itu.models.Patterns.*
-import dk.itu.models.utils.FunctionDeclaration
 
 abstract class ScopingRule extends AncestorGuaranteedRule {
 	
@@ -91,7 +87,18 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			
 			this.typeDeclarations.clear
 			
-			#["char", "int", "long"].forEach[ typeName |
+			#[	"void",
+				"char",					"signed char",				"unsigned char",
+				"short",				"short int",				"signed short",
+				"signed short int",		"unsigned short",			"unsigned short int",
+				"int",					"signed",					"signed int",
+				"unsigned",				"unsigned int",				"long",
+				"long int",				"signed long",				"signed long int",
+				"unsigned long",		"unsigned long int",		"long long",
+				"long long int",		"signed long long",			"signed long long int",
+				"unsigned long long",	"unsigned long long int",	"float",
+				"double",				"long double"
+			].forEach[ typeName |
 				this.typeDeclarations.put(
 					typeName,
 					new TypeDeclaration(typeName, null),
@@ -155,36 +162,40 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			
 			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(type))
-				throw new Exception('''ReconfigureDeclarationRule: type declaration «type» not found.''')
+				throw new Exception('''ScopingRule: type declaration «type» not found.''')
 
-			val typeDeclarations = typeDeclarations.declarationList(type)
+			val typeDeclarationList = typeDeclarations.declarationList(type)
 			
-			if (typeDeclarations.size == 1) {
-				val typeDeclaration = typeDeclarations.get(0).key as TypeDeclaration
+			if (typeDeclarationList.size == 1) {
+				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
 				val functionDeclaration = new FunctionDeclaration(name, typeDeclaration)
 				functionDeclarations.put(name, functionDeclaration, pc)
 			} else {
 				throw new Exception("ScopingRule: not handled: multiple type declarations.")
 			}
 		} else
-		
-//		if (node.isTypeDeclaration) {
-//			
-//			// get current PC and names
-//			val pc = node.guard
-//			val name = node.getNameOfTypeDeclaration
-//			val type = node.getTypeOfTypeDeclaration
-//			
-//			// get registered type declaration
-//			if (!typeDeclarations.containsDeclaration(type))
-//				throw new Exception('''ReconfigureDeclarationRule: type declaration «type» not found.''')
-//			val typeDeclaration = typeDeclarations.get(type, pc) as TypeDeclaration
-//			
-//			// create the new type declaration
-//			val newTypeDeclaration = new TypeDeclaration(name, typeDeclaration)
-//			this.typeDeclarations.put(name, newTypeDeclaration, pc)
-//			
-//		} else if (node.isFunctionDeclaration) {
+		if (node.isTypeDeclaration) {
+			
+			// get current PC and names
+			val name = node.getNameOfTypeDeclaration
+			val type = node.getTypeOfTypeDeclaration
+			val pc = node.guard
+			
+			// get registered type declaration
+			if (!typeDeclarations.containsDeclaration(type))
+				throw new Exception('''ScopingRule: type declaration «type» not found.''')
+			
+			val typeDeclarationList = typeDeclarations.declarationList(type)
+			
+			if (typeDeclarationList.size == 1) {
+				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
+				val newTypeDeclaration = new TypeDeclaration(name, typeDeclaration)
+				typeDeclarations.put(name, newTypeDeclaration, pc)
+			} else {
+				throw new Exception("ScopingRule: not handled: multiple type declarations.")
+			}
+		} else
+//		if (node.isFunctionDeclaration) {
 //			var declarator = node.getDescendantNode("SimpleDeclarator")
 //			if (declarator == null)
 //				declarator = node.getDescendantNode("ParameterTypedefDeclarator")
@@ -225,12 +236,12 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			
 			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(type))
-				throw new Exception('''ReconfigureDeclarationRule: type declaration «type» not found.''')
+				throw new Exception('''ScopingRule: type declaration «type» not found.''')
 			
-			val typeDeclarations = typeDeclarations.declarationList(type)
+			val typeDeclarationList = typeDeclarations.declarationList(type)
 			
-			if (typeDeclarations.size == 1) {
-				val typeDeclaration = typeDeclarations.get(0).key as TypeDeclaration
+			if (typeDeclarationList.size == 1) {
+				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
 				val variableDeclaration = new VariableDeclaration(name, typeDeclaration)
 				addVariable(name, variableDeclaration, pc)
 			} else {
@@ -247,12 +258,12 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			
 			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(type))
-				throw new Exception('''ReconfigureDeclarationRule: type declaration «type» not found.''')
+				throw new Exception('''ScopingRule: type declaration «type» not found.''')
 			
-			val typeDeclarations = typeDeclarations.declarationList(type)
+			val typeDeclarationList = typeDeclarations.declarationList(type)
 			
-			if (typeDeclarations.size == 1) {
-				val typeDeclaration = typeDeclarations.get(0).key as TypeDeclaration
+			if (typeDeclarationList.size == 1) {
+				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
 				val variableDeclaration = new VariableDeclaration(name, typeDeclaration)
 				addVariable(name, variableDeclaration, pc)
 			} else {
@@ -260,49 +271,6 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			}
 			
 		} else
-//		if (
-//			node.isVariableDeclarationOrParamenter
-//		) {
-//			var declarator = node.getDescendantNode("SimpleDeclarator")
-//			if (declarator == null)
-//				declarator = node.getDescendantNode("ParameterTypedefDeclarator")
-//			if (declarator == null) {
-//				throw new Exception("ScopingRule: unknown declarator.")
-//			}
-//			
-//			println
-//			println(node.printAST)
-//			
-//			val variableName = declarator.get(0).toString
-//			if (!variableName.equals(Settings::reconfiguratorIncludePlaceholder)) {
-//				throw new UnsupportedOperationException("Add Variable Declaration")
-////				addVariable(variableName)
-//			}
-//		} else if (
-//			#["FunctionDefinition", "FunctionDeclarator"].contains(node.name)
-//		) {
-//			var declarator = node.getDescendantNode("SimpleDeclarator")
-//			val functionName = declarator.get(0).toString
-//			throw new UnsupportedOperationException("Function Declaration")
-////			functionDeclarations.newDeclaration(functionName)
-//		} else if (
-//			node.isStructDeclarationWithVariability
-//		) {
-//			
-//			println
-//			
-//			println('''before «typeDeclarations.size»''')
-//			println(typeDeclarations.names)
-//			
-//			println("found isStructDeclarationWithVariability")
-//			println(node.printCode)
-//			println(node.printAST)
-//
-//			println('''after «typeDeclarations.size»''')
-//			
-//			throw new Exception
-//			
-//		} else
 		if (#[	"AbstractDeclarator", "AdditiveExpression", "AndExpression", "ArrayAbstractDeclarator",
 			"ArrayDeclarator", "AssemblyExpressionOpt", "AssignmentExpression", "AssignmentOperator",
 			"AttributeExpressionOpt", "AttributeKeyword", "AttributeList", "AttributeListOpt",

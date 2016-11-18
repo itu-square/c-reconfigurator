@@ -1,19 +1,16 @@
 package dk.itu.models.rules
 
 import dk.itu.models.PresenceConditionIdMap
-import dk.itu.models.rules.phase3variables.RewriteVariableUseRule
-import dk.itu.models.strategies.TopDownStrategy
-import dk.itu.models.utils.TypeDeclaration
-import dk.itu.models.utils.VariableDeclaration
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
-import xtc.tree.Node
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
 import static extension dk.itu.models.Patterns.*
+import dk.itu.models.utils.TypeDeclaration
+import dk.itu.models.utils.VariableDeclaration
 
 class ReconfigureDeclarationRule extends ScopingRule {
 	
@@ -69,32 +66,38 @@ class ReconfigureDeclarationRule extends ScopingRule {
 //			var newNode = (node.get(1) as GNode).replaceDeclaratorTextWithNewId(variantName)
 //			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
 //			newNode
-//		} else if (
-//			node.isVariableDeclarationWithVariability(ancestors)
-//		) {
-//				val varPC = node.get(0) as PresenceCondition
-//				var declarator = node.getDescendantNode("SimpleDeclarator")
-//				if (declarator == null)
-//					declarator = node.getDescendantNode("ParameterTypedefDeclarator")
-//				val varName = declarator.get(0).toString
-//				val varTypeName = node.getDescendantNode("DeclaringList").get(0).toString
-//				var varType = typeDeclarations.get(varTypeName, varPC) as TypeDeclaration
-//				// if the type does not exist, then add it
-//				if (varType == null) {
-//					varType = new TypeDeclaration(varTypeName, null)
-//					typeDeclarations.put(varTypeName, varType, varPC)
-//				}
-//				val varDecl = new VariableDeclaration(varName, varType)
-//				
-//				variableDeclarationScopes.last.value.put(varName, varDecl, varPC)
-//				
-//				val newName = varName + "_V" + pcidmap.getId(varPC)
-//				var newNode = (node.get(1) as GNode).replaceDeclaratorTextWithNewId(newName)
-//				newNode = newNode.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition.and(varPC), pcidmap)
-//				newNode = newNode.rewriteFunctionCall(functionDeclarations, node.presenceCondition.and(varPC), pcidmap)
-//				newNode.setProperty("OriginalPC", node.presenceCondition.and(varPC))
-//				newNode
-//		} else if (
+//		} else
+		if (
+			node.isVariableDeclarationWithVariability
+		) {
+			val varPC = node.get(0) as PresenceCondition
+			val varDeclarationNode = node.get(1) as GNode
+			val varName = varDeclarationNode.getNameOfVariableDeclaration
+			val varType = varDeclarationNode.getTypeOfVariableDeclaration
+			
+			// get registered type declaration
+			if (!typeDeclarations.containsDeclaration(varType))
+				throw new Exception('''ReconfigureDeclarationRule: type declaration «varType» not found.''')
+			
+			val typeDeclarationList = typeDeclarations.declarationList(varType)
+			
+			if (typeDeclarationList.size == 1) {
+				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
+
+				val newName = varName + "_V" + pcidmap.getId(varPC)
+				val varDeclaration = new VariableDeclaration(newName, typeDeclaration)
+				addVariable(varName, varDeclaration, varPC)
+
+				var newNode = (node.get(1) as GNode).replaceDeclaratorTextWithNewId(newName)
+				newNode = newNode.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition.and(varPC), pcidmap)
+				newNode = newNode.rewriteFunctionCall(functionDeclarations, node.presenceCondition.and(varPC), pcidmap)
+				newNode.setProperty("OriginalPC", node.presenceCondition.and(varPC))
+				return newNode
+			} else {
+				throw new Exception("ReconfigureDeclarationRule: not handled: multiple type declarations.")
+			}
+		} else
+//		if (
 //			// function definition with variability
 //			ancestors.size >= 1
 //			&& ancestors.last.name.equals("ExternalDeclarationList")
@@ -183,7 +186,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			println
 			println('''------------------------------''')
 			println('''- ReconfigureDeclarationRule -''')
-			println('''------''')
+			println('''------------------------------''')
 			ancestors.forEach[
 				println('''- «it.name»''')]
 			println((node as GNode).printAST)
