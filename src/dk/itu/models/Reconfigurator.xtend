@@ -457,7 +457,8 @@ class Reconfigurator {
 			
 			Reconfigurator::errors.addAll(SuperC::outputErrors)
 			
-			SuperC::outputFullContent.writeToFile(Settings::targetFile.path + ".full.c")
+			if (Settings::printFullContent)
+				SuperC::outputFullContent.writeToFile(Settings::targetFile.path + ".full.c")
 			
 			if (SuperC::outputAST != null) {
 				var Node node = SuperC::outputAST

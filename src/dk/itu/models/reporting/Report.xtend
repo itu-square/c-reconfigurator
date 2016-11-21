@@ -1,10 +1,8 @@
 package dk.itu.models.reporting
 
-import java.util.ArrayList
-import static extension dk.itu.models.Extensions.*
-import java.io.ByteArrayOutputStream
-import java.io.PrintStream
 import java.io.File
+import java.util.ArrayList
+import org.apache.commons.lang3.StringUtils
 
 class Report {
 	
@@ -110,4 +108,14 @@ class Report {
 //		
 //		baos.toString.writeToFile(outputFilename)
 	}
+	
+	public def void printSummary() {
+		val maxFilenameLength = fileRecords.maxBy[filename.length].filename.length
+		
+		fileRecords.forEach[
+			print(StringUtils::rightPad(filename, maxFilenameLength + 5))
+			if (!folder) println(errors.size) else println
+		]
+	}
+	
 }

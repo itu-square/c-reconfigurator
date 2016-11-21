@@ -1,7 +1,5 @@
 package dk.itu.models.reporting
 
-import java.util.ArrayList
-
 class ErrorRecord {
 	
 	public val String error

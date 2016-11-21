@@ -1,6 +1,8 @@
 package dk.itu.models.tests
 
 import dk.itu.models.Reconfigurator
+import dk.itu.models.reporting.ErrorRecord
+import dk.itu.models.reporting.Report
 import java.io.File
 import java.util.ArrayList
 
@@ -8,8 +10,9 @@ import static extension dk.itu.models.Extensions.*
 
 class TestFiles {
 	
-	static val source = new File("/home/alex/linux_kernel/test-files")
-	static val target = new File("/home/alex/linux_kernel/test-files-target")
+	static val report = new Report
+	static val source = new File("/home/alex/vbdb/source")
+	static val target = new File("/home/alex/vbdb/target")
 	
 	static def void process (File currentFile) {
 
@@ -20,6 +23,7 @@ class TestFiles {
 		if (currentFile.isDirectory) {
 			
 			println('''processing directory .«currentRelativePath»/''')
+			report.addFolder(currentRelativePath)
 			
 			val targetDir = new File(currentTargetPath)
 			if (!targetDir.exists) targetDir.mkdirs
@@ -48,11 +52,16 @@ class TestFiles {
 //				,"-I",       "/home/alex/linux_kernel/linux-4.7/include/uapi"
 //				,"-I",       "/home/alex/linux_kernel/linux-4.7/include/generated/uapi"
 //				,"-include", "test.h"
-				,"-printIntermediaryFiles"
+//				,"-printIntermediaryFiles"
 //				,"-printDebugInfo"
 				)
 			Reconfigurator::main(runArgs)
-			Reconfigurator::errors.forEach[println(it)]
+			val errors = new ArrayList<ErrorRecord>
+			Reconfigurator::errors.forEach[
+				println(it)
+				errors.add(new ErrorRecord(it))
+			]
+			report.addFile(currentRelativePath, errors)
 			
 		} else {
 			// ignore
@@ -64,6 +73,10 @@ class TestFiles {
 		println("Begin TestFiles")
 		
 		process(source)
+		
+		println("Printing Summary")
+		
+		report.printSummary
 		
 		println("End TestFiles")
 		
