@@ -114,7 +114,18 @@ class Report {
 		
 		fileRecords.forEach[
 			print(StringUtils::rightPad(filename, maxFilenameLength + 5))
-			if (!folder) println(errors.size) else println
+			if (!folder) {
+				print(StringUtils::rightPad(errors.size.toString, 5))
+
+				val exception = errors.findFirst[it.error.startsWith("Exception: ")]
+				if (exception != null) print("exception     ") else print("              ")
+
+				if (exception == null) {
+					val oracle = errors.findFirst[it.error.startsWith("oracle: ")]
+					if (oracle != null) print(oracle.error) else print("oracle: pass")
+				}
+			}
+			println
 		]
 	}
 	

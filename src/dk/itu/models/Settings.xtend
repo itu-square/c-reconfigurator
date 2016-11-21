@@ -73,9 +73,9 @@ class Settings {
 				case "-target":
 					if(i < args.size-1) { targetFile = new File(args.get(i+1)) }
 					else {println("-target argument has no value."); return false}
-//				case "-oracle":
-//					if(i < args.size-1) { oracleFile = new File(args.get(i+1)) }
-//					else {println("-oracle argument has no value."); return false}
+				case "-oracle":
+					if(i < args.size-1) { oracleFile = new File(args.get(i+1)) }
+					else {println("-oracle argument has no value."); return false}
 //				case "-isystem":
 //					if(i < args.size-1) { systemIncludeFolders.add(new File(args.get(i+1))) }
 //					else {println("-isystem argument has no value."); return false}

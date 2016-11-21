@@ -13,12 +13,14 @@ class TestFiles {
 	static val report = new Report
 	static val source = new File("/home/alex/vbdb/source")
 	static val target = new File("/home/alex/vbdb/target")
+	static val oracle = new File("/home/alex/vbdb/oracle")
 	
 	static def void process (File currentFile) {
 
 		val currentFilePath = currentFile.path
 		val currentRelativePath = currentFilePath.relativeTo(source.path)
 		val currentTargetPath = target + currentRelativePath
+		val currentOraclePath = oracle + currentRelativePath
 		
 		if (currentFile.isDirectory) {
 			
@@ -43,6 +45,7 @@ class TestFiles {
 			runArgs.addAll(
 				 "-source",	 currentFilePath
 				,"-target",  currentTargetPath
+				,"-oracle",  currentOraclePath
 //				,"-I",       "/home/alex/linux_kernel/linux-4.7/include"
 //				,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include"
 //				,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include/generated/uapi" 
@@ -55,6 +58,7 @@ class TestFiles {
 //				,"-printIntermediaryFiles"
 //				,"-printDebugInfo"
 				)
+			
 			Reconfigurator::main(runArgs)
 			val errors = new ArrayList<ErrorRecord>
 			Reconfigurator::errors.forEach[
