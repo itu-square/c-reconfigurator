@@ -1,6 +1,5 @@
 package dk.itu.models
 
-import java.util.List
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
@@ -13,22 +12,11 @@ import static extension dk.itu.models.Extensions.*
 class Patterns {
 	
 	public static def boolean isTypeDeclaration(GNode node) {
-		      node.name.equals("Declaration")
-		&&    node.size == 2
-		
-		&&   (node.get(0) instanceof GNode)
-		&&   (node.get(0) as GNode).name.equals("DeclaringList")
-		
-		&&  ((node.get(0) as GNode).get(0) instanceof GNode)
-		&&  ((node.get(0) as GNode).get(0) as GNode).name.equals("BasicDeclarationSpecifier")
-		
-		&&  ((node.get(0) as GNode).get(0) as GNode).getDescendantNode("DeclarationQualifierList") != null
-		
-		&& (((node.get(0) as GNode).get(0) as GNode).getDescendantNode("DeclarationQualifierList").get(0) instanceof Language<?>)
-		&& (((node.get(0) as GNode).get(0) as GNode).getDescendantNode("DeclarationQualifierList").get(0) as Language<CTag>).tag.equals(CTag::TYPEDEF)
-		
-		&&  ((node.get(0) as GNode).get(1) instanceof GNode)
-		&&  ((node.get(0) as GNode).get(1) as GNode).name.equals("SimpleDeclarator")
+		node.name.equals("Declaration")
+		&& node.getDescendantNode[
+			it instanceof Language<?>
+			&& (it as Language<CTag>).tag.equals(CTag::TYPEDEF)
+		] != null
 	}
 	
 	public static def boolean isTypeDeclarationWithVariability(GNode node) {
@@ -42,8 +30,8 @@ class Patterns {
 	}
 	
 	public static def String getNameOfTypeDeclaration(GNode node) {
-		val simpleDeclarator = ((node.get(0) as GNode).get(1) as GNode)
-		return (simpleDeclarator.get(0) as Text<?>).toString
+		val simpleDeclarator = node.getDescendantNode("SimpleDeclarator")
+		return (simpleDeclarator.get(0) as Text<CTag>).toString
 	}
 	
 	public static def String getTypeOfTypeDeclaration(GNode node) {
@@ -133,7 +121,7 @@ class Patterns {
 		
 		if (typeNode.name.equals("TypedefTypeSpecifier")) {
 			val typedefTypeSpecifier = (typeNode as GNode)
-			return (typedefTypeSpecifier.get(1) as Text<CTag>).toString	
+			return (typedefTypeSpecifier.findFirst[it instanceof Text<?>] as Text<CTag>).toString	
 		} else
 
 		if (typeNode instanceof Language<?>) {
@@ -145,26 +133,6 @@ class Patterns {
 			println(node.printAST)
 			throw new Exception("case not handled")
 		}
-	}
-	
-	
-	
-	
-	
-	
-	public static def boolean isFunctionDeclaration(GNode node) {
-		node.name.equals("Declaration")
-		&& node.getDescendantNode("FunctionDeclarator") != null
-	}
-	
-	public static def boolean isVariableDeclarationWithVariability(GNode node, List<GNode> ancestors) {
-		ancestors.size >= 1
-		&& #["ExternalDeclarationList", "DeclarationOrStatementList"].contains(ancestors.last.name)
-		&& node.name.equals("Conditional")
-		&& node.get(1) instanceof GNode
-		&& #["Declaration", "DeclarationExtension"].contains((node.get(1) as GNode).name)
-		&& !(node.get(1) as GNode).containsTypedef
-		&& node.getDescendantNode("SUETypeSpecifier") == null
 	}
 		
 
@@ -229,17 +197,6 @@ class Patterns {
 	
 	public static def boolean isParameterDeclaration(GNode node) {
 		   node.name.equals("ParameterIdentifierDeclaration")
-		&& node.size == 3
-		
-		&& (node.get(0) instanceof Language<?>)
-		
-		&& ((
-			   (node.get(1) instanceof GNode)
-			&& (node.get(1) as GNode).name.equals("SimpleDeclarator")
-		) || (
-			   (node.get(1) instanceof GNode)
-			&& (node.get(1) as GNode).name.equals("UnaryIdentifierDeclarator")
-		))
 	}
 	
 	public static def String getNameOfParameterDeclaration(GNode node) {
@@ -251,7 +208,14 @@ class Patterns {
 	}
 	
 	public static def String getTypeOfParameterDeclaration(GNode node) {
-		var typeName = (node.get(0) as Language<CTag>).toString
+		var typeName =
+			if (node.get(0) instanceof Language<?>)
+				(node.get(0) as Language<CTag>).toString
+			else if (node.get(0) instanceof GNode && (node.get(0) as GNode).name.equals("TypedefTypeSpecifier"))
+				((node.get(0) as GNode).get(0) as Text<?>).toString
+			else
+				throw new Exception("case not handled")
+		
 		var declarator = (node.get(1) as GNode)
 		while (declarator.name.equals("UnaryIdentifierDeclarator")) {
 			typeName = typeName + (declarator.get(0)).toString

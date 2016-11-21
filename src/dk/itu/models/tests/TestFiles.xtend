@@ -30,6 +30,8 @@ class TestFiles {
 
 		} else if(currentFilePath.endsWith(".c")) {
 			
+			println
+			println("----------------------------------------------------------------------")
 			println('''processing file .«currentRelativePath»''')
 
 			var runArgs = new ArrayList<String>
@@ -46,7 +48,8 @@ class TestFiles {
 //				,"-I",       "/home/alex/linux_kernel/linux-4.7/include/uapi"
 //				,"-I",       "/home/alex/linux_kernel/linux-4.7/include/generated/uapi"
 //				,"-include", "test.h"
-//				,"-printDebugInfo"		
+				,"-printIntermediaryFiles"
+//				,"-printDebugInfo"
 				)
 			Reconfigurator::main(runArgs)
 			Reconfigurator::errors.forEach[println(it)]

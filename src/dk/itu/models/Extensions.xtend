@@ -51,15 +51,15 @@ class Extensions {
 	}
 	
 	public static def void debug(String text) {
-		val stackTrace = Thread.currentThread.stackTrace
-		if(Settings::printDebugInfo) println(
-			"\n" + "(" + stackTrace.get(2).fileName + ":" + stackTrace.get(2).lineNumber + ")" +
-			"\n" + text
-		)
+		if(Settings::printDebugInfo) {
+			val stackTrace = Thread.currentThread.stackTrace
+			println(
+				text + "             (" + stackTrace.get(2).fileName + ":" + stackTrace.get(2).lineNumber + ")"
+			)
+		}
 	}
 	
 	public static def void writeToFile(String text, String file) {
-		debug("Writing file: " + file)
 		val fileObject = new File(file)
 		if (!fileObject.parentFile.exists) {
 			Files.createParentDirs(fileObject)

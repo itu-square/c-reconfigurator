@@ -72,7 +72,8 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		if (#["ExternalDeclarationList", "FunctionDefinition", "FunctionDeclarator", "CompoundStatement"].contains(node.name)) {
 			addVariableDeclarationScope(node)
 		} else if (node.name.equals("TranslationUnit")) {
-			
+			debug("\n" + "TranslationUnit")
+			this.functionDeclarations.clear
 			this.typeDeclarations.clear
 			
 			#[	"void",
@@ -128,11 +129,20 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"EmptyDefinition", "EnumSpecifier", "EnumeratorList", "Enumerator", "EnumeratorValueOpt",
 			"PostfixIdentifierDeclarator", "PostfixingAbstractDeclarator", "CleanTypedefDeclarator",
 			"CleanPostfixTypedefDeclarator", "DirectSelection", "AssemblyExpressionOpt",
-			"LocalLabelDeclarationListOpt", "ParameterAbstractDeclaration", "ParameterIdentifierDeclaration"]
+			"LocalLabelDeclarationListOpt", "ParameterAbstractDeclaration", "ParameterIdentifierDeclaration",
+			"ExpressionOpt"]
 				.contains(node.name)
 		) {
 			// no scope
 		} else {
+			println
+			println('''---------------''')
+			println('''- ScopingRule -''')
+			println('''---------------''')
+			ancestors.forEach[
+				println('''- «it.name»''')]
+			println((node as GNode).printAST)
+			println
 			throw new Exception("ScopingRule: possible scope : " + node.name + ".")
 		}
 		
@@ -142,7 +152,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		
 		
 		if (node.isFunctionDefinition) {
-			
+			debug("isFunctionDefinition")
 			// get current PC and names
 			val name = node.nameOfFunctionDefinition
 			val type = node.typeOfFunctionDefinition
@@ -163,12 +173,12 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			}
 		} else
 		if (node.isTypeDeclaration) {
-			
+			debug("isTypeDeclaration")
 			// get current PC and names
 			val name = node.getNameOfTypeDeclaration
 			val type = node.getTypeOfTypeDeclaration
 			val pc = node.guard
-			
+
 			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(type))
 				throw new Exception('''ScopingRule: type declaration «type» not found.''')
@@ -177,8 +187,15 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			
 			if (typeDeclarationList.size == 1) {
 				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
-				val newTypeDeclaration = new TypeDeclaration(name, typeDeclaration)
+				
+				var newTypeDeclaration = new TypeDeclaration(name, typeDeclaration)
 				typeDeclarations.put(name, newTypeDeclaration, pc)
+				
+				newTypeDeclaration = new TypeDeclaration(name + "*", typeDeclaration)
+				typeDeclarations.put(name + "*", newTypeDeclaration, pc)
+				
+				newTypeDeclaration = new TypeDeclaration(name + "**", typeDeclaration)
+				typeDeclarations.put(name + "**", newTypeDeclaration, pc)
 			} else {
 				throw new Exception("ScopingRule: not handled: multiple type declarations.")
 			}
@@ -216,7 +233,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 //			
 //		} else
 		if (node.isVariableDeclaration) {
-			
+			debug("isVariableDeclaration")
 			// get current PC and names
 			val pc = node.guard
 			val name = node.getNameOfVariableDeclaration
@@ -238,7 +255,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			
 		} else
 		if (node.isParameterDeclaration) {
-			
+			debug("isParameterDeclaration")
 			// get current PC and names
 			val pc = node.guard
 			val name = node.getNameOfParameterDeclaration
@@ -271,7 +288,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"DeclarationQualifierList", "DeclaringList", "Decrement", "DesignatedInitializer",
 			"Designation", "Designator", "DesignatorList", "DirectSelection",
 				"EqualityExpression", "EmptyDefinition", "EnumSpecifier", "Enumerator", "EnumeratorList",
-			"EnumeratorValueOpt", "Expression", "ExpressionList", "ExpressionStatement",
+			"EnumeratorValueOpt", "Expression", "ExpressionList", "ExpressionOpt", "ExpressionStatement",
 			"ExternalDeclarationList",
 				"FunctionCall", "FunctionDeclarator", "FunctionPrototype", "FunctionSpecifier",
 				"GotoStatement",

@@ -53,7 +53,10 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 		List<SimpleEntry<Declaration, PresenceCondition>> declarations,
 		Pair<?> args
 	) {
-		if (declarations.empty) {
+		if (
+			declarations.empty
+			|| (declarations.size == 1 && declarations.get(0).value.isTrue)
+		) {
 			node.setProperty("HandledByRewriteFunctionCallRule", true)
 			return node
 		} else {
@@ -121,8 +124,9 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 			&& functionDeclarations.containsDeclaration((node.get(0) as GNode).get(0).toString)
 			&& !node.getBooleanProperty("HandledByRewriteFunctionCallRule")
 		) {
-			
+			debug("RewriteFunctionCallRule")
 			val fcall = (node.get(0) as GNode).get(0).toString
+			
 			val declarations = filterDeclarations(fcall, externalGuard.and(node.presenceCondition))
 			val exp = buildExp(node, declarations, node.toPair.tail)
 			

@@ -71,8 +71,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		if (
 			node.isVariableDeclarationWithVariability
 		) {
-			debug("VariableDeclarationWithVariability")
-			
+			debug("isVariableDeclarationWithVariability")
 			val varPC = node.get(0) as PresenceCondition
 			val varDeclarationNode = node.get(1) as GNode
 			val varName = varDeclarationNode.getNameOfVariableDeclaration
@@ -103,13 +102,12 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		if (
 			node.isFunctionDefinitionWithVariability
 		) {
-			debug("\n" + "FunctionDefinitionWithVariability")
-			
+			debug("isFunctionDefinitionWithVariability")
 			val funcPC = node.get(0) as PresenceCondition
 			val funcDefinitionNode = node.get(1) as GNode
 			val funcName = funcDefinitionNode.getNameOfFunctionDefinition
 			val funcType = funcDefinitionNode.getTypeOfFunctionDefinition
-
+			
 			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(funcType))
 				throw new Exception('''ReconfigureDeclarationRule: type declaration «funcType» not found.''')
@@ -127,7 +125,6 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				newNode = newNode.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition.and(funcPC), pcidmap)
 				newNode = newNode.rewriteFunctionCall(functionDeclarations, node.presenceCondition.and(funcPC), pcidmap)
 				newNode.setProperty("OriginalPC", node.presenceCondition.and(funcPC))
-				
 				return newNode
 			} else {
 				throw new Exception("ReconfigureDeclarationRule: not handled: multiple type declarations.")
@@ -137,8 +134,24 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			node.isFunctionDefinition
 			&& !ancestors.last.name.equals("Conditional")
 		) {
-			debug("FunctionDefinition")
-			node.rewriteFunctionCall(functionDeclarations, node.presenceCondition, pcidmap)
+			debug("isFunctionDefinition")
+			val funcName = node.nameOfFunctionDefinition
+			functionDeclarations.rem(funcName, funcName)
+			
+			var newpair = Pair.EMPTY
+			for (Object child : node.toList) {
+				if ((
+						(child instanceof GNode)
+						&& (child as GNode).name.equals("FunctionPrototype")
+					) || (
+						(child instanceof Language<?>)
+				)) {
+					newpair = newpair.add(child)
+				} else {
+					newpair = newpair.add((child as GNode).rewriteFunctionCall(functionDeclarations, node.presenceCondition, pcidmap))
+				}
+			}
+			return GNode.createFromPair("FunctionDefinition", newpair)
 		} else
 //		if(
 //			// other places to rewrite variable names and function calls
@@ -192,7 +205,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				"IndirectSelection", "EmptyDefinition", "EnumSpecifier", "EnumeratorList", "Enumerator",
 				"EnumeratorValueOpt", "PostfixIdentifierDeclarator", "PostfixingAbstractDeclarator",
 				"CleanTypedefDeclarator", "CleanPostfixTypedefDeclarator", "DirectSelection",
-				"AssemblyExpressionOpt", "LocalLabelDeclarationListOpt",
+				"AssemblyExpressionOpt", "LocalLabelDeclarationListOpt", "ExpressionOpt",
 				"ParameterIdentifierDeclaration"].contains(node.name)
 			|| (node.name.equals("ParameterAbstractDeclaration") && node.size == 1)
 		) {

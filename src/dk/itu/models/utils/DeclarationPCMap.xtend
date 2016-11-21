@@ -21,14 +21,18 @@ class DeclarationPCMap {
 		map.get(name).add(new SimpleEntry(declaration, pc))
 	}
 	
-//	public def Declaration get (String name, PresenceCondition pc) {
-//		val list = map.get(name)
-//		if (list != null) {
-//			val pair = list.findFirst[pair | !pair.value.BDD.imp(pc.BDD).isZero]
-//			if (pair != null)
-//				pair.key
-//		}
-//	} 
+	public def void rem(String name, String variantName) {
+		if (map.containsKey(name)) {
+			val variant = map.get(name).findFirst[pair | pair.key.name.equals(variantName)]
+			if (variant != null) {
+				map.get(name).remove(variant)
+			}
+			
+			if (map.get(name).size == 0) {
+				map.remove(name)
+			}
+		}
+	}
 	
 	public def boolean containsDeclaration(String name) {
 		map.containsKey(name)
