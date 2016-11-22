@@ -477,15 +477,13 @@ class Reconfigurator {
 				
 				node = new TxMain().transform(node)
 
-				if (Settings::printIntermediaryFiles) {
-					node.printAST.writeToFile(Settings::targetFile.path + ".ast")
-				}
+				node.printAST.writeToFile(Settings::targetFile.path + ".ast")
 				node.printCode.writeToFile(Settings::targetFile.path)
 				
 				// check oracle
 				if(Settings::oracleFile != null) {
 					if(Settings::oracleFile.exists) {
-						if(!node.printCode.equals(readFile(Settings::oracleFile.path)))
+						if(!node.printAST.equals(readFile(Settings::oracleFile.path)))
 							Reconfigurator::errors.add("oracle: fail")
 					} else {
 						Reconfigurator::errors.add("oracle: !ext")

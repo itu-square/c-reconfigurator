@@ -116,9 +116,20 @@ class Report {
 			print(StringUtils::rightPad(filename, maxFilenameLength + 5))
 			if (!folder) {
 				print(StringUtils::rightPad(errors.size.toString, 5))
-
+				
+				var errnos = "err("
+				for (var i=0; i<=9; i++) {
+					val errno = "error:(" + i
+					if (errors.exists[it.error.startsWith(errno)]) {
+						errnos += i
+						if (i!=9) errnos += ","
+					}
+				}
+				errnos += ")"
+				if (!errnos.equals("err()")) print(StringUtils::rightPad(errnos, 10)) else print("          ")
+				
 				val exception = errors.findFirst[it.error.startsWith("Exception: ")]
-				if (exception != null) print("exception     ") else print("              ")
+				if (exception != null) print("excpt     ") else print("          ")
 
 				if (exception == null) {
 					val oracle = errors.findFirst[it.error.startsWith("oracle: ")]

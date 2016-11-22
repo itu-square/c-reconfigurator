@@ -20,7 +20,7 @@ class TestFiles {
 		val currentFilePath = currentFile.path
 		val currentRelativePath = currentFilePath.relativeTo(source.path)
 		val currentTargetPath = target + currentRelativePath
-		val currentOraclePath = oracle + currentRelativePath
+		val currentOraclePath = oracle + currentRelativePath + ".ast"
 		
 		if (currentFile.isDirectory) {
 			
@@ -56,7 +56,7 @@ class TestFiles {
 //				,"-I",       "/home/alex/linux_kernel/linux-4.7/include/generated/uapi"
 //				,"-include", "test.h"
 //				,"-printIntermediaryFiles"
-//				,"-printDebugInfo"
+				,"-printDebugInfo"
 				)
 			
 			Reconfigurator::main(runArgs)

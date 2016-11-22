@@ -156,7 +156,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			// get current PC and names
 			val name = node.nameOfFunctionDefinition
 			val type = node.typeOfFunctionDefinition
-			val pc = node.guard
+			val pc = node.presenceCondition
 			
 			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(type))
@@ -177,7 +177,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			// get current PC and names
 			val name = node.getNameOfTypeDeclaration
 			val type = node.getTypeOfTypeDeclaration
-			val pc = node.guard
+			val pc = node.presenceCondition
 
 			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(type))
@@ -235,7 +235,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		if (node.isVariableDeclaration) {
 			debug("isVariableDeclaration")
 			// get current PC and names
-			val pc = node.guard
+			val pc = node.presenceCondition
 			val name = node.getNameOfVariableDeclaration
 			val type = node.getTypeOfVariableDeclaration
 			
@@ -257,7 +257,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		if (node.isParameterDeclaration) {
 			debug("isParameterDeclaration")
 			// get current PC and names
-			val pc = node.guard
+			val pc = node.presenceCondition
 			val name = node.getNameOfParameterDeclaration
 			val type = node.getTypeOfParameterDeclaration
 			

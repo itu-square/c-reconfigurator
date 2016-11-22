@@ -10,7 +10,7 @@ class Settings {
 	static public var boolean printDebugInfo = false
 	static public var boolean printIncludes = false
 	static public var boolean reconfigureIncludes = false
-	static public var boolean minimize = false
+	static public var boolean minimize = true
 	static public var boolean parseOnly = false
 	static public var boolean printFullContent = false
 	

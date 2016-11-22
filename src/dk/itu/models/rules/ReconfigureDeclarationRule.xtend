@@ -151,7 +151,14 @@ class ReconfigureDeclarationRule extends ScopingRule {
 					newpair = newpair.add((child as GNode).rewriteFunctionCall(functionDeclarations, node.presenceCondition, pcidmap))
 				}
 			}
-			return GNode.createFromPair("FunctionDefinition", newpair)
+			return GNode.createFromPair(
+				"FunctionDefinition",
+				newpair,
+				if (node.properties == null)
+					null
+				else
+					node.properties.toInvertedMap[p | node.getProperty(p.toString)]
+				)
 		} else
 //		if(
 //			// other places to rewrite variable names and function calls
