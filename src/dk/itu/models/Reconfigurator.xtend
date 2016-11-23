@@ -482,9 +482,11 @@ class Reconfigurator {
 				node.printAST.writeToFile(Settings::targetFile.path + ".ast")
 				
 				val sb = new StringBuilder
-				preprocessor.transformedFeatureNames.forEach[
-					sb.append("int " + it + ";\n")
-				]
+				if (!Settings::parseOnly) {
+					preprocessor.transformedFeatureNames.forEach[
+						sb.append("int " + it + ";\n")
+					]
+				}
 				sb.append(node.printCode)
 				sb.toString.writeToFile(Settings::targetFile.path)
 								
