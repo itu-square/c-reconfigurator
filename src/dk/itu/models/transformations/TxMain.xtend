@@ -18,7 +18,6 @@ class TxMain extends Transformation {
 						
 		debug("PHASE 1 - Normalize")
 		var Node node1 = node
-		
 		val tdn1 = new TopDownStrategy
 		tdn1.register(new RemActionRule)
 		tdn1.register(new NormalizeRule)
@@ -43,33 +42,18 @@ class TxMain extends Transformation {
 		}
 
 
-
-
-		debug("PHASE ? - Reconfigure declarations")
-		val tdnQ = new TopDownStrategy
-		tdnQ.register(new ReconfigureDeclarationRule)
-		var Node node4 = tdnQ.transform(node2) as Node
-		writeToFile(node4.printCode, Settings::targetFile.path)
-		if (Settings::printIntermediaryFiles) {
-			writeToFile(node4.printCode, Settings::targetFile + ".phase_.c")
-			writeToFile(node4.printAST, Settings::targetFile + ".phase_.ast")
+		var Node node4 = node2
+		if (!Settings::parseOnly) {
+			debug("PHASE 3,4 - Reconfigure declarations")
+			val tdnQ = new TopDownStrategy
+			tdnQ.register(new ReconfigureDeclarationRule)
+			node4 = tdnQ.transform(node2) as Node
+			writeToFile(node4.printCode, Settings::targetFile.path)
+			if (Settings::printIntermediaryFiles) {
+				writeToFile(node4.printCode, Settings::targetFile + ".phase_.c")
+				writeToFile(node4.printAST, Settings::targetFile + ".phase_.ast")
+			}
 		}
-
-//		println("PHASE 3 - Reconfigure variables")
-//		val pcidmap = new PresenceConditionIdMap		
-//		val reconfigureVariableRule = new ReconfigureVariableRule(pcidmap)
-//		val tdn3 = new TopDownStrategy
-//		tdn3.register(reconfigureVariableRule)
-//		var Node node3 = tdn3.transform(node2) as Node
-//		writeToFile(node3.printCode, Settings::targetFile + ".phase3.c")
-//		writeToFile(node3.printAST, Settings::targetFile + ".phase3.ast")
-
-//		println("PHASE 4 - Reconfigure functions")
-//		val tdn4 = new TopDownStrategy
-//		tdn4.register(new ReconfigureFunctionRule(pcidmap))
-//		var Node node4 = tdn4.transform(node3) as Node
-////		writeToFile(node4.printCode, file + ".phase4.c")
-////		writeToFile(node4.printAST, file + ".phase4.ast")
 
 
 
@@ -78,7 +62,6 @@ class TxMain extends Transformation {
 		debug("PHASE 5 - Cleanup")
 		val tdn5 = new TopDownStrategy
 		tdn5.register(new RemergeConditionalsRule)
-//		tdn5.register(new Specific_ExtractRParenFromConditionalRule)
 		var Node node5 = tdn5.transform(node4) as Node
 		writeToFile(node5.printCode, Settings::targetFile.path)
 		if (Settings::printIntermediaryFiles) {
@@ -88,39 +71,22 @@ class TxMain extends Transformation {
 
 
 
-
-		debug("PHASE 6 - #ifdef to if")
-		val tdn6 = new TopDownStrategy
-		tdn6.register(new Ifdef2IfRule)
-		var Node node6 = tdn6.transform(node5) as Node
-		writeToFile(node6.printCode, Settings::targetFile.path)
-		if (Settings::printIntermediaryFiles) {
-			writeToFile(node6.printCode, Settings::targetFile + ".phase6.c")
-			writeToFile(node6.printAST, Settings::targetFile + ".phase6.ast")
+		var Node node6 = node5
+		if (!Settings::parseOnly) {
+			debug("PHASE 6 - #ifdef to if")
+			val tdn6 = new TopDownStrategy
+			tdn6.register(new Ifdef2IfRule)
+			node6 = tdn6.transform(node5) as Node
+			writeToFile(node6.printCode, Settings::targetFile.path)
+			if (Settings::printIntermediaryFiles) {
+				writeToFile(node6.printCode, Settings::targetFile + ".phase6.c")
+				writeToFile(node6.printAST, Settings::targetFile + ".phase6.ast")
+			}
 		}
 
 
 
-
-		val Node result = node6
-//		writeToFile('''#include "«Settings::reconfigFile»"«"\n" + result.printCode»''', file)
-//		writeToFile(result.printAST, file + ".ast")
-		
-		
-		// check #if elimination
-//		println('''result: «IF result.containsConditional»#if«ELSE»no#if«ENDIF»''')
-
-		// check oracle
-//		if(Settings::oracleFile != null) {
-//			val oracle = file.replace(Settings::targetFile.path, Settings::oracleFile.path) + ".ast"
-//			if((new File(oracle)).exists)
-//				if(result.printAST.equals(readFile(oracle)))
-//					println("oracle: pass")
-//				else
-//					println("oracle: fail")
-//		}
-
-		return result
+		return node6
 	}
 	
 }

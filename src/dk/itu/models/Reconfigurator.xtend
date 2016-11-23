@@ -1,6 +1,8 @@
 package dk.itu.models
 
 import dk.itu.models.preprocessor.Preprocessor
+import dk.itu.models.reporting.ErrorRecord
+import dk.itu.models.reporting.Report
 import dk.itu.models.transformations.TxMain
 import dk.itu.models.transformations.TxRemActions
 import java.io.File
@@ -478,8 +480,14 @@ class Reconfigurator {
 				node = new TxMain().transform(node)
 
 				node.printAST.writeToFile(Settings::targetFile.path + ".ast")
-				node.printCode.writeToFile(Settings::targetFile.path)
 				
+				val sb = new StringBuilder
+				preprocessor.transformedFeatureNames.forEach[
+					sb.append("int " + it + ";\n")
+				]
+				sb.append(node.printCode)
+				sb.toString.writeToFile(Settings::targetFile.path)
+								
 				// check oracle
 				if(Settings::oracleFile != null) {
 					if(Settings::oracleFile.exists) {
@@ -491,7 +499,6 @@ class Reconfigurator {
 				} else {
 					Reconfigurator::errors.add("oracle: null")
 				}
-
 			} else {
 				throw new Exception("Reconfigurator no AST")
 			}
@@ -499,6 +506,15 @@ class Reconfigurator {
 			Reconfigurator::errors.add("Exception: " + e.message + "\n"
 				+ "at: " + e.stackTrace.map[t | t.toString].join("\nat: ") )
 		}
+		
+		val errors = new ArrayList<ErrorRecord>
+		Reconfigurator::errors.forEach[
+			println(it)
+			errors.add(new ErrorRecord(it))
+		]
+		val report = new Report
+		report.addFile(Settings::sourceFile.name, errors)
+		report.printSummary
 		
 		println("new Reconfigurator END")
 	}

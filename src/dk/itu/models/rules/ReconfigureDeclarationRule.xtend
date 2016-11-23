@@ -183,6 +183,9 @@ class ReconfigureDeclarationRule extends ScopingRule {
 							else it].toPair)
 					else return node
 		} else
+		if (node.name.equals("IterationStatement")) {
+			return node.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition, pcidmap)
+		} else
 		if (
 			// the rest
 			#["TranslationUnit", "ExternalDeclarationList", "DeclaringList",

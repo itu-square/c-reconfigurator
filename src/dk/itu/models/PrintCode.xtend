@@ -278,39 +278,44 @@ class PrintCode extends PrintMethod {
 			}
 			ancestors.remove(node)
 		} else if (
-			node.name.equals("Declaration")
+			       node.name.equals("Declaration")
 			
-			&& node.get(0) instanceof GNode
-			&& (node.get(0) as GNode).name.equals("DeclaringList")
+			&&    (node.get(0) instanceof GNode)
+			&&    (node.get(0) as GNode).name.equals("DeclaringList")
 			
-			&& (node.get(0) as GNode).get(0).toString.equals("char")
+			&&    (node.get(0) as GNode).get(0).toString.equals("char")
 			
-			&& (node.get(0) as GNode).get(1) instanceof GNode
-			&& ((node.get(0) as GNode).get(1) as GNode).name.equals("ArrayDeclarator")
-			&& ((node.get(0) as GNode).get(1) as GNode).get(0) instanceof GNode
-			&& (((node.get(0) as GNode).get(1) as GNode).get(0) as GNode).name.equals("SimpleDeclarator")
-			&& (((node.get(0) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString.equals(Settings::reconfiguratorIncludePlaceholder)
+			&&   ((node.get(0) as GNode).get(1) instanceof GNode)
+			&&   ((node.get(0) as GNode).get(1) as GNode).name.equals("ArrayDeclarator")
 			
-			&& (node.get(0) as GNode).get(2) instanceof GNode
-			&& ((node.get(0) as GNode).get(2) as GNode).name.equals("InitializerOpt")
-			&& ((node.get(0) as GNode).get(2) as GNode).get(1) instanceof GNode
-			&& (((node.get(0) as GNode).get(2) as GNode).get(1) as GNode).name.equals("Initializer")
+			&&  (((node.get(0) as GNode).get(1) as GNode).get(0) instanceof GNode)
+			&&  (((node.get(0) as GNode).get(1) as GNode).get(0) as GNode).name.equals("SimpleDeclarator")
+			&&  (((node.get(0) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString.startsWith(Settings::reconfiguratorIncludePlaceholder)
 			
-			&& (((node.get(0) as GNode).get(2) as GNode).get(1) as GNode)
-				.get(0) instanceof GNode
-			&& ((((node.get(0) as GNode).get(2) as GNode).get(1) as GNode)
-				.get(0) as GNode).name.equals("StringLiteralList")
-			&& ((((node.get(0) as GNode).get(2) as GNode).get(1) as GNode)
-				.get(0) as GNode).get(0).toString.startsWith("\"#include")
+			&&   ((node.get(0) as GNode).get(4) instanceof GNode)
+			&&   ((node.get(0) as GNode).get(4) as GNode).name.equals("InitializerOpt")
+			&&   ((node.get(0) as GNode).get(4) as GNode).get(1) instanceof GNode
+			
+			&&  (((node.get(0) as GNode).get(4) as GNode).get(1) as GNode).name.equals("Initializer")
+			
+			&& ((((node.get(0) as GNode).get(4) as GNode).get(1) as GNode).get(0) instanceof GNode)
+			&& ((((node.get(0) as GNode).get(4) as GNode).get(1) as GNode).get(0) as GNode).name.equals("StringLiteralList")
+			&& ((((node.get(0) as GNode).get(4) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString.startsWith("\"#include")
 		) {
-			var includeStrLit = ((((node.get(0) as GNode).get(2) as GNode).get(1) as GNode)
+			var includeStrLit = ((((node.get(0) as GNode).get(4) as GNode).get(1) as GNode)
 				.get(0) as GNode).get(0).toString
 			includeStrLit = includeStrLit.subSequence(1, includeStrLit.length-1).toString
 			
-			output.println
-			output.print(indent)
-			output.print(includeStrLit.replace("\\\"", "\""))
-			last_line = includeStrLit
+			if (node.properties != null && node.hasProperty("OriginalPC")) {
+				output.println('''#if «(node.getProperty("OriginalPC") as PresenceCondition).PCtoCPPexp»''')
+				output.println(includeStrLit.replace("\\\"", "\""))
+				output.println('''#endif''')
+				last_line = "#endif"
+			} else {
+				output.print(indent)
+				output.print(includeStrLit.replace("\\\"", "\""))
+				last_line = includeStrLit
+			}
 		} else {
 			ancestors.add(node)
 			for (Object it : node) {
