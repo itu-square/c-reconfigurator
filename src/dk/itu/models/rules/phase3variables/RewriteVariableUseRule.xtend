@@ -48,8 +48,9 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 	protected def buildExp(
 		String varName,
 		GNode node,
-		List<SimpleEntry<Declaration, PresenceCondition>> declarations) {
-		
+		List<SimpleEntry<Declaration, PresenceCondition>> declarations,
+		PresenceCondition varPC
+	) {
 		if (
 			declarations.empty
 			|| (declarations.size == 1 && declarations.get(0).value.isTrue)
@@ -63,7 +64,7 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 			var GNode exp = null
 			for (SimpleEntry<Declaration, PresenceCondition> pair : declarations.reverseView) {
 				val newVarName = pair.key.name
-				val pc = pair.value
+				val pc = pair.value.restrict(varPC.not)
 				
 				val newExp = if(newVarName.equals(varName)) node else node.replaceIdentifierVarName(varName, newVarName)
 				if (newExp.name.equals("PrimaryIdentifier"))
@@ -169,9 +170,10 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 				throw new Exception("RewriteVariableUseRule: unknown location of variable name")
 			}
 			
-			val declarations = filterDeclarations(varName, externalGuard.and(node.presenceCondition))
+			val varPC = externalGuard.and(node.presenceCondition)
 			
-			val exp = buildExp(varName, node, declarations)
+			val declarations = filterDeclarations(varName, varPC)
+			val exp = buildExp(varName, node, declarations, varPC)
 			
 			if(exp != null) {
 				return exp

@@ -51,7 +51,8 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 	def buildExp (
 		GNode node,
 		List<SimpleEntry<Declaration, PresenceCondition>> declarations,
-		Pair<?> args
+		Pair<?> args,
+		PresenceCondition varPC
 	) {
 		if (
 			declarations.empty
@@ -63,7 +64,7 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 			var GNode exp = null
 			for (SimpleEntry<Declaration, PresenceCondition> pair : declarations.reverseView) {
 				val funcName = pair.key.name
-				val pc = pair.value
+				val pc = pair.value.restrict(varPC.not)
 				
 				val newCall = GNode::create(
 					"FunctionCall",
@@ -127,8 +128,10 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 			debug("RewriteFunctionCallRule")
 			val fcall = (node.get(0) as GNode).get(0).toString
 			
-			val declarations = filterDeclarations(fcall, externalGuard.and(node.presenceCondition))
-			val exp = buildExp(node, declarations, node.toPair.tail)
+			val varPC = externalGuard.and(node.presenceCondition)
+			
+			val declarations = filterDeclarations(fcall, varPC)
+			val exp = buildExp(node, declarations, node.toPair.tail, varPC)
 			
 			if(exp != null) {
 				return exp

@@ -486,6 +486,7 @@ class Reconfigurator {
 					preprocessor.transformedFeatureNames.forEach[
 						sb.append("int " + it + ";\n")
 					]
+					sb.append("\n")
 				}
 				sb.append(node.printCode)
 				sb.toString.writeToFile(Settings::targetFile.path)
