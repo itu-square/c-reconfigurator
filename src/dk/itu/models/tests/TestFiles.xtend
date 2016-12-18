@@ -11,9 +11,9 @@ import static extension dk.itu.models.Extensions.*
 class TestFiles {
 	
 	static val report = new Report
-	static val source = new File("/home/alex/vbdb/source")
-	static val target = new File("/home/alex/vbdb/target")
-	static val oracle = new File("/home/alex/vbdb/oracle")
+	static val source = new File("/home/alex/reconfigurator/c-reconfigurator-test/source/vbdb/linux")
+	static val target = new File("/home/alex/reconfigurator/c-reconfigurator-test/target/vbdb/linux")
+	static val oracle = new File("/home/alex/reconfigurator/c-reconfigurator-test/oracle_new/vbdb/linux")
 	
 	static def void process (File currentFile) {
 
@@ -41,11 +41,12 @@ class TestFiles {
 			println('''processing file .«currentRelativePath»''')
 
 			var runArgs = new ArrayList<String>
-		
+			
 			runArgs.addAll(
-				 "-source",	 currentFilePath
-				,"-target",  currentTargetPath
-				,"-oracle",  currentOraclePath
+				 "-source"	,currentFilePath
+				,"-target"	,currentTargetPath
+				,"-oracle"	,currentOraclePath
+				,"-I"		,currentFile.parent	
 //				,"-I",       "/home/alex/linux_kernel/linux-4.7/include"
 //				,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include"
 //				,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include/generated/uapi" 
@@ -78,9 +79,24 @@ class TestFiles {
 		
 		process(source)
 		
+		println
+		println("----------------------------------------------------------------------")
 		println("Printing Summary")
 		
 		report.printSummary
+		
+		val passes = report.fileRecords.filter[
+			!folder
+			&& errors.findFirst[it.error.startsWith("Exception: ")] == null
+			&& errors.findFirst[it.error.startsWith("oracle: ")] == null
+		].size
+		val files = report.fileRecords.filter[!folder].size
+		println
+		print("[")
+		for (var i = 0; i < passes; i++) print("█")
+		for (var i = passes; i < files; i++) print("■")
+		println("]")
+		println(passes + "/" + files)
 		
 		println("End TestFiles")
 		

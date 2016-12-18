@@ -86,7 +86,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 				"unsigned long",		"unsigned long int",		"long long",
 				"long long int",		"signed long long",			"signed long long int",
 				"unsigned long long",	"unsigned long long int",	"float",
-				"double",				"long double"
+				"double",				"long double",				"_Bool"
 			].forEach[ typeName |
 				this.typeDeclarations.put(
 					typeName,

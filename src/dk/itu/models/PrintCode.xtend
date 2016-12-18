@@ -158,7 +158,7 @@ class PrintCode extends PrintMethod {
 		if(
 			#["Declaration", "DeclarationExtension", "FunctionDefinition"].contains(node.name)
 			&& !ancestors.exists[c | c instanceof GNode && c.name.equals("FunctionDefinition")]
-			&& !last_line.startsWith("#") && !last_line.empty
+			&& (!last_line.startsWith("#") || last_line.startsWith("#include")) && !last_line.empty
 		) {
 			output.println
 			current_C_line = ""
@@ -305,6 +305,10 @@ class PrintCode extends PrintMethod {
 			var includeStrLit = ((((node.get(0) as GNode).get(4) as GNode).get(1) as GNode)
 				.get(0) as GNode).get(0).toString
 			includeStrLit = includeStrLit.subSequence(1, includeStrLit.length-1).toString
+			
+			if (!last_line.startsWith("#include")) {
+				output.println
+			}
 			
 			if (node.properties != null && node.hasProperty("OriginalPC")) {
 				output.println('''#if «(node.getProperty("OriginalPC") as PresenceCondition).PCtoCPPexp»''')

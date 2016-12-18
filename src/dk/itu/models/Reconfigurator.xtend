@@ -511,7 +511,6 @@ class Reconfigurator {
 		
 		val errors = new ArrayList<ErrorRecord>
 		Reconfigurator::errors.forEach[
-			println(it)
 			errors.add(new ErrorRecord(it))
 		]
 		val report = new Report
