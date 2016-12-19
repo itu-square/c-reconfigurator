@@ -15,7 +15,7 @@ class TxMain extends Transformation {
 	
 	override Node transform(Node node) {
 						
-		debug("PHASE 1 - Normalize")
+		debug("PHASE 1 - Normalize", true)
 		var Node node1 = node
 		val tdn1 = new TopDownStrategy
 		tdn1.register(new NormalizeRule)
@@ -29,7 +29,7 @@ class TxMain extends Transformation {
 
 
 
-		debug("PHASE 2 - Prepare for reconfiguration")
+		debug("PHASE 2 - Prepare for reconfiguration", true)
 		val tdn2 = new TopDownStrategy
 		tdn2.register(new IsolateDeclarationRule)
 		val Node node2 = tdn2.transform(node1) as Node
@@ -42,7 +42,7 @@ class TxMain extends Transformation {
 
 		var Node node4 = node2
 		if (!Settings::parseOnly) {
-			debug("PHASE 3,4 - Reconfigure declarations")
+			debug("PHASE 3,4 - Reconfigure declarations", true)
 			val tdnQ = new TopDownStrategy
 			tdnQ.register(new ReconfigureDeclarationRule)
 			node4 = tdnQ.transform(node2) as Node
@@ -57,7 +57,7 @@ class TxMain extends Transformation {
 
 
 
-		debug("PHASE 5 - Cleanup")
+		debug("PHASE 5 - Cleanup", true)
 		val tdn5 = new TopDownStrategy
 		tdn5.register(new RemergeConditionalsRule)
 		var Node node5 = tdn5.transform(node4) as Node
@@ -71,7 +71,7 @@ class TxMain extends Transformation {
 
 		var Node node6 = node5
 		if (!Settings::parseOnly) {
-			debug("PHASE 6 - #ifdef to if")
+			debug("PHASE 6 - #ifdef to if", true)
 			val tdn6 = new TopDownStrategy
 			tdn6.register(new Ifdef2IfRule)
 			node6 = tdn6.transform(node5) as Node

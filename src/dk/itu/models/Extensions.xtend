@@ -50,12 +50,21 @@ class Extensions {
 		else path
 	}
 	
+	public static def void debug(){
+		debug("")
+	}
+	
 	public static def void debug(String text) {
+		debug(text, false)
+	}
+	
+	public static def void debug(String text, boolean pinpoint) {
 		if(Settings::printDebugInfo) {
 			val stackTrace = Thread.currentThread.stackTrace
-			println(
-				text + "             (" + stackTrace.get(2).fileName + ":" + stackTrace.get(2).lineNumber + ")"
-			)
+			print(text)
+			if (pinpoint)
+				print ("             (" + stackTrace.get(2).fileName + ":" + stackTrace.get(2).lineNumber + ")")
+			println
 		}
 	}
 	

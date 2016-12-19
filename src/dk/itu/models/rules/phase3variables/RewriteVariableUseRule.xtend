@@ -18,6 +18,7 @@ import xtc.tree.Node
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
+import static extension dk.itu.models.rules.ScopingRule.*
 
 class RewriteVariableUseRule extends AncestorGuaranteedRule {
 	
@@ -170,15 +171,15 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 				throw new Exception("RewriteVariableUseRule: unknown location of variable name")
 			}
 			
-			val varPC = externalGuard.and(node.presenceCondition)
-			
-			val declarations = filterDeclarations(varName, varPC)
-			val exp = buildExp(varName, node, declarations, varPC)
-			
-			if(exp != null) {
-				return exp
-			} else {
-				return node
+			if (variableDeclarationScopes.variableExists(varName)) {
+				val varPC = externalGuard.and(node.presenceCondition)
+				
+				val declarations = filterDeclarations(varName, varPC)
+				val exp = buildExp(varName, node, declarations, varPC)
+				
+				if(exp != null) {
+					return exp
+				}
 			}
 		}
 		node

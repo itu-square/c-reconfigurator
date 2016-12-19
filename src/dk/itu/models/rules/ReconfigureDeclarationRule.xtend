@@ -71,11 +71,12 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		if (
 			node.isVariableDeclarationWithVariability
 		) {
-			debug("isVariableDeclarationWithVariability")
+			debug("isVariableDeclarationWithVariability", true)
 			val varPC = node.get(0) as PresenceCondition
 			val varDeclarationNode = node.get(1) as GNode
 			val varName = varDeclarationNode.getNameOfVariableDeclaration
 			val varType = varDeclarationNode.getTypeOfVariableDeclaration
+			debug("- " + varName)
 			
 			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(varType))
@@ -102,7 +103,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		if (
 			node.isFunctionDefinitionWithVariability
 		) {
-			debug("isFunctionDefinitionWithVariability")
+			debug("isFunctionDefinitionWithVariability", true)
 			val funcPC = node.get(0) as PresenceCondition
 			val funcDefinitionNode = node.get(1) as GNode
 			val funcName = funcDefinitionNode.getNameOfFunctionDefinition
@@ -134,8 +135,9 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			node.isFunctionDefinition
 			&& !ancestors.last.name.equals("Conditional")
 		) {
-			debug("isFunctionDefinition")
+			debug("isFunctionDefinition", true)
 			val funcName = node.nameOfFunctionDefinition
+			debug("- " + funcName)
 			functionDeclarations.rem(funcName, funcName)
 			
 			var newpair = Pair.EMPTY
@@ -148,7 +150,10 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				)) {
 					newpair = newpair.add(child)
 				} else {
-					newpair = newpair.add((child as GNode).rewriteFunctionCall(functionDeclarations, node.presenceCondition, pcidmap))
+					val nodepc = node.presenceCondition
+					var newnode = (child as GNode).rewriteVariableUse(variableDeclarationScopes, nodepc, pcidmap)
+					newnode = (child as GNode).rewriteFunctionCall(functionDeclarations, nodepc, pcidmap)
+					newpair = newpair.add(newnode)
 				}
 			}
 			return GNode.createFromPair(
@@ -160,30 +165,33 @@ class ReconfigureDeclarationRule extends ScopingRule {
 					node.properties.toInvertedMap[p | node.getProperty(p.toString)]
 				)
 		} else
-//		if(
-//			// other places to rewrite variable names and function calls
-//			#["ExpressionStatement", "Initializer", "ReturnStatement"]
-//			.contains(node.name) ) {
-//				val tdn = new TopDownStrategy
-//				tdn.register(new RewriteVariableUseRule(variableDeclarationScopes, node.presenceCondition, pcidmap))
-//				val newNode = tdn.transform(node) as GNode
-//		
-//				return newNode
-//		} else
 		if (
 			// other places to rewrite variable names and function calls
-			node.name.equals("SelectionStatement") ) {
-				val newNode = (node.get(2) as GNode).rewriteVariableUse(variableDeclarationScopes, node.presenceCondition, pcidmap)
-				
-				if (!newNode.printAST.equals(node.get(2).printAST))
-					return GNode::createFromPair(
-						"SelectionStatement",
-						node.map[
-							if (node.indexOf(it) == 2) newNode
-							else it].toPair)
-					else return node
+			node.name.equals("SelectionStatement")
+		) {
+			debug
+			debug("other rewrites", true)
+			debug("- " + node.name)
+			val newNode = (node.get(2) as GNode).rewriteVariableUse(variableDeclarationScopes, node.presenceCondition, pcidmap)
+			
+			if (!newNode.printAST.equals(node.get(2).printAST)) {
+				return GNode::createFromPair(
+					"SelectionStatement",
+					node.map[
+						if (node.indexOf(it) == 2) newNode
+						else it].toPair)
+			} else {
+				return node
+			}
 		} else
-		if (node.name.equals("IterationStatement")) {
+		if (
+			node.name.equals("IterationStatement")
+			|| node.name.equals("CompoundStatement")
+			|| node.name.equals("ExpressionStatement")
+		) {
+			debug
+			debug("other rewrites", true)
+			debug("- " + node.name)
 			return node.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition, pcidmap)
 		} else
 		if (
@@ -198,7 +206,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				"FunctionPrototype", "FunctionSpecifier", "FunctionDeclarator",
 				"PostfixingFunctionDeclarator", "ParameterTypeListOpt", "ParameterTypeList",
 				"ParameterList", "ParameterDeclaration", "BasicTypeSpecifier", "TypeQualifierList",
-				"TypeQualifier", "ConstQualifier", "CompoundStatement", "DeclarationOrStatementList",
+				"TypeQualifier", "ConstQualifier", "DeclarationOrStatementList",
 				"ReturnStatement", "MultiplicativeExpression", "CastExpression", "TypeName",
 				"TypedefTypeSpecifier", "PrimaryIdentifier", "RelationalExpression",
 				"ExpressionStatement", "AssignmentExpression", "AssignmentOperator", "FunctionCall",

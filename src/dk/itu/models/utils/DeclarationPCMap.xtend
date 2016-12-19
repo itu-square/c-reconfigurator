@@ -53,4 +53,8 @@ class DeclarationPCMap {
 	public def void clear() {
 		map.clear
 	}
+	
+	public def Set<String> maps() {
+		map.keySet.map['''«it» -> {«FOR x : map.get(it) SEPARATOR ", "»«x.key.name»«ENDFOR»}'''].toSet
+	}
 }

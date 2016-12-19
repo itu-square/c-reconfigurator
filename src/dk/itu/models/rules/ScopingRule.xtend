@@ -47,10 +47,24 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 	}
 	
 	protected def variableExists(String name) {
-		variableDeclarationScopes.exists[ se |
-			se.value.containsDeclaration(name)
-		]
+		variableDeclarationScopes.variableExists(name)
 	}
+	
+	public static def variableExists(
+		ArrayList<SimpleEntry<GNode,DeclarationPCMap>> variableDeclarationScopes,
+		String name
+	) {
+		variableDeclarationScopes.exists[ se | se.value.containsDeclaration(name) ]
+	}
+	
+	
+	
+	protected def declaredVariableNames() {
+		variableDeclarationScopes.map[value].map[it.maps].flatten
+	}
+	
+	
+	
 	
 	def PresenceCondition transform(PresenceCondition cond) {
 		clearVariableDeclarationScopes
@@ -72,7 +86,8 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		if (#["ExternalDeclarationList", "FunctionDefinition", "FunctionDeclarator", "CompoundStatement"].contains(node.name)) {
 			addVariableDeclarationScope(node)
 		} else if (node.name.equals("TranslationUnit")) {
-			debug("\n" + "TranslationUnit")
+			debug("\n\n")
+			debug("TranslationUnit", true)
 			this.functionDeclarations.clear
 			this.typeDeclarations.clear
 			
@@ -152,7 +167,8 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		
 		
 		if (node.isFunctionDefinition) {
-			debug("isFunctionDefinition")
+			debug
+			debug("isFunctionDefinition", true)
 			// get current PC and names
 			val name = node.nameOfFunctionDefinition
 			val type = node.typeOfFunctionDefinition
@@ -173,7 +189,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			}
 		} else
 		if (node.isTypeDeclaration) {
-			debug("isTypeDeclaration")
+			debug("isTypeDeclaration", true)
 			// get current PC and names
 			val name = node.getNameOfTypeDeclaration
 			val type = node.getTypeOfTypeDeclaration
@@ -233,7 +249,8 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 //			
 //		} else
 		if (node.isVariableDeclaration) {
-			debug("isVariableDeclaration")
+			debug
+			debug("isVariableDeclaration", true)
 			// get current PC and names
 			val pc = node.presenceCondition
 			val name = node.getNameOfVariableDeclaration
@@ -255,7 +272,8 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			
 		} else
 		if (node.isParameterDeclaration) {
-			debug("isParameterDeclaration")
+			debug
+			debug("isParameterDeclaration", true)
 			// get current PC and names
 			val pc = node.presenceCondition
 			val name = node.getNameOfParameterDeclaration
