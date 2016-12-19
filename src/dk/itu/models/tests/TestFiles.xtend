@@ -11,9 +11,9 @@ import static extension dk.itu.models.Extensions.*
 class TestFiles {
 	
 	static val report = new Report
-	static val source = new File("/home/alex/reconfigurator/c-reconfigurator-test/source/vbdb/linux")
-	static val target = new File("/home/alex/reconfigurator/c-reconfigurator-test/target/vbdb/linux")
-	static val oracle = new File("/home/alex/reconfigurator/c-reconfigurator-test/oracle_new/vbdb/linux")
+	static val source = new File("/home/alex/reconfigurator/c-reconfigurator-test/source/vbdb")
+	static val target = new File("/home/alex/reconfigurator/c-reconfigurator-test/target/vbdb")
+	static val oracle = new File("/home/alex/reconfigurator/c-reconfigurator-test/oracle_new/vbdb")
 	
 	static def void process (File currentFile) {
 

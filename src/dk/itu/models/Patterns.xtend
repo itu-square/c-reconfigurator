@@ -179,9 +179,7 @@ class Patterns {
 		} else
 		
 		if (typeNode instanceof GNode && (typeNode as GNode).name.equals("BasicTypeSpecifier")) {
-			return 
-				((typeNode as GNode).get(0) as Language<CTag>).toString + " " +
-				((typeNode as GNode).get(1) as Language<CTag>).toString
+			return (typeNode as GNode).filter[it instanceof Language<?>].map[it.toString].join(" ")
 		} else 
 		
 		{
