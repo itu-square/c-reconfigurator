@@ -56,6 +56,7 @@ class TestFiles {
 //				,"-I",       "/home/alex/linux_kernel/linux-4.7/include/uapi"
 //				,"-I",       "/home/alex/linux_kernel/linux-4.7/include/generated/uapi"
 //				,"-include", "test.h"
+				,"-reconfigureIncludes"
 //				,"-printIntermediaryFiles"
 //				,"-printDebugInfo"
 				)

@@ -67,6 +67,9 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 				val newVarName = pair.key.name
 				var pc = pair.value.restrict(varPC.not)
 				if (pc.isFalse) pc = pair.value.simplify(varPC)
+				// if the simplification reduced the PC completely to 1/True
+				// then we can use the original PC (pair.value)
+				if (pc.isTrue) pc = pair.value
 				
 				val newExp = if(newVarName.equals(varName)) node else node.replaceIdentifierVarName(varName, newVarName)
 				if (newExp.name.equals("PrimaryIdentifier"))
