@@ -65,7 +65,8 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 			var GNode exp = null
 			for (SimpleEntry<Declaration, PresenceCondition> pair : declarations.reverseView) {
 				val newVarName = pair.key.name
-				val pc = pair.value.restrict(varPC.not)
+				var pc = pair.value.restrict(varPC.not)
+				if (pc.isFalse) pc = pair.value.simplify(varPC)
 				
 				val newExp = if(newVarName.equals(varName)) node else node.replaceIdentifierVarName(varName, newVarName)
 				if (newExp.name.equals("PrimaryIdentifier"))
@@ -131,7 +132,7 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 			}																			// otherwise move to the next scope
 		}
 					
-		if (!disjunctionPC.isTrue) {												// if the PCs collected so far cover the universe
+		if (!varPC.BDD.imp(disjunctionPC.BDD).isOne) {												// if the PCs collected so far cover the universe
 			declarations.add(new SimpleEntry<Declaration, PresenceCondition>(
 				new VariableDeclaration(varName, null),
 				disjunctionPC.not

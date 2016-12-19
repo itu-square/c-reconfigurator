@@ -64,7 +64,8 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 			var GNode exp = null
 			for (SimpleEntry<Declaration, PresenceCondition> pair : declarations.reverseView) {
 				val funcName = pair.key.name
-				val pc = pair.value.restrict(varPC.not)
+				var pc = pair.value.restrict(varPC.not)
+				if (pc.isFalse) pc = pair.value.simplify(varPC)
 				
 				val newCall = GNode::create(
 					"FunctionCall",
@@ -110,7 +111,7 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 			}
 		}
 		
-		if (!disjunctionPC.isTrue) {
+		if (!callPC.BDD.imp(disjunctionPC.BDD).isOne) {
 			declarations.add(new SimpleEntry<Declaration, PresenceCondition>(
 				new FunctionDeclaration(funcName, null),
 				disjunctionPC.not
