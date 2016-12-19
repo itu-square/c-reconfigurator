@@ -3,7 +3,6 @@ package dk.itu.models.transformations
 import dk.itu.models.Settings
 import dk.itu.models.rules.ReconfigureDeclarationRule
 import dk.itu.models.rules.phase1normalize.NormalizeRule
-import dk.itu.models.rules.phase1normalize.RemActionRule
 import dk.itu.models.rules.phase2prepare.IsolateDeclarationRule
 import dk.itu.models.rules.phase5cleanup.RemergeConditionalsRule
 import dk.itu.models.rules.phase6ifdefs.Ifdef2IfRule
@@ -19,7 +18,6 @@ class TxMain extends Transformation {
 		debug("PHASE 1 - Normalize")
 		var Node node1 = node
 		val tdn1 = new TopDownStrategy
-		tdn1.register(new RemActionRule)
 		tdn1.register(new NormalizeRule)
 		node1 = tdn1.transform(node1) as Node
 		writeToFile(node1.printCode, Settings::targetFile.path)
