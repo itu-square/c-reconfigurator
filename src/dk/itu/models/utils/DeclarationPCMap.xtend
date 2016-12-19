@@ -15,31 +15,49 @@ class DeclarationPCMap {
 		map = new HashMap<String, List<SimpleEntry<Declaration,PresenceCondition>>>
 	}
 	
+	private def fix(String name) {
+		if (name.contains(" ")) {
+			val n = map.keySet.findFirst[key |
+				key.contains(" ")
+				&& name.split(" ").size == key.split(" ").size
+				&& key.split(" ").toSet.equals(name.split(" ").toSet)
+			]
+			if (n != null)
+				return n
+		}
+		return name
+	}
+	
 	public def void put (String name, Declaration declaration, PresenceCondition pc) {
-		map.putIfAbsent(name, new ArrayList<SimpleEntry<Declaration, PresenceCondition>>)
+		val fixedName = fix(name)
+		if (!map.containsKey(fixedName))
+			map.put(fixedName, new ArrayList<SimpleEntry<Declaration, PresenceCondition>>)
 		
-		map.get(name).add(new SimpleEntry(declaration, pc))
+		map.get(fixedName).add(new SimpleEntry(declaration, pc))
 	}
 	
 	public def void rem(String name, String variantName) {
-		if (map.containsKey(name)) {
-			val variant = map.get(name).findFirst[pair | pair.key.name.equals(variantName)]
+		val fixedName = fix(name)
+		if (map.containsKey(fixedName)) {
+			val variant = map.get(fixedName).findFirst[pair | pair.key.name.equals(variantName)]
 			if (variant != null) {
-				map.get(name).remove(variant)
+				map.get(fixedName).remove(variant)
 			}
 			
-			if (map.get(name).size == 0) {
-				map.remove(name)
+			if (map.get(fixedName).size == 0) {
+				map.remove(fixedName)
 			}
 		}
 	}
 	
 	public def boolean containsDeclaration(String name) {
-		map.containsKey(name)
+		val fixedName = fix(name)
+		map.containsKey(fixedName)
 	}
 	
 	public def List<SimpleEntry<Declaration, PresenceCondition>> declarationList(String name) {
-		map.get(name)
+		val fixedName = fix(name)
+		map.get(fixedName)
 	}
 	
 	public def int size() {
