@@ -200,11 +200,8 @@ class Patterns {
 	}
 	
 	public static def String getNameOfParameterDeclaration(GNode node) {
-		var declarator = (node.get(1) as GNode)
-		while (!declarator.name.equals("SimpleDeclarator")) {
-			declarator = (declarator.get(1) as GNode)
-		}
-		return (declarator.get(0) as Text<?>).toString
+		val simpl = node.getDescendantNode("SimpleDeclarator")
+		return (simpl.get(0) as Text<?>).toString
 	}
 	
 	public static def String getTypeOfParameterDeclaration(GNode node) {
@@ -213,6 +210,8 @@ class Patterns {
 				(node.get(0) as Language<CTag>).toString
 			else if (node.get(0) instanceof GNode && (node.get(0) as GNode).name.equals("TypedefTypeSpecifier"))
 				((node.get(0) as GNode).get(0) as Text<?>).toString
+			else if (node.get(0) instanceof GNode && (node.get(0) as GNode).name.equals("BasicTypeSpecifier"))
+				((node.get(0) as GNode).get(1) as Language<CTag>).toString
 			else
 				throw new Exception("case not handled")
 		
