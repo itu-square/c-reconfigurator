@@ -196,8 +196,38 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			val pc = node.presenceCondition
 
 			// get registered type declaration
-			if (!typeDeclarations.containsDeclaration(type))
-				throw new Exception('''ScopingRule: type declaration «type» not found.''')
+			if (!typeDeclarations.containsDeclaration(type)) {
+				throw new Exception('''ScopingRule: type declaration [«type»] of [«name»] not found.''')
+			}
+			
+			val typeDeclarationList = typeDeclarations.declarationList(type)
+			
+			if (typeDeclarationList.size == 1) {
+				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
+				
+				var newTypeDeclaration = new TypeDeclaration(name, typeDeclaration)
+				typeDeclarations.put(name, newTypeDeclaration, pc)
+				
+				newTypeDeclaration = new TypeDeclaration(name + "*", typeDeclaration)
+				typeDeclarations.put(name + "*", newTypeDeclaration, pc)
+				
+				newTypeDeclaration = new TypeDeclaration(name + "**", typeDeclaration)
+				typeDeclarations.put(name + "**", newTypeDeclaration, pc)
+			} else {
+				throw new Exception("ScopingRule: not handled: multiple type declarations.")
+			}
+		} else
+		if (node.isStructTypeDeclaration) {
+			debug("isStructTypeDeclaration", true)
+			// get current PC and names
+			val name = node.getNameOfStructTypeDeclaration
+			val type = node.getTypeOfStructTypeDeclaration
+			val pc = node.presenceCondition
+			
+			// get registered type declaration
+			if (!typeDeclarations.containsDeclaration(type)) {
+				typeDeclarations.put(type, new TypeDeclaration(type, null), pc)
+			}
 			
 			val typeDeclarationList = typeDeclarations.declarationList(type)
 			

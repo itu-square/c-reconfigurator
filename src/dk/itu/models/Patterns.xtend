@@ -11,12 +11,53 @@ import static extension dk.itu.models.Extensions.*
 
 class Patterns {
 	
+	
+	public static def boolean isStructTypeDeclaration(GNode node) {
+		node.name.equals("Declaration")
+		&& node.getDescendantNode[
+			it instanceof Language<?>
+			&& (it as Language<CTag>).tag.equals(CTag::TYPEDEF)
+		] != null
+		&& node.getDescendantNode("StructSpecifier") != null
+	}
+	
+	public static def boolean isStructTypeDeclarationWithVariability(GNode node) {
+		node.name.equals("Conditional")
+		&& node.size == 2
+		
+		&& (node.get(0) instanceof PresenceCondition)
+		
+		&& (node.get(1) instanceof GNode)
+		&& (node.get(1) as GNode).isStructTypeDeclaration
+	}
+	
+	public static def String getNameOfStructTypeDeclaration(GNode node) {
+		val simpleDeclarator = node.getDescendantNode("SimpleDeclarator")
+		return (simpleDeclarator.get(0) as Text<CTag>).toString
+	}
+	
+	public static def String getTypeOfStructTypeDeclaration(GNode node) {
+		val structSpecifier = node.getDescendantNode("StructSpecifier")
+		return (structSpecifier.get(0) as Language<CTag>).toString + " "
+			+ ((structSpecifier.get(1) as GNode).get(0) as Text<CTag>).toString
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	public static def boolean isTypeDeclaration(GNode node) {
 		node.name.equals("Declaration")
 		&& node.getDescendantNode[
 			it instanceof Language<?>
 			&& (it as Language<CTag>).tag.equals(CTag::TYPEDEF)
 		] != null
+		&& node.getDescendantNode("StructSpecifier") == null
 	}
 	
 	public static def boolean isTypeDeclarationWithVariability(GNode node) {
@@ -35,9 +76,9 @@ class Patterns {
 	}
 	
 	public static def String getTypeOfTypeDeclaration(GNode node) {
-		
 		var typeName = ""
 		var bds = ((node.get(0) as GNode).get(0) as GNode)
+		
 		while (
 			bds.name.equals("BasicDeclarationSpecifier")
 		){
@@ -142,6 +183,10 @@ class Patterns {
 	
 	public static def boolean isVariableDeclaration(GNode node) {
 		node.name.equals("Declaration")
+		&& node.getDescendantNode[
+			it instanceof Language<?>
+			&& (it as Language<CTag>).tag.equals(CTag::TYPEDEF)
+		] == null
 	}
 	
 	public static def boolean isVariableDeclarationWithVariability(GNode node) {
