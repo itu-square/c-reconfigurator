@@ -145,7 +145,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"PostfixIdentifierDeclarator", "PostfixingAbstractDeclarator", "CleanTypedefDeclarator",
 			"CleanPostfixTypedefDeclarator", "DirectSelection", "AssemblyExpressionOpt",
 			"LocalLabelDeclarationListOpt", "ParameterAbstractDeclaration", "ParameterIdentifierDeclaration",
-			"ExpressionOpt"]
+			"ExpressionOpt", "StructSpecifier"]
 				.contains(node.name)
 		) {
 			// no scope
@@ -176,7 +176,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			
 			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(type))
-				throw new Exception('''ScopingRule: type declaration «type» not found.''')
+				throw new Exception('''ScopingRule: type declaration [«type»] of [«name»] not found.''')
 
 			val typeDeclarationList = typeDeclarations.declarationList(type)
 			
@@ -352,7 +352,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 				"SelectionStatement", "ShiftExpression", "SignedKeyword", "SimpleDeclarator", "Subscript",
 			"SUEDeclarationSpecifier", "SUETypeSpecifier", "StatementAsExpression", "StringLiteralList",
 			"StructDeclaration", "StructDeclarationList", "StructDeclarator", "StructDeclaringList",
-			"StructOrUnion", "StructOrUnionSpecifier",
+			"StructOrUnion", "StructOrUnionSpecifier", "StructSpecifier",
 				"TranslationUnit", "TypedefDeclarationSpecifier", "TypedefTypeSpecifier", "TypeName",
 			"TypeQualifier", "TypeQualifierList",
 			 	"UnaryAbstractDeclarator", "UnaryExpression", "UnaryIdentifierDeclarator", "Unaryoperator",

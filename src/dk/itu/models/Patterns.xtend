@@ -164,6 +164,10 @@ class Patterns {
 			val typedefTypeSpecifier = (typeNode as GNode)
 			return (typedefTypeSpecifier.findFirst[it instanceof Text<?>] as Text<CTag>).toString	
 		} else
+		
+		if (typeNode.name.equals("SUETypeSpecifier")) {
+			return typeNode.printCode
+		}
 
 		if (typeNode instanceof Language<?>) {
 			return (typeNode as Language<CTag>).toString
@@ -171,6 +175,7 @@ class Patterns {
 		
 		{
 			println
+			println(node.printCode)
 			println(node.printAST)
 			throw new Exception("case not handled")
 		}
