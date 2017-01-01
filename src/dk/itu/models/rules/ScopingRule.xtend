@@ -246,41 +246,19 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 				throw new Exception("ScopingRule: not handled: multiple type declarations.")
 			}
 		} else
-//		if (node.isFunctionDeclaration) {
-//			var declarator = node.getDescendantNode("SimpleDeclarator")
-//			if (declarator == null)
-//				declarator = node.getDescendantNode("ParameterTypedefDeclarator")
-//			
-//			throw new UnsupportedOperationException("Function Declaration")
-////			functionDeclarations.newDeclaration(declarator.get(0).toString)
-//		}
-//
-//		
-//		
-//		// VARIABLE DECLARATIONS
-//		
-//		// variable of type
-//		else if (
-//			     (node.name.equals("Declaration"))
-//			&&   (node.get(0) instanceof GNode)
-//			&&   (node.get(0) as GNode).name.equals("DeclaringList")
-//			&&  ((node.get(0) as GNode).get(0) instanceof Language<?>)
-//			&&  ((node.get(0) as GNode).get(1) instanceof GNode)
-//			&&  ((node.get(0) as GNode).get(1) as GNode).name.equals("SimpleDeclarator")
-//			&& (((node.get(0) as GNode).get(1) as GNode).get(0) instanceof Text<?>)
-//		) {
-//			
-//			val varName = (((node.get(0) as GNode).get(1) as GNode).get(0) as Text<?>).toString
-//			val varTypeName = ((node.get(0) as GNode).get(0) as Language<?>).toString
-//			val varPC = guard(node)
-//			val varType = typeDeclarations.get(varTypeName, varPC) as TypeDeclaration
-//			
-//			addVariable(new VariableDeclaration(varName, varType), varPC)
-//			
-//		} else
+		if (node.isEnumDeclaration) {
+			debug
+			debug("isEnumDeclaration", true)
+			
+			val pc = node.presenceCondition
+			val name = node.nameOfEnumDeclaration
+			
+			this.typeDeclarations.put( name, new TypeDeclaration(name, null), pc)
+		} else
 		if (node.isVariableDeclaration) {
 			debug
 			debug("isVariableDeclaration", true)
+			
 			// get current PC and names
 			val pc = node.presenceCondition
 			val name = node.getNameOfVariableDeclaration

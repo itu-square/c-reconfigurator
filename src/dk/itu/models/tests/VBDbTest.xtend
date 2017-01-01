@@ -8,17 +8,13 @@ import java.util.ArrayList
 
 import static extension dk.itu.models.Extensions.*
 
-class TestFiles {
+class VBDbTest {
 	
 	static val report = new Report
-//	static val source = new File("/home/alex/reconfigurator/c-reconfigurator-test/source/vbdb")
-//	static val target = new File("/home/alex/reconfigurator/c-reconfigurator-test/target/vbdb")
-//	static val oracle = new File("/home/alex/reconfigurator/c-reconfigurator-test/oracle_new/vbdb")
+	static val source = new File("/home/alex/reconfigurator/c-reconfigurator-test/source/vbdb")
+	static val target = new File("/home/alex/reconfigurator/c-reconfigurator-test/target/vbdb")
+	static val oracle = new File("/home/alex/reconfigurator/c-reconfigurator-test/oracle_new/vbdb")
 
-	static val source = new File("/home/alex/reconfigurator/c-reconfigurator-test/source/libssh_new/0a4ea19/pki.c")
-	static val target = new File("/home/alex/reconfigurator/c-reconfigurator-test/target/libssh/0a4ea19/pki.c")
-	static val oracle = new File("/home/alex/reconfigurator/c-reconfigurator-test/oracle_new/libssh/0a4ea19/pki.c")
-	
 	static def void process (File currentFile) {
 
 		val currentFilePath = currentFile.path
@@ -51,21 +47,6 @@ class TestFiles {
 				,"-target"	,currentTargetPath
 				,"-oracle"	,currentOraclePath
 				,"-I"		,currentFile.parent
-				
-				//libSSH
-				,"-I"		,currentFile.parent + "/incl_reconf"
-				,"-define"	,"RECONFIGURATOR"
-				//libSSH end
-				
-//				,"-I",       "/home/alex/linux_kernel/linux-4.7/include"
-//				,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include"
-//				,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include/generated/uapi" 
-//				,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include/generated"
-//				,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include/uapi"
-//				,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include/generated/uapi" 
-//				,"-I",       "/home/alex/linux_kernel/linux-4.7/include/uapi"
-//				,"-I",       "/home/alex/linux_kernel/linux-4.7/include/generated/uapi"
-//				,"-include", "test.h"
 				,"-reconfigureIncludes"
 //				,"-printIntermediaryFiles"
 //				,"-printDebugInfo"

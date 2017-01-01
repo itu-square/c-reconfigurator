@@ -46,6 +46,29 @@ class Patterns {
 	
 	
 	
+	public static def boolean isEnumDeclaration(GNode node) {
+		node.name.equals("Declaration")
+		&& node.getDescendantNode("EnumSpecifier") != null
+	}
+	
+	public static def String getNameOfEnumDeclaration(GNode node) {
+		val enumSpecifier = node.getDescendantNode("EnumSpecifier")
+		if (
+			enumSpecifier != null
+			&& enumSpecifier.get(0) instanceof Language<?>
+			&& enumSpecifier.get(1) instanceof GNode
+			&& (enumSpecifier.get(1) as GNode).name.equals("IdentifierOrTypedefName")
+		) {
+			return (enumSpecifier.get(0) as Language<CTag>).toString + " "
+				+ ((enumSpecifier.get(1) as GNode).get(0) as Text<?>).toString
+		} else {
+			println
+			println(node.printCode)
+			println(node.printAST)
+			throw new Exception("case not handled")
+		}
+	}
+	
 	
 	
 	
