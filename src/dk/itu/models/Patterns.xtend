@@ -277,14 +277,20 @@ class Patterns {
 	
 	public static def String getTypeOfParameterDeclaration(GNode node) {
 		var typeName =
-			if (node.get(0) instanceof Language<?>)
+			if (node.get(0) instanceof Language<?>) {
 				(node.get(0) as Language<CTag>).toString
-			else if (node.get(0) instanceof GNode && (node.get(0) as GNode).name.equals("TypedefTypeSpecifier"))
-				((node.get(0) as GNode).get(0) as Text<?>).toString
-			else if (node.get(0) instanceof GNode && (node.get(0) as GNode).name.equals("BasicTypeSpecifier"))
+			} else if (node.get(0) instanceof GNode && (node.get(0) as GNode).name.equals("TypedefTypeSpecifier")) {
+				if ((node.get(0) as GNode).get(0) instanceof Text<?>)
+					((node.get(0) as GNode).get(0) as Text<?>).toString
+				else if ((node.get(0) as GNode).get(1) instanceof Text<?>)
+					((node.get(0) as GNode).get(1) as Text<?>).toString
+			} else if (node.get(0) instanceof GNode && (node.get(0) as GNode).name.equals("BasicTypeSpecifier")) {
 				((node.get(0) as GNode).get(1) as Language<CTag>).toString
-			else
+			} else if (node.get(0) instanceof GNode && (node.get(0) as GNode).name.equals("SUETypeSpecifier")) {
+				(node.get(0) as GNode).get(0).printCode
+			} else {
 				throw new Exception("case not handled")
+			}
 		
 		var declarator = (node.get(1) as GNode)
 		while (declarator.name.equals("UnaryIdentifierDeclarator")) {
