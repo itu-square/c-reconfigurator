@@ -8,6 +8,7 @@ import xtc.tree.GNode
 import xtc.tree.Node
 
 import static extension dk.itu.models.Extensions.*
+import java.util.ArrayDeque
 
 class Patterns {
 	
@@ -232,34 +233,44 @@ class Patterns {
 		return (simpleDeclarator.get(0) as Text<?>).toString
 	}
 	
-	public static def String getTypeOfVariableDeclaration(GNode node) {
-		val declaringList = node.getDescendantNode("DeclaringList")
-		var typeNode = declaringList.get(0)
+	private static def String getTypeByTraversal(GNode node) {
 		
-		if (typeNode instanceof Language<?>) {
-			return (declaringList.get(0) as Language<CTag>).toString
-		} else
+		val ArrayDeque<Object> elements = new ArrayDeque<Object>
+		elements.add(node)
 		
-		if (typeNode instanceof GNode && (typeNode as GNode).name.equals("BasicDeclarationSpecifier")) {
-			return ((typeNode as GNode).get(1) as Language<CTag>).toString
-		} else
+		var type = ""
 		
-		if (typeNode instanceof GNode && (typeNode as GNode).name.equals("TypedefTypeSpecifier")) {
-			return (typeNode as GNode).getDescendantNode[
-				it instanceof Text<?>
-				&& (it as Text<CTag>).tag.equals(CTag::TYPEDEFname)
-			].toString
-		} else
-		
-		if (typeNode instanceof GNode && (typeNode as GNode).name.equals("BasicTypeSpecifier")) {
-			return (typeNode as GNode).filter[it instanceof Language<?>].map[it.toString].join(" ")
-		} else 
-		
-		{
-			println
-			println(node.printAST)
-			throw new Exception("case not handled")
+		while (!elements.empty) {
+			val current = elements.remove
+			
+			if (current instanceof Language<?>) {
+				if (!current.toString.equals("static")
+					&& !current.toString.equals("extern")
+					&& !current.toString.equals("const")
+				) {
+					if (current.toString.equals("*")) {
+						type += current.toString
+					} else {
+						type += " " + current.toString
+					}
+				}
+			}
+
+			else if (current instanceof GNode) {
+				if ((current as GNode).name.equals("SimpleDeclarator")) {
+					elements.clear
+				} else {
+					for (Object e : current.toList.reverseView)
+						elements.addFirst(e)
+				}
+			}
 		}
+		return type.trim
+	}
+	
+	public static def String getTypeOfVariableDeclaration(GNode node) {
+		val declaringList = node.getDescendantNode("DeclaringList") as GNode
+		return getTypeByTraversal(declaringList)
 	}
 	
 	
