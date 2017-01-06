@@ -168,11 +168,12 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		
 		if (node.isFunctionDefinition) {
 			debug
-			debug("isFunctionDefinition", true)
+			debug("   isFunctionDefinition", true)
 			// get current PC and names
 			val name = node.nameOfFunctionDefinition
 			val type = node.typeOfFunctionDefinition
 			val pc = node.presenceCondition
+			debug('''   - [«name»] of [«type»]''')
 			
 			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(type))
@@ -217,6 +218,24 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 				throw new Exception("ScopingRule: not handled: multiple type declarations.")
 			}
 		} else
+		
+		if (node.isStructDeclaration) {
+			debug("   isStructDeclaration", true)
+			// get current PC and names
+			val name = node.getNameOfStructDeclaration
+			val pc = node.presenceCondition
+			debug('''   - [«name»]''')
+			
+			var newTypeDeclaration = new TypeDeclaration(name, null)
+			typeDeclarations.put(name, newTypeDeclaration, pc)
+			
+			newTypeDeclaration = new TypeDeclaration(name + "*", null)
+			typeDeclarations.put(name + "*", newTypeDeclaration, pc)
+			
+			newTypeDeclaration = new TypeDeclaration(name + "**", null)
+			typeDeclarations.put(name + "**", newTypeDeclaration, pc)
+		} else
+		
 		if (node.isStructTypeDeclaration) {
 			debug("isStructTypeDeclaration", true)
 			// get current PC and names
@@ -248,21 +267,23 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		} else
 		if (node.isEnumDeclaration) {
 			debug
-			debug("isEnumDeclaration", true)
+			debug("   isEnumDeclaration", true)
 			
 			val pc = node.presenceCondition
 			val name = node.nameOfEnumDeclaration
+			debug('''   - [«name»]''')
 			
 			this.typeDeclarations.put( name, new TypeDeclaration(name, null), pc)
 		} else
 		if (node.isVariableDeclaration) {
 			debug
-			debug("isVariableDeclaration", true)
+			debug("   isVariableDeclaration", true)
 			
 			// get current PC and names
 			val pc = node.presenceCondition
 			val name = node.getNameOfVariableDeclaration
 			val type = node.getTypeOfVariableDeclaration
+			debug('''   - [«name»] of [«type»]''')
 			
 			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(type))
@@ -281,11 +302,12 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		} else
 		if (node.isParameterDeclaration) {
 			debug
-			debug("isParameterDeclaration", true)
+			debug("   isParameterDeclaration", true)
 			// get current PC and names
 			val pc = node.presenceCondition
 			val name = node.getNameOfParameterDeclaration
 			val type = node.getTypeOfParameterDeclaration
+			debug('''   - [«name»] of [«type»]''')
 			
 			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(type))

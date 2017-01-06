@@ -46,7 +46,6 @@ class LibSSHTest {
 				 "-source"	,currentFilePath
 				,"-target"	,currentTargetPath
 				,"-oracle"	,currentOraclePath
-				,"-I"		,currentFile.parent
 				
 				,"-I"		,currentFile.parent + "/incl_reconf"
 				,"-define"	,"RECONFIGURATOR"

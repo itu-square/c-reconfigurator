@@ -13,6 +13,22 @@ import java.util.ArrayDeque
 class Patterns {
 	
 	
+	public static def boolean isStructDeclaration(GNode node) {
+		node.name.equals("Declaration")
+		&& node.getDescendantNode[
+			it instanceof Language<?>
+			&& (it as Language<CTag>).tag.equals(CTag::TYPEDEF)
+		] == null
+		&& node.getDescendantNode("StructSpecifier") != null
+	}
+	
+	public static def String getNameOfStructDeclaration(GNode node) {
+		val structSpecifier = node.getDescendantNode("StructSpecifier")
+		
+		return (structSpecifier.get(0) as Language<?>).toString + " "
+			+ ((structSpecifier.get(1) as GNode).get(0) as Text<?>).toString
+	}
+	
 	public static def boolean isStructTypeDeclaration(GNode node) {
 		node.name.equals("Declaration")
 		&& node.getDescendantNode[
@@ -50,6 +66,7 @@ class Patterns {
 	public static def boolean isEnumDeclaration(GNode node) {
 		node.name.equals("Declaration")
 		&& node.getDescendantNode("EnumSpecifier") != null
+		&& node.getDescendantNode("EnumeratorList") != null
 	}
 	
 	public static def String getNameOfEnumDeclaration(GNode node) {

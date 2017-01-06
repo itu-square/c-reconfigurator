@@ -71,12 +71,12 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		if (
 			node.isVariableDeclarationWithVariability
 		) {
-			debug("isVariableDeclarationWithVariability", true)
+			debug("   isVariableDeclarationWithVariability", true)
 			val varPC = node.get(0) as PresenceCondition
 			val varDeclarationNode = node.get(1) as GNode
 			val varName = varDeclarationNode.getNameOfVariableDeclaration
 			val varType = varDeclarationNode.getTypeOfVariableDeclaration
-			debug("- " + varName)
+			debug('''   - [«varName»] of [«varType»]''')
 			
 			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(varType))
@@ -135,9 +135,9 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			node.isFunctionDefinition
 			&& !ancestors.last.name.equals("Conditional")
 		) {
-			debug("isFunctionDefinition", true)
+			debug("   isFunctionDefinition", true)
 			val funcName = node.nameOfFunctionDefinition
-			debug("- " + funcName)
+			debug("   - " + funcName)
 			functionDeclarations.rem(funcName, funcName)
 			
 			var newpair = Pair.EMPTY
@@ -170,8 +170,8 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			node.name.equals("SelectionStatement")
 		) {
 			debug
-			debug("other rewrites", true)
-			debug("- " + node.name)
+			debug("   other rewrites", true)
+			debug("   - " + node.name)
 			val newNode = (node.get(2) as GNode).rewriteVariableUse(variableDeclarationScopes, node.presenceCondition, pcidmap)
 			
 			if (!newNode.printAST.equals(node.get(2).printAST)) {
@@ -190,8 +190,8 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			|| node.name.equals("ExpressionStatement")
 		) {
 			debug
-			debug("other rewrites", true)
-			debug("- " + node.name)
+			debug("   other rewrites", true)
+			debug("   - " + node.name)
 			return node.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition, pcidmap)
 		} else
 		if (
