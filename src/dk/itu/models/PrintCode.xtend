@@ -311,6 +311,7 @@ class PrintCode extends PrintMethod {
 			}
 			
 			if (node.properties != null && node.hasProperty("OriginalPC")) {
+				output.println
 				output.println('''#if «(node.getProperty("OriginalPC") as PresenceCondition).PCtoCPPexp»''')
 				output.println(includeStrLit.replace("\\\"", "\""))
 				output.println('''#endif''')

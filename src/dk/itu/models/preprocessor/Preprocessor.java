@@ -91,7 +91,7 @@ public class Preprocessor {
 					String param = result.group(2); // feature expression
 					
 					if (Tag.INCLUDE.equals(dir)) {
-						out.append("char " + Settings.reconfiguratorIncludePlaceholder + "[] = \"" + line.replace("\"", "\\\"") + "\";\n");
+						out.append("char " + Settings.reconfiguratorIncludePlaceholder + "[] = \"" + line.replace("\"", "\\\"").replaceFirst("# *include", "#include") + "\";\n");
 					}
 					out.append(line + "\n");
 					
