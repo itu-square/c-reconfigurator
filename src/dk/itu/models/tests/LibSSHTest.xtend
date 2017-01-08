@@ -11,9 +11,9 @@ import static extension dk.itu.models.Extensions.*
 class LibSSHTest {
 	
 	static val report = new Report
-	static val source = new File("/home/alex/reconfigurator/c-reconfigurator-test/source/libssh_new/0a4ea19/pki.c")
+	static val source = new File("/home/alex/reconfigurator/c-reconfigurator-test/source/libssh/0a4ea19/pki.c")
 	static val target = new File("/home/alex/reconfigurator/c-reconfigurator-test/target/libssh/0a4ea19/pki.c")
-	static val oracle = new File("/home/alex/reconfigurator/c-reconfigurator-test/oracle_new/libssh/0a4ea19/pki.c")
+	static val oracle = new File("/home/alex/reconfigurator/c-reconfigurator-test/oracle/libssh/0a4ea19/pki.c")
 	
 	static def void process (File currentFile) {
 
@@ -48,10 +48,9 @@ class LibSSHTest {
 				,"-oracle"	,currentOraclePath
 				
 				,"-I"		,currentFile.parent + "/incl_reconf"
-				,"-define"	,"RECONFIGURATOR"
 				
 				,"-reconfigureIncludes"
-				,"-printIntermediaryFiles"
+//				,"-printIntermediaryFiles"
 //				,"-printDebugInfo"
 				)
 			

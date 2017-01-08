@@ -494,8 +494,9 @@ class Reconfigurator {
 				// check oracle
 				if(Settings::oracleFile != null) {
 					if(Settings::oracleFile.exists) {
-						if(!node.printAST.equals(readFile(Settings::oracleFile.path)))
+						if(!node.printAST.equals(readFile(Settings::oracleFile.path))) {
 							Reconfigurator::errors.add("oracle: fail")
+						}
 					} else {
 						Reconfigurator::errors.add("oracle: !ext")
 					}

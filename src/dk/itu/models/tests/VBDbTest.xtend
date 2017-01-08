@@ -13,7 +13,7 @@ class VBDbTest {
 	static val report = new Report
 	static val source = new File("/home/alex/reconfigurator/c-reconfigurator-test/source/vbdb")
 	static val target = new File("/home/alex/reconfigurator/c-reconfigurator-test/target/vbdb")
-	static val oracle = new File("/home/alex/reconfigurator/c-reconfigurator-test/oracle_new/vbdb")
+	static val oracle = new File("/home/alex/reconfigurator/c-reconfigurator-test/oracle/vbdb")
 
 	static def void process (File currentFile) {
 
