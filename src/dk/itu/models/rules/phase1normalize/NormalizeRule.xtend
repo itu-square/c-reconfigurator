@@ -39,6 +39,7 @@ class NormalizeRule extends Rule  {
 		tdn1.register(new ExtractConditionalFromGlobalVariableInitializerRule)
 		tdn1.register(new ExtractConditionalFromArrayDeclaratorRule)
 		tdn1.register(new ExtractConditionalFromFunctionDeclaratorRule)
+		tdn1.register(new ExtractConditionalFromSwitchStatementRule)
 		normalized = tdn1.transform(normalized) as Node
 		
 		val tdn2 = new TopDownStrategy

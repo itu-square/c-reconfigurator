@@ -51,7 +51,7 @@ class LibSSHTest {
 				,"-define"	,"RECONFIGURATOR"
 				
 				,"-reconfigureIncludes"
-//				,"-printIntermediaryFiles"
+				,"-printIntermediaryFiles"
 //				,"-printDebugInfo"
 				)
 			
