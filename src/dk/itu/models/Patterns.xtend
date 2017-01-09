@@ -55,8 +55,15 @@ class Patterns {
 	
 	public static def String getTypeOfStructTypeDeclaration(GNode node) {
 		val structSpecifier = node.getDescendantNode("StructSpecifier")
-		return (structSpecifier.get(0) as Language<CTag>).toString + " "
-			+ ((structSpecifier.get(1) as GNode).get(0) as Text<CTag>).toString
+		
+		val name = 
+		if (structSpecifier.getDescendantNode("IdentifierOrTypedefName") != null) {
+			(structSpecifier.get(0) as Language<CTag>).toString + " "
+			+ (structSpecifier.getDescendantNode("IdentifierOrTypedefName").get(0) as Text<CTag>).toString
+		} else {
+			(structSpecifier.get(0) as Language<CTag>).toString
+		}
+		return name
 	}
 	
 	
@@ -113,27 +120,12 @@ class Patterns {
 	
 	public static def String getNameOfTypeDeclaration(GNode node) {
 		val simpleDeclarator = node.getDescendantNode("SimpleDeclarator")
-		return (simpleDeclarator.get(0) as Text<CTag>).toString
+		val name = (simpleDeclarator.get(0) as Text<CTag>).toString
+		return name
 	}
 	
 	public static def String getTypeOfTypeDeclaration(GNode node) {
-		var typeName = ""
-		var bds = ((node.get(0) as GNode).get(0) as GNode)
-		
-		while (
-			bds.name.equals("BasicDeclarationSpecifier")
-		){
-			if (
-				(bds.last instanceof GNode)
-				&& (bds.last as GNode).name.equals("SignedKeyword")
-			) {
-				typeName = (bds.last as GNode).head.toString + " " + typeName
-			} else if (bds.last instanceof Language<?>) {
-				typeName = (bds.last as Language<CTag>).toString + " " + typeName
-			}
-			bds = bds.get(0) as GNode
-		}
-		return typeName.trim
+		return getTypeByTraversal(node.getDescendantNode("DeclaringList") as GNode)
 	}
 	
 	
@@ -264,6 +256,7 @@ class Patterns {
 				if (!current.toString.equals("static")
 					&& !current.toString.equals("extern")
 					&& !current.toString.equals("const")
+					&& !current.toString.equals("typedef")
 				) {
 					if (current.toString.equals("*")) {
 						type += current.toString

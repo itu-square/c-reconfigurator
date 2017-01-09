@@ -450,7 +450,12 @@ class Reconfigurator {
 			// Preprocessor
 			Reconfigurator::preprocessor = new Preprocessor
 			Reconfigurator::transformedFeaturemap = preprocessor.mapFeatureAndTransformedFeatureNames
-			Reconfigurator::preprocessor.runFile(Settings::sourceFile.path).toString.writeToFile(Settings::targetFile.path)
+			val preproc = Reconfigurator::preprocessor.runFile(Settings::sourceFile.path).toString
+			preproc.writeToFile(Settings::targetFile.path)
+			
+			if (Settings::printIntermediaryFiles) {
+				preproc.writeToFile(Settings::targetFile.path + ".preproc.c")
+			}
 			
 			// Parser
 			val superc = new SuperC
