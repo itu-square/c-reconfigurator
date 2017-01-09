@@ -77,18 +77,37 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 				else
 					newExp.getDescendantNode("PrimaryIdentifier").setHandled
 				
-				exp = if (exp == null) newExp else
-				 GNode::create("PrimaryExpression",
-					new Language<CTag>(CTag.LPAREN),
-			 		GNode::create("ConditionalExpression",
-			 			pc.PCtoCexp,
-			 			new Language<CTag>(CTag.QUESTION),
-			 			newExp,
-			 			new Language<CTag>(CTag.COLON),
-			 			exp
-			 			),
-			 		new Language<CTag>(CTag.RPAREN)
-				)
+				exp = if (exp == null) {
+					newExp
+				} else {
+					val exp1 = if (newExp.name.equals("AssignmentExpression")) {
+						GNode::create("PrimaryExpression",
+							new Language<CTag>(CTag.LPAREN),
+							newExp,
+							new Language<CTag>(CTag.RPAREN)
+						)
+					} else { newExp }
+					
+					val exp2 = if (exp.name.equals("AssignmentExpression")) {
+						GNode::create("PrimaryExpression",
+							new Language<CTag>(CTag.LPAREN),
+							exp,
+							new Language<CTag>(CTag.RPAREN)
+						)
+					} else { exp }
+					
+					GNode::create("PrimaryExpression",
+						new Language<CTag>(CTag.LPAREN),
+				 		GNode::create("ConditionalExpression",
+				 			pc.PCtoCexp,
+				 			new Language<CTag>(CTag.QUESTION),
+				 			exp1,
+				 			new Language<CTag>(CTag.COLON),
+				 			exp2
+				 			),
+				 		new Language<CTag>(CTag.RPAREN)
+						)
+				}
 			}
 			return exp
 		}

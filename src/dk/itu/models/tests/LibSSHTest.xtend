@@ -12,13 +12,13 @@ class LibSSHTest {
 	
 	static val report = new Report
 	
-	static val source = new File("/home/alex/reconfigurator/c-reconfigurator-test/source/libssh/0a4ea19/pki.c")
-	static val target = new File("/home/alex/reconfigurator/c-reconfigurator-test/target/libssh/0a4ea19/pki.c")
-	static val oracle = new File("/home/alex/reconfigurator/c-reconfigurator-test/oracle/libssh/0a4ea19/pki.c")
+//	static val source = new File("/home/alex/reconfigurator/c-reconfigurator-test/source/libssh/0a4ea19/pki.c")
+//	static val target = new File("/home/alex/reconfigurator/c-reconfigurator-test/target/libssh/0a4ea19/pki.c")
+//	static val oracle = new File("/home/alex/reconfigurator/c-reconfigurator-test/oracle/libssh/0a4ea19/pki.c")
 	
-//	static val source = new File("/home/alex/reconfigurator/c-reconfigurator-test/source/libssh/fadbe80/options.c")
-//	static val target = new File("/home/alex/reconfigurator/c-reconfigurator-test/target/libssh/fadbe80/options.c")
-//	static val oracle = new File("/home/alex/reconfigurator/c-reconfigurator-test/oracle/libssh/fadbe80/options.c")
+	static val source = new File("/home/alex/reconfigurator/c-reconfigurator-test/source/libssh/fadbe80/options.c")
+	static val target = new File("/home/alex/reconfigurator/c-reconfigurator-test/target/libssh/fadbe80/options.c")
+	static val oracle = new File("/home/alex/reconfigurator/c-reconfigurator-test/oracle/libssh/fadbe80/options.c")
 	
 	static def void process (File currentFile) {
 
