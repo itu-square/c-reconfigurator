@@ -28,6 +28,10 @@ class Patterns {
 		return (structSpecifier.get(0) as Language<?>).toString + " "
 			+ ((structSpecifier.get(1) as GNode).get(0) as Text<?>).toString
 	}
+
+
+
+
 	
 	public static def boolean isStructTypeDeclaration(GNode node) {
 		node.name.equals("Declaration")
@@ -149,6 +153,37 @@ class Patterns {
 		&& (((node.get(1) as GNode).get(0) as GNode).get(0) as GNode).name.equals("StructSpecifier")
 	} 
 	
+	
+	
+	
+	
+	
+	
+	
+	public static def boolean isFunctionDeclaration(GNode node) {
+		node.name.equals("Declaration")
+		&& node.getDescendantNode("FunctionDeclarator") != null
+	} 
+	
+	public static def boolean isFunctionDeclarationWithVariability(GNode node) {
+		node.name.equals("Conditional")
+		&& node.size == 2
+		
+		&& (node.get(0) instanceof PresenceCondition)
+		
+		&& (node.get(1) instanceof GNode)
+		&& (node.get(1) as GNode).isFunctionDeclaration
+	}
+	
+	public static def String getNameOfFunctionDeclaration(GNode node) {
+		val simpleDeclarator = node.getDescendantNode("SimpleDeclarator")
+		return (simpleDeclarator.get(0) as Text<?>).toString
+	}
+	
+	public static def String getTypeOfFunctionDeclaration(GNode node) {
+		val declaringList = node.getDescendantNode("DeclaringList") as GNode
+		return getTypeByTraversal(declaringList)
+	}
 	
 	
 	
@@ -297,28 +332,7 @@ class Patterns {
 	}
 	
 	public static def String getTypeOfParameterDeclaration(GNode node) {
-		var typeName =
-			if (node.get(0) instanceof Language<?>) {
-				(node.get(0) as Language<CTag>).toString
-			} else if (node.get(0) instanceof GNode && (node.get(0) as GNode).name.equals("TypedefTypeSpecifier")) {
-				if ((node.get(0) as GNode).get(0) instanceof Text<?>)
-					((node.get(0) as GNode).get(0) as Text<?>).toString
-				else if ((node.get(0) as GNode).get(1) instanceof Text<?>)
-					((node.get(0) as GNode).get(1) as Text<?>).toString
-			} else if (node.get(0) instanceof GNode && (node.get(0) as GNode).name.equals("BasicTypeSpecifier")) {
-				((node.get(0) as GNode).get(1) as Language<CTag>).toString
-			} else if (node.get(0) instanceof GNode && (node.get(0) as GNode).name.equals("SUETypeSpecifier")) {
-				(node.get(0) as GNode).get(0).printCode
-			} else {
-				throw new Exception("case not handled")
-			}
-		
-		var declarator = (node.get(1) as GNode)
-		while (declarator.name.equals("UnaryIdentifierDeclarator")) {
-			typeName = typeName + (declarator.get(0)).toString
-			declarator = (declarator.get(1) as GNode)
-		}
-		return typeName
+		return getTypeByTraversal(node)
 	}
 	
 	

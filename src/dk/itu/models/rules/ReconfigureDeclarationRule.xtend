@@ -45,61 +45,82 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		) {
 			node.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition, pcidmap)
 		} else
-//		if (
-//			node.isTypeDeclarationWithVariability
-//		) {
-//			// get current PC and names
-//			val pc = node.guard.and((node.get(0) as PresenceCondition))
-//			val name = (node.get(1) as GNode).getNameOfTypeDeclaration
-//			val type = (node.get(1) as GNode).getTypeOfTypeDeclaration
-//			
-//			// get registered type declaration
-//			if (!typeDeclarations.containsDeclaration(type))
-//				throw new Exception('''ReconfigureDeclarationRule: type declaration «type» not found.''')
-//			val typeDeclaration = typeDeclarations.get(type, pc) as TypeDeclaration
-//			
-//			// create new name and new type declaration
-//			val variantName = name + "_V" + pcidmap.getId(pc)
-//			val variantTypeDeclaration = new TypeDeclaration(variantName, typeDeclaration)
-//			this.typeDeclarations.put(name, variantTypeDeclaration, pc)
-//			
-//			// rewrite the names and return the node
-//			var newNode = (node.get(1) as GNode).replaceDeclaratorTextWithNewId(variantName)
-//			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
-//			newNode
-//		} else
+		
 		if (
-			node.isVariableDeclarationWithVariability
+			node.isStructDeclarationWithVariability
 		) {
-			debug("   isVariableDeclarationWithVariability", true)
-			val varPC = node.get(0) as PresenceCondition
-			val varDeclarationNode = node.get(1) as GNode
-			val varName = varDeclarationNode.getNameOfVariableDeclaration
-			val varType = varDeclarationNode.getTypeOfVariableDeclaration
-			debug('''   - [«varName»] of [«varType»]''')
+			val pc = node.get(0) as PresenceCondition
+			val declarationNode = node.get(1) as GNode
+			val name = declarationNode.getNameOfStructDeclaration.replace("struct ", "")
+			
+			
+			//
+			// Importand TODO
+			// the type should be more complex than getNameOfStructDeclaration
+			// it should be getTypeOfStructDeclaration with all the fields
+			//
+			
+			
+			val type = declarationNode.getNameOfStructDeclaration
 			
 			// get registered type declaration
-			if (!typeDeclarations.containsDeclaration(varType))
-				throw new Exception('''ReconfigureDeclarationRule: type declaration «varType» not found.''')
+			if (!typeDeclarations.containsDeclaration(type))
+				throw new Exception('''ReconfigureDeclarationRule: type declaration «type» not found.''')
 			
-			val typeDeclarationList = typeDeclarations.declarationList(varType)
+			val typeDeclarationList = typeDeclarations.declarationList(type)
 			
 			if (typeDeclarationList.size == 1) {
 				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
 
-				val newName = varName + "_V" + pcidmap.getId(varPC)
-				val varDeclaration = new VariableDeclaration(newName, typeDeclaration)
-				addVariable(varName, varDeclaration, varPC)
+				val newName = name + "_V" + pcidmap.getId(pc)
+				val newTypeDeclaration = new TypeDeclaration(newName, typeDeclaration)
+				typeDeclarations.put(newName, newTypeDeclaration, pc)
+				
+				//
+				// Importand TODO
+				// temporarily not reconfigured
+				//var newNode = declarationNode.replaceIdentifierVarName(name, newName)
+				//newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
+				//return newNode
+				return declarationNode
+			} else {
+				throw new Exception("ReconfigureDeclarationRule: not handled: multiple type declarations.")
+			}
+		} else
+		
+		
+		if (
+			node.isFunctionDeclarationWithVariability
+		) {
+			val pc = node.get(0) as PresenceCondition
+			val declarationNode = node.get(1) as GNode
+			val name = declarationNode.getNameOfFunctionDeclaration
+			val type = declarationNode.getTypeOfFunctionDeclaration
+			
+	
+			// get registered type declaration
+			if (!typeDeclarations.containsDeclaration(type))
+				throw new Exception('''ReconfigureDeclarationRule: type declaration «type» not found.''')
+			
+			val typeDeclarationList = typeDeclarations.declarationList(type)
+			
+			if (typeDeclarationList.size == 1) {
+				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
 
-				var newNode = varDeclarationNode.replaceDeclaratorTextWithNewId(newName)
-				newNode = newNode.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition.and(varPC), pcidmap)
-				newNode = newNode.rewriteFunctionCall(functionDeclarations, node.presenceCondition.and(varPC), pcidmap)
-				newNode.setProperty("OriginalPC", node.presenceCondition.and(varPC))
+				val newName = name + "_V" + pcidmap.getId(pc)
+				val funcDeclaration = new FunctionDeclaration(newName, typeDeclaration)
+				functionDeclarations.put(newName, funcDeclaration, pc)
+
+				var newNode = declarationNode.replaceIdentifierVarName(name, newName)
+				newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
 				return newNode
 			} else {
 				throw new Exception("ReconfigureDeclarationRule: not handled: multiple type declarations.")
 			}
 		} else
+		
+		
+		
 		if (
 			node.isFunctionDefinitionWithVariability
 		) {
@@ -108,6 +129,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			val funcDefinitionNode = node.get(1) as GNode
 			val funcName = funcDefinitionNode.getNameOfFunctionDefinition
 			val funcType = funcDefinitionNode.getTypeOfFunctionDefinition
+			debug('''  --- [«funcName»] of [«funcType»]''')
 			
 			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(funcType))
@@ -131,6 +153,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				throw new Exception("ReconfigureDeclarationRule: not handled: multiple type declarations.")
 			}
 		} else
+		
 		if (
 			node.isFunctionDefinition
 			&& !ancestors.last.name.equals("Conditional")
@@ -165,6 +188,40 @@ class ReconfigureDeclarationRule extends ScopingRule {
 					node.properties.toInvertedMap[p | node.getProperty(p.toString)]
 				)
 		} else
+
+		if (
+			node.isVariableDeclarationWithVariability
+		) {
+			debug("   isVariableDeclarationWithVariability", true)
+			val varPC = node.get(0) as PresenceCondition
+			val varDeclarationNode = node.get(1) as GNode
+			val varName = varDeclarationNode.getNameOfVariableDeclaration
+			val varType = varDeclarationNode.getTypeOfVariableDeclaration
+			println('''   - [«varName»] of [«varType»]''')
+			
+			// get registered type declaration
+			if (!typeDeclarations.containsDeclaration(varType))
+				throw new Exception('''ReconfigureDeclarationRule: type declaration «varType» not found.''')
+			
+			val typeDeclarationList = typeDeclarations.declarationList(varType)
+			
+			if (typeDeclarationList.size == 1) {
+				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
+
+				val newName = varName + "_V" + pcidmap.getId(varPC)
+				val varDeclaration = new VariableDeclaration(newName, typeDeclaration)
+				addVariable(varName, varDeclaration, varPC)
+
+				var newNode = varDeclarationNode.replaceDeclaratorTextWithNewId(newName)
+				newNode = newNode.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition.and(varPC), pcidmap)
+				newNode = newNode.rewriteFunctionCall(functionDeclarations, node.presenceCondition.and(varPC), pcidmap)
+				newNode.setProperty("OriginalPC", node.presenceCondition.and(varPC))
+				return newNode
+			} else {
+				throw new Exception("ReconfigureDeclarationRule: not handled: multiple type declarations.")
+			}
+		} else
+		
 		if (
 			// other places to rewrite variable names and function calls
 			node.name.equals("SelectionStatement")
@@ -224,7 +281,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				"EnumeratorValueOpt", "PostfixIdentifierDeclarator", "PostfixingAbstractDeclarator",
 				"CleanTypedefDeclarator", "CleanPostfixTypedefDeclarator", "DirectSelection",
 				"AssemblyExpressionOpt", "LocalLabelDeclarationListOpt", "ExpressionOpt",
-				"ParameterIdentifierDeclaration", "StructSpecifier"].contains(node.name)
+				"ParameterIdentifierDeclaration", "StructSpecifier", "BitFieldSizeOpt"].contains(node.name)
 			|| (node.name.equals("ParameterAbstractDeclaration") && node.size == 1)
 		) {
 			node

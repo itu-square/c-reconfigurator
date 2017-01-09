@@ -145,7 +145,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"PostfixIdentifierDeclarator", "PostfixingAbstractDeclarator", "CleanTypedefDeclarator",
 			"CleanPostfixTypedefDeclarator", "DirectSelection", "AssemblyExpressionOpt",
 			"LocalLabelDeclarationListOpt", "ParameterAbstractDeclaration", "ParameterIdentifierDeclaration",
-			"ExpressionOpt", "StructSpecifier"]
+			"ExpressionOpt", "StructSpecifier", "BitFieldSizeOpt"]
 				.contains(node.name)
 		) {
 			// no scope
@@ -311,7 +311,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			
 			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(type))
-				throw new Exception('''ScopingRule: type declaration «type» not found.''')
+				throw new Exception('''ScopingRule: type declaration [«type»] not found.''')
 			
 			val typeDeclarationList = typeDeclarations.declarationList(type)
 			
@@ -328,7 +328,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"ArrayDeclarator", "AssemblyExpressionOpt", "AssignmentExpression", "AssignmentOperator",
 			"AttributeExpressionOpt", "AttributeKeyword", "AttributeList", "AttributeListOpt",
 			"AttributeSpecifier", "AttributeSpecifierList", "AttributeSpecifierListOpt",
-				"BasicDeclarationSpecifier", "BasicTypeSpecifier", "BreakStatement",
+				"BasicDeclarationSpecifier", "BasicTypeSpecifier", "BreakStatement", "BitFieldSizeOpt",
 				"CastExpression", "CleanPostfixTypedefDeclarator", "CleanTypedefDeclarator",
 			"CompoundStatement", "Conditional", "ConditionalExpression", "ConstQualifier",
 			"ContinueStatement",

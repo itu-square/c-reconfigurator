@@ -59,7 +59,7 @@ class LibSSHTest {
 				,"-I"		,currentFile.parent + "/incl_reconf"
 				
 				,"-reconfigureIncludes"
-				,"-printIntermediaryFiles"
+//				,"-printIntermediaryFiles"
 //				,"-printDebugInfo"
 				)
 			
