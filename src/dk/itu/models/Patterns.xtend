@@ -292,6 +292,7 @@ class Patterns {
 					&& !current.toString.equals("extern")
 					&& !current.toString.equals("const")
 					&& !current.toString.equals("typedef")
+					&& !current.toString.equals("__restrict")
 				) {
 					if (current.toString.equals("*")) {
 						type += current.toString
