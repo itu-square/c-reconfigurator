@@ -13,10 +13,10 @@ class FileTest2 {
 		var runArgs = new ArrayList<String>
 		
 		runArgs.addAll(
-			 "-source",	"/home/alex/reconfigurator/c-reconfigurator-test/source/libssh/0a4ea19/pki.c"
-			,"-target",	"/home/alex/reconfigurator/c-reconfigurator-test/target/libssh/0a4ea19/pki.c"
-			,"-oracle",	"/home/alex/reconfigurator/c-reconfigurator-test/oracle/libssh/0a4ea19/pki.c.ast"
-			,"-I",		"/home/alex/reconfigurator/c-reconfigurator-test/source/libssh/0a4ea19/incl_reconf"
+			 "-source",	"/home/alex/reconfigurator/c-reconfigurator-test/source/libssh/fadbe80/options.c"
+			,"-target",	"/home/alex/reconfigurator/c-reconfigurator-test/target/libssh/fadbe80/options.c"
+			,"-oracle",	"/home/alex/reconfigurator/c-reconfigurator-test/oracle/libssh/fadbe80/options.c.ast"
+			,"-I",		"/home/alex/reconfigurator/c-reconfigurator-test/source/libssh/fadbe80/incl_reconf"
 			,"-reconfigureIncludes"
 			
 //			 "-source",	"/home/alex/reconfigurator/c-reconfigurator-test/source/vbdb/linux/76baeeb/76baeeb.c"

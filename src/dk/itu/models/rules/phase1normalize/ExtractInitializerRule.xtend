@@ -58,13 +58,12 @@ class ExtractInitializerRule extends AncestorGuaranteedRule {
 				val stringLiteralList = initializer.get(0) as GNode
 				if (
 					stringLiteralList.size == 1
-					&& stringLiteralList.get(0) instanceof GNode
-					&& (stringLiteralList.get(0) as GNode).name.equals("Conditional")
-					&& (stringLiteralList.get(0) as GNode).size == 2
-					&& (stringLiteralList.get(0) as GNode).get(1) instanceof Text<?>
-					&& ((stringLiteralList.get(0) as GNode).get(1) as Text<CTag>).tag.equals(CTag::STRINGliteral)
+					&& stringLiteralList.getDescendantNode[
+						it instanceof Text<?> && (it as Text<CTag>).tag.equals(CTag::STRINGliteral)
+					] != null
 				) {
-					var str = (stringLiteralList.get(0) as GNode).get(1).toString
+					var str = stringLiteralList.getDescendantNode[
+						it instanceof Text<?> && (it as Text<CTag>).tag.equals(CTag::STRINGliteral)].toString
 					str = str.subSequence(1, str.length-1).toString
 					for (var int index = 0; index < str.length; index++) {
 						newPair = newPair.add(GNode::create(
@@ -86,6 +85,10 @@ class ExtractInitializerRule extends AncestorGuaranteedRule {
 				}
 				else {
 					println
+					println(declaringList.printCode)
+					println("-----")
+					println(declaringList.printAST)
+					println("-----")
 					println(stringLiteralList.printAST)
 					throw new Exception("ExtractInitializerRule: unknown String Literal initialization pattern.")
 				}
