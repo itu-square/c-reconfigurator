@@ -145,7 +145,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"PostfixIdentifierDeclarator", "PostfixingAbstractDeclarator", "CleanTypedefDeclarator",
 			"CleanPostfixTypedefDeclarator", "DirectSelection", "AssemblyExpressionOpt",
 			"LocalLabelDeclarationListOpt", "ParameterAbstractDeclaration", "ParameterIdentifierDeclaration",
-			"ExpressionOpt", "StructSpecifier", "BitFieldSizeOpt"]
+			"ExpressionOpt", "StructSpecifier", "BitFieldSizeOpt", "VolatileQualifier"]
 				.contains(node.name)
 		) {
 			// no scope
@@ -347,7 +347,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 				"MatchedInitializerList", "MultiplicativeExpression",
 				"ParameterList", "ParameterTypedefDeclarator", "ParameterTypeList", "ParameterTypeListOpt",
 			"PostfixIdentifierDeclarator", "PostfixingAbstractDeclarator", "PostfixingFunctionDeclarator",
-			"PrimaryExpression", "PrimaryIdentifier",
+			"PrimaryExpression", "PrimaryIdentifier", "ParameterAbstractDeclaration",
 				"RelationalExpression", "ReturnStatement", "RestrictQualifier",
 				"SelectionStatement", "ShiftExpression", "SignedKeyword", "SimpleDeclarator", "Subscript",
 			"SUEDeclarationSpecifier", "SUETypeSpecifier", "StatementAsExpression", "StringLiteralList",
@@ -356,6 +356,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 				"TranslationUnit", "TypedefDeclarationSpecifier", "TypedefTypeSpecifier", "TypeName",
 			"TypeQualifier", "TypeQualifierList",
 			 	"UnaryAbstractDeclarator", "UnaryExpression", "UnaryIdentifierDeclarator", "Unaryoperator",
+			 	"VolatileQualifier",
 				"Word"].contains(node.name)
 			|| (node.name.equals("ParameterDeclaration") && (node.size == 1 || !(node instanceof GNode)))
 			|| (node.name.equals("ParameterDeclaration") && node.getDescendantNode("EnumSpecifier") != null )

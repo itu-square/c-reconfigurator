@@ -281,8 +281,8 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				"EnumeratorValueOpt", "PostfixIdentifierDeclarator", "PostfixingAbstractDeclarator",
 				"CleanTypedefDeclarator", "CleanPostfixTypedefDeclarator", "DirectSelection",
 				"AssemblyExpressionOpt", "LocalLabelDeclarationListOpt", "ExpressionOpt",
-				"ParameterIdentifierDeclaration", "StructSpecifier", "BitFieldSizeOpt"].contains(node.name)
-			|| (node.name.equals("ParameterAbstractDeclaration") && node.size == 1)
+				"ParameterIdentifierDeclaration", "StructSpecifier", "BitFieldSizeOpt",
+				"ParameterAbstractDeclaration", "VolatileQualifier"].contains(node.name)
 		) {
 			node
 		} else {
