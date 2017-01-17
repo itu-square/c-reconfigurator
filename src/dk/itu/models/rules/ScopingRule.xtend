@@ -226,14 +226,17 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			val pc = node.presenceCondition
 			debug('''   - [«name»]''')
 			
-			var newTypeDeclaration = new TypeDeclaration(name, null)
-			typeDeclarations.put(name, newTypeDeclaration, pc)
-			
-			newTypeDeclaration = new TypeDeclaration(name + "*", null)
-			typeDeclarations.put(name + "*", newTypeDeclaration, pc)
-			
-			newTypeDeclaration = new TypeDeclaration(name + "**", null)
-			typeDeclarations.put(name + "**", newTypeDeclaration, pc)
+			// get registered type declaration
+			if (!typeDeclarations.containsDeclaration(name)) {
+				var newTypeDeclaration = new TypeDeclaration(name, null)
+				typeDeclarations.put(name, newTypeDeclaration, pc)
+				
+				newTypeDeclaration = new TypeDeclaration(name + "*", null)
+				typeDeclarations.put(name + "*", newTypeDeclaration, pc)
+				
+				newTypeDeclaration = new TypeDeclaration(name + "**", null)
+				typeDeclarations.put(name + "**", newTypeDeclaration, pc)
+			}
 		} else
 		
 		if (node.isStructTypeDeclaration) {

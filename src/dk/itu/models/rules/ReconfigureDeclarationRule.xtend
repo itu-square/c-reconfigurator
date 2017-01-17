@@ -57,8 +57,14 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			
 			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(type)) {
-				val typeDeclaration = new TypeDeclaration(type, null)
+				var typeDeclaration = new TypeDeclaration(type, null)
 				typeDeclarations.put(type, typeDeclaration, pc)
+				
+				typeDeclaration = new TypeDeclaration(type + "*", null)
+				typeDeclarations.put(type + "*", typeDeclaration, pc)
+				
+				typeDeclaration = new TypeDeclaration(type + "**", null)
+				typeDeclarations.put(type + "**", typeDeclaration, pc)
 			}
 			
 			val typeDeclarationList = typeDeclarations.declarationList(type)
@@ -67,8 +73,10 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
 
 				val newName = name + "_V" + pcidmap.getId(pc)
-				val newTypeDeclaration = new TypeDeclaration(newName, typeDeclaration)
-				typeDeclarations.put(newName, newTypeDeclaration, pc)
+				val newType = type.replace(name, newName)
+				
+				val newTypeDeclaration = new TypeDeclaration(newType, typeDeclaration)
+				typeDeclarations.put(newType, newTypeDeclaration, pc)
 				
 				var newNode = declarationNode.replaceIdentifierVarName(name, newName)
 				newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
