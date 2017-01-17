@@ -53,19 +53,13 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			val declarationNode = node.get(1) as GNode
 			val name = declarationNode.getNameOfStructDeclaration.replace("struct ", "")
 			
-			
-			//
-			// Importand TODO
-			// the type should be more complex than getNameOfStructDeclaration
-			// it should be getTypeOfStructDeclaration with all the fields
-			//
-			
-			
 			val type = declarationNode.getNameOfStructDeclaration
 			
 			// get registered type declaration
-			if (!typeDeclarations.containsDeclaration(type))
-				throw new Exception('''ReconfigureDeclarationRule: type declaration «type» not found.''')
+			if (!typeDeclarations.containsDeclaration(type)) {
+				val typeDeclaration = new TypeDeclaration(type, null)
+				typeDeclarations.put(type, typeDeclaration, pc)
+			}
 			
 			val typeDeclarationList = typeDeclarations.declarationList(type)
 			
@@ -76,13 +70,9 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				val newTypeDeclaration = new TypeDeclaration(newName, typeDeclaration)
 				typeDeclarations.put(newName, newTypeDeclaration, pc)
 				
-				//
-				// Importand TODO
-				// temporarily not reconfigured
-				//var newNode = declarationNode.replaceIdentifierVarName(name, newName)
-				//newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
-				//return newNode
-				return declarationNode
+				var newNode = declarationNode.replaceIdentifierVarName(name, newName)
+				newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
+				return newNode
 			} else {
 				throw new Exception("ReconfigureDeclarationRule: not handled: multiple type declarations.")
 			}
@@ -282,7 +272,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				"CleanTypedefDeclarator", "CleanPostfixTypedefDeclarator", "DirectSelection",
 				"AssemblyExpressionOpt", "LocalLabelDeclarationListOpt", "ExpressionOpt",
 				"ParameterIdentifierDeclaration", "StructSpecifier", "BitFieldSizeOpt",
-				"ParameterAbstractDeclaration", "VolatileQualifier"].contains(node.name)
+				"ParameterAbstractDeclaration", "VolatileQualifier", "UnionSpecifier"].contains(node.name)
 		) {
 			node
 		} else {

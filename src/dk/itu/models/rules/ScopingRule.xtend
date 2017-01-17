@@ -145,7 +145,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"PostfixIdentifierDeclarator", "PostfixingAbstractDeclarator", "CleanTypedefDeclarator",
 			"CleanPostfixTypedefDeclarator", "DirectSelection", "AssemblyExpressionOpt",
 			"LocalLabelDeclarationListOpt", "ParameterAbstractDeclaration", "ParameterIdentifierDeclaration",
-			"ExpressionOpt", "StructSpecifier", "BitFieldSizeOpt", "VolatileQualifier"]
+			"ExpressionOpt", "StructSpecifier", "BitFieldSizeOpt", "VolatileQualifier", "UnionSpecifier"]
 				.contains(node.name)
 		) {
 			// no scope
@@ -356,6 +356,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 				"TranslationUnit", "TypedefDeclarationSpecifier", "TypedefTypeSpecifier", "TypeName",
 			"TypeQualifier", "TypeQualifierList",
 			 	"UnaryAbstractDeclarator", "UnaryExpression", "UnaryIdentifierDeclarator", "Unaryoperator",
+			 "UnionSpecifier",
 			 	"VolatileQualifier",
 				"Word"].contains(node.name)
 			|| (node.name.equals("ParameterDeclaration") && (node.size == 1 || !(node instanceof GNode)))
