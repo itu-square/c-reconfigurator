@@ -162,7 +162,9 @@ class Ifdef2IfRule extends AncestorGuaranteedRule {
 			&& (((node.get(1) as GNode).get(0) as GNode).get(1) as GNode).name.equals("ArrayDeclarator")
 			&& (((node.get(1) as GNode).get(0) as GNode).get(1) as GNode).get(0) instanceof GNode
 			&& ((((node.get(1) as GNode).get(0) as GNode).get(1) as GNode).get(0) as GNode).name.equals("SimpleDeclarator")
-			&& ((((node.get(1) as GNode).get(0) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString.equals(Settings::reconfiguratorIncludePlaceholder)
+			&& (((((node.get(1) as GNode).get(0) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString.equals(Settings::reconfiguratorIncludePlaceholder)
+			 || ((((node.get(1) as GNode).get(0) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString.equals(Settings::reconfiguratorIncludePlaceholderEnd)
+			 )
 		) {
 			return node
 		} else if (

@@ -94,6 +94,9 @@ public class Preprocessor {
 						out.append("char " + Settings.reconfiguratorIncludePlaceholder + "[] = \"" + line.replace("\"", "\\\"").replaceFirst("# *include", "#include") + "\";\n");
 					}
 					out.append(line + "\n");
+					if (Tag.INCLUDE.equals(dir) && Settings.printIncludes) {
+						out.append("char " + Settings.reconfiguratorIncludePlaceholderEnd + "[] = \"" + line.replace("\"", "\\\"").replaceFirst("# *include", "#include") + "\";\n");
+					}
 					
 					if (Tag.IFDEF.equals(dir) || Tag.IF.equals(dir) || Tag.ELIF.equals(dir)) {
 						saveFeatureNamesIntoMap(param);

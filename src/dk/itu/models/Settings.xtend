@@ -18,7 +18,8 @@ class Settings {
 	
 //	static public var int maxProcessedFiles = 10
 //	
-	static public var String reconfiguratorIncludePlaceholder = "_reconfig_include"; 
+	static public var String reconfiguratorIncludePlaceholder = "_reconfig_include";
+	static public var String reconfiguratorIncludePlaceholderEnd = "_reconfig_include_end";
 	static public var List<String> defineMacros
 	static public var List<String> undefMacros
 	

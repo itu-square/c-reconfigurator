@@ -310,16 +310,34 @@ class PrintCode extends PrintMethod {
 				output.println
 			}
 			
-			if (node.properties != null && node.hasProperty("OriginalPC")) {
-				output.println
-				output.println('''#if «(node.getProperty("OriginalPC") as PresenceCondition).PCtoCPPexp»''')
-				output.println(includeStrLit.replace("\\\"", "\""))
-				output.println('''#endif''')
-				last_line = "#endif"
-			} else {
-				output.print(indent)
-				output.print(includeStrLit.replace("\\\"", "\""))
-				last_line = includeStrLit
+			if ((((node.get(0) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString.equals(Settings::reconfiguratorIncludePlaceholder)) {
+				if (node.properties != null && node.hasProperty("OriginalPC")) {
+					output.println
+					output.println('''#if «(node.getProperty("OriginalPC") as PresenceCondition).PCtoCPPexp»''')
+					if (Settings::printIncludes) output.print("// BEGIN ")
+					output.println(includeStrLit.replace("\\\"", "\""))
+//					output.println('''#endif''')
+//					last_line = "#endif"
+				} else {
+					output.print(indent)
+					if (Settings::printIncludes) output.print("// BEGIN ")
+					output.print(includeStrLit.replace("\\\"", "\""))
+					last_line = includeStrLit
+				}
+			} else if ((((node.get(0) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString.equals(Settings::reconfiguratorIncludePlaceholderEnd)) {
+				if (node.properties != null && node.hasProperty("OriginalPC")) {
+					output.println
+//					output.println('''#if «(node.getProperty("OriginalPC") as PresenceCondition).PCtoCPPexp»''')
+					if (Settings::printIncludes) output.print("// END ")
+					output.println(includeStrLit.replace("\\\"", "\""))
+					output.println('''#endif''')
+					last_line = "#endif"
+				} else {
+					output.print(indent)
+					if (Settings::printIncludes) output.print("// END ")
+					output.print(includeStrLit.replace("\\\"", "\""))
+					last_line = includeStrLit
+				}
 			}
 		} else {
 			ancestors.add(node)
