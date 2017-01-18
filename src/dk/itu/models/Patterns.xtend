@@ -175,6 +175,12 @@ class Patterns {
 		&& (node.get(1) as GNode).isFunctionDeclaration
 	}
 	
+	public static def boolean isFunctionDeclarationWithSignatureVariability(GNode node) {
+		node.isFunctionDeclaration
+		&& node.getDescendantNode("ParameterList") != null
+		&& node.getDescendantNode("ParameterList").filter[(it instanceof GNode) && (it as GNode).isParameterDeclaration].size > 0
+	}
+	
 	public static def String getNameOfFunctionDeclaration(GNode node) {
 		val simpleDeclarator = node.getDescendantNode("SimpleDeclarator")
 		return (simpleDeclarator.get(0) as Text<?>).toString

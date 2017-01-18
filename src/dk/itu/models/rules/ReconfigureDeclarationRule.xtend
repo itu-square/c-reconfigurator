@@ -38,15 +38,6 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		(this as ScopingRule).transform(node)
 		
 		if (
-			// declarations without variability
-			ancestors.size >= 1
-			&& #["ExternalDeclarationList", "DeclarationExtension", "DeclarationOrStatementList"].contains(ancestors.last.name)
-			&& #["Declaration", "DeclarationExtension"].contains(node.name)
-		) {
-			node.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition, pcidmap)
-		} else
-		
-		if (
 			node.isStructDeclarationWithVariability
 		) {
 			val pc = node.get(0) as PresenceCondition
@@ -86,6 +77,31 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			}
 		} else
 		
+		if (
+			node.isFunctionDeclarationWithVariability
+			&& (node.get(1) as GNode).isFunctionDeclarationWithSignatureVariability
+		) {
+			val pc = node.get(0) as PresenceCondition
+			val declarationNode = node.get(1) as GNode
+			val name = declarationNode.getNameOfFunctionDeclaration
+			val type = declarationNode.getTypeOfFunctionDeclaration
+			
+			println
+			println ("isFunctionDeclarationWithSignatureVariability")
+			println ("-------------")
+			println (node.printCode)
+			println ("-------------")
+			println ('''fpc   [«pc»]''')
+			println ('''fname [«name»]''')
+			println ('''ftype [«type»]''')
+			val params = node.getDescendantNode("ParameterList").filter[(it instanceof GNode) && (it as GNode).isParameterDeclaration]
+			println ('''params [«params.size»]''')
+			params.forEach[println(''' - [«(it as GNode).getTypeOfParameterDeclaration»] of [«(it as GNode).getNameOfParameterDeclaration»]''')]
+			
+			println ("=============")
+			
+			return node
+		} else
 		
 		if (
 			node.isFunctionDeclarationWithVariability
@@ -239,6 +255,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				return node
 			}
 		} else
+		
 		if (
 			node.name.equals("IterationStatement")
 			|| node.name.equals("CompoundStatement")
@@ -249,6 +266,16 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			debug("   - " + node.name)
 			return node.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition, pcidmap)
 		} else
+		
+		if (
+			// declarations without variability
+			ancestors.size >= 1
+			&& #["ExternalDeclarationList", "DeclarationExtension", "DeclarationOrStatementList"].contains(ancestors.last.name)
+			&& #["Declaration", "DeclarationExtension"].contains(node.name)
+		) {
+			node.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition, pcidmap)
+		} else
+		
 		if (
 			// the rest
 			#["TranslationUnit", "ExternalDeclarationList", "DeclaringList",
