@@ -299,12 +299,9 @@ class Patterns {
 					&& !current.toString.equals("const")
 					&& !current.toString.equals("typedef")
 					&& !current.toString.equals("__restrict")
+					&& !current.toString.equals("*")
 				) {
-					if (current.toString.equals("*")) {
-						type += current.toString
-					} else {
-						type += " " + current.toString
-					}
+					type += " " + current.toString
 				}
 			}
 

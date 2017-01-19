@@ -103,18 +103,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 				"unsigned long long",	"unsigned long long int",	"float",
 				"double",				"long double",				"_Bool"
 			].forEach[ typeName |
-				this.typeDeclarations.put(
-					typeName,
-					new TypeDeclaration(typeName, null),
-					Reconfigurator::presenceConditionManager.newPresenceCondition(true))
-				this.typeDeclarations.put(
-					typeName + "*",
-					new TypeDeclaration(typeName + "*", null),
-					Reconfigurator::presenceConditionManager.newPresenceCondition(true))
-				this.typeDeclarations.put(
-					typeName + "**",
-					new TypeDeclaration(typeName + "**", null),
-					Reconfigurator::presenceConditionManager.newPresenceCondition(true))]
+				this.typeDeclarations.put(typeName, new TypeDeclaration(typeName, null), Reconfigurator::presenceConditionManager.newPresenceCondition(true))]
 			
 		} else if(#["Declaration", "DeclaringList", "SUEDeclarationSpecifier",
 			"DeclarationQualifierList", "StructOrUnionSpecifier", "StructOrUnion",
@@ -208,12 +197,6 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 				
 				var newTypeDeclaration = new TypeDeclaration(name, typeDeclaration)
 				typeDeclarations.put(name, newTypeDeclaration, pc)
-				
-				newTypeDeclaration = new TypeDeclaration(name + "*", typeDeclaration)
-				typeDeclarations.put(name + "*", newTypeDeclaration, pc)
-				
-				newTypeDeclaration = new TypeDeclaration(name + "**", typeDeclaration)
-				typeDeclarations.put(name + "**", newTypeDeclaration, pc)
 			} else {
 				throw new Exception("ScopingRule: not handled: multiple type declarations.")
 			}
@@ -230,12 +213,6 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			if (!typeDeclarations.containsDeclaration(name)) {
 				var newTypeDeclaration = new TypeDeclaration(name, null)
 				typeDeclarations.put(name, newTypeDeclaration, pc)
-				
-				newTypeDeclaration = new TypeDeclaration(name + "*", null)
-				typeDeclarations.put(name + "*", newTypeDeclaration, pc)
-				
-				newTypeDeclaration = new TypeDeclaration(name + "**", null)
-				typeDeclarations.put(name + "**", newTypeDeclaration, pc)
 			}
 		} else
 		
@@ -258,12 +235,6 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 				
 				var newTypeDeclaration = new TypeDeclaration(name, typeDeclaration)
 				typeDeclarations.put(name, newTypeDeclaration, pc)
-				
-				newTypeDeclaration = new TypeDeclaration(name + "*", typeDeclaration)
-				typeDeclarations.put(name + "*", newTypeDeclaration, pc)
-				
-				newTypeDeclaration = new TypeDeclaration(name + "**", typeDeclaration)
-				typeDeclarations.put(name + "**", newTypeDeclaration, pc)
 			} else {
 				throw new Exception("ScopingRule: not handled: multiple type declarations.")
 			}
@@ -303,30 +274,21 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			}
 			
 		} else
+		
 		if (node.isParameterDeclaration) {
-			debug
-			debug("   isParameterDeclaration", true)
-			// get current PC and names
 			val pc = node.presenceCondition
 			val name = node.getNameOfParameterDeclaration
 			val type = node.getTypeOfParameterDeclaration
-			debug('''   - [«name»] of [«type»]''')
 			
-			// get registered type declaration
-			if (!typeDeclarations.containsDeclaration(type))
-				throw new Exception('''ScopingRule: type declaration [«type»] not found.''')
-			
-			val typeDeclarationList = typeDeclarations.declarationList(type)
-			
-			if (typeDeclarationList.size == 1) {
-				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
+			if (typeDeclarations.containsDeclaration(type)) {
+				val typeDeclaration = typeDeclarations.declarationList(type).findFirst[key.name.equals(type)].key as TypeDeclaration
 				val variableDeclaration = new VariableDeclaration(name, typeDeclaration)
 				addVariable(name, variableDeclaration, pc)
 			} else {
-				throw new Exception("ScopingRule: not handled: multiple type declarations.")
+				throw new Exception('''ScopingRule: type declaration [«type»] not found.''')
 			}
-			
 		} else
+		
 		if (#[	"AbstractDeclarator", "AdditiveExpression", "AndExpression", "ArrayAbstractDeclarator",
 			"ArrayDeclarator", "AssemblyExpressionOpt", "AssignmentExpression", "AssignmentOperator",
 			"AttributeExpressionOpt", "AttributeKeyword", "AttributeList", "AttributeListOpt",

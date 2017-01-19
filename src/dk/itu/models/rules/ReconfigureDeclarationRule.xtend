@@ -50,12 +50,6 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			if (!typeDeclarations.containsDeclaration(type)) {
 				var typeDeclaration = new TypeDeclaration(type, null)
 				typeDeclarations.put(type, typeDeclaration, pc)
-				
-				typeDeclaration = new TypeDeclaration(type + "*", null)
-				typeDeclarations.put(type + "*", typeDeclaration, pc)
-				
-				typeDeclaration = new TypeDeclaration(type + "**", null)
-				typeDeclarations.put(type + "**", typeDeclaration, pc)
 			}
 			
 			val typeDeclarationList = typeDeclarations.declarationList(type)
@@ -67,7 +61,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				val newType = type.replace(name, newName)
 				
 				val newTypeDeclaration = new TypeDeclaration(newType, typeDeclaration)
-				typeDeclarations.put(newType, newTypeDeclaration, pc)
+				typeDeclarations.put(type, newTypeDeclaration, pc)
 				
 				var newNode = declarationNode.replaceIdentifierVarName(name, newName)
 				newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
@@ -77,31 +71,36 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			}
 		} else
 		
-		if (
-			node.isFunctionDeclarationWithVariability
-			&& (node.get(1) as GNode).isFunctionDeclarationWithSignatureVariability
-		) {
-			val pc = node.get(0) as PresenceCondition
-			val declarationNode = node.get(1) as GNode
-			val name = declarationNode.getNameOfFunctionDeclaration
-			val type = declarationNode.getTypeOfFunctionDeclaration
-			
-			println
-			println ("isFunctionDeclarationWithSignatureVariability")
-			println ("-------------")
-			println (node.printCode)
-			println ("-------------")
-			println ('''fpc   [«pc»]''')
-			println ('''fname [«name»]''')
-			println ('''ftype [«type»]''')
-			val params = node.getDescendantNode("ParameterList").filter[(it instanceof GNode) && (it as GNode).isParameterDeclaration]
-			println ('''params [«params.size»]''')
-			params.forEach[println(''' - [«(it as GNode).getTypeOfParameterDeclaration»] of [«(it as GNode).getNameOfParameterDeclaration»]''')]
-			
-			println ("=============")
-			
-			return node
-		} else
+//		if (
+//			node.isFunctionDeclarationWithVariability
+//			&& (node.get(1) as GNode).isFunctionDeclarationWithSignatureVariability
+//		) {
+//			val pc = node.get(0) as PresenceCondition
+//			val declarationNode = node.get(1) as GNode
+//			val name = declarationNode.getNameOfFunctionDeclaration
+//			val type = declarationNode.getTypeOfFunctionDeclaration
+//			
+//			println
+//			println ("isFunctionDeclarationWithSignatureVariability")
+//			println ("-------------")
+//			println (node.printCode)
+//			println ("-------------")
+//			println ('''fpc   [«pc»]''')
+//			println ('''fname [«name»]''')
+//			println ('''ftype [«type»]''')
+//			val params = node.getDescendantNode("ParameterList").filter[(it instanceof GNode) && (it as GNode).isParameterDeclaration]
+//			println ('''params [«params.size»]''')
+//			params.forEach[
+//				print(''' - [«(it as GNode).getTypeOfParameterDeclaration»] of [«(it as GNode).getNameOfParameterDeclaration»]''')
+////				print(''' || real: [«(it as GNode).getTypeOfParameterDeclaration»] («typeDeclarations.variantNames.size»)''')
+//				println
+//			]
+//			typeDeclarations.maps.forEach[println(it)]
+//			
+//			println ("=============")
+//			
+//			return node
+//		} else
 		
 		if (
 			node.isFunctionDeclarationWithVariability

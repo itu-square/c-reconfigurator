@@ -15,7 +15,7 @@ class DeclarationPCMap {
 		map = new HashMap<String, List<SimpleEntry<Declaration,PresenceCondition>>>
 	}
 	
-	private def fix(String name) {
+	def fix(String name) {
 		if (name.contains(" ")) {
 			val n = map.keySet.findFirst[key |
 				key.contains(" ")
@@ -73,6 +73,6 @@ class DeclarationPCMap {
 	}
 	
 	public def Set<String> maps() {
-		map.keySet.map['''«it» -> {«FOR x : map.get(it) SEPARATOR ", "»«x.key.name»«ENDFOR»}'''].toSet
+		map.keySet.sort.map['''«it» -> {«FOR x : map.get(it) SEPARATOR ", "»«x.key.name»«ENDFOR»}'''].toSet
 	}
 }
