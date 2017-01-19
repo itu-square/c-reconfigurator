@@ -78,6 +78,13 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 
 	def Pair<Object> transform(Pair<Object> pair) {
 		clearVariableDeclarationScopes
+		
+		var temp = ancestors.last.toPair
+		while (temp != pair) {
+			transform(temp.head)
+			temp = temp.tail
+		}
+		
 		pair
 	}
 	
@@ -280,12 +287,10 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			val name = node.getNameOfParameterDeclaration
 			val type = node.getTypeOfParameterDeclaration
 			
-			if (typeDeclarations.containsDeclaration(type)) {
+			if (typeDeclarations.declarationList(type).findFirst[key.name.equals(type)] != null) {
 				val typeDeclaration = typeDeclarations.declarationList(type).findFirst[key.name.equals(type)].key as TypeDeclaration
 				val variableDeclaration = new VariableDeclaration(name, typeDeclaration)
 				addVariable(name, variableDeclaration, pc)
-			} else {
-				throw new Exception('''ScopingRule: type declaration [«type»] not found.''')
 			}
 		} else
 		

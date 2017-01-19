@@ -1,5 +1,8 @@
 package dk.itu.models
 
+import dk.itu.models.utils.DeclarationPCMap
+import java.util.ArrayDeque
+import java.util.ArrayList
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
@@ -8,7 +11,6 @@ import xtc.tree.GNode
 import xtc.tree.Node
 
 import static extension dk.itu.models.Extensions.*
-import java.util.ArrayDeque
 
 class Patterns {
 	
@@ -175,10 +177,9 @@ class Patterns {
 		&& (node.get(1) as GNode).isFunctionDeclaration
 	}
 	
-	public static def boolean isFunctionDeclarationWithSignatureVariability(GNode node) {
+	public static def boolean isFunctionDeclarationWithSignatureVariability(GNode node, DeclarationPCMap typeDeclarations) {
 		node.isFunctionDeclaration
-		&& node.getDescendantNode("ParameterList") != null
-		&& node.getDescendantNode("ParameterList").filter[(it instanceof GNode) && (it as GNode).isParameterDeclaration].size > 0
+		&& node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).size > 0
 	}
 	
 	public static def String getNameOfFunctionDeclaration(GNode node) {
@@ -189,6 +190,24 @@ class Patterns {
 	public static def String getTypeOfFunctionDeclaration(GNode node) {
 		val declaringList = node.getDescendantNode("DeclaringList") as GNode
 		return getTypeByTraversal(declaringList)
+	}
+	
+	public static def Iterable<String> getSignatureTypesOfFunctionDeclaration(GNode node) {
+		val types = new ArrayList<String>
+		types.add(node.getTypeOfFunctionDeclaration)
+		val parameterList = node.getDescendantNode("ParameterList")
+		if (parameterList != null) {
+			types.addAll(parameterList.filter[(it instanceof GNode) && (it as GNode).isParameterDeclaration].map[(it as GNode).getTypeOfParameterDeclaration])
+		}
+		return types
+	}
+	
+	public static def Iterable<String> getVariableSignatureTypesOfFunctionDeclaration(GNode node, DeclarationPCMap typeDeclarations) {
+		println
+		println('''--- [«node.getSignatureTypesOfFunctionDeclaration»] ---''')
+		node.getSignatureTypesOfFunctionDeclaration.filter[type |
+			println('''--- «type»: [«typeDeclarations.declarationList(type) != null»] ---''')
+			typeDeclarations.declarationList(type).exists[!key.name.equals(type)]]
 	}
 	
 	

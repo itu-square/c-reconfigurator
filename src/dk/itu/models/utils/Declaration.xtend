@@ -7,4 +7,8 @@ abstract class Declaration {
 	new (String name) {
 		this.name = name
 	}
+	
+	override public def String toString() { 
+	    return name
+	}
 }

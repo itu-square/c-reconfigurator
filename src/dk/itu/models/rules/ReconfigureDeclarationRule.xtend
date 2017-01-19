@@ -1,10 +1,16 @@
 package dk.itu.models.rules
 
 import dk.itu.models.PresenceConditionIdMap
+import dk.itu.models.Reconfigurator
+import dk.itu.models.utils.Declaration
 import dk.itu.models.utils.FunctionDeclaration
 import dk.itu.models.utils.TypeDeclaration
 import dk.itu.models.utils.VariableDeclaration
+import java.util.AbstractMap.SimpleEntry
+import java.util.ArrayList
+import java.util.List
 import xtc.lang.cpp.CTag
+import xtc.lang.cpp.PresenceConditionManager
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
@@ -30,6 +36,54 @@ class ReconfigureDeclarationRule extends ScopingRule {
 	}
 
 	override dispatch Pair<Object> transform(Pair<Object> pair) {
+		if (
+			!pair.empty
+			&& (pair.head instanceof GNode)
+			&& (pair.head as GNode).isFunctionDeclarationWithVariability
+			&& ((pair.head as GNode).get(1) as GNode).isFunctionDeclarationWithSignatureVariability(typeDeclarations)
+		) {
+			val node = pair.head as GNode
+			(this as ScopingRule).transform(node)
+			
+			val pc = node.get(0) as PresenceCondition
+			val declarationNode = node.get(1) as GNode
+			val name = declarationNode.getNameOfFunctionDeclaration
+			val type = declarationNode.getTypeOfFunctionDeclaration
+			
+			println(''' ----------''')
+			println(node.printCode)
+			println(''' [«name»] of [«type»]''')
+			
+			println("sigs " + node.getSignatureTypesOfFunctionDeclaration)
+			println("vars " + node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations))
+			println("head " + node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head)
+			typeDeclarations.declarationList(node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head).forEach[
+				println('''- [«key.name»] [«value»]''')
+			]
+			
+			typeDeclarations.declarationList(node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head).filterDeclarations(type, pc).forEach[
+				println('''= [«key.name»] [«value»]''')
+			]
+			
+			val declarations = typeDeclarations.declarationList(node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head).filterDeclarations(type, pc)
+			
+			var Pair<Object> newPair = Pair::EMPTY
+			
+			for(SimpleEntry<Declaration, PresenceConditionManager.PresenceCondition> declaration : declarations) {
+				val newPC = pc.and(declaration.value)
+				val newName = name + "_V" + pcidmap.getId(newPC)
+				
+				newPair = newPair.add(GNode::create(
+					"Conditional",
+					newPC,
+					(node.get(1) as GNode).replaceIdentifierVarName(name, newName)
+				))
+			}
+			
+			newPair = newPair.append(pair.tail)
+			return newPair
+		}
+		
 		pair
 	}
 	
@@ -42,64 +96,68 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		) {
 			val pc = node.get(0) as PresenceCondition
 			val declarationNode = node.get(1) as GNode
-			val name = declarationNode.getNameOfStructDeclaration.replace("struct ", "")
-			
 			val type = declarationNode.getNameOfStructDeclaration
+			val name = type.replace("struct ", "")
 			
-			// get registered type declaration
+			var TypeDeclaration typeDeclaration
+			
 			if (!typeDeclarations.containsDeclaration(type)) {
-				var typeDeclaration = new TypeDeclaration(type, null)
+				typeDeclaration = new TypeDeclaration(type, null)
 				typeDeclarations.put(type, typeDeclaration, pc)
 			}
 			
-			val typeDeclarationList = typeDeclarations.declarationList(type)
+			val newName = name + "_V" + pcidmap.getId(pc)
+			val newType = type.replace(name, newName)
 			
-			if (typeDeclarationList.size == 1) {
-				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
-
-				val newName = name + "_V" + pcidmap.getId(pc)
-				val newType = type.replace(name, newName)
-				
-				val newTypeDeclaration = new TypeDeclaration(newType, typeDeclaration)
-				typeDeclarations.put(type, newTypeDeclaration, pc)
-				
-				var newNode = declarationNode.replaceIdentifierVarName(name, newName)
-				newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
-				return newNode
-			} else {
-				throw new Exception("ReconfigureDeclarationRule: not handled: multiple type declarations.")
-			}
+			val newTypeDeclaration = new TypeDeclaration(newType, null)
+			typeDeclarations.put(type, newTypeDeclaration, pc)
+			
+			typeDeclarations.rem(type, type)
+			
+			var newNode = declarationNode.replaceIdentifierVarName(name, newName)
+			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
+			return newNode
 		} else
 		
 //		if (
 //			node.isFunctionDeclarationWithVariability
-//			&& (node.get(1) as GNode).isFunctionDeclarationWithSignatureVariability
+//			&& (node.get(1) as GNode).isFunctionDeclarationWithSignatureVariability(typeDeclarations)
 //		) {
 //			val pc = node.get(0) as PresenceCondition
 //			val declarationNode = node.get(1) as GNode
 //			val name = declarationNode.getNameOfFunctionDeclaration
 //			val type = declarationNode.getTypeOfFunctionDeclaration
 //			
-//			println
-//			println ("isFunctionDeclarationWithSignatureVariability")
-//			println ("-------------")
-//			println (node.printCode)
-//			println ("-------------")
-//			println ('''fpc   [«pc»]''')
-//			println ('''fname [«name»]''')
-//			println ('''ftype [«type»]''')
-//			val params = node.getDescendantNode("ParameterList").filter[(it instanceof GNode) && (it as GNode).isParameterDeclaration]
-//			println ('''params [«params.size»]''')
-//			params.forEach[
-//				print(''' - [«(it as GNode).getTypeOfParameterDeclaration»] of [«(it as GNode).getNameOfParameterDeclaration»]''')
-////				print(''' || real: [«(it as GNode).getTypeOfParameterDeclaration»] («typeDeclarations.variantNames.size»)''')
-//				println
+//			println(''' ----------''')
+//			println(node.printCode)
+//			println(''' [«name»] of [«type»]''')
+//			
+//			println("sigs " + node.getSignatureTypesOfFunctionDeclaration)
+//			println("vars " + node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations))
+//			println("head " + node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head)
+//			typeDeclarations.declarationList(node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head).forEach[
+//				println('''- [«key.name»] [«value»]''')
 //			]
-//			typeDeclarations.maps.forEach[println(it)]
 //			
-//			println ("=============")
-//			
-//			return node
+//			typeDeclarations.declarationList(node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head).filterDeclarations(type, pc).forEach[
+//				println('''= [«key.name»] [«value»]''')
+//			]
+//
+////			
+////			val varTypeName = node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head
+////			
+////			println('''= [«varTypeName»]''')
+////			typeDeclarations.declarationList(varTypeName).forEach[println('''== [«it.key.name»] [«it.value»]''')]
+////			
+////			if (typeDeclarations.containsDeclaration(type)) {
+////				return node
+////			} else {
+////				throw new Exception('''ReconfigureDeclarationRule: type declaration [«type»] not found.''')
+////			}
+//
+//			val newNode = GNode::createFromPair(declarationNode.name, declarationNode.toPair)
+//			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
+//			return newNode
 //		} else
 		
 		if (
@@ -320,5 +378,30 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			println
 			throw new Exception("ReconfigureDeclarationRule: unknown declaration : " + node.name + ".")
 		}
+	}
+	
+	
+	
+	private def filterDeclarations(List<SimpleEntry<Declaration, PresenceConditionManager.PresenceCondition>> inDeclarations, String typeName, PresenceCondition guardPC) {
+		
+		val declarations = new ArrayList<SimpleEntry<Declaration,PresenceCondition>>
+		
+		var disjunctionPC = Reconfigurator::presenceConditionManager.newPresenceCondition(false)
+		for (SimpleEntry<Declaration, PresenceCondition> pair : inDeclarations) {
+			val pc = pair.value
+			if (!guardPC.and(pc).isFalse) {
+				declarations.add(pair)
+				disjunctionPC = pc.or(disjunctionPC)
+			}
+		}
+		
+		if (!guardPC.BDD.imp(disjunctionPC.BDD).isOne) {
+			declarations.add(new SimpleEntry<Declaration, PresenceCondition>(
+				new TypeDeclaration(typeName, null),
+				disjunctionPC.not
+			))
+		}
+		
+		return declarations
 	}
 }
