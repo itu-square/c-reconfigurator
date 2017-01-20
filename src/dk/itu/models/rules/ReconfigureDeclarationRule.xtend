@@ -43,47 +43,24 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			&& ((pair.head as GNode).get(1) as GNode).isFunctionDeclarationWithSignatureVariability(typeDeclarations)
 		) {
 			val node = pair.head as GNode
-			(this as ScopingRule).transform(node)
-			
 			val pc = node.get(0) as PresenceCondition
 			val declarationNode = node.get(1) as GNode
-			val name = declarationNode.getNameOfFunctionDeclaration
 			val type = declarationNode.getTypeOfFunctionDeclaration
 			
-			println(''' ----------''')
-			println(node.printCode)
-			println(''' [«name»] of [«type»]''')
-			
-			println("sigs " + node.getSignatureTypesOfFunctionDeclaration)
-			println("vars " + node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations))
-			println("head " + node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head)
-			typeDeclarations.declarationList(node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head).forEach[
-				println('''- [«key.name»] [«value»]''')
-			]
-			
-			typeDeclarations.declarationList(node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head).filterDeclarations(type, pc).forEach[
-				println('''= [«key.name»] [«value»]''')
-			]
-			
-			val declarations = typeDeclarations.declarationList(node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head).filterDeclarations(type, pc)
+			val varType = declarationNode.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head
+			val declarations = typeDeclarations.declarationList(varType).filterDeclarations(type, pc)
 			
 			var Pair<Object> newPair = Pair::EMPTY
 			
 			for(SimpleEntry<Declaration, PresenceConditionManager.PresenceCondition> declaration : declarations) {
-				val newPC = pc.and(declaration.value)
-				val newName = name + "_V" + pcidmap.getId(newPC)
-				
-				newPair = newPair.add(GNode::create(
-					"Conditional",
-					newPC,
-					(node.get(1) as GNode).replaceIdentifierVarName(name, newName)
-				))
+				val newDeclarationNode = declarationNode
+					.replaceIdentifierVarName(varType.replace("struct ", ""), declaration.key.name.replace("struct ", ""))
+				newPair = newPair.add(GNode::create("Conditional", pc.and(declaration.value), newDeclarationNode))
 			}
-			
+
 			newPair = newPair.append(pair.tail)
 			return newPair
-		}
-		
+		}		
 		pair
 	}
 	
@@ -118,47 +95,6 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
 			return newNode
 		} else
-		
-//		if (
-//			node.isFunctionDeclarationWithVariability
-//			&& (node.get(1) as GNode).isFunctionDeclarationWithSignatureVariability(typeDeclarations)
-//		) {
-//			val pc = node.get(0) as PresenceCondition
-//			val declarationNode = node.get(1) as GNode
-//			val name = declarationNode.getNameOfFunctionDeclaration
-//			val type = declarationNode.getTypeOfFunctionDeclaration
-//			
-//			println(''' ----------''')
-//			println(node.printCode)
-//			println(''' [«name»] of [«type»]''')
-//			
-//			println("sigs " + node.getSignatureTypesOfFunctionDeclaration)
-//			println("vars " + node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations))
-//			println("head " + node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head)
-//			typeDeclarations.declarationList(node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head).forEach[
-//				println('''- [«key.name»] [«value»]''')
-//			]
-//			
-//			typeDeclarations.declarationList(node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head).filterDeclarations(type, pc).forEach[
-//				println('''= [«key.name»] [«value»]''')
-//			]
-//
-////			
-////			val varTypeName = node.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head
-////			
-////			println('''= [«varTypeName»]''')
-////			typeDeclarations.declarationList(varTypeName).forEach[println('''== [«it.key.name»] [«it.value»]''')]
-////			
-////			if (typeDeclarations.containsDeclaration(type)) {
-////				return node
-////			} else {
-////				throw new Exception('''ReconfigureDeclarationRule: type declaration [«type»] not found.''')
-////			}
-//
-//			val newNode = GNode::createFromPair(declarationNode.name, declarationNode.toPair)
-//			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
-//			return newNode
-//		} else
 		
 		if (
 			node.isFunctionDeclarationWithVariability
