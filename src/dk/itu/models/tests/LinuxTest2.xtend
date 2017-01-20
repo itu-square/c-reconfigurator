@@ -49,6 +49,7 @@ class LinuxTest2 {
 				,"-include"	,source.path + "/config.h"
 				,"-I"		,source.path + "/arch/x86/include/"
 				,"-I"		,source.path + "/include/"
+				,"-I"		,source.path + "/arch/x86/include/uapi/"
 				,"-reconfigureIncludes"
 				,"-printIncludes"
 //				,"-printIntermediaryFiles"
