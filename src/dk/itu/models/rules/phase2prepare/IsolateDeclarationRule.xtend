@@ -33,13 +33,14 @@ class IsolateDeclarationRule extends AncestorGuaranteedRule {
 			decl = (pair.head as GNode).findFirst[ c |
 				c instanceof GNode
 				&& (
-					(c as GNode).name.equals("Declaration")
+					   (c as GNode).name.equals("Declaration")
+					|| (c as GNode).name.equals("DeclarationExtension")
 					|| (c as GNode).name.equals("FunctionDefinition")
 					|| (
-						(c as GNode).name.equals("Conditional")
-						&& (c as GNode).size == 2
-						&& (c as GNode).get(1) instanceof GNode
-						&& ((c as GNode).get(1) as GNode).name.equals("Declaration")
+						    (c as GNode).name.equals("Conditional")
+						&&  (c as GNode).size == 2
+						&& ((c as GNode).get(1) instanceof GNode)
+						&& #["Declaration", "DeclarationExtension"].contains(((c as GNode).get(1) as GNode).name)
 					)
 				)] as GNode
 		}
