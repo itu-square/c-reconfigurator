@@ -122,6 +122,21 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		} else
 		
 		if (
+			node.isEnumDeclarationWithVariability
+		) {
+			val pc = node.get(0) as PresenceCondition
+			var newNode = node.get(1) as GNode
+			
+			for (String enumerator : node.getDescendantNode("EnumeratorList").filter[(it instanceof GNode) && (it as GNode).name.equals("Enumerator")].map[(it as GNode).get(0).toString]) {
+				val newEnumerator = enumerator + "_V" + pcidmap.getId(pc)
+				newNode = newNode.replaceIdentifierVarName(enumerator, newEnumerator)
+			}
+			
+			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
+			return newNode
+		} else
+		
+		if (
 			node.isFunctionDeclarationWithVariability
 		) {
 			val pc = node.get(0) as PresenceCondition

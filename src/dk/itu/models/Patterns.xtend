@@ -82,6 +82,21 @@ class Patterns {
 		&& node.getDescendantNode("EnumeratorList") != null
 	}
 	
+	public static def boolean isEnumDeclarationWithVariability(GNode node) {
+		node.name.equals("Conditional")
+		&& node.size == 2
+		
+		&& (node.get(0) instanceof PresenceCondition)
+		
+		&& (node.get(1) instanceof GNode)
+		&& (node.get(1) as GNode).isEnumDeclaration
+	}
+	
+	public static def boolean isNamedEnumDeclaration(GNode node) {
+		node.isEnumDeclaration
+		&& node.getDescendantNode("IdentifierOrTypedefName") != null
+	}
+	
 	public static def String getNameOfEnumDeclaration(GNode node) {
 		val enumSpecifier = node.getDescendantNode("EnumSpecifier")
 		if (

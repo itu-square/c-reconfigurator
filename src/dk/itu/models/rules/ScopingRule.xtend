@@ -241,7 +241,8 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 				throw new Exception("ScopingRule: not handled: multiple type declarations.")
 			}
 		} else
-		if (node.isEnumDeclaration) {
+		
+		if (node.isNamedEnumDeclaration) {
 			debug
 			debug("   isEnumDeclaration", true)
 			
@@ -250,6 +251,12 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			debug('''   - [«name»]''')
 			
 			this.typeDeclarations.put(new TypeDeclaration(name, null), null, pc)
+		} else
+		
+		if (
+			node.isEnumDeclaration
+		) {
+			// TODO something
 		} else
 		
 		if (
