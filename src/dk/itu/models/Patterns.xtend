@@ -26,7 +26,6 @@ class Patterns {
 	
 	public static def String getNameOfStructDeclaration(GNode node) {
 		val structSpecifier = node.getDescendantNode("StructSpecifier")
-		
 		return (structSpecifier.get(0) as Language<?>).toString + " "
 			+ ((structSpecifier.get(1) as GNode).get(0) as Text<?>).toString
 	}
@@ -55,8 +54,9 @@ class Patterns {
 	}
 	
 	public static def String getNameOfStructTypeDeclaration(GNode node) {
-		val simpleDeclarator = node.getDescendantNode("SimpleDeclarator")
-		return (simpleDeclarator.get(0) as Text<CTag>).toString
+		((node.getDescendantNode("DeclaringList")
+			.findFirst[(it instanceof GNode) && (it as GNode).name.equals("SimpleDeclarator")] as GNode)
+			.get(0) as Text<CTag>).toString
 	}
 	
 	public static def String getTypeOfStructTypeDeclaration(GNode node) {

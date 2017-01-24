@@ -218,27 +218,18 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			}
 		} else
 		
-		if (node.isStructTypeDeclaration) {
-			debug("isStructTypeDeclaration", true)
-			// get current PC and names
+		if (
+			node.isStructTypeDeclaration
+		) {
+			val pc = node.presenceCondition
 			val name = node.getNameOfStructTypeDeclaration
 			val type = node.getTypeOfStructTypeDeclaration
-			val pc = node.presenceCondition
 			
-			// get registered type declaration
-			if (!typeDeclarations.containsDeclaration(type)) {
-				typeDeclarations.put(new TypeDeclaration(type, null), null, pc)
-			}
-			
-			val typeDeclarationList = typeDeclarations.declarationList(type)
-			
-			if (typeDeclarationList.size == 1) {
-				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
-				
-				var newTypeDeclaration = new TypeDeclaration(name, typeDeclaration)
-				typeDeclarations.put(newTypeDeclaration, null, pc)
+			if (type.equals("struct")) {
+				val typeDeclaration = new TypeDeclaration(name, null)
+				typeDeclarations.put(typeDeclaration, null, pc)
 			} else {
-				throw new Exception("ScopingRule: not handled: multiple type declarations.")
+				throw new Exception("Case not handled")
 			}
 		} else
 		

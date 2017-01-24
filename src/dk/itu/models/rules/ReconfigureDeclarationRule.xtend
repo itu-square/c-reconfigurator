@@ -96,6 +96,33 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		} else
 		
 		if (
+			node.isStructTypeDeclarationWithVariability
+		) {
+			val pc = node.get(0) as PresenceCondition
+			val declarationNode = node.get(1) as GNode
+			val typeName = declarationNode.getNameOfStructTypeDeclaration
+			val refTypeName = declarationNode.getTypeOfStructTypeDeclaration
+			
+			if (refTypeName.equals("struct")) {
+				var typeDeclaration = typeDeclarations.getDeclaration(typeName) as TypeDeclaration
+				if (typeDeclaration == null) {
+					typeDeclaration = new TypeDeclaration(typeName, null)
+					typeDeclarations.put(typeDeclaration, null, pc)
+				}
+				
+				val newTypeName = typeName + "_V" + pcidmap.getId(pc)
+				val newTypeDeclaration = new TypeDeclaration(newTypeName, null)
+				typeDeclarations.put(typeDeclaration, newTypeDeclaration, pc)
+				
+				var newNode = declarationNode.replaceIdentifierVarName(typeName, newTypeName)
+				newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
+				return newNode
+			} else {
+				throw new Exception("Case not handled")
+			}
+		} else
+		
+		if (
 			node.isStructDeclarationWithVariability
 		) {
 			val pc = node.get(0) as PresenceCondition
