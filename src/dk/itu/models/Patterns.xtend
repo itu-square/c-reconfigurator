@@ -203,8 +203,8 @@ class Patterns {
 	}
 	
 	public static def Iterable<String> getVariableSignatureTypesOfFunctionDeclaration(GNode node, DeclarationPCMap typeDeclarations) {
-		node.getSignatureTypesOfFunctionDeclaration.filter[type |
-			typeDeclarations.declarationList(type).exists[!key.name.equals(type)]]
+		node.getSignatureTypesOfFunctionDeclaration.filter[typeName |
+			typeDeclarations.declarationList(typeName).size != 0]
 	}
 	
 	

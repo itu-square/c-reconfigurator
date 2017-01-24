@@ -15,6 +15,7 @@ import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
 import static extension dk.itu.models.Patterns.*
+import dk.itu.models.Settings
 
 abstract class ScopingRule extends AncestorGuaranteedRule {
 	
@@ -42,8 +43,8 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		}
 	}
 	
-	protected def addVariable(String name, VariableDeclaration variable, PresenceCondition pc) {
-		variableDeclarationScopes.last.value.put(name, variable, pc)
+	protected def addVariable(VariableDeclaration variable, VariableDeclaration variant, PresenceCondition pc) {
+		variableDeclarationScopes.last.value.put(variable, variant, pc)
 	}
 	
 	protected def variableExists(String name) {
@@ -55,12 +56,6 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		String name
 	) {
 		variableDeclarationScopes.exists[ se | se.value.containsDeclaration(name) ]
-	}
-	
-	
-	
-	protected def declaredVariableNames() {
-		variableDeclarationScopes.map[value].map[it.maps].flatten
 	}
 	
 	
@@ -110,7 +105,17 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 				"unsigned long long",	"unsigned long long int",	"float",
 				"double",				"long double",				"_Bool"
 			].forEach[ typeName |
-				this.typeDeclarations.put(typeName, new TypeDeclaration(typeName, null), Reconfigurator::presenceConditionManager.newPresenceCondition(true))]
+				this.typeDeclarations.put(
+					new TypeDeclaration(typeName, null),
+					null,
+					Reconfigurator::presenceConditionManager.newPresenceCondition(true))
+				if (typeName.contains("signed")) {
+					this.typeDeclarations.put(
+						new TypeDeclaration(typeName.replace("signed", "__signed__"), null),
+						null,
+						Reconfigurator::presenceConditionManager.newPresenceCondition(true))
+				}
+			]
 			
 		} else if(#["Declaration", "DeclaringList", "SUEDeclarationSpecifier",
 			"DeclarationQualifierList", "StructOrUnionSpecifier", "StructOrUnion",
@@ -180,33 +185,23 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			if (typeDeclarationList.size == 1) {
 				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
 				val functionDeclaration = new FunctionDeclaration(name, typeDeclaration)
-				functionDeclarations.put(name, functionDeclaration, pc)
+				functionDeclarations.put(functionDeclaration, null, pc)
 			} else {
 				throw new Exception("ScopingRule: not handled: multiple type declarations.")
 			}
 		} else
 		if (node.isTypeDeclaration) {
-			debug("isTypeDeclaration", true)
-			// get current PC and names
-			val name = node.getNameOfTypeDeclaration
-			val type = node.getTypeOfTypeDeclaration
 			val pc = node.presenceCondition
-
-			// get registered type declaration
-			if (!typeDeclarations.containsDeclaration(type)) {
-				throw new Exception('''ScopingRule: type declaration [«type»] of [«name»] not found.''')
-			}
+			val typeName = node.getNameOfTypeDeclaration
+			val refTypeName = node.getTypeOfTypeDeclaration
 			
-			val typeDeclarationList = typeDeclarations.declarationList(type)
+			var refTypeDeclaration = typeDeclarations.getDeclaration(refTypeName) as TypeDeclaration
 			
-			if (typeDeclarationList.size == 1) {
-				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
-				
-				var newTypeDeclaration = new TypeDeclaration(name, typeDeclaration)
-				typeDeclarations.put(name, newTypeDeclaration, pc)
-			} else {
-				throw new Exception("ScopingRule: not handled: multiple type declarations.")
-			}
+			if (refTypeDeclaration == null)
+				throw new Exception('''ScopingRule: type declaration [«refTypeName»] of [«typeName»] not found.''')
+			
+			var newTypeDeclaration = new TypeDeclaration(typeName, refTypeDeclaration)
+			typeDeclarations.put(newTypeDeclaration, null, pc)
 		} else
 		
 		if (node.isStructDeclaration) {
@@ -219,7 +214,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(name)) {
 				var newTypeDeclaration = new TypeDeclaration(name, null)
-				typeDeclarations.put(name, newTypeDeclaration, pc)
+				typeDeclarations.put(newTypeDeclaration, null, pc)
 			}
 		} else
 		
@@ -232,7 +227,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			
 			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(type)) {
-				typeDeclarations.put(type, new TypeDeclaration(type, null), pc)
+				typeDeclarations.put(new TypeDeclaration(type, null), null, pc)
 			}
 			
 			val typeDeclarationList = typeDeclarations.declarationList(type)
@@ -241,7 +236,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
 				
 				var newTypeDeclaration = new TypeDeclaration(name, typeDeclaration)
-				typeDeclarations.put(name, newTypeDeclaration, pc)
+				typeDeclarations.put(newTypeDeclaration, null, pc)
 			} else {
 				throw new Exception("ScopingRule: not handled: multiple type declarations.")
 			}
@@ -254,32 +249,25 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			val name = node.nameOfEnumDeclaration
 			debug('''   - [«name»]''')
 			
-			this.typeDeclarations.put( name, new TypeDeclaration(name, null), pc)
+			this.typeDeclarations.put(new TypeDeclaration(name, null), null, pc)
 		} else
-		if (node.isVariableDeclaration) {
-			debug
-			debug("   isVariableDeclaration", true)
-			
-			// get current PC and names
+		
+		if (
+			node.isVariableDeclaration
+			&& !node.getNameOfVariableDeclaration.startsWith(Settings::reconfiguratorIncludePlaceholder)
+		) {
 			val pc = node.presenceCondition
-			val name = node.getNameOfVariableDeclaration
-			val type = node.getTypeOfVariableDeclaration
-			debug('''   - [«name»] of [«type»]''')
+			val varName = node.getNameOfVariableDeclaration
+			val typeName = node.getTypeOfVariableDeclaration
+			
+			val typeDeclaration = typeDeclarations.getDeclaration(typeName) as TypeDeclaration
 			
 			// get registered type declaration
-			if (!typeDeclarations.containsDeclaration(type))
-				throw new Exception('''ScopingRule: type declaration «type» not found.''')
+			if (typeDeclaration == null)
+				throw new Exception('''ScopingRule: type declaration [«typeName»] not found.''')
 			
-			val typeDeclarationList = typeDeclarations.declarationList(type)
-			
-			if (typeDeclarationList.size == 1) {
-				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
-				val variableDeclaration = new VariableDeclaration(name, typeDeclaration)
-				addVariable(name, variableDeclaration, pc)
-			} else {
-				throw new Exception("ScopingRule: not handled: multiple type declarations.")
-			}
-			
+			val variableDeclaration = new VariableDeclaration(varName, typeDeclaration)
+			addVariable(variableDeclaration, null, pc)
 		} else
 		
 		if (node.isParameterDeclaration) {
@@ -290,7 +278,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			if (typeDeclarations.declarationList(type).findFirst[key.name.equals(type)] != null) {
 				val typeDeclaration = typeDeclarations.declarationList(type).findFirst[key.name.equals(type)].key as TypeDeclaration
 				val variableDeclaration = new VariableDeclaration(name, typeDeclaration)
-				addVariable(name, variableDeclaration, pc)
+				addVariable(variableDeclaration, null, pc)
 			}
 		} else
 		
@@ -335,6 +323,8 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			|| (node.name.equals("Declaration") && node.getDescendantNode("StructOrUnionSpecifier") != null )
 			|| (node.name.equals("ParameterDeclaration") && node.getDescendantNode("SimpleDeclarator") == null)
 			|| (node.name.equals("ParameterAbstractDeclaration") && node.size == 1)
+			|| (node.isVariableDeclaration
+				&& node.getNameOfVariableDeclaration.startsWith(Settings::reconfiguratorIncludePlaceholder))
 		) {
 			// no declaration
 		} else {

@@ -4,36 +4,39 @@ import java.util.AbstractMap.SimpleEntry
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.List
-import java.util.Set
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 
 class DeclarationPCMap {
 	
-	protected val HashMap<String, List<SimpleEntry<Declaration,PresenceCondition>>> map
+	protected val HashMap<Declaration, List<SimpleEntry<Declaration,PresenceCondition>>> map
 	
 	new () {
-		map = new HashMap<String, List<SimpleEntry<Declaration,PresenceCondition>>>
+		map = new HashMap<Declaration, List<SimpleEntry<Declaration,PresenceCondition>>>
 	}
 	
-	def fix(String name) {
+	def String fix(String name) {
 		if (name.contains(" ")) {
-			val n = map.keySet.findFirst[key |
-				key.contains(" ")
-				&& name.split(" ").size == key.split(" ").size
-				&& key.split(" ").toSet.equals(name.split(" ").toSet)
+			val n = map.keySet.findFirst[declaration |
+				declaration.name.contains(" ")
+				&& name.split(" ").size == declaration.name.split(" ").size
+				&& declaration.name.split(" ").toSet.equals(name.split(" ").toSet)
 			]
 			if (n != null)
-				return n
+				return n.name
 		}
 		return name
 	}
 	
-	public def void put (String name, Declaration declaration, PresenceCondition pc) {
-		val fixedName = fix(name)
-		if (!map.containsKey(fixedName))
-			map.put(fixedName, new ArrayList<SimpleEntry<Declaration, PresenceCondition>>)
+	public def void put (Declaration declaration, Declaration variant, PresenceCondition pc) {
+		if (!map.keySet.exists[it.name.equals(declaration.name)])
+			map.put(declaration, new ArrayList<SimpleEntry<Declaration, PresenceCondition>>)
 		
-		map.get(fixedName).add(new SimpleEntry(declaration, pc))
+		if (variant != null)
+			map.get(declaration).add(new SimpleEntry(variant, pc))
+	}
+	
+	public def Declaration getDeclaration(String name) {
+		map.keySet.sortBy[it.name].findFirst[declaration | declaration.name.equals(fix(name))]
 	}
 	
 	public def void rem(String name, String variantName) {
@@ -51,28 +54,22 @@ class DeclarationPCMap {
 	}
 	
 	public def boolean containsDeclaration(String name) {
-		val fixedName = fix(name)
-		map.containsKey(fixedName)
+		map.keySet.exists[key | key.name.equals(fix(name))]
 	}
 	
 	public def List<SimpleEntry<Declaration, PresenceCondition>> declarationList(String name) {
-		val fixedName = fix(name)
-		map.get(fixedName)
+		map.get(getDeclaration(name))
 	}
 	
 	public def int size() {
 		map.size
 	}
 	
-	public def Set<String> names() {
-		map.keySet
+	public def Iterable<String> names() {
+		map.keySet.map[name].sort
 	}
 	
 	public def void clear() {
 		map.clear
-	}
-	
-	public def Set<String> maps() {
-		map.keySet.sort.map['''«it» -> {«FOR x : map.get(it) SEPARATOR ", "»«x.key.name»«ENDFOR»}'''].toSet
 	}
 }
