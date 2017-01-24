@@ -106,7 +106,7 @@ class Patterns {
 	
 	
 	public static def boolean isTypeDeclaration(GNode node) {
-		node.name.equals("Declaration")
+		#["Declaration", "DeclarationExtension"].contains(node.name)
 		&& node.getDescendantNode[
 			it instanceof Language<?>
 			&& (it as Language<CTag>).tag.equals(CTag::TYPEDEF)
