@@ -139,6 +139,12 @@ class Patterns {
 		&& (node.get(1) as GNode).isTypeDeclaration
 	}
 	
+	public static def boolean isTypeDeclarationWithTypeVariability(GNode node, DeclarationPCMap typeDeclarations) {
+		node.isTypeDeclaration
+		&& !node.getBooleanProperty("refTypeVariabilityHandled")
+		&& typeDeclarations.declarationList(node.getTypeOfTypeDeclaration).size > 0
+	}
+	
 	public static def String getNameOfTypeDeclaration(GNode node) {
 		val simpleDeclarator = node.getDescendantNode("SimpleDeclarator")
 		val name = (simpleDeclarator.get(0) as Text<CTag>).toString

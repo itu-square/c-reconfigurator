@@ -1,6 +1,5 @@
 package dk.itu.models.utils
 
-import java.util.AbstractMap.SimpleEntry
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.List
@@ -8,10 +7,10 @@ import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 
 class DeclarationPCMap {
 	
-	protected val HashMap<Declaration, List<SimpleEntry<Declaration,PresenceCondition>>> map
+	protected val HashMap<Declaration, List<DeclarationPCPair>> map
 	
 	new () {
-		map = new HashMap<Declaration, List<SimpleEntry<Declaration,PresenceCondition>>>
+		map = new HashMap<Declaration, List<DeclarationPCPair>>
 	}
 	
 	def String fix(String name) {
@@ -27,12 +26,16 @@ class DeclarationPCMap {
 		return name
 	}
 	
+	public def void put(Declaration declaration) {
+		map.put(declaration, new ArrayList<DeclarationPCPair>)
+	}
+	
 	public def void put (Declaration declaration, Declaration variant, PresenceCondition pc) {
 		if (!map.keySet.exists[it.name.equals(declaration.name)])
-			map.put(declaration, new ArrayList<SimpleEntry<Declaration, PresenceCondition>>)
+			map.put(declaration, new ArrayList<DeclarationPCPair>)
 		
 		if (variant != null)
-			map.get(declaration).add(new SimpleEntry(variant, pc))
+			map.get(declaration).add(new DeclarationPCPair(variant, pc))
 	}
 	
 	public def Declaration getDeclaration(String name) {
@@ -42,7 +45,7 @@ class DeclarationPCMap {
 	public def void rem(String name, String variantName) {
 		val fixedName = fix(name)
 		if (map.containsKey(fixedName)) {
-			val variant = map.get(fixedName).findFirst[pair | pair.key.name.equals(variantName)]
+			val variant = map.get(fixedName).findFirst[declaration.name.equals(variantName)]
 			if (variant != null) {
 				map.get(fixedName).remove(variant)
 			}
@@ -57,7 +60,7 @@ class DeclarationPCMap {
 		map.keySet.exists[key | key.name.equals(fix(name))]
 	}
 	
-	public def List<SimpleEntry<Declaration, PresenceCondition>> declarationList(String name) {
+	public def List<DeclarationPCPair> declarationList(String name) {
 		map.get(getDeclaration(name))
 	}
 	
@@ -70,6 +73,6 @@ class DeclarationPCMap {
 	}
 	
 	public def void clear() {
-		map.clear
+//		map.clear
 	}
 }

@@ -2,15 +2,13 @@ package dk.itu.models.rules
 
 import dk.itu.models.PresenceConditionIdMap
 import dk.itu.models.Reconfigurator
-import dk.itu.models.utils.Declaration
+import dk.itu.models.utils.DeclarationPCPair
 import dk.itu.models.utils.FunctionDeclaration
 import dk.itu.models.utils.TypeDeclaration
 import dk.itu.models.utils.VariableDeclaration
-import java.util.AbstractMap.SimpleEntry
 import java.util.ArrayList
 import java.util.List
 import xtc.lang.cpp.CTag
-import xtc.lang.cpp.PresenceConditionManager
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
@@ -52,15 +50,47 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			
 			var Pair<Object> newPair = Pair::EMPTY
 			
-			for(SimpleEntry<Declaration, PresenceConditionManager.PresenceCondition> declaration : declarations) {
+			for(DeclarationPCPair declPair : declarations) {
 				val newDeclarationNode = declarationNode
-					.replaceIdentifierVarName(varType.replace("struct ", ""), declaration.key.name.replace("struct ", ""))
-				newPair = newPair.add(GNode::create("Conditional", pc.and(declaration.value), newDeclarationNode))
+					.replaceIdentifierVarName(varType.replace("struct ", ""), declPair.declaration.name.replace("struct ", ""))
+				newPair = newPair.add(GNode::create("Conditional", pc.and(declPair.pc), newDeclarationNode))
 			}
 
 			newPair = newPair.append(pair.tail)
 			return newPair
-		}		
+		} else
+		
+		// |- #ifdef pc
+		// |  |- typedef refTypeName typeName;
+		// |- ... tail
+		if (
+			!pair.empty
+			&& (pair.head instanceof GNode)
+			&& (pair.head as GNode).isTypeDeclarationWithVariability
+			&& ((pair.head as GNode).get(1) as GNode).isTypeDeclarationWithTypeVariability(typeDeclarations)
+		) {
+			val node = pair.head as GNode
+			val pc = node.get(0) as PresenceCondition
+			val declarationNode = node.get(1) as GNode
+			val refTypeName = declarationNode.getTypeOfTypeDeclaration
+			
+			val filtered = typeDeclarations.declarationList(refTypeName).filterDeclarations(refTypeName, pc)
+			
+			var Pair<Object> newPair = Pair::EMPTY
+			
+			for(DeclarationPCPair declPair : filtered) {
+				val newDeclarationNode = if(!refTypeName.equals(declPair.declaration.name))
+						declarationNode.replaceIdentifierVarName(refTypeName, declPair.declaration.name)
+					else
+						declarationNode
+				newDeclarationNode.setProperty("refTypeVariabilityHandled", true)
+				newPair = newPair.add(GNode::create("Conditional", pc.and(declPair.pc), newDeclarationNode))
+			}
+			
+			newPair = newPair.append(pair.tail)
+			return newPair				
+		}
+			
 		pair
 	}
 	
@@ -73,8 +103,8 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		) {
 			val pc = node.get(0) as PresenceCondition
 			val declarationNode = node.get(1) as GNode
-			val typeName = declarationNode.getNameOfFunctionDeclaration
-			val refTypeName = declarationNode.getTypeOfFunctionDeclaration
+			val typeName = declarationNode.getNameOfTypeDeclaration
+			val refTypeName = declarationNode.getTypeOfTypeDeclaration
 			
 			var refTypeDeclaration = typeDeclarations.getDeclaration(refTypeName) as TypeDeclaration
 			if (refTypeDeclaration == null)
@@ -83,7 +113,6 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			var typeDeclaration = typeDeclarations.getDeclaration(typeName) as TypeDeclaration
 			if (typeDeclaration == null) {
 				typeDeclaration = new TypeDeclaration(typeName, null)
-				typeDeclarations.put(typeDeclaration, null, pc)
 			}
 			
 			val newTypeName = typeName + "_V" + pcidmap.getId(pc)
@@ -204,7 +233,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			val typeDeclarationList = typeDeclarations.declarationList(funcType)
 			
 			if (typeDeclarationList.size == 1) {
-				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
+				val typeDeclaration = typeDeclarationList.get(0).declaration as TypeDeclaration
 
 				val newName = funcName + "_V" + pcidmap.getId(funcPC)
 				val funcDeclaration = new FunctionDeclaration(newName, typeDeclaration)
@@ -271,7 +300,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			val typeDeclarationList = typeDeclarations.declarationList(varType)
 			
 			if (typeDeclarationList.size == 1) {
-				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
+				val typeDeclaration = typeDeclarationList.get(0).declaration as TypeDeclaration
 
 				val newName = varName + "_V" + pcidmap.getId(varPC)
 				val varDeclaration = new VariableDeclaration(newName, typeDeclaration)
@@ -376,13 +405,13 @@ class ReconfigureDeclarationRule extends ScopingRule {
 	
 	
 	
-	private def filterDeclarations(List<SimpleEntry<Declaration, PresenceConditionManager.PresenceCondition>> inDeclarations, String typeName, PresenceCondition guardPC) {
+	private def filterDeclarations(List<DeclarationPCPair> inDeclarations, String typeName, PresenceCondition guardPC) {
 		
-		val declarations = new ArrayList<SimpleEntry<Declaration,PresenceCondition>>
+		val declarations = new ArrayList<DeclarationPCPair>
 		
 		var disjunctionPC = Reconfigurator::presenceConditionManager.newPresenceCondition(false)
-		for (SimpleEntry<Declaration, PresenceCondition> pair : inDeclarations) {
-			val pc = pair.value
+		for (DeclarationPCPair pair : inDeclarations) {
+			val pc = pair.pc
 			if (!guardPC.and(pc).isFalse) {
 				declarations.add(pair)
 				disjunctionPC = pc.or(disjunctionPC)
@@ -390,7 +419,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		}
 		
 		if (!guardPC.BDD.imp(disjunctionPC.BDD).isOne) {
-			declarations.add(new SimpleEntry<Declaration, PresenceCondition>(
+			declarations.add(new DeclarationPCPair(
 				new TypeDeclaration(typeName, null),
 				disjunctionPC.not
 			))

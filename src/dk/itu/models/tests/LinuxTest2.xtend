@@ -46,6 +46,7 @@ class LinuxTest2 {
 				 "-source"	,currentFilePath
 				,"-target"	,currentTargetPath
 				,"-oracle"	,currentOraclePath
+				,"-include"	,source.path + "/gcc_predefines.h"
 				,"-include"	,source.path + "/config.h"
 				,"-I"		,source.path + "/arch/x86/include/"
 				,"-I"		,source.path + "/arch/x86/include/uapi/"

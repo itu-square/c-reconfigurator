@@ -183,22 +183,24 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			val typeDeclarationList = typeDeclarations.declarationList(type)
 			
 			if (typeDeclarationList.size == 1) {
-				val typeDeclaration = typeDeclarationList.get(0).key as TypeDeclaration
+				val typeDeclaration = typeDeclarationList.get(0).declaration as TypeDeclaration
 				val functionDeclaration = new FunctionDeclaration(name, typeDeclaration)
 				functionDeclarations.put(functionDeclaration, null, pc)
 			} else {
 				throw new Exception("ScopingRule: not handled: multiple type declarations.")
 			}
 		} else
+		
 		if (node.isTypeDeclaration) {
 			val pc = node.presenceCondition
 			val typeName = node.getNameOfTypeDeclaration
 			val refTypeName = node.getTypeOfTypeDeclaration
 			
-			var refTypeDeclaration = typeDeclarations.getDeclaration(refTypeName) as TypeDeclaration
-			
-			if (refTypeDeclaration == null)
+			val refTypeDeclaration = typeDeclarations.getDeclaration(refTypeName) as TypeDeclaration
+			if (refTypeDeclaration == null) {
+				typeDeclarations.names.forEach[println('''- [«it»]''')]
 				throw new Exception('''ScopingRule: type declaration [«refTypeName»] of [«typeName»] not found.''')
+			}
 			
 			var newTypeDeclaration = new TypeDeclaration(typeName, refTypeDeclaration)
 			typeDeclarations.put(newTypeDeclaration, null, pc)
@@ -273,8 +275,8 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			val name = node.getNameOfParameterDeclaration
 			val type = node.getTypeOfParameterDeclaration
 			
-			if (typeDeclarations.declarationList(type).findFirst[key.name.equals(type)] != null) {
-				val typeDeclaration = typeDeclarations.declarationList(type).findFirst[key.name.equals(type)].key as TypeDeclaration
+			if (typeDeclarations.declarationList(type).findFirst[declaration.name.equals(type)] != null) {
+				val typeDeclaration = typeDeclarations.declarationList(type).findFirst[declaration.name.equals(type)].declaration as TypeDeclaration
 				val variableDeclaration = new VariableDeclaration(name, typeDeclaration)
 				addVariable(variableDeclaration, null, pc)
 			}

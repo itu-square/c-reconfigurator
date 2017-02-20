@@ -26,8 +26,7 @@ class ReplaceIdentifierRule extends AncestorGuaranteedRule {
 	override dispatch Language<CTag> transform(Language<CTag> lang) {
 		if (
 			lang instanceof Text<?>
-			&& (lang as Text<CTag>).tag.equals(CTag::IDENTIFIER)
-//			&& #["SimpleDeclarator", "ParameterTypedefDeclarator"].contains(ancestors.last.name)
+			&& #[CTag::IDENTIFIER, CTag::TYPEDEFname].contains((lang as Text<CTag>).tag)
 			&& lang.toString.equals(oldIdentifier)
 		) {
 			return new Text(lang.tag, newIdentifier)
