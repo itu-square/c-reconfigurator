@@ -1,12 +1,12 @@
 package dk.itu.models.rules
 
 import dk.itu.models.Reconfigurator
+import dk.itu.models.Settings
 import dk.itu.models.utils.DeclarationPCMap
+import dk.itu.models.utils.DeclarationScopeStack
 import dk.itu.models.utils.FunctionDeclaration
 import dk.itu.models.utils.TypeDeclaration
 import dk.itu.models.utils.VariableDeclaration
-import java.util.AbstractMap.SimpleEntry
-import java.util.ArrayList
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
@@ -15,64 +15,32 @@ import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
 import static extension dk.itu.models.Patterns.*
-import dk.itu.models.Settings
 
 abstract class ScopingRule extends AncestorGuaranteedRule {
 	
-	protected val ArrayList<SimpleEntry<GNode,DeclarationPCMap>> variableDeclarationScopes
+	protected val DeclarationScopeStack variableDeclarations
 	protected val DeclarationPCMap typeDeclarations
 	protected val DeclarationPCMap functionDeclarations
 	
 	new () {
 		super()
-		this.variableDeclarationScopes = new ArrayList<SimpleEntry<GNode,DeclarationPCMap>>
+		this.variableDeclarations = new DeclarationScopeStack
 		this.typeDeclarations = new DeclarationPCMap
 		this.functionDeclarations = new DeclarationPCMap
 	}
 	
-	protected def addVariableDeclarationScope(GNode node) {
-		this.variableDeclarationScopes.add(new SimpleEntry<GNode,DeclarationPCMap>(node, new DeclarationPCMap))
-	}
-	
-	protected def clearVariableDeclarationScopes() {
-		while (
-			variableDeclarationScopes.size > 0 &&
-			!ancestors.contains(variableDeclarationScopes.last.key)
-		) {
-			variableDeclarationScopes.remove(variableDeclarationScopes.size - 1)
-		}
-	}
-	
-	protected def addVariable(VariableDeclaration variable, VariableDeclaration variant, PresenceCondition pc) {
-		variableDeclarationScopes.last.value.put(variable, variant, pc)
-	}
-	
-	protected def variableExists(String name) {
-		variableDeclarationScopes.variableExists(name)
-	}
-	
-	public static def variableExists(
-		ArrayList<SimpleEntry<GNode,DeclarationPCMap>> variableDeclarationScopes,
-		String name
-	) {
-		variableDeclarationScopes.exists[ se | se.value.containsDeclaration(name) ]
-	}
-	
-	
-	
-	
 	def PresenceCondition transform(PresenceCondition cond) {
-		clearVariableDeclarationScopes
+		variableDeclarations.clearScopes(ancestors)
 		cond
 	}
 
 	def Language<CTag> transform(Language<CTag> lang) {
-		clearVariableDeclarationScopes
+		variableDeclarations.clearScopes(ancestors)
 		lang
 	}
 
 	def Pair<Object> transform(Pair<Object> pair) {
-		clearVariableDeclarationScopes
+		variableDeclarations.clearScopes(ancestors)
 		
 		var temp = ancestors.last.toPair
 		while (temp != pair) {
@@ -84,14 +52,13 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 	}
 	
 	def Object transform(GNode node) {
-		clearVariableDeclarationScopes
+		variableDeclarations.clearScopes(ancestors)
 		if (#["ExternalDeclarationList", "FunctionDefinition", "FunctionDeclarator", "CompoundStatement"].contains(node.name)) {
-			addVariableDeclarationScope(node)
+			variableDeclarations.pushScope(node)
 		} else if (node.name.equals("TranslationUnit")) {
 			debug("\n\n")
 			debug("TranslationUnit", true)
-			this.functionDeclarations.clear
-			this.typeDeclarations.clear
+			variableDeclarations.clearScopes(ancestors)
 			
 			#[	"void",
 				"char",					"signed char",				"unsigned char",
@@ -256,7 +223,6 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			node.isVariableDeclaration
 			&& !node.getNameOfVariableDeclaration.startsWith(Settings::reconfiguratorIncludePlaceholder)
 		) {
-			val pc = node.presenceCondition
 			val varName = node.getNameOfVariableDeclaration
 			val typeName = node.getTypeOfVariableDeclaration
 			
@@ -267,18 +233,17 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 				throw new Exception('''ScopingRule: type declaration [«typeName»] not found.''')
 			
 			val variableDeclaration = new VariableDeclaration(varName, typeDeclaration)
-			addVariable(variableDeclaration, null, pc)
+			variableDeclarations.put(variableDeclaration)
 		} else
 		
 		if (node.isParameterDeclaration) {
-			val pc = node.presenceCondition
 			val name = node.getNameOfParameterDeclaration
 			val type = node.getTypeOfParameterDeclaration
 			
 			if (typeDeclarations.declarationList(type).findFirst[declaration.name.equals(type)] != null) {
 				val typeDeclaration = typeDeclarations.declarationList(type).findFirst[declaration.name.equals(type)].declaration as TypeDeclaration
 				val variableDeclaration = new VariableDeclaration(name, typeDeclaration)
-				addVariable(variableDeclaration, null, pc)
+				variableDeclarations.put(variableDeclaration)
 			}
 		} else
 		

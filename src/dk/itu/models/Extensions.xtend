@@ -12,6 +12,7 @@ import dk.itu.models.rules.phase4functions.RenameFunctionRule
 import dk.itu.models.rules.phase4functions.RewriteFunctionCallRule
 import dk.itu.models.strategies.TopDownStrategy
 import dk.itu.models.utils.DeclarationPCMap
+import dk.itu.models.utils.DeclarationScopeStack
 import java.io.BufferedReader
 import java.io.ByteArrayOutputStream
 import java.io.File
@@ -20,7 +21,6 @@ import java.io.FileReader
 import java.io.IOException
 import java.io.PrintStream
 import java.io.PrintWriter
-import java.util.AbstractMap.SimpleEntry
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.Iterator
@@ -486,11 +486,10 @@ class Extensions {
     
     public static def rewriteVariableUse (
     	GNode node,
-		ArrayList<SimpleEntry<GNode,DeclarationPCMap>> variableDeclarationScopes,
-		PresenceCondition pc,
-		PresenceConditionIdMap pcidmap ) {
+		DeclarationScopeStack variableDeclarationScopes,
+		PresenceCondition pc) {
 			val tdn = new TopDownStrategy
-			tdn.register(new RewriteVariableUseRule(variableDeclarationScopes, pc, pcidmap))
+			tdn.register(new RewriteVariableUseRule(variableDeclarationScopes, pc))
 			tdn.transform(node) as GNode
 	}
 
@@ -503,10 +502,9 @@ class Extensions {
     public static def rewriteFunctionCall (
     	GNode node,
 		DeclarationPCMap fmap,
-		PresenceCondition pc,
-		PresenceConditionIdMap pcidmap ) {
+		PresenceCondition pc) {
     		val tdn = new TopDownStrategy
-			tdn.register(new RewriteFunctionCallRule(fmap, pc, pcidmap))
+			tdn.register(new RewriteFunctionCallRule(fmap, pc))
 			tdn.transform(node) as GNode
 	}
 	

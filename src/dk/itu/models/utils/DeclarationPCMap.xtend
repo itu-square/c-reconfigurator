@@ -71,8 +71,4 @@ class DeclarationPCMap {
 	public def Iterable<String> names() {
 		map.keySet.map[name].sort
 	}
-	
-	public def void clear() {
-//		map.clear
-	}
 }

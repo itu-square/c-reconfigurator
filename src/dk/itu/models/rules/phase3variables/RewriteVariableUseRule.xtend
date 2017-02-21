@@ -1,10 +1,10 @@
 package dk.itu.models.rules.phase3variables
 
-import dk.itu.models.PresenceConditionIdMap
 import dk.itu.models.Reconfigurator
 import dk.itu.models.rules.AncestorGuaranteedRule
 import dk.itu.models.utils.Declaration
 import dk.itu.models.utils.DeclarationPCMap
+import dk.itu.models.utils.DeclarationScopeStack
 import dk.itu.models.utils.VariableDeclaration
 import java.util.AbstractMap.SimpleEntry
 import java.util.ArrayList
@@ -18,24 +18,20 @@ import xtc.tree.Node
 import xtc.util.Pair
 
 import static extension dk.itu.models.Extensions.*
-import static extension dk.itu.models.rules.ScopingRule.*
 
 class RewriteVariableUseRule extends AncestorGuaranteedRule {
 	
-	private val PresenceConditionIdMap pcidmap
-	protected val ArrayList<SimpleEntry<GNode,DeclarationPCMap>> variableDeclarationScopes
+	protected val DeclarationScopeStack variableDeclarationScopes
 	
 	protected val PresenceCondition externalGuard
 	
 	new (
-		ArrayList<SimpleEntry<GNode,DeclarationPCMap>> variableDeclarationScopes,
-		PresenceCondition externalGuard,
-		PresenceConditionIdMap pcidmap
+		DeclarationScopeStack variableDeclarationScopes,
+		PresenceCondition externalGuard
 	) {
 		super()
 		this.variableDeclarationScopes = variableDeclarationScopes
 		this.externalGuard = externalGuard
-		this.pcidmap = pcidmap
 	}
 	
 	static def String get_id (HashMap<PresenceCondition, String> map, PresenceCondition pc) {
@@ -194,7 +190,7 @@ class RewriteVariableUseRule extends AncestorGuaranteedRule {
 				throw new Exception("RewriteVariableUseRule: unknown location of variable name")
 			}
 			
-			if (variableDeclarationScopes.variableExists(varName)) {
+			if (variableDeclarationScopes.getDeclaration(varName) != null) {
 				val varPC = externalGuard.and(node.presenceCondition)
 				
 				val declarations = filterDeclarations(varName, varPC)

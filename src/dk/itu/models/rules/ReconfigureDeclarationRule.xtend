@@ -1,6 +1,5 @@
 package dk.itu.models.rules
 
-import dk.itu.models.PresenceConditionIdMap
 import dk.itu.models.Reconfigurator
 import dk.itu.models.utils.DeclarationPCPair
 import dk.itu.models.utils.FunctionDeclaration
@@ -18,12 +17,6 @@ import static extension dk.itu.models.Extensions.*
 import static extension dk.itu.models.Patterns.*
 
 class ReconfigureDeclarationRule extends ScopingRule {
-	
-	private val PresenceConditionIdMap pcidmap
-	
-	new () {
-		this.pcidmap = new PresenceConditionIdMap
-	}
 	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
 		cond
@@ -112,10 +105,11 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			
 			var typeDeclaration = typeDeclarations.getDeclaration(typeName) as TypeDeclaration
 			if (typeDeclaration == null) {
-				typeDeclaration = new TypeDeclaration(typeName, null)
+				typeDeclaration = new TypeDeclaration(typeName, refTypeDeclaration)
+				typeDeclarations.put(typeDeclaration)
 			}
 			
-			val newTypeName = typeName + "_V" + pcidmap.getId(pc)
+			val newTypeName = typeName + "_V" + (typeDeclarations.declarationList(typeName).size + 1)
 			val newTypeDeclaration = new TypeDeclaration(newTypeName, refTypeDeclaration)
 			typeDeclarations.put(typeDeclaration, newTypeDeclaration, pc)
 			
@@ -123,6 +117,8 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
 			return newNode
 		} else
+		
+		
 		
 		if (
 			node.isStructTypeDeclarationWithVariability
@@ -139,7 +135,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 					typeDeclarations.put(typeDeclaration, null, pc)
 				}
 				
-				val newTypeName = typeName + "_V" + pcidmap.getId(pc)
+				val newTypeName = typeName + "_V" + (typeDeclarations.declarationList(typeName).size + 1)
 				val newTypeDeclaration = new TypeDeclaration(newTypeName, null)
 				typeDeclarations.put(typeDeclaration, newTypeDeclaration, pc)
 				
@@ -151,6 +147,8 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			}
 		} else
 		
+		
+		
 		if (
 			node.isStructDeclarationWithVariability
 		) {
@@ -159,15 +157,14 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			val type = declarationNode.getNameOfStructDeclaration
 			val name = type.replace("struct ", "")
 			
-			var TypeDeclaration typeDeclaration
-			
-			if (!typeDeclarations.containsDeclaration(type)) {
+			var typeDeclaration = typeDeclarations.getDeclaration(type)
+			if (typeDeclaration == null) {
 				typeDeclaration = new TypeDeclaration(type, null)
-				typeDeclarations.put(typeDeclaration, null, pc)
+				typeDeclarations.put(typeDeclaration)
 			}
 			
-			val newName = name + "_V" + pcidmap.getId(pc)
-			val newType = type.replace(name, newName)
+			val newType = type + "_V" + (typeDeclarations.declarationList(type).size + 1)
+			val newName = newType.replace("struct ", "")
 			
 			val newTypeDeclaration = new TypeDeclaration(newType, null)
 			typeDeclarations.put(typeDeclaration, newTypeDeclaration, pc)
@@ -177,6 +174,8 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			return newNode
 		} else
 		
+		
+		
 		if (
 			node.isEnumDeclarationWithVariability
 		) {
@@ -184,7 +183,12 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			var newNode = node.get(1) as GNode
 			
 			for (String enumerator : node.getDescendantNode("EnumeratorList").filter[(it instanceof GNode) && (it as GNode).name.equals("Enumerator")].map[(it as GNode).get(0).toString]) {
-				val newEnumerator = enumerator + "_V" + pcidmap.getId(pc)
+				
+				println
+				println('''changing [«enumerator»]''')
+				println
+				
+				val newEnumerator = enumerator + "_V?"// + pcidmap.getId(pc)
 				newNode = newNode.replaceIdentifierVarName(enumerator, newEnumerator)
 			}
 			
@@ -192,24 +196,29 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			return newNode
 		} else
 		
+		
+		
 		if (
 			node.isFunctionDeclarationWithVariability
 		) {
 			val pc = node.get(0) as PresenceCondition
 			val declarationNode = node.get(1) as GNode
 			val funcName = declarationNode.getNameOfFunctionDeclaration
-			val typeName = declarationNode.getTypeOfFunctionDeclaration
+			val funcType = declarationNode.getTypeOfFunctionDeclaration
 			
-			var typeDeclaration = typeDeclarations.getDeclaration(typeName) as TypeDeclaration
+			var funcTypeDeclaration = typeDeclarations.getDeclaration(funcType) as TypeDeclaration
+			if (funcTypeDeclaration == null)
+				throw new Exception('''ReconfigureDeclarationRule: type declaration [«funcType»] not found.''')
 			
-			// get registered type declaration
-			if (typeDeclaration == null)
-				throw new Exception('''ReconfigureDeclarationRule: type declaration [«typeName»] not found.''')
+			var funcDeclaration = functionDeclarations.getDeclaration(funcName) as FunctionDeclaration
+			if (funcDeclaration == null) {
+				funcDeclaration = new FunctionDeclaration(funcName, funcTypeDeclaration)
+				functionDeclarations.put(funcDeclaration)
+			}
 			
-			val newFuncName = funcName + "_V" + pcidmap.getId(pc)
-			val funcDeclaration = new FunctionDeclaration(newFuncName, typeDeclaration)
-
-			functionDeclarations.put(funcDeclaration, null, pc)
+			val newFuncName = funcName + "_V" + (functionDeclarations.declarationList(funcName).size + 1)
+			val newFuncDeclaration = new FunctionDeclaration(newFuncName, funcTypeDeclaration)
+			functionDeclarations.put(funcDeclaration, newFuncDeclaration, pc)
 
 			var newNode = declarationNode.replaceIdentifierVarName(funcName, newFuncName)
 			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
@@ -219,12 +228,10 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		if (
 			node.isFunctionDefinitionWithVariability
 		) {
-			debug("isFunctionDefinitionWithVariability", true)
 			val funcPC = node.get(0) as PresenceCondition
 			val funcDefinitionNode = node.get(1) as GNode
 			val funcName = funcDefinitionNode.getNameOfFunctionDefinition
 			val funcType = funcDefinitionNode.getTypeOfFunctionDefinition
-			debug('''  --- [«funcName»] of [«funcType»]''')
 			
 			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(funcType))
@@ -235,13 +242,13 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			if (typeDeclarationList.size == 1) {
 				val typeDeclaration = typeDeclarationList.get(0).declaration as TypeDeclaration
 
-				val newName = funcName + "_V" + pcidmap.getId(funcPC)
+				val newName = funcName + "_V?" //+ pcidmap.getId(funcPC)
 				val funcDeclaration = new FunctionDeclaration(newName, typeDeclaration)
 				functionDeclarations.put(funcDeclaration, null, funcPC)
 				
 				var newNode = funcDefinitionNode.renameFunctionWithNewId(newName)
-				newNode = newNode.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition.and(funcPC), pcidmap)
-				newNode = newNode.rewriteFunctionCall(functionDeclarations, node.presenceCondition.and(funcPC), pcidmap)
+				newNode = newNode.rewriteVariableUse(variableDeclarations, node.presenceCondition.and(funcPC))
+				newNode = newNode.rewriteFunctionCall(functionDeclarations, node.presenceCondition.and(funcPC))
 				newNode.setProperty("OriginalPC", node.presenceCondition.and(funcPC))
 				return newNode
 			} else {
@@ -269,8 +276,8 @@ class ReconfigureDeclarationRule extends ScopingRule {
 					newpair = newpair.add(child)
 				} else {
 					val nodepc = node.presenceCondition
-					var newnode = (child as GNode).rewriteVariableUse(variableDeclarationScopes, nodepc, pcidmap)
-					newnode = (child as GNode).rewriteFunctionCall(functionDeclarations, nodepc, pcidmap)
+					var newnode = (child as GNode).rewriteVariableUse(variableDeclarations, nodepc)
+					newnode = (child as GNode).rewriteFunctionCall(functionDeclarations, nodepc)
 					newpair = newpair.add(newnode)
 				}
 			}
@@ -302,13 +309,13 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			if (typeDeclarationList.size == 1) {
 				val typeDeclaration = typeDeclarationList.get(0).declaration as TypeDeclaration
 
-				val newName = varName + "_V" + pcidmap.getId(varPC)
+				val newName = varName + "_V?"// + pcidmap.getId(varPC)
 				val varDeclaration = new VariableDeclaration(newName, typeDeclaration)
-				addVariable(varDeclaration, null, varPC)
+				variableDeclarations.put(varDeclaration)
 
 				var newNode = varDeclarationNode.replaceDeclaratorTextWithNewId(newName)
-				newNode = newNode.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition.and(varPC), pcidmap)
-				newNode = newNode.rewriteFunctionCall(functionDeclarations, node.presenceCondition.and(varPC), pcidmap)
+				newNode = newNode.rewriteVariableUse(variableDeclarations, node.presenceCondition.and(varPC))
+				newNode = newNode.rewriteFunctionCall(functionDeclarations, node.presenceCondition.and(varPC))
 				newNode.setProperty("OriginalPC", node.presenceCondition.and(varPC))
 				return newNode
 			} else {
@@ -323,7 +330,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			debug
 			debug("   other rewrites", true)
 			debug("   - " + node.name)
-			val newNode = (node.get(2) as GNode).rewriteVariableUse(variableDeclarationScopes, node.presenceCondition, pcidmap)
+			val newNode = (node.get(2) as GNode).rewriteVariableUse(variableDeclarations, node.presenceCondition)
 			
 			if (!newNode.printAST.equals(node.get(2).printAST)) {
 				return GNode::createFromPair(
@@ -344,7 +351,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			debug
 			debug("   other rewrites", true)
 			debug("   - " + node.name)
-			return node.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition, pcidmap)
+			return node.rewriteVariableUse(variableDeclarations, node.presenceCondition)
 		} else
 		
 		if (
@@ -353,7 +360,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			&& #["ExternalDeclarationList", "DeclarationExtension", "DeclarationOrStatementList"].contains(ancestors.last.name)
 			&& #["Declaration", "DeclarationExtension"].contains(node.name)
 		) {
-			node.rewriteVariableUse(variableDeclarationScopes, node.presenceCondition, pcidmap)
+			node.rewriteVariableUse(variableDeclarations, node.presenceCondition)
 		} else
 		
 		if (

@@ -1,6 +1,5 @@
 package dk.itu.models.rules.phase4functions
 
-import dk.itu.models.PresenceConditionIdMap
 import dk.itu.models.Reconfigurator
 import dk.itu.models.rules.AncestorGuaranteedRule
 import dk.itu.models.utils.Declaration
@@ -22,7 +21,6 @@ import static extension dk.itu.models.Extensions.*
 class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 
 	private val DeclarationPCMap functionDeclarations
-	private val PresenceConditionIdMap pcidmap
 	static def String get_id (HashMap<PresenceCondition, String> map, PresenceCondition pc) {
 		map.get(map.keySet.findFirst[is(pc)])
 	}
@@ -30,9 +28,8 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 	
 	protected val PresenceCondition externalGuard
 	
-	new (DeclarationPCMap functionDeclarations, PresenceCondition externalGuard, PresenceConditionIdMap pcidmap) {
+	new (DeclarationPCMap functionDeclarations, PresenceCondition externalGuard) {
 		this.functionDeclarations = functionDeclarations
-		this.pcidmap = pcidmap
 		this.externalGuard = externalGuard
 	}
 	
