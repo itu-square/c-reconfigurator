@@ -2,6 +2,7 @@ package dk.itu.models.utils
 
 import xtc.tree.GNode
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
+import java.util.List
 
 class DeclarationScope {
 	
@@ -22,6 +23,10 @@ class DeclarationScope {
 	
 	public def Declaration getDeclaration(String name) {
 		map.getDeclaration(name)
+	}
+	
+	public def List<DeclarationPCPair> declarationList(String name) {
+		map.declarationList(name)
 	}
 	
 }

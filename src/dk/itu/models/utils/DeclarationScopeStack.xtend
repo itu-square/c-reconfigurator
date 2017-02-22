@@ -4,6 +4,7 @@ import java.util.ArrayList
 import java.util.Stack
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.tree.GNode
+import java.util.List
 
 class DeclarationScopeStack {
 	
@@ -36,6 +37,10 @@ class DeclarationScopeStack {
 		}
 		
 		return declaration
+	}
+	
+	public def List<DeclarationPCPair> declarationList(String name) {
+		stack.map[declarationList(name)].filterNull.flatten.toList
 	}
 
 }

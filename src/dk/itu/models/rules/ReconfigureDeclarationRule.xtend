@@ -188,7 +188,13 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				println('''changing [«enumerator»]''')
 				println
 				
-				val newEnumerator = enumerator + "_V?"// + pcidmap.getId(pc)
+				var enumeratorDeclaration = variableDeclarations.getDeclaration(enumerator)
+				if (enumeratorDeclaration == null) {
+					enumeratorDeclaration = new VariableDeclaration(enumerator, typeDeclarations.getDeclaration("int") as TypeDeclaration)
+					variableDeclarations.put(enumeratorDeclaration)
+				}
+				
+				val newEnumerator = enumerator + "_V" + (variableDeclarations.declarationList(enumerator).size + 1)
 				newNode = newNode.replaceIdentifierVarName(enumerator, newEnumerator)
 			}
 			
