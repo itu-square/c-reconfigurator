@@ -183,11 +183,6 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			var newNode = node.get(1) as GNode
 			
 			for (String enumerator : node.getDescendantNode("EnumeratorList").filter[(it instanceof GNode) && (it as GNode).name.equals("Enumerator")].map[(it as GNode).get(0).toString]) {
-				
-				println
-				println('''changing [«enumerator»]''')
-				println
-				
 				var enumeratorDeclaration = variableDeclarations.getDeclaration(enumerator)
 				if (enumeratorDeclaration == null) {
 					enumeratorDeclaration = new VariableDeclaration(enumerator, typeDeclarations.getDeclaration("int") as TypeDeclaration)

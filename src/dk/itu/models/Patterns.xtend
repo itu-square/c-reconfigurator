@@ -343,7 +343,7 @@ class Patterns {
 			}
 
 			else if (current instanceof GNode) {
-				if ((current as GNode).name.equals("SimpleDeclarator")) {
+				if (#["SimpleDeclarator", "PostfixIdentifierDeclarator"].contains((current as GNode).name)) {
 					elements.clear
 				} else {
 					for (Object e : current.toList.reverseView)
