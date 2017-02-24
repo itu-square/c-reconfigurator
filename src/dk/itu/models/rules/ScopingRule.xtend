@@ -113,7 +113,8 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"PostfixIdentifierDeclarator", "PostfixingAbstractDeclarator", "CleanTypedefDeclarator",
 			"CleanPostfixTypedefDeclarator", "DirectSelection", "AssemblyExpressionOpt",
 			"LocalLabelDeclarationListOpt", "ParameterAbstractDeclaration", "ParameterIdentifierDeclaration",
-			"ExpressionOpt", "StructSpecifier", "BitFieldSizeOpt", "VolatileQualifier", "UnionSpecifier"]
+			"ExpressionOpt", "StructSpecifier", "BitFieldSizeOpt", "VolatileQualifier", "UnionSpecifier",
+			"AssemblyStatement", "AsmKeyword", "Assemblyargument", "AssemblyoperandsOpt", "Assemblyclobbers"]
 				.contains(node.name)
 		) {
 			// no scope
@@ -134,32 +135,24 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		
 		
 		
+		
+		
+		
 		if (node.isFunctionDefinition) {
-			debug
-			debug("   isFunctionDefinition", true)
-			// get current PC and names
 			val name = node.nameOfFunctionDefinition
 			val type = node.typeOfFunctionDefinition
-			val pc = node.presenceCondition
-			debug('''   - [«name»] of [«type»]''')
 			
-			// get registered type declaration
-			if (!typeDeclarations.containsDeclaration(type))
+			var typeDeclaration = typeDeclarations.getDeclaration(type) as TypeDeclaration
+			if (typeDeclaration == null)
 				throw new Exception('''ScopingRule: type declaration [«type»] of [«name»] not found.''')
 
-			val typeDeclarationList = typeDeclarations.declarationList(type)
-			
-			if (typeDeclarationList.size == 1) {
-				val typeDeclaration = typeDeclarationList.get(0).declaration as TypeDeclaration
-				val functionDeclaration = new FunctionDeclaration(name, typeDeclaration)
-				functionDeclarations.put(functionDeclaration, null, pc)
-			} else {
-				throw new Exception("ScopingRule: not handled: multiple type declarations.")
-			}
+			var newFuncDeclaration = new FunctionDeclaration(name, typeDeclaration)
+			functionDeclarations.put(newFuncDeclaration)
 		} else
 		
+		
+		
 		if (node.isTypeDeclaration) {
-			val pc = node.presenceCondition
 			val typeName = node.getNameOfTypeDeclaration
 			val refTypeName = node.getTypeOfTypeDeclaration
 			
@@ -170,8 +163,10 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			}
 			
 			var newTypeDeclaration = new TypeDeclaration(typeName, refTypeDeclaration)
-			typeDeclarations.put(newTypeDeclaration, null, pc)
+			typeDeclarations.put(newTypeDeclaration)
 		} else
+		
+		
 		
 		if (node.isStructDeclaration) {
 			debug("   isStructDeclaration", true)
@@ -250,7 +245,8 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		if (#[	"AbstractDeclarator", "AdditiveExpression", "AndExpression", "ArrayAbstractDeclarator",
 			"ArrayDeclarator", "AssemblyExpressionOpt", "AssignmentExpression", "AssignmentOperator",
 			"AttributeExpressionOpt", "AttributeKeyword", "AttributeList", "AttributeListOpt",
-			"AttributeSpecifier", "AttributeSpecifierList", "AttributeSpecifierListOpt",
+			"AttributeSpecifier", "AttributeSpecifierList", "AttributeSpecifierListOpt", "AssemblyStatement",
+			"AsmKeyword", "Assemblyargument", "AssemblyoperandsOpt", "Assemblyclobbers",
 				"BasicDeclarationSpecifier", "BasicTypeSpecifier", "BreakStatement", "BitFieldSizeOpt",
 				"CastExpression", "CleanPostfixTypedefDeclarator", "CleanTypedefDeclarator",
 			"CompoundStatement", "Conditional", "ConditionalExpression", "ConstQualifier",

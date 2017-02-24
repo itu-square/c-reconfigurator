@@ -343,8 +343,10 @@ class Patterns {
 			}
 
 			else if (current instanceof GNode) {
-				if (#["SimpleDeclarator", "PostfixIdentifierDeclarator", "TypeQualifier"].contains((current as GNode).name)) {
+				if (#["SimpleDeclarator", "PostfixIdentifierDeclarator"].contains((current as GNode).name)) {
 					elements.clear
+				} else if (#["TypeQualifier"].contains((current as GNode).name)) {
+					// do nothing
 				} else {
 					for (Object e : current.toList.reverseView)
 						elements.addFirst(e)

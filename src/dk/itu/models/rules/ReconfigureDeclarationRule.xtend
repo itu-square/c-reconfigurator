@@ -226,36 +226,38 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			return newNode
 		} else
 		
+		
+		
 		if (
 			node.isFunctionDefinitionWithVariability
 		) {
-			val funcPC = node.get(0) as PresenceCondition
-			val funcDefinitionNode = node.get(1) as GNode
-			val funcName = funcDefinitionNode.getNameOfFunctionDefinition
-			val funcType = funcDefinitionNode.getTypeOfFunctionDefinition
+			val pc = node.get(0) as PresenceCondition
+			val definitionNode = node.get(1) as GNode
+			val funcName = definitionNode.getNameOfFunctionDefinition
+			val funcType = definitionNode.getTypeOfFunctionDefinition
 			
-			// get registered type declaration
-			if (!typeDeclarations.containsDeclaration(funcType))
+			var funcTypeDeclaration = typeDeclarations.getDeclaration(funcType) as TypeDeclaration
+			if (funcTypeDeclaration == null)
 				throw new Exception('''ReconfigureDeclarationRule: type declaration «funcType» not found.''')
 			
-			val typeDeclarationList = typeDeclarations.declarationList(funcType)
-			
-			if (typeDeclarationList.size == 1) {
-				val typeDeclaration = typeDeclarationList.get(0).declaration as TypeDeclaration
-
-				val newName = funcName + "_V?" //+ pcidmap.getId(funcPC)
-				val funcDeclaration = new FunctionDeclaration(newName, typeDeclaration)
-				functionDeclarations.put(funcDeclaration, null, funcPC)
-				
-				var newNode = funcDefinitionNode.renameFunctionWithNewId(newName)
-				newNode = newNode.rewriteVariableUse(variableDeclarations, node.presenceCondition.and(funcPC))
-				newNode = newNode.rewriteFunctionCall(functionDeclarations, node.presenceCondition.and(funcPC))
-				newNode.setProperty("OriginalPC", node.presenceCondition.and(funcPC))
-				return newNode
-			} else {
-				throw new Exception("ReconfigureDeclarationRule: not handled: multiple type declarations.")
+			var funcDeclaration = functionDeclarations.getDeclaration(funcName) as FunctionDeclaration
+			if (funcDeclaration == null) {
+				funcDeclaration = new FunctionDeclaration(funcName, funcTypeDeclaration)
+				functionDeclarations.put(funcDeclaration)
 			}
+			
+			val newFuncName = funcName + "_V" + (functionDeclarations.declarationList(funcName).size + 1)
+			val newFuncDeclaration = new FunctionDeclaration(newFuncName, funcTypeDeclaration)
+			functionDeclarations.put(funcDeclaration, newFuncDeclaration, pc)
+
+			var newNode = definitionNode.renameFunctionWithNewId(newFuncName)
+			newNode = newNode.rewriteVariableUse(variableDeclarations, node.presenceCondition.and(pc))
+			newNode = newNode.rewriteFunctionCall(functionDeclarations, node.presenceCondition.and(pc))
+			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
+			return newNode
 		} else
+		
+		
 		
 		if (
 			node.isFunctionDefinition
@@ -395,7 +397,8 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				"CleanTypedefDeclarator", "CleanPostfixTypedefDeclarator", "DirectSelection",
 				"AssemblyExpressionOpt", "LocalLabelDeclarationListOpt", "ExpressionOpt",
 				"ParameterIdentifierDeclaration", "StructSpecifier", "BitFieldSizeOpt",
-				"ParameterAbstractDeclaration", "VolatileQualifier", "UnionSpecifier"].contains(node.name)
+				"ParameterAbstractDeclaration", "VolatileQualifier", "UnionSpecifier", "AssemblyStatement",
+				"AsmKeyword", "Assemblyargument", "AssemblyoperandsOpt", "Assemblyclobbers"].contains(node.name)
 		) {
 			node
 		} else {
