@@ -162,8 +162,10 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 				throw new Exception('''ScopingRule: type declaration [«refTypeName»] of [«typeName»] not found.''')
 			}
 			
-			var newTypeDeclaration = new TypeDeclaration(typeName, refTypeDeclaration)
-			typeDeclarations.put(newTypeDeclaration)
+			if(!typeDeclarations.containsDeclaration(typeName)) {
+				var newTypeDeclaration = new TypeDeclaration(typeName, refTypeDeclaration)
+				typeDeclarations.put(newTypeDeclaration)
+			}
 		} else
 		
 		
