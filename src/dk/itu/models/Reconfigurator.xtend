@@ -426,8 +426,8 @@ class Reconfigurator {
 			runArgs.addAll("-D", defineMacro) }
 		for (String undefMacro : Settings::undefMacros) {
 			runArgs.addAll("-U", undefMacro) }
-//		for (File include : Settings::systemIncludeFolders) {
-//			runArgs.addAll("-isystem", include.path) }
+		for (File include : Settings::systemIncludeFolders) {
+			runArgs.addAll("-isystem", include.path) }
 		for (File include : Settings::includeFolders) {
 			runArgs.addAll("-I", include.path) }
 		for (File header : Settings::headerFiles) {

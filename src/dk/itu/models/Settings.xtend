@@ -28,7 +28,7 @@ class Settings {
 	static public var File targetFile
 	static public var File oracleFile
 	static public var List<File> includeFolders
-//	static public var List<File> systemIncludeFolders
+	static public var List<File> systemIncludeFolders
 	static public var List<File> headerFiles
 	static public var File reconfigFile
 //	static public var File consoleFile
@@ -57,7 +57,7 @@ class Settings {
 //	// return false in case of error
 //	//        true in case of success
 	static public def boolean init(String[] args) {
-//		systemIncludeFolders = new ArrayList<File>
+		systemIncludeFolders = new ArrayList<File>
 		includeFolders = new ArrayList<File>
 		headerFiles = new ArrayList<File>
 		defineMacros = new ArrayList<String>
@@ -77,9 +77,9 @@ class Settings {
 				case "-oracle":
 					if(i < args.size-1) { oracleFile = new File(args.get(i+1)) }
 					else {println("-oracle argument has no value."); return false}
-//				case "-isystem":
-//					if(i < args.size-1) { systemIncludeFolders.add(new File(args.get(i+1))) }
-//					else {println("-isystem argument has no value."); return false}
+				case "-isystem":
+					if(i < args.size-1) { systemIncludeFolders.add(new File(args.get(i+1))) }
+					else {println("-isystem argument has no value."); return false}
 				case "-I":
 					if(i < args.size-1) { includeFolders.add(new File(args.get(i+1))) }
 					else {println("-I argument has no value."); return false}
