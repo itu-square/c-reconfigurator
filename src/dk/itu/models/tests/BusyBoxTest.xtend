@@ -45,7 +45,7 @@ class BusyBoxTest {
 			runArgs.addAll(
 				 "-source"	,currentFilePath
 				,"-target"	,currentTargetPath
-//				,"-oracle"	,currentOraclePath
+				,"-oracle"	,currentOraclePath
 				,"-include"	,source.path + "/busybox/gcc_predefines.h"
 				,"-include"	,source.path + "/busybox/config.h"
 //				,"-I"		,source.path + "/arch/x86/include/"
@@ -57,7 +57,7 @@ class BusyBoxTest {
 				,"-isystem"	,source.path + "/usr/include/x86_64-linux-gnu/"
 				,"-reconfigureIncludes"
 				,"-printIncludes"
-////				,"-printIntermediaryFiles"
+//				,"-printIntermediaryFiles"
 ////				,"-printFullContent"
 ////				,"-printDebugInfo"
 				)
