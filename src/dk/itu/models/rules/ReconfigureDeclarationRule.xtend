@@ -297,11 +297,14 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		if (
 			node.isVariableDeclarationWithVariability
 		) {
-			debug("   isVariableDeclarationWithVariability", true)
 			val varPC = node.get(0) as PresenceCondition
 			val varDeclarationNode = node.get(1) as GNode
 			val varName = varDeclarationNode.getNameOfVariableDeclaration
 			val varType = varDeclarationNode.getTypeOfVariableDeclaration
+			
+			println
+			println(node.printCode)
+			println
 			
 			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(varType))
