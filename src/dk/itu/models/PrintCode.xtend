@@ -8,6 +8,7 @@ import xtc.tree.GNode
 import xtc.tree.Node
 
 import static extension dk.itu.models.Extensions.*
+import java.io.File
 
 class PrintCode extends PrintMethod {
 	
@@ -167,12 +168,26 @@ class PrintCode extends PrintMethod {
 		
 		if(
 			#["Declaration", "DeclarationExtension", "FunctionDefinition"].contains(node.name)
-			&& node.properties != null && node.hasProperty("OriginalPC")
 		) {
-			output.println
-			output.print('''// «(node.getProperty("OriginalPC") as PresenceCondition).PCtoCPPexp»''')
-			if(last_line.empty)
+			if (node.properties != null && node.hasProperty("OriginalPC")) {
 				output.println
+				output.print('''// «(node.getProperty("OriginalPC") as PresenceCondition).PCtoCPPexp»''')
+				if(last_line.empty)
+					output.println
+			}
+			
+			if (node.location != null) {
+				output.println
+				output.println('''// «node.location.file»''')
+				output.println('''// «Settings::targetFile»''')
+				if (node.location.file.equals(Settings::targetFile)) {
+					output.print('''// «Settings::sourceFile.parentFile.toPath.relativize(Settings::sourceFile.toPath) »''')
+				} else {
+					output.print('''// «Settings::sourceFile.parentFile.toPath.relativize(new File(node.location.file).toPath) »''')
+				}
+				if(last_line.empty)
+					output.println
+			}
 		}
 		
 		// IF or ELSE with a single statement

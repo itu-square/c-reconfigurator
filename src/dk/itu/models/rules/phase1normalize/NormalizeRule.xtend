@@ -27,6 +27,7 @@ class NormalizeRule extends Rule  {
 		var Node normalized = node
 		
 		val tdn1 = new TopDownStrategy
+		tdn1.register(new SetLocationOnDeclarationRule)
 		tdn1.register(new RemOneRule)
 		tdn1.register(new RemZeroRule)
 		tdn1.register(new RemEmptyNodesRule)
