@@ -6,6 +6,8 @@ import java.util.List
 
 class Settings {
 	
+	static public var boolean runPreprocessor = false
+	
 //	static public var boolean oracleOnly = false
 	static public var boolean printDebugInfo = false
 	static public var boolean printIncludes = false
@@ -24,6 +26,7 @@ class Settings {
 	static public var List<String> undefMacros
 	
 	static public var File sourceFile
+	static public var File sourceRoot
 //	static public var File fileList
 	static public var File targetFile
 	static public var File oracleFile
@@ -71,6 +74,9 @@ class Settings {
 				case "-source":
 					if(i < args.size-1) { sourceFile = new File(args.get(i+1)) }
 					else {println("-source argument has no value."); return false}
+				case "-root":
+					if(i < args.size-1) { sourceRoot = new File(args.get(i+1)) }
+					else {println("-root has no value."); return false}
 				case "-target":
 					if(i < args.size-1) { targetFile = new File(args.get(i+1)) }
 					else {println("-target argument has no value."); return false}

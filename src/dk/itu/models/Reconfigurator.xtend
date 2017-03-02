@@ -433,7 +433,10 @@ class Reconfigurator {
 		for (File header : Settings::headerFiles) {
 			runArgs.addAll("-include", header.path.replace("\\", "\\\\")) }				
 		
-		runArgs.add(Settings::targetFile.path)
+		if (Settings::runPreprocessor)
+			runArgs.add(Settings::targetFile.path)
+		else
+			runArgs.add(Settings::sourceFile.path)
 		
 		runArgs
 	}
@@ -448,13 +451,15 @@ class Reconfigurator {
 		
 		try {
 			// Preprocessor
-			Reconfigurator::preprocessor = new Preprocessor
-			Reconfigurator::transformedFeaturemap = preprocessor.mapFeatureAndTransformedFeatureNames
-			val preproc = Reconfigurator::preprocessor.runFile(Settings::sourceFile.path).toString
-			preproc.writeToFile(Settings::targetFile.path)
-			
-			if (Settings::printIntermediaryFiles) {
-				preproc.writeToFile(Settings::targetFile.path + ".preproc.c")
+			if (Settings::runPreprocessor) {
+				Reconfigurator::preprocessor = new Preprocessor
+				Reconfigurator::transformedFeaturemap = preprocessor.mapFeatureAndTransformedFeatureNames
+				val preproc = Reconfigurator::preprocessor.runFile(Settings::sourceFile.path).toString
+				preproc.writeToFile(Settings::targetFile.path)
+				
+				if (Settings::printIntermediaryFiles) {
+					preproc.writeToFile(Settings::targetFile.path + ".preproc.c")
+				}
 			}
 			
 			// Parser
@@ -486,15 +491,17 @@ class Reconfigurator {
 
 				node.printAST.writeToFile(Settings::targetFile.path + ".ast")
 				
-				val sb = new StringBuilder
-				if (!Settings::parseOnly) {
-					preprocessor.transformedFeatureNames.forEach[
-						sb.append("int " + it + ";\n")
-					]
-					sb.append("\n")
+				if (Settings::runPreprocessor) {
+					val sb = new StringBuilder
+					if (!Settings::parseOnly) {
+						preprocessor.transformedFeatureNames.forEach[
+							sb.append("int " + it + ";\n")
+						]
+						sb.append("\n")
+					}
+					sb.append(node.printCode)
+					sb.toString.writeToFile(Settings::targetFile.path)
 				}
-				sb.append(node.printCode)
-				sb.toString.writeToFile(Settings::targetFile.path)
 								
 				// check oracle
 				if(Settings::oracleFile != null) {

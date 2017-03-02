@@ -44,6 +44,7 @@ class BusyBoxTest {
 			
 			runArgs.addAll(
 				 "-source"	,currentFilePath
+				,"-root"	,source.path
 				,"-target"	,currentTargetPath
 				,"-oracle"	,currentOraclePath
 				,"-include"	,source.path + "/busybox/gcc_predefines.h"

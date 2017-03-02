@@ -178,13 +178,7 @@ class PrintCode extends PrintMethod {
 			
 			if (node.location != null) {
 				output.println
-				output.println('''// «node.location.file»''')
-				output.println('''// «Settings::targetFile»''')
-				if (node.location.file.equals(Settings::targetFile)) {
-					output.print('''// «Settings::sourceFile.parentFile.toPath.relativize(Settings::sourceFile.toPath) »''')
-				} else {
-					output.print('''// «Settings::sourceFile.parentFile.toPath.relativize(new File(node.location.file).toPath) »''')
-				}
+				output.print('''// «Settings::sourceRoot.parentFile.toPath.relativize(new File(node.location.file).toPath) »:«node.location.line»:«node.location.column»''')
 				if(last_line.empty)
 					output.println
 			}
