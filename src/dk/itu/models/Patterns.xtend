@@ -125,8 +125,8 @@ class Patterns {
 		&& node.getDescendantNode[
 			it instanceof Language<?>
 			&& (it as Language<CTag>).tag.equals(CTag::TYPEDEF)
-		] != null
-		&& node.getDescendantNode("StructSpecifier") == null
+		] !== null
+		&& node.getDescendantNode("StructSpecifier") === null
 	}
 	
 	public static def boolean isTypeDeclarationWithVariability(GNode node) {
@@ -343,7 +343,7 @@ class Patterns {
 			}
 
 			else if (current instanceof GNode) {
-				if (#["SimpleDeclarator", "PostfixIdentifierDeclarator"].contains((current as GNode).name)) {
+				if (#["SimpleDeclarator", "PostfixIdentifierDeclarator", "ParameterTypedefDeclarator"].contains((current as GNode).name)) {
 					elements.clear
 				} else if (#["TypeQualifier"].contains((current as GNode).name)) {
 					// do nothing
