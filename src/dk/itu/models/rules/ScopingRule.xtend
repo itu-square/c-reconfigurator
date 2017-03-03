@@ -114,7 +114,8 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"CleanPostfixTypedefDeclarator", "DirectSelection", "AssemblyExpressionOpt",
 			"LocalLabelDeclarationListOpt", "ParameterAbstractDeclaration", "ParameterIdentifierDeclaration",
 			"ExpressionOpt", "StructSpecifier", "BitFieldSizeOpt", "VolatileQualifier", "UnionSpecifier",
-			"AssemblyStatement", "AsmKeyword", "Assemblyargument", "AssemblyoperandsOpt", "Assemblyclobbers"]
+			"AssemblyStatement", "AsmKeyword", "Assemblyargument", "AssemblyoperandsOpt", "Assemblyclobbers",
+			"AssemblyExpression"]
 				.contains(node.name)
 		) {
 			// no scope
@@ -247,8 +248,8 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		if (#[	"AbstractDeclarator", "AdditiveExpression", "AndExpression", "ArrayAbstractDeclarator",
 			"ArrayDeclarator", "AssemblyExpressionOpt", "AssignmentExpression", "AssignmentOperator",
 			"AttributeExpressionOpt", "AttributeKeyword", "AttributeList", "AttributeListOpt",
-			"AttributeSpecifier", "AttributeSpecifierList", "AttributeSpecifierListOpt", "AssemblyStatement",
-			"AsmKeyword", "Assemblyargument", "AssemblyoperandsOpt", "Assemblyclobbers",
+			"AttributeSpecifier", "AttributeSpecifierList", "AttributeSpecifierListOpt", "AssemblyExpression",
+			"AssemblyStatement", "AsmKeyword", "Assemblyargument", "AssemblyoperandsOpt", "Assemblyclobbers",
 				"BasicDeclarationSpecifier", "BasicTypeSpecifier", "BreakStatement", "BitFieldSizeOpt",
 				"CastExpression", "CleanPostfixTypedefDeclarator", "CleanTypedefDeclarator",
 			"CompoundStatement", "Conditional", "ConditionalExpression", "ConstQualifier",

@@ -401,7 +401,8 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				"AssemblyExpressionOpt", "LocalLabelDeclarationListOpt", "ExpressionOpt",
 				"ParameterIdentifierDeclaration", "StructSpecifier", "BitFieldSizeOpt",
 				"ParameterAbstractDeclaration", "VolatileQualifier", "UnionSpecifier", "AssemblyStatement",
-				"AsmKeyword", "Assemblyargument", "AssemblyoperandsOpt", "Assemblyclobbers"].contains(node.name)
+				"AsmKeyword", "Assemblyargument", "AssemblyoperandsOpt", "Assemblyclobbers", "AssemblyExpression"
+				].contains(node.name)
 		) {
 			node
 		} else {
