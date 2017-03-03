@@ -169,16 +169,16 @@ class PrintCode extends PrintMethod {
 		if(
 			#["Declaration", "DeclarationExtension", "FunctionDefinition"].contains(node.name)
 		) {
-			if (node.properties != null && node.hasProperty("OriginalPC")) {
-				output.println
-				output.print('''// «(node.getProperty("OriginalPC") as PresenceCondition).PCtoCPPexp»''')
-				if(last_line.empty)
-					output.println
-			}
-			
 			if (node.location != null) {
 				output.println
 				output.print('''// «Settings::sourceRoot.parentFile.toPath.relativize(new File(node.location.file).toPath) »:«node.location.line»:«node.location.column»''')
+				if(last_line.empty && !(node.properties != null && node.hasProperty("OriginalPC")))
+					output.println
+			}
+			
+			if (node.properties != null && node.hasProperty("OriginalPC")) {
+				output.println
+				output.print('''// «(node.getProperty("OriginalPC") as PresenceCondition).PCtoCPPexp»''')
 				if(last_line.empty)
 					output.println
 			}
