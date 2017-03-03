@@ -215,6 +215,14 @@ class PrintCode extends PrintMethod {
 			current_line = "        "
 		}
 		
+		if (
+			node.name.equals("Enumerator") && last_C_line.endsWith(",")
+		) {
+			output.println
+			output.print(indent.substring(1))
+					
+		}
+		
 		if (node.name.equals("Conditional")) {
 			
 			if (!last_line.empty && !last_line.endsWith("{")) {
