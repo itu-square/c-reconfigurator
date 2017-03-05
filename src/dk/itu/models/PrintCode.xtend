@@ -219,7 +219,9 @@ class PrintCode extends PrintMethod {
 			node.name.equals("Enumerator") && last_C_line.endsWith(",")
 		) {
 			output.println
-			output.print(indent.substring(1))
+			output.print(indent.substring(4))
+			last_C_line = current_C_line = ""
+			last_line = current_line = ""
 					
 		}
 		
