@@ -54,9 +54,12 @@ class Patterns {
 	}
 	
 	public static def String getNameOfStructTypeDeclaration(GNode node) {
-		((node.getDescendantNode("DeclaringList")
-			.findFirst[(it instanceof GNode) && (it as GNode).name.equals("SimpleDeclarator")] as GNode)
-			.get(0) as Text<CTag>).toString
+		var declarator = (node.getDescendantNode("DeclaringList")
+			.findFirst[(it instanceof GNode) && #["SimpleDeclarator", "UnaryIdentifierDeclarator"].contains((it as GNode).name)] as GNode) as GNode
+		if (!declarator.name.equals("SimpleDeclarator"))
+			declarator = declarator.getDescendantNode("SimpleDeclarator") as GNode
+		
+		(declarator.get(0) as Text<CTag>).toString
 	}
 	
 	public static def String getTypeOfStructTypeDeclaration(GNode node) {
