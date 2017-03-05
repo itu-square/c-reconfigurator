@@ -185,20 +185,33 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			}
 		} else
 		
+		
+		
 		if (
 			node.isStructTypeDeclaration
 		) {
 			val pc = node.presenceCondition
-			val name = node.getNameOfStructTypeDeclaration
-			val type = node.getTypeOfStructTypeDeclaration
+			val typeName = node.getNameOfStructTypeDeclaration
+			val refTypeName = node.getTypeOfStructTypeDeclaration
 			
-			if (type.equals("struct")) {
-				val typeDeclaration = new TypeDeclaration(name, null)
+			if (refTypeName.equals("struct")) {
+				val typeDeclaration = new TypeDeclaration(typeName, null)
 				typeDeclarations.put(typeDeclaration, null, pc)
 			} else {
-				throw new Exception("Case not handled")
+				var refTypeDeclaration = typeDeclarations.getDeclaration(refTypeName) as TypeDeclaration
+				if (refTypeDeclaration === null) {
+					refTypeDeclaration = new TypeDeclaration(refTypeName, null)
+					typeDeclarations.put(refTypeDeclaration)
+				}
+				
+				if(!typeDeclarations.containsDeclaration(typeName)) {
+					var newTypeDeclaration = new TypeDeclaration(typeName, refTypeDeclaration)
+					typeDeclarations.put(newTypeDeclaration)
+				}
 			}
 		} else
+		
+		
 		
 		if (node.isNamedEnumDeclaration) {
 			debug
