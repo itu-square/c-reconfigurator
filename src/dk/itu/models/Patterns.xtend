@@ -253,43 +253,7 @@ class Patterns {
 	}
 	
 	public static def String getTypeOfFunctionDefinition(GNode node) {
-		val functionPrototype = node.getDescendantNode("FunctionPrototype")
-		val typeNode = functionPrototype.get(0) as Node
-		
-		if (typeNode.name.equals("BasicDeclarationSpecifier")) {
-			val basicTypeSpecifier = (typeNode as GNode)
-			return (basicTypeSpecifier.get(1) as Language<CTag>).toString	
-		} else
-		
-		if (typeNode.name.equals("BasicTypeSpecifier")) {
-			val basicTypeSpecifier = (typeNode as GNode)
-			return (basicTypeSpecifier.get(1) as Language<CTag>).toString	
-		} else
-		
-		if (typeNode.name.equals("TypedefDeclarationSpecifier")) {
-			val typedefDeclarationSpecifier = (typeNode as GNode)
-			return (typedefDeclarationSpecifier.get(1) as Text<CTag>).toString	
-		} else
-		
-		if (typeNode.name.equals("TypedefTypeSpecifier")) {
-			val typedefTypeSpecifier = (typeNode as GNode)
-			return (typedefTypeSpecifier.findFirst[it instanceof Text<?>] as Text<CTag>).toString	
-		} else
-		
-		if (typeNode.name.equals("SUETypeSpecifier")) {
-			return typeNode.printCode
-		}
-
-		if (typeNode instanceof Language<?>) {
-			return (typeNode as Language<CTag>).toString
-		} else
-		
-		{
-			println
-			println(node.printCode)
-			println(node.printAST)
-			throw new Exception("case not handled")
-		}
+		return getTypeByTraversal((node.getDescendantNode("FunctionPrototype") as GNode).get(0) as GNode)
 	}
 		
 
