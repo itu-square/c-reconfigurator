@@ -168,6 +168,7 @@ class PrintCode extends PrintMethod {
 		
 		if(
 			#["Declaration", "DeclarationExtension", "FunctionDefinition"].contains(node.name)
+			&& !ancestors.exists[c | c instanceof GNode && c.name.equals("DeclarationExtension")]
 		) {
 			if (node.location != null) {
 				output.println
