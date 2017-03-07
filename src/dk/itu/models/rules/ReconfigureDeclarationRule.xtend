@@ -150,21 +150,21 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		
 		
 		if (
-			node.isStructDeclarationWithVariability
+			node.isStructUnionDeclarationWithVariability
 		) {
 			val pc = node.get(0) as PresenceCondition
 			val declarationNode = node.get(1) as GNode
-			val type = declarationNode.getNameOfStructDeclaration
-			val name = type.replace("struct ", "")
+			val type = declarationNode.getNameOfStructUnionDeclaration
+			val name = type.replace("struct ", "").replace("union ", "")
 			
 			var typeDeclaration = typeDeclarations.getDeclaration(type)
-			if (typeDeclaration == null) {
+			if (typeDeclaration === null) {
 				typeDeclaration = new TypeDeclaration(type, null)
 				typeDeclarations.put(typeDeclaration)
 			}
 			
 			val newType = type + "_V" + (typeDeclarations.declarationList(type).size + 1)
-			val newName = newType.replace("struct ", "")
+			val newName = newType.replace("struct ", "").replace("union ", "")
 			
 			val newTypeDeclaration = new TypeDeclaration(newType, null)
 			typeDeclarations.put(typeDeclaration, newTypeDeclaration, pc)

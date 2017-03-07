@@ -8,26 +8,42 @@ import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
-import xtc.tree.Node
 
 import static extension dk.itu.models.Extensions.*
 
 class Patterns {
 	
 	
-	public static def boolean isStructDeclaration(GNode node) {
+	public static def boolean isStructUnionDeclaration(GNode node) {
 		node.name.equals("Declaration")
 		&& node.getDescendantNode[
 			it instanceof Language<?>
 			&& (it as Language<CTag>).tag.equals(CTag::TYPEDEF)
-		] == null
-		&& node.getDescendantNode("StructSpecifier") != null
+		] === null
+		&& (
+			node.getDescendantNode("StructSpecifier") !== null
+			|| node.getDescendantNode("UnionSpecifier") !== null
+		)
 	}
 	
-	public static def String getNameOfStructDeclaration(GNode node) {
-		val structSpecifier = node.getDescendantNode("StructSpecifier")
-		return (structSpecifier.get(0) as Language<?>).toString + " "
-			+ ((structSpecifier.get(1) as GNode).get(0) as Text<?>).toString
+	public static def boolean isStructUnionDeclarationWithVariability(GNode node) {
+		node.name.equals("Conditional")
+		&& node.size == 2
+		
+		&& (node.get(0) instanceof PresenceCondition)
+		
+		&& (node.get(1) instanceof GNode)
+		&& (node.get(1) as GNode).isStructUnionDeclaration
+	} 
+	
+	public static def String getNameOfStructUnionDeclaration(GNode node) {
+		var specifier = node.getDescendantNode("StructSpecifier")
+		
+		if (specifier === null)
+			specifier = node.getDescendantNode("UnionSpecifier")
+		
+		return (specifier.get(0) as Language<?>).toString + " "
+			+ ((specifier.get(1) as GNode).get(0) as Text<?>).toString
 	}
 
 
@@ -157,30 +173,6 @@ class Patterns {
 	public static def String getTypeOfTypeDeclaration(GNode node) {
 		return getTypeByTraversal(node.getDescendantNode("DeclaringList") as GNode)
 	}
-	
-	
-	
-	
-	
-	
-	public static def boolean isStructDeclarationWithVariability(GNode node) {
-		   node.name.equals("Conditional")
-		&& node.size == 2
-		
-		&& (node.get(1) instanceof GNode)
-		&& (node.get(1) as GNode).name.equals("Declaration")
-		&& (node.get(1) as GNode).size == 2
-		
-		&& ((node.get(1) as GNode).get(0) instanceof GNode)
-		&& ((node.get(1) as GNode).get(0) as GNode).name.equals("SUETypeSpecifier")
-		&& ((node.get(1) as GNode).get(0) as GNode).size == 1
-
-		&& (((node.get(1) as GNode).get(0) as GNode).get(0) instanceof GNode)
-		&& (((node.get(1) as GNode).get(0) as GNode).get(0) as GNode).name.equals("StructSpecifier")
-	} 
-	
-	
-	
 	
 	
 	

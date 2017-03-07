@@ -171,17 +171,12 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		
 		
 		
-		if (node.isStructDeclaration) {
-			debug("   isStructDeclaration", true)
-			// get current PC and names
-			val name = node.getNameOfStructDeclaration
-			val pc = node.presenceCondition
-			debug('''   - [«name»]''')
+		if (node.isStructUnionDeclaration) {
+			val name = node.getNameOfStructUnionDeclaration
 			
-			// get registered type declaration
 			if (!typeDeclarations.containsDeclaration(name)) {
 				var newTypeDeclaration = new TypeDeclaration(name, null)
-				typeDeclarations.put(newTypeDeclaration, null, pc)
+				typeDeclarations.put(newTypeDeclaration)
 			}
 		} else
 		
@@ -233,7 +228,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		if (
 			node.isVariableDeclaration
 			&& !node.getNameOfVariableDeclaration.startsWith(Settings::reconfiguratorIncludePlaceholder)
-		) {
+		) { println(node.printCode + "\n" + node.printAST)
 			val varName = node.getNameOfVariableDeclaration
 			val typeName = node.getTypeOfVariableDeclaration
 			
