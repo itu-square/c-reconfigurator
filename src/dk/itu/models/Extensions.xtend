@@ -35,6 +35,7 @@ import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 import xtc.tree.Node
 import xtc.util.Pair
+import dk.itu.models.rules.AncestorGuaranteedRule
 
 class Extensions {
 
@@ -498,6 +499,12 @@ class Extensions {
     	tdn.register(new ReplaceIdentifierRule(oldName, newName))
     	tdn.transform(node) as GNode
     }
+    
+    public static def replaceIdentifierVarName (GNode node, String oldName, String newName, Function1<AncestorGuaranteedRule, Boolean> test) {
+    	val tdn = new TopDownStrategy
+    	tdn.register(new ReplaceIdentifierRule(oldName, newName, test))
+    	tdn.transform(node) as GNode
+    } 
     
     public static def rewriteFunctionCall (
     	GNode node,

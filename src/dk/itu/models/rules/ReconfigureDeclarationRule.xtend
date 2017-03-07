@@ -121,30 +121,31 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		
 		
 		if (
-			node.isStructTypeDeclarationWithVariability
+			node.isStructUnionTypeDeclarationWithVariability
 		) {
 			val pc = node.get(0) as PresenceCondition
 			val declarationNode = node.get(1) as GNode
-			val typeName = declarationNode.getNameOfStructTypeDeclaration
-			val refTypeName = declarationNode.getTypeOfStructTypeDeclaration
+			val typeName = declarationNode.getNameOfStructUnionTypeDeclaration
+			val refTypeName = declarationNode.getTypeOfStructUnionTypeDeclaration
 			
-			if (refTypeName.equals("struct")) {
-				var typeDeclaration = typeDeclarations.getDeclaration(typeName) as TypeDeclaration
-				if (typeDeclaration == null) {
-					typeDeclaration = new TypeDeclaration(typeName, null)
-					typeDeclarations.put(typeDeclaration, null, pc)
-				}
-				
-				val newTypeName = typeName + "_V" + (typeDeclarations.declarationList(typeName).size + 1)
-				val newTypeDeclaration = new TypeDeclaration(newTypeName, null)
-				typeDeclarations.put(typeDeclaration, newTypeDeclaration, pc)
-				
-				var newNode = declarationNode.replaceIdentifierVarName(typeName, newTypeName)
-				newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
-				return newNode
-			} else {
-				throw new Exception("Case not handled")
+			
+			var refTypeDeclaration = typeDeclarations.getDeclaration(refTypeName) as TypeDeclaration
+			if (refTypeDeclaration === null && !refTypeName.equals("struct") && !refTypeName.equals("union"))
+				throw new Exception('''ReconfigureDeclarationRule: type declaration [«refTypeName»] not found.''')
+			
+			var typeDeclaration = typeDeclarations.getDeclaration(typeName) as TypeDeclaration
+			if (typeDeclaration === null) {
+				typeDeclaration = new TypeDeclaration(typeName, refTypeDeclaration)
+				typeDeclarations.put(typeDeclaration)
 			}
+			
+			val newTypeName = typeName + "_V" + (typeDeclarations.declarationList(typeName).size + 1)
+			val newTypeDeclaration = new TypeDeclaration(newTypeName, refTypeDeclaration)
+			typeDeclarations.put(typeDeclaration, newTypeDeclaration, pc)
+			
+			var newNode = declarationNode.replaceIdentifierVarName(typeName, newTypeName)
+			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
+			return newNode
 		} else
 		
 		
@@ -169,7 +170,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			val newTypeDeclaration = new TypeDeclaration(newType, null)
 			typeDeclarations.put(typeDeclaration, newTypeDeclaration, pc)
 			
-			var newNode = declarationNode.replaceIdentifierVarName(name, newName)
+			val newNode = declarationNode.replaceIdentifierVarName(name, newName, [rule | !rule.ancestors.exists[it.name.equals("SUEDeclarationSpecifier")]])
 			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
 			return newNode
 		} else

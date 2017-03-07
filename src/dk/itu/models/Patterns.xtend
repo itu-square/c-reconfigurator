@@ -50,26 +50,29 @@ class Patterns {
 
 
 	
-	public static def boolean isStructTypeDeclaration(GNode node) {
+	public static def boolean isStructUnionTypeDeclaration(GNode node) {
 		node.name.equals("Declaration")
 		&& node.getDescendantNode[
 			it instanceof Language<?>
 			&& (it as Language<CTag>).tag.equals(CTag::TYPEDEF)
-		] != null
-		&& node.getDescendantNode("StructSpecifier") != null
+		] !== null
+		&& (
+			node.getDescendantNode("StructSpecifier") !== null
+			|| node.getDescendantNode("UnionSpecifier") !== null
+		)
 	}
 	
-	public static def boolean isStructTypeDeclarationWithVariability(GNode node) {
+	public static def boolean isStructUnionTypeDeclarationWithVariability(GNode node) {
 		node.name.equals("Conditional")
 		&& node.size == 2
 		
 		&& (node.get(0) instanceof PresenceCondition)
 		
 		&& (node.get(1) instanceof GNode)
-		&& (node.get(1) as GNode).isStructTypeDeclaration
+		&& (node.get(1) as GNode).isStructUnionTypeDeclaration
 	}
 	
-	public static def String getNameOfStructTypeDeclaration(GNode node) {
+	public static def String getNameOfStructUnionTypeDeclaration(GNode node) {
 		var declarator = (node.getDescendantNode("DeclaringList")
 			.findFirst[(it instanceof GNode) && #["SimpleDeclarator", "UnaryIdentifierDeclarator"].contains((it as GNode).name)] as GNode) as GNode
 		if (!declarator.name.equals("SimpleDeclarator"))
@@ -78,15 +81,18 @@ class Patterns {
 		(declarator.get(0) as Text<CTag>).toString
 	}
 	
-	public static def String getTypeOfStructTypeDeclaration(GNode node) {
-		val structSpecifier = node.getDescendantNode("StructSpecifier")
+	public static def String getTypeOfStructUnionTypeDeclaration(GNode node) {
+		var specifier = node.getDescendantNode("StructSpecifier")
+		
+		if (specifier === null)
+			specifier = node.getDescendantNode("UnionSpecifier")
 		
 		val name = 
-		if (structSpecifier.getDescendantNode("IdentifierOrTypedefName") != null) {
-			(structSpecifier.get(0) as Language<CTag>).toString + " "
-			+ (structSpecifier.getDescendantNode("IdentifierOrTypedefName").get(0) as Text<CTag>).toString
+		if (specifier.getDescendantNode("IdentifierOrTypedefName") !== null) {
+			(specifier.get(0) as Language<CTag>).toString + " "
+			+ (specifier.getDescendantNode("IdentifierOrTypedefName").get(0) as Text<CTag>).toString
 		} else {
-			(structSpecifier.get(0) as Language<CTag>).toString
+			(specifier.get(0) as Language<CTag>).toString
 		}
 		return name
 	}
@@ -146,6 +152,7 @@ class Patterns {
 			&& (it as Language<CTag>).tag.equals(CTag::TYPEDEF)
 		] !== null
 		&& node.getDescendantNode("StructSpecifier") === null
+		&& node.getDescendantNode("UnionSpecifier") === null
 	}
 	
 	public static def boolean isTypeDeclarationWithVariability(GNode node) {

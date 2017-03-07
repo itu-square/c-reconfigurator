@@ -1,22 +1,33 @@
 package dk.itu.models.rules.phase3variables
 
+import dk.itu.models.rules.AncestorGuaranteedRule
+import org.eclipse.xtext.xbase.lib.Functions.Function1
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 import xtc.util.Pair
-import dk.itu.models.rules.AncestorGuaranteedRule
+
+import static extension dk.itu.models.Extensions.*
 
 class ReplaceIdentifierRule extends AncestorGuaranteedRule {
 	
 	protected val String oldIdentifier
 	protected val String newIdentifier
+	protected var Function1<AncestorGuaranteedRule, Boolean> test
 	
 	new (String oldIdentifier, String newIdentifier) {
 		super()
 		this.oldIdentifier = oldIdentifier
 		this.newIdentifier = newIdentifier
+	}
+	
+	new(String oldIdentifier, String newIdentifier, Function1<AncestorGuaranteedRule, Boolean> test) {
+		super()
+		this.oldIdentifier = oldIdentifier
+		this.newIdentifier = newIdentifier
+		this.test = test
 	}
 	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
@@ -28,7 +39,19 @@ class ReplaceIdentifierRule extends AncestorGuaranteedRule {
 			lang instanceof Text<?>
 			&& #[CTag::IDENTIFIER, CTag::TYPEDEFname].contains((lang as Text<CTag>).tag)
 			&& lang.toString.equals(oldIdentifier)
+			&& (test === null || test.apply(this))
 		) {
+			
+			println
+			println("--")
+			ancestors.forEach[println('''[«it.name»]''')]
+			println("--")
+			println(lang.printCode)
+			println(test === null)
+			println(test !== null && test.apply(this))
+			println("--------------------")
+			println
+			
 			return new Text(lang.tag, newIdentifier)
 		}
 		lang
