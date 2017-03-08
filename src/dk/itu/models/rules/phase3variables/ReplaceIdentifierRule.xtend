@@ -9,8 +9,6 @@ import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 import xtc.util.Pair
 
-import static extension dk.itu.models.Extensions.*
-
 class ReplaceIdentifierRule extends AncestorGuaranteedRule {
 	
 	protected val String oldIdentifier
@@ -41,17 +39,6 @@ class ReplaceIdentifierRule extends AncestorGuaranteedRule {
 			&& lang.toString.equals(oldIdentifier)
 			&& (test === null || test.apply(this))
 		) {
-			
-			println
-			println("--")
-			ancestors.forEach[println('''[«it.name»]''')]
-			println("--")
-			println(lang.printCode)
-			println(test === null)
-			println(test !== null && test.apply(this))
-			println("--------------------")
-			println
-			
 			return new Text(lang.tag, newIdentifier)
 		}
 		lang

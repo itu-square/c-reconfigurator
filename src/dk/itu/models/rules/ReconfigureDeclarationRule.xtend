@@ -143,7 +143,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			val newTypeDeclaration = new TypeDeclaration(newTypeName, refTypeDeclaration)
 			typeDeclarations.put(typeDeclaration, newTypeDeclaration, pc)
 			
-			var newNode = declarationNode.replaceIdentifierVarName(typeName, newTypeName)
+			var newNode = declarationNode.replaceIdentifierVarName(typeName, newTypeName, [rule | !rule.ancestors.exists[it.name.equals("SUEDeclarationSpecifier")]])
 			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
 			return newNode
 		} else
@@ -170,7 +170,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			val newTypeDeclaration = new TypeDeclaration(newType, null)
 			typeDeclarations.put(typeDeclaration, newTypeDeclaration, pc)
 			
-			val newNode = declarationNode.replaceIdentifierVarName(name, newName, [rule | !rule.ancestors.exists[it.name.equals("SUEDeclarationSpecifier")]])
+			val newNode = declarationNode.replaceIdentifierVarName(name, newName)
 			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
 			return newNode
 		} else
