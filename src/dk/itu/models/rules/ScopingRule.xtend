@@ -233,9 +233,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			val typeName = node.getTypeOfVariableDeclaration
 			
 			val typeDeclaration = typeDeclarations.getDeclaration(typeName) as TypeDeclaration
-			
-			// get registered type declaration
-			if (typeDeclaration == null)
+			if (typeDeclaration === null)
 				throw new Exception('''ScopingRule: type declaration [«typeName»] not found.''')
 			
 			val variableDeclaration = new VariableDeclaration(varName, typeDeclaration)
@@ -245,12 +243,13 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 		if (node.isParameterDeclaration) {
 			val name = node.getNameOfParameterDeclaration
 			val type = node.getTypeOfParameterDeclaration
+						
+			val typeDeclaration = typeDeclarations.getDeclaration(type) as TypeDeclaration
+			if (typeDeclaration === null)
+				throw new Exception('''ScopingRule: type declaration [«type»] not found.''')
 			
-			if (typeDeclarations.declarationList(type).findFirst[declaration.name.equals(type)] != null) {
-				val typeDeclaration = typeDeclarations.declarationList(type).findFirst[declaration.name.equals(type)].declaration as TypeDeclaration
-				val variableDeclaration = new VariableDeclaration(name, typeDeclaration)
-				variableDeclarations.put(variableDeclaration)
-			}
+			val variableDeclaration = new VariableDeclaration(name, typeDeclaration)
+			variableDeclarations.put(variableDeclaration)
 		} else
 		
 		if (#[	"AbstractDeclarator", "AdditiveExpression", "AndExpression", "ArrayAbstractDeclarator",
