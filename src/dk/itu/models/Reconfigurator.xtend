@@ -30,6 +30,7 @@ class Reconfigurator {
 		runArgs.add("-showErrors")
 		runArgs.add("-nostdinc")
 		runArgs.add("-saveLayoutTokens")
+		runArgs.addAll("-restrictFreeToPrefix", "ENABLE_")
 		
 		for (String defineMacro : Settings.defineMacros) {
 			runArgs.addAll("-D", defineMacro) }
@@ -55,7 +56,11 @@ class Reconfigurator {
 		
 		if (!Settings::init(args)) throw new Exception("Settings initialization error.")
 		
-		Reconfigurator::file = Settings::targetFile.path
+		if (Settings::runPreprocessor) {
+			Reconfigurator::file = Settings::targetFile.path
+		} else {
+			Reconfigurator::file = Settings::sourceFile.path
+		}
 		Reconfigurator::errors = new ArrayList<String>
 		
 		try {
@@ -100,26 +105,16 @@ class Reconfigurator {
 
 				node.printAST.writeToFile(Settings::targetFile.path + ".ast")
 				
-				if (Settings::runPreprocessor) {
-					val sb = new StringBuilder
-					if (!Settings::parseOnly) {
-						preprocessor.transformedFeatureNames.forEach[
-							sb.append("int " + it + ";\n")
-						]
-						sb.append("\n")
-					}
-					sb.append(node.printCode)
-					sb.toString.writeToFile(Settings::targetFile.path)
-				} else {
-//					println
-//					println("_______________________________________________");
-//					for (var i = 0; i < Reconfigurator::presenceConditionManager.variableManager.size; i++)
-//						println(Reconfigurator::presenceConditionManager.variableManager.getName(i))
-//					println('''total variables [«Reconfigurator::presenceConditionManager.variableManager.size»]''')
-//					
-//					println("-----------------------------------------------")
-//					println
+				val sb = new StringBuilder
+				if (Settings::runPreprocessor && !Settings::parseOnly) {
+					preprocessor.transformedFeatureNames.forEach[
+						sb.append("int " + it + ";\n")
+					]
+					sb.append("\n")
 				}
+				sb.append(node.printCode)
+				sb.toString.writeToFile(Settings::targetFile.path)
+
 								
 				// check oracle
 				if(Settings::oracleFile !== null) {
