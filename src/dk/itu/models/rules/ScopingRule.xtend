@@ -70,7 +70,8 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 				"unsigned long",		"unsigned long int",		"long long",
 				"long long int",		"signed long long",			"signed long long int",
 				"unsigned long long",	"unsigned long long int",	"float",
-				"double",				"long double",				"_Bool"
+				"double",				"long double",				"_Bool",
+				"__builtin_va_list"
 			].forEach[ typeName |
 				this.typeDeclarations.put(
 					new TypeDeclaration(typeName, null),
@@ -115,7 +116,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"LocalLabelDeclarationListOpt", "ParameterAbstractDeclaration", "ParameterIdentifierDeclaration",
 			"ExpressionOpt", "StructSpecifier", "BitFieldSizeOpt", "VolatileQualifier", "UnionSpecifier",
 			"AssemblyStatement", "AsmKeyword", "Assemblyargument", "AssemblyoperandsOpt", "Assemblyclobbers",
-			"AssemblyExpression"]
+			"AssemblyExpression", "VarArgDeclarationSpecifier", "VarArgTypeName"]
 				.contains(node.name)
 		) {
 			// no scope
@@ -286,7 +287,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"TypeQualifier", "TypeQualifierList",
 			 	"UnaryAbstractDeclarator", "UnaryExpression", "UnaryIdentifierDeclarator", "Unaryoperator",
 			 "UnionSpecifier",
-			 	"VolatileQualifier",
+			 	"VarArgDeclarationSpecifier", "VarArgTypeName", "VolatileQualifier",
 				"Word"].contains(node.name)
 			|| (node.name.equals("ParameterDeclaration") && (node.size == 1 || !(node instanceof GNode)))
 			|| (node.name.equals("ParameterDeclaration") && node.getDescendantNode("EnumSpecifier") != null )
