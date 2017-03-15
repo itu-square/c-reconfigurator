@@ -1,55 +1,62 @@
 package dk.itu.models.tests
 
-import java.util.ArrayList
 import dk.itu.models.Reconfigurator
+import dk.itu.models.reporting.ErrorRecord
+import dk.itu.models.reporting.Report
+import java.io.File
+import java.util.ArrayList
+
+import static extension dk.itu.models.Extensions.*
 
 class FileTest {
 	
 	
 	def static void main(String[] args) { 
 		
-		println("Begin LinuxTest")
+		println("Begin File Test")
 		
-		val source = "/home/alex/linux_kernel/linux-4.7/"
-		val target = "/home/alex/linux_kernel/linux-4.7-target/"
+		val report = new Report
+		val source = new File("/home/alex/reconfigurator/c-reconfigurator-busybox-test/source")
+		
+		val currentFilePath   = "/home/alex/reconfigurator/test/source/typedef_struct_var1.c"
+		val currentTargetPath = "/home/alex/reconfigurator/test/target/typedef_struct_var1.c"
+		val currentOraclePath = "/home/alex/reconfigurator/test/oracle/typedef_struct_var1.c"
+		
+		val currentRelativePath = currentFilePath.relativeTo(source.path)
 		
 		var runArgs = new ArrayList<String>
-		
-		runArgs.addAll(
-			 "-source",	 source + "test.c"
-			,"-target",  target + "test.c"
-			,"-I",		 source + "include/"
-			,"-I",       source + "include/uapi"
-			,"-I",		 source + "arch/x86/include/uapi/"
-//			,"-I",       "/home/alex/linux_kernel/linux-4.7/include"
-//			,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include"
-//			,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include/generated/uapi" 
-//			,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include/generated"
-//			,"-I",       "/home/alex/linux_kernel/linux-4.7/arch/x86/include/generated/uapi" 
-//			,"-I",       "/home/alex/linux_kernel/linux-4.7/include/generated/uapi"
-//			,"-include", "/home/alex/linux_kernel/linux-4.7/include/linux/mutex.h"
-//			,"-include", "/home/alex/linux_kernel/linux-4.7/include/linux/mutex-debug.h"
-//			,"-include", "/home/alex/linux_kernel/linux-4.7/include/linux/wait.h"
-//			,"-include", "/home/alex/linux_kernel/linux-4.7/include/linux/types.h"
-//			,"-include", "/home/alex/linux_kernel/linux-4.7/include/linux/spinlock_types_up.h"
-//			,"-include", "/home/alex/linux_kernel/linux-4.7/include/linux/spinlock_types.h"
-			,"-define",  "__GNUC__=5"
-			,"-define",  "__GNUC_MINOR__=4"
-			,"-define",  "__GNUC_PATCHLEVEL__=0"
-			,"-undef",   "__INTEL_COMPILER"
-			,"-undef",	 "__CHECKER__"
-			,"-printFullContent"
-			,"-printIntermediaryFiles"
-			,"-printIncludes"
-			,"-reconfigureIncludes"
-			)
-		Reconfigurator::main(runArgs)
-		
-		Reconfigurator::errors.forEach[println(it)]
+			
+			runArgs.addAll(
+				 "-source"	,currentFilePath
+				,"-root"	,source.path
+				,"-target"	,currentTargetPath
+				,"-oracle"	,currentOraclePath
+				,"-include"	,source.path + "/busybox/gcc_predefines.h"
+				,"-include"	,source.path + "/busybox/config.h"
+				,"-I"		,source.path + "/busybox/include/"
+				,"-isystem"	,source.path + "/usr/lib/gcc/x86_64-linux-gnu/5/include"
+				,"-isystem"	,source.path + "/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"
+				,"-isystem"	,source.path + "/usr/include/x86_64-linux-gnu"
+				,"-isystem"	,source.path + "/usr/include"
+				
+				,"-reconfigureIncludes"
+				,"-printIncludes"
+//				,"-printIntermediaryFiles"
+//				,"-printFullContent"
+//				,"-printDebugInfo"
+				)
+			
+			Reconfigurator::main(runArgs)
+			val errors = new ArrayList<ErrorRecord>
+			Reconfigurator::errors.forEach[
+				println(it)
+				errors.add(new ErrorRecord(it))
+			]
+			report.addFile(currentRelativePath, errors)
 		
 		
 		
-		println("End LinuxTest")
+		println("End File Test")
 		
 	}
 }

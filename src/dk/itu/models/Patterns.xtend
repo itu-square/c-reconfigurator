@@ -74,7 +74,7 @@ class Patterns {
 	
 	public static def String getNameOfStructUnionTypeDeclaration(GNode node) {
 		var declarator = (node.getDescendantNode("DeclaringList")
-			.findFirst[(it instanceof GNode) && #["SimpleDeclarator", "UnaryIdentifierDeclarator"].contains((it as GNode).name)] as GNode) as GNode
+			.findFirst[(it instanceof GNode) && #["SimpleDeclarator", "UnaryIdentifierDeclarator", "ArrayDeclarator"].contains((it as GNode).name)] as GNode) as GNode
 		if (!declarator.name.equals("SimpleDeclarator"))
 			declarator = declarator.getDescendantNode("SimpleDeclarator") as GNode
 		
