@@ -37,11 +37,7 @@ class Patterns {
 	} 
 	
 	public static def String getNameOfStructUnionDeclaration(GNode node) {
-		var specifier = node.getDescendantNode("StructSpecifier")
-		
-		if (specifier === null)
-			specifier = node.getDescendantNode("UnionSpecifier")
-		
+		var specifier = node.getDescendantNode[#["StructSpecifier", "UnionSpecifier"].contains(name)]
 		return (specifier.get(0) as Language<?>).toString + " "
 			+ ((specifier.get(1) as GNode).get(0) as Text<?>).toString
 	}
@@ -151,8 +147,7 @@ class Patterns {
 			it instanceof Language<?>
 			&& (it as Language<CTag>).tag.equals(CTag::TYPEDEF)
 		] !== null
-		&& node.getDescendantNode("StructSpecifier") === null
-		&& node.getDescendantNode("UnionSpecifier") === null
+		&& node.getDescendantNode("SUEDeclarationSpecifier") === null
 	}
 	
 	public static def boolean isTypeDeclarationWithVariability(GNode node) {

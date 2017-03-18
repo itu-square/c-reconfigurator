@@ -16,11 +16,11 @@ class FileTest {
 		println("Begin File Test")
 		
 		val report = new Report
-		val source = new File("/home/alex/reconfigurator/c-reconfigurator-busybox-test/source")
+		val source = new File("/home/alex/reconfigurator/test/source")
 		
-		val currentFilePath   = "/home/alex/reconfigurator/test/source/typedef_struct_var1.c"
-		val currentTargetPath = "/home/alex/reconfigurator/test/target/typedef_struct_var1.c"
-		val currentOraclePath = "/home/alex/reconfigurator/test/oracle/typedef_struct_var1.c"
+		val currentFilePath   = "/home/alex/reconfigurator/test/source/typedef_enum1.c"
+		val currentTargetPath = "/home/alex/reconfigurator/test/target/typedef_enum1.c"
+		val currentOraclePath = "/home/alex/reconfigurator/test/oracle/typedef_enum1.c"
 		
 		val currentRelativePath = currentFilePath.relativeTo(source.path)
 		

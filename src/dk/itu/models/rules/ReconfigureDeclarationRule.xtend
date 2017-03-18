@@ -403,7 +403,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 				"ParameterIdentifierDeclaration", "StructSpecifier", "BitFieldSizeOpt",
 				"ParameterAbstractDeclaration", "VolatileQualifier", "UnionSpecifier", "AssemblyStatement",
 				"AsmKeyword", "Assemblyargument", "AssemblyoperandsOpt", "Assemblyclobbers", "AssemblyExpression",
-				"VarArgDeclarationSpecifier", "VarArgTypeName"
+				"VarArgDeclarationSpecifier", "VarArgTypeName", "BitFieldSize"
 				].contains(node.name)
 		) {
 			node

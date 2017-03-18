@@ -116,7 +116,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"LocalLabelDeclarationListOpt", "ParameterAbstractDeclaration", "ParameterIdentifierDeclaration",
 			"ExpressionOpt", "StructSpecifier", "BitFieldSizeOpt", "VolatileQualifier", "UnionSpecifier",
 			"AssemblyStatement", "AsmKeyword", "Assemblyargument", "AssemblyoperandsOpt", "Assemblyclobbers",
-			"AssemblyExpression", "VarArgDeclarationSpecifier", "VarArgTypeName"]
+			"AssemblyExpression", "VarArgDeclarationSpecifier", "VarArgTypeName", "BitFieldSize"]
 				.contains(node.name)
 		) {
 			// no scope
@@ -159,8 +159,10 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			val refTypeName = node.getTypeOfTypeDeclaration
 			
 			val refTypeDeclaration = typeDeclarations.getDeclaration(refTypeName) as TypeDeclaration
-			if (refTypeDeclaration == null) {
-				typeDeclarations.names.forEach[println('''- [«it»]''')]
+			if (refTypeDeclaration === null) {
+				println
+				println(node.printAST)
+				println
 				throw new Exception('''ScopingRule: type declaration [«refTypeName»] of [«typeName»] not found.''')
 			}
 			
@@ -259,6 +261,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"AttributeSpecifier", "AttributeSpecifierList", "AttributeSpecifierListOpt", "AssemblyExpression",
 			"AssemblyStatement", "AsmKeyword", "Assemblyargument", "AssemblyoperandsOpt", "Assemblyclobbers",
 				"BasicDeclarationSpecifier", "BasicTypeSpecifier", "BreakStatement", "BitFieldSizeOpt",
+			"BitFieldSize",
 				"CastExpression", "CleanPostfixTypedefDeclarator", "CleanTypedefDeclarator",
 			"CompoundStatement", "Conditional", "ConditionalExpression", "ConstQualifier",
 			"ContinueStatement",
