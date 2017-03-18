@@ -116,7 +116,8 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"LocalLabelDeclarationListOpt", "ParameterAbstractDeclaration", "ParameterIdentifierDeclaration",
 			"ExpressionOpt", "StructSpecifier", "BitFieldSizeOpt", "VolatileQualifier", "UnionSpecifier",
 			"AssemblyStatement", "AsmKeyword", "Assemblyargument", "AssemblyoperandsOpt", "Assemblyclobbers",
-			"AssemblyExpression", "VarArgDeclarationSpecifier", "VarArgTypeName", "BitFieldSize"]
+			"AssemblyExpression", "VarArgDeclarationSpecifier", "VarArgTypeName", "BitFieldSize", "AlignofExpression",
+			"Alignofkeyword"]
 				.contains(node.name)
 		) {
 			// no scope
@@ -260,6 +261,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			"AttributeExpressionOpt", "AttributeKeyword", "AttributeList", "AttributeListOpt",
 			"AttributeSpecifier", "AttributeSpecifierList", "AttributeSpecifierListOpt", "AssemblyExpression",
 			"AssemblyStatement", "AsmKeyword", "Assemblyargument", "AssemblyoperandsOpt", "Assemblyclobbers",
+			"AlignofExpression", "Alignofkeyword",
 				"BasicDeclarationSpecifier", "BasicTypeSpecifier", "BreakStatement", "BitFieldSizeOpt",
 			"BitFieldSize",
 				"CastExpression", "CleanPostfixTypedefDeclarator", "CleanTypedefDeclarator",
