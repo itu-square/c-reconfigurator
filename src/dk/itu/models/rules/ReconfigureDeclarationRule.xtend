@@ -298,36 +298,28 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		if (
 			node.isVariableDeclarationWithVariability
 		) {
-			val varPC = node.get(0) as PresenceCondition
-			val varDeclarationNode = node.get(1) as GNode
-			val varName = varDeclarationNode.getNameOfVariableDeclaration
-			val varType = varDeclarationNode.getTypeOfVariableDeclaration
+			val pc = node.get(0) as PresenceCondition
+			val declarationNode = node.get(1) as GNode
+			val varName = declarationNode.nameOfVariableDeclaration
+			val varType = declarationNode.typeOfVariableDeclaration
 			
-			println
-			println(node.printCode)
-			println
+			var varTypeDeclaration = typeDeclarations.getDeclaration(varType) as TypeDeclaration
+			if (varTypeDeclaration === null)
+				throw new Exception('''ReconfigureDeclarationRule: type declaration [«varType»] not found.''')
 			
-			// get registered type declaration
-			if (!typeDeclarations.containsDeclaration(varType))
-				throw new Exception('''ReconfigureDeclarationRule: type declaration «varType» not found.''')
-			
-			val typeDeclarationList = typeDeclarations.declarationList(varType)
-			
-			if (typeDeclarationList.size == 1) {
-				val typeDeclaration = typeDeclarationList.get(0).declaration as TypeDeclaration
-
-				val newName = varName + "_V?"// + pcidmap.getId(varPC)
-				val varDeclaration = new VariableDeclaration(newName, typeDeclaration)
+			var varDeclaration = variableDeclarations.getDeclaration(varName) as VariableDeclaration
+			if (varDeclaration === null) {
+				varDeclaration = new VariableDeclaration(varName, varTypeDeclaration)
 				variableDeclarations.put(varDeclaration)
-
-				var newNode = varDeclarationNode.replaceDeclaratorTextWithNewId(newName)
-				newNode = newNode.rewriteVariableUse(variableDeclarations, node.presenceCondition.and(varPC))
-				newNode = newNode.rewriteFunctionCall(functionDeclarations, node.presenceCondition.and(varPC))
-				newNode.setProperty("OriginalPC", node.presenceCondition.and(varPC))
-				return newNode
-			} else {
-				throw new Exception("ReconfigureDeclarationRule: not handled: multiple type declarations.")
 			}
+			
+			val newVarName = varName + "_V" + (variableDeclarations.declarationList(varName).size + 1)
+			val newVarDeclaration = new VariableDeclaration(newVarName, varTypeDeclaration)
+			variableDeclarations.put(varDeclaration, newVarDeclaration, pc)
+
+			var newNode = declarationNode.replaceIdentifierVarName(varName, newVarName)
+			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
+			return newNode
 		} else
 		
 		if (
