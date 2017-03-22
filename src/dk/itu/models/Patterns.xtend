@@ -250,7 +250,7 @@ class Patterns {
 	}
 	
 	public static def String getTypeOfFunctionDefinition(GNode node) {
-		return getTypeByTraversal((node.getDescendantNode("FunctionPrototype") as GNode).get(0) as GNode)
+		return getTypeByTraversal((node.getDescendantNode("FunctionPrototype") as GNode))
 	}
 		
 

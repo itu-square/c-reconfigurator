@@ -13,6 +13,7 @@ import xtc.lang.cpp.SuperC
 import xtc.tree.Node
 
 import static extension dk.itu.models.Extensions.*
+import java.util.HashMap
 
 class Reconfigurator {
 	
@@ -74,6 +75,8 @@ class Reconfigurator {
 				if (Settings::printIntermediaryFiles) {
 					preproc.writeToFile(Settings::targetFile.path + ".preproc.c")
 				}
+			} else {
+				Reconfigurator::transformedFeaturemap = new HashMap<String, String>
 			}
 			
 			// Parser
@@ -108,6 +111,11 @@ class Reconfigurator {
 				val sb = new StringBuilder
 				if (Settings::runPreprocessor && !Settings::parseOnly) {
 					preprocessor.transformedFeatureNames.forEach[
+						sb.append("int " + it + ";\n")
+					]
+					sb.append("\n")
+				} else {
+					Reconfigurator::transformedFeaturemap.values.forEach[
 						sb.append("int " + it + ";\n")
 					]
 					sb.append("\n")
