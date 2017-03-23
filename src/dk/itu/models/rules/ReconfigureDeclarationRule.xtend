@@ -25,37 +25,8 @@ class ReconfigureDeclarationRule extends ScopingRule {
 	override dispatch Language<CTag> transform(Language<CTag> lang) {
 		lang
 	}
-
-	override dispatch Pair<Object> transform(Pair<Object> pair) {
-		if (
-			!pair.empty
-			&& (pair.head instanceof GNode)
-			&& (pair.head as GNode).isFunctionDeclarationWithVariability
-			&& ((pair.head as GNode).get(1) as GNode).isFunctionDeclarationWithSignatureVariability(typeDeclarations)
-		) {
-			val node = pair.head as GNode
-			val pc = node.get(0) as PresenceCondition
-			val declarationNode = node.get(1) as GNode
-			val type = declarationNode.getTypeOfFunctionDeclaration
-			
-			val varType = declarationNode.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head
-			val declarations = typeDeclarations.declarationList(varType).filterDeclarations(type, pc)
-			
-			var Pair<Object> newPair = Pair::EMPTY
-			
-			for(DeclarationPCPair declPair : declarations) {
-				val newDeclarationNode = declarationNode
-					.replaceIdentifierVarName(varType.replace("struct ", ""), declPair.declaration.name.replace("struct ", ""))
-				newPair = newPair.add(GNode::create("Conditional", pc.and(declPair.pc), newDeclarationNode))
-			}
-
-			newPair = newPair.append(pair.tail)
-			return newPair
-		} else
-		
-		// |- #ifdef pc
-		// |  |- typedef refTypeName typeName;
-		// |- ... tail
+	
+	private def Pair<Object> reconfigureTypeDeclarationWithVariabilityAndSignatureVariability(Pair<Object> pair) {
 		if (
 			!pair.empty
 			&& (pair.head instanceof GNode)
@@ -82,9 +53,147 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			
 			newPair = newPair.append(pair.tail)
 			return newPair				
+		} else {
+			return pair
 		}
+	}
+	
+	private def Pair<Object> reconfigureFunctionDeclarationWithVariabilityAndSignatureVariability(Pair<Object> pair) {
+		if (
+			!pair.empty
+			&& (pair.head instanceof GNode)
+			&& (pair.head as GNode).isFunctionDeclarationWithVariability
+			&& ((pair.head as GNode).get(1) as GNode).isFunctionDeclarationWithSignatureVariability(typeDeclarations)
+		) {
+			val node = pair.head as GNode
+			val pc = node.get(0) as PresenceCondition
+			val declarationNode = node.get(1) as GNode
+			val type = declarationNode.getTypeOfFunctionDeclaration
 			
-		pair
+			val varType = declarationNode.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head
+			val declarations = typeDeclarations.declarationList(varType).filterDeclarations(type, pc)
+			
+			var Pair<Object> newPair = Pair::EMPTY
+			
+			for(DeclarationPCPair declPair : declarations) {
+				val newDeclarationNode = declarationNode
+					.replaceIdentifierVarName(varType.replace("struct ", ""), declPair.declaration.name.replace("struct ", ""))
+				newPair = newPair.add(GNode::create("Conditional", pc.and(declPair.pc), newDeclarationNode))
+			}
+
+			newPair = newPair.append(pair.tail)
+			return newPair
+		} else {
+			return pair
+		}
+	}
+
+	private def Pair<Object> reconfigureVariableDeclarationWithTypeVariability(Pair<Object> pair) {
+		if (
+			!pair.empty
+			&& (pair.head instanceof GNode)
+			&& (pair.head as GNode).isVariableDeclarationWithTypeVariability(typeDeclarations)
+		) {
+			val node = pair.head as GNode
+			val declarationNode = node
+			val varName = declarationNode.getNameOfVariableDeclaration
+			val varType = declarationNode.getTypeOfVariableDeclaration
+			
+			var varTypeDeclaration = typeDeclarations.getDeclaration(varType) as TypeDeclaration
+			if (varTypeDeclaration === null)
+				throw new Exception('''ReconfigureDeclarationRule: type declaration [«varType»] not found.''')
+			
+			var varDeclaration = variableDeclarations.getDeclaration(varName) as VariableDeclaration
+			if (varDeclaration === null) {
+				varDeclaration = new VariableDeclaration(varName, varTypeDeclaration)
+				variableDeclarations.put(varDeclaration)
+			}
+			
+			val filtered = typeDeclarations.declarationList(varType).filterDeclarations(varType, Reconfigurator::presenceConditionManager.newPresenceCondition(true))
+			
+			var Pair<Object> newPair = Pair::EMPTY
+			
+			for(DeclarationPCPair declPair : filtered) {
+				var newDeclarationNode = if(!varType.equals(declPair.declaration.name)) {
+					println
+					println('''rewrite [«varName»] from [«varType»] to [«declPair.declaration.name»]''')
+					println(variableDeclarations.getDeclaration(varName))
+					println
+					
+					declarationNode.replaceIdentifierVarName(varType, declPair.declaration.name)
+					} else {
+						declarationNode
+					}
+					
+				newDeclarationNode.setProperty("refTypeVariabilityHandled", true)
+				
+				val newVarName = varName + "_V" + (variableDeclarations.declarationList(varName).size + 1)
+				val newVarDeclaration = new VariableDeclaration(newVarName, varTypeDeclaration)
+				variableDeclarations.put(varDeclaration, newVarDeclaration, declPair.pc)
+				
+				newDeclarationNode = newDeclarationNode.replaceIdentifierVarName(varName, newVarName)
+				newDeclarationNode.setProperty("OriginalPC", node.presenceCondition.and(declPair.pc))
+				
+				newPair = newPair.add(newDeclarationNode)
+			}
+			
+			newPair = newPair.append(pair.tail)
+			return newPair				
+		} else {
+			return pair
+		}
+	}
+
+	private def Pair<Object> reconfigureVariableDeclarationWithVariabilityAndTypeVariability(Pair<Object> pair) {
+		if (
+			!pair.empty
+			&& (pair.head instanceof GNode)
+			&& (pair.head as GNode).isVariableDeclarationWithVariability
+			&& ((pair.head as GNode).get(1) as GNode).isVariableDeclarationWithTypeVariability(typeDeclarations)
+		) {
+			val node = pair.head as GNode
+			val pc = node.get(0) as PresenceCondition
+			val declarationNode = node.get(1) as GNode
+			val refTypeName = declarationNode.getTypeOfVariableDeclaration
+			
+			val filtered = typeDeclarations.declarationList(refTypeName).filterDeclarations(refTypeName, pc)
+			
+			var Pair<Object> newPair = Pair::EMPTY
+			
+			for(DeclarationPCPair declPair : filtered) {
+				val newDeclarationNode = if(!refTypeName.equals(declPair.declaration.name)) {
+						declarationNode.replaceIdentifierVarName(refTypeName, declPair.declaration.name)
+					} else {
+						declarationNode
+					}
+				newDeclarationNode.setProperty("refTypeVariabilityHandled", true)
+				newPair = newPair.add(GNode::create("Conditional", pc.and(declPair.pc), newDeclarationNode))
+			}
+			
+			newPair = newPair.append(pair.tail)
+			return newPair				
+		} else {
+			return pair
+		}
+	}
+
+	override dispatch Pair<Object> transform(Pair<Object> pair) {
+		
+		var Pair<Object> newPair = pair
+		
+		newPair = reconfigureTypeDeclarationWithVariabilityAndSignatureVariability(pair)
+		if (newPair !== pair) return newPair
+		
+		newPair = reconfigureFunctionDeclarationWithVariabilityAndSignatureVariability(pair)
+		if (newPair !== pair) return newPair
+		
+		newPair = reconfigureVariableDeclarationWithTypeVariability(pair)
+		if (newPair !== pair) return newPair
+			
+		newPair = reconfigureVariableDeclarationWithVariabilityAndTypeVariability(pair)
+		if (newPair !== pair) return newPair
+			
+		return pair
 	}
 	
 	override dispatch Object transform(GNode node) {

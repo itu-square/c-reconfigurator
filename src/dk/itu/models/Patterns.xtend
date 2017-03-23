@@ -263,7 +263,8 @@ class Patterns {
 		&& node.getDescendantNode[
 			it instanceof Language<?>
 			&& (it as Language<CTag>).tag.equals(CTag::TYPEDEF)
-		] == null
+		] === null
+		&& !(node.get(0) as GNode).name.equals("SUETypeSpecifier")
 	}
 	
 	public static def boolean isVariableDeclarationWithVariability(GNode node) {
@@ -274,6 +275,12 @@ class Patterns {
 		
 		&& (node.get(1) instanceof GNode)
 		&& (node.get(1) as GNode).isVariableDeclaration
+	}
+	
+	public static def boolean isVariableDeclarationWithTypeVariability(GNode node, DeclarationPCMap typeDeclarations) {
+		node.isVariableDeclaration
+		&& !node.getBooleanProperty("refTypeVariabilityHandled")
+		&& typeDeclarations.declarationList(node.getTypeOfVariableDeclaration).size > 0
 	}
 	
 	public static def String getNameOfVariableDeclaration(GNode node) {
