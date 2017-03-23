@@ -1,0 +1,50 @@
+|- TranslationUnit
+   |- ExternalDeclarationList
+      |- Declaration
+      |  |- SUETypeSpecifier
+      |  |  |- StructSpecifier
+      |  |     |- xtc.lang.cpp.Syntax.Language<STRUCT>struct  
+      |  |     |- IdentifierOrTypedefName
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>s  
+      |  |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |     |- StructDeclarationList
+      |  |     |  |- StructDeclaration
+      |  |     |  |  |- StructDeclaringList
+      |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |     |  |  |  |- StructDeclarator
+      |  |     |  |  |  |  |- SimpleDeclarator
+      |  |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>f1  
+      |  |     |  |  |  |  |- BitFieldSizeOpt
+      |  |     |  |  |  |- AttributeSpecifierListOpt
+      |  |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |     |  |- StructDeclaration
+      |  |     |     |- StructDeclaringList
+      |  |     |     |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
+      |  |     |     |  |- StructDeclarator
+      |  |     |     |  |  |- SimpleDeclarator
+      |  |     |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>f2  
+      |  |     |     |  |  |- BitFieldSizeOpt
+      |  |     |     |  |- AttributeSpecifierListOpt
+      |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+         |- DeclaringList
+         |  |- SUEDeclarationSpecifier
+         |  |  |- DeclarationQualifierList
+         |  |  |  |- xtc.lang.cpp.Syntax.Language<TYPEDEF>typedef  
+         |  |  |- StructSpecifier
+         |  |     |- xtc.lang.cpp.Syntax.Language<STRUCT>struct  
+         |  |     |- IdentifierOrTypedefName
+         |  |        |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>s  
+         |  |- ArrayDeclarator
+         |  |  |- SimpleDeclarator
+         |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>s_buf  
+         |  |  |- ArrayAbstractDeclarator
+         |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
+         |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>1  
+         |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
+         |  |- AssemblyExpressionOpt
+         |  |- AttributeSpecifierListOpt
+         |  |- InitializerOpt
+         |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  

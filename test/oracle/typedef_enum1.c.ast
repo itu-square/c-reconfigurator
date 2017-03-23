@@ -1,0 +1,29 @@
+|- TranslationUnit
+   |- ExternalDeclarationList
+      |- Declaration
+         |- DeclaringList
+         |  |- SUEDeclarationSpecifier
+         |  |  |- DeclarationQualifierList
+         |  |  |  |- xtc.lang.cpp.Syntax.Language<TYPEDEF>typedef  
+         |  |  |- EnumSpecifier
+         |  |     |- xtc.lang.cpp.Syntax.Language<ENUM>enum  
+         |  |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |  |     |- EnumeratorList
+         |  |     |  |- Enumerator
+         |  |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>P_ALL  
+         |  |     |  |  |- EnumeratorValueOpt
+         |  |     |  |- xtc.lang.cpp.Syntax.Language<COMMA>,  
+         |  |     |  |- Enumerator
+         |  |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>P_PID  
+         |  |     |  |  |- EnumeratorValueOpt
+         |  |     |  |- xtc.lang.cpp.Syntax.Language<COMMA>,  
+         |  |     |  |- Enumerator
+         |  |     |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>P_PGID  
+         |  |     |     |- EnumeratorValueOpt
+         |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+         |  |- SimpleDeclarator
+         |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>idtype_t  
+         |  |- AssemblyExpressionOpt
+         |  |- AttributeSpecifierListOpt
+         |  |- InitializerOpt
+         |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  

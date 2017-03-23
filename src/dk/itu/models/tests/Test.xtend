@@ -11,9 +11,9 @@ import static extension dk.itu.models.Extensions.*
 class Test {
 	
 	static val report = new Report
-	static val source = new File("/home/alex/reconfigurator/test/source")
-	static val target = new File("/home/alex/reconfigurator/test/target")
-	static val oracle = new File("/home/alex/reconfigurator/test/oracle")
+	static val source = new File("/home/alex/reconfigurator/c-reconfigurator/test/source")
+	static val target = new File("/home/alex/reconfigurator/c-reconfigurator/test/target")
+	static val oracle = new File("/home/alex/reconfigurator/c-reconfigurator/test/oracle")
 
 	static def void process (File currentFile) {
 
@@ -47,13 +47,6 @@ class Test {
 				,"-root"	,source.path
 				,"-target"	,currentTargetPath
 				,"-oracle"	,currentOraclePath
-				,"-include"	,source.path + "/busybox/gcc_predefines.h"
-				,"-include"	,source.path + "/busybox/config.h"
-				,"-I"		,source.path + "/busybox/include/"
-				,"-isystem"	,source.path + "/usr/lib/gcc/x86_64-linux-gnu/5/include"
-				,"-isystem"	,source.path + "/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed"
-				,"-isystem"	,source.path + "/usr/include/x86_64-linux-gnu"
-				,"-isystem"	,source.path + "/usr/include"
 				
 				,"-reconfigureIncludes"
 				,"-printIncludes"
