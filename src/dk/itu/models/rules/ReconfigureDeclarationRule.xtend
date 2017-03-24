@@ -26,6 +26,12 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		lang
 	}
 	
+	
+	
+	
+
+
+
 	private def Pair<Object> reconfigureTypeDeclarationWithVariabilityAndSignatureVariability(Pair<Object> pair) {
 		if (
 			!pair.empty
@@ -115,11 +121,6 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			
 			for(DeclarationPCPair declPair : filtered) {
 				var newDeclarationNode = if(!varType.equals(declPair.declaration.name)) {
-					println
-					println('''rewrite [«varName»] from [«varType»] to [«declPair.declaration.name»]''')
-					println(variableDeclarations.getDeclaration(varName))
-					println
-					
 					declarationNode.replaceIdentifierVarName(varType, declPair.declaration.name)
 					} else {
 						declarationNode
@@ -196,10 +197,13 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		return pair
 	}
 	
-	override dispatch Object transform(GNode node) {
-		// Update the variable scopes and declarations.
-		(this as ScopingRule).transform(node)
-		
+
+
+
+
+
+
+	private def GNode reconfigureTypeDeclarationWithVariability(GNode node) {
 		if (
 			node.isTypeDeclarationWithVariability
 		) {
@@ -209,11 +213,11 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			val refTypeName = declarationNode.getTypeOfTypeDeclaration
 			
 			var refTypeDeclaration = typeDeclarations.getDeclaration(refTypeName) as TypeDeclaration
-			if (refTypeDeclaration == null)
+			if (refTypeDeclaration === null)
 				throw new Exception('''ReconfigureDeclarationRule: type declaration [«refTypeName»] not found.''')
 			
 			var typeDeclaration = typeDeclarations.getDeclaration(typeName) as TypeDeclaration
-			if (typeDeclaration == null) {
+			if (typeDeclaration === null) {
 				typeDeclaration = new TypeDeclaration(typeName, refTypeDeclaration)
 				typeDeclarations.put(typeDeclaration)
 			}
@@ -225,10 +229,12 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			var newNode = declarationNode.replaceIdentifierVarName(typeName, newTypeName)
 			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
 			return newNode
-		} else
-		
-		
-		
+		} else {
+			return node
+		}
+	}
+	
+	private def GNode reconfigureStructUnionTypeDeclarationWithVariability(GNode node) {
 		if (
 			node.isStructUnionTypeDeclarationWithVariability
 		) {
@@ -255,10 +261,12 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			var newNode = declarationNode.replaceIdentifierVarName(typeName, newTypeName, [rule | !rule.ancestors.exists[it.name.equals("SUEDeclarationSpecifier")]])
 			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
 			return newNode
-		} else
-		
-		
-		
+		} else {
+			return node
+		}
+	}
+	
+	private def GNode reconfigureStructUnionDeclarationWithVariability(GNode node) {
 		if (
 			node.isStructUnionDeclarationWithVariability
 		) {
@@ -282,10 +290,12 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			val newNode = declarationNode.replaceIdentifierVarName(name, newName)
 			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
 			return newNode
-		} else
-		
-		
-		
+		} else {
+			return node
+		}
+	}
+	
+	private def GNode reconfigureEnumDeclarationWithVariability(GNode node) {
 		if (
 			node.isEnumDeclarationWithVariability
 		) {
@@ -294,7 +304,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			
 			for (String enumerator : node.getDescendantNode("EnumeratorList").filter[(it instanceof GNode) && (it as GNode).name.equals("Enumerator")].map[(it as GNode).get(0).toString]) {
 				var enumeratorDeclaration = variableDeclarations.getDeclaration(enumerator)
-				if (enumeratorDeclaration == null) {
+				if (enumeratorDeclaration === null) {
 					enumeratorDeclaration = new VariableDeclaration(enumerator, typeDeclarations.getDeclaration("int") as TypeDeclaration)
 					variableDeclarations.put(enumeratorDeclaration)
 				}
@@ -305,10 +315,12 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			
 			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
 			return newNode
-		} else
-		
-		
-		
+		} else {
+			return node
+		}
+	}
+	
+	private def GNode reconfigureFunctionDeclarationWithVariability(GNode node) {
 		if (
 			node.isFunctionDeclarationWithVariability
 		) {
@@ -318,11 +330,11 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			val funcType = declarationNode.getTypeOfFunctionDeclaration
 			
 			var funcTypeDeclaration = typeDeclarations.getDeclaration(funcType) as TypeDeclaration
-			if (funcTypeDeclaration == null)
+			if (funcTypeDeclaration === null)
 				throw new Exception('''ReconfigureDeclarationRule: type declaration [«funcType»] not found.''')
 			
 			var funcDeclaration = functionDeclarations.getDeclaration(funcName) as FunctionDeclaration
-			if (funcDeclaration == null) {
+			if (funcDeclaration === null) {
 				funcDeclaration = new FunctionDeclaration(funcName, funcTypeDeclaration)
 				functionDeclarations.put(funcDeclaration)
 			}
@@ -334,10 +346,12 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			var newNode = declarationNode.replaceIdentifierVarName(funcName, newFuncName)
 			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
 			return newNode
-		} else
-		
-		
-		
+		} else {
+			return node
+		}
+	}
+	
+	private def GNode reconfigureFunctionDefinitionWithVariability(GNode node) {
 		if (
 			node.isFunctionDefinitionWithVariability
 		) {
@@ -347,11 +361,11 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			val funcType = definitionNode.getTypeOfFunctionDefinition
 			
 			var funcTypeDeclaration = typeDeclarations.getDeclaration(funcType) as TypeDeclaration
-			if (funcTypeDeclaration == null)
+			if (funcTypeDeclaration === null)
 				throw new Exception('''ReconfigureDeclarationRule: type declaration «funcType» not found.''')
 			
 			var funcDeclaration = functionDeclarations.getDeclaration(funcName) as FunctionDeclaration
-			if (funcDeclaration == null) {
+			if (funcDeclaration === null) {
 				funcDeclaration = new FunctionDeclaration(funcName, funcTypeDeclaration)
 				functionDeclarations.put(funcDeclaration)
 			}
@@ -365,10 +379,12 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			newNode = newNode.rewriteFunctionCall(functionDeclarations, node.presenceCondition.and(pc))
 			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
 			return newNode
-		} else
-		
-		
-		
+		} else {
+			return node
+		}
+	}
+	
+	private def GNode reconfigureFunctionDefinition(GNode node) {
 		if (
 			node.isFunctionDefinition
 			&& !ancestors.last.name.equals("Conditional")
@@ -397,13 +413,17 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			return GNode.createFromPair(
 				"FunctionDefinition",
 				newpair,
-				if (node.properties == null)
+				if (node.properties === null)
 					null
 				else
 					node.properties.toInvertedMap[p | node.getProperty(p.toString)]
 				)
-		} else
-
+		} else {
+			return node
+		}
+	}
+	
+	private def GNode reconfigureVariableDeclarationWithVariability(GNode node) {
 		if (
 			node.isVariableDeclarationWithVariability
 		) {
@@ -429,8 +449,12 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			var newNode = declarationNode.replaceIdentifierVarName(varName, newVarName)
 			newNode.setProperty("OriginalPC", node.presenceCondition.and(pc))
 			return newNode
-		} else
-		
+		} else {
+			return node
+		}
+	}
+	
+	private def GNode reconfigureSelection(GNode node) {
 		if (
 			// other places to rewrite variable names and function calls
 			node.name.equals("SelectionStatement")
@@ -438,19 +462,23 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			debug
 			debug("   other rewrites", true)
 			debug("   - " + node.name)
-			val newNode = (node.get(2) as GNode).rewriteVariableUse(variableDeclarations, node.presenceCondition)
+			val tempNode = (node.get(2) as GNode).rewriteVariableUse(variableDeclarations, node.presenceCondition)
 			
-			if (!newNode.printAST.equals(node.get(2).printAST)) {
+			if (!tempNode.printAST.equals(node.get(2).printAST)) {
 				return GNode::createFromPair(
 					"SelectionStatement",
 					node.map[
-						if (node.indexOf(it) == 2) newNode
+						if (node.indexOf(it) == 2) tempNode
 						else it].toPair)
 			} else {
 				return node
 			}
-		} else
-		
+		} else {
+			return node
+		}
+	}
+	
+	private def GNode reconfigureIterationCompoundExpression(GNode node) {
 		if (
 			node.name.equals("IterationStatement")
 			|| node.name.equals("CompoundStatement")
@@ -460,8 +488,12 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			debug("   other rewrites", true)
 			debug("   - " + node.name)
 			return node.rewriteVariableUse(variableDeclarations, node.presenceCondition)
-		} else
-		
+		} else {
+			return node
+		}
+	}
+	
+	private def GNode reconfigureNonVariability(GNode node) {
 		if (
 			// declarations without variability
 			ancestors.size >= 1
@@ -469,7 +501,49 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			&& #["Declaration", "DeclarationExtension"].contains(node.name)
 		) {
 			node.rewriteVariableUse(variableDeclarations, node.presenceCondition)
-		} else
+		} else {
+			return node
+		}
+	}
+	
+	override dispatch Object transform(GNode node) {
+		// Update the variable scopes and declarations.
+		(this as ScopingRule).transform(node)
+		
+		var GNode newNode = node
+		
+		newNode = reconfigureTypeDeclarationWithVariability(node)
+		if (newNode !== node) return newNode
+		
+		newNode = reconfigureStructUnionTypeDeclarationWithVariability(node)
+		if (newNode !== node) return newNode
+		
+		newNode = reconfigureStructUnionDeclarationWithVariability(node)
+		if (newNode !== node) return newNode
+		
+		newNode = reconfigureEnumDeclarationWithVariability(node)
+		if (newNode !== node) return newNode
+		
+		newNode = reconfigureFunctionDeclarationWithVariability(node)
+		if (newNode !== node) return newNode
+		
+		newNode = reconfigureFunctionDefinitionWithVariability(node)
+		if (newNode !== node) return newNode
+		
+		newNode = reconfigureFunctionDefinition(node)
+		if (newNode !== node) return newNode
+		
+		newNode = reconfigureVariableDeclarationWithVariability(node)
+		if (newNode !== node) return newNode
+		
+		newNode = reconfigureSelection(node)
+		if (newNode !== node) return newNode
+		
+		newNode = reconfigureIterationCompoundExpression(node)
+		if (newNode !== node) return newNode
+		
+		newNode = reconfigureNonVariability(node)
+		if (newNode !== node) return newNode
 		
 		if (
 			// the rest
