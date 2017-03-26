@@ -2,10 +2,9 @@ package dk.itu.models.rules.phase4functions
 
 import dk.itu.models.Reconfigurator
 import dk.itu.models.rules.AncestorGuaranteedRule
-import dk.itu.models.utils.Declaration
 import dk.itu.models.utils.DeclarationPCMap
+import dk.itu.models.utils.DeclarationPCPair
 import dk.itu.models.utils.FunctionDeclaration
-import java.util.AbstractMap.SimpleEntry
 import java.util.ArrayList
 import java.util.HashMap
 import java.util.List
@@ -47,25 +46,25 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 	
 	def buildExp (
 		GNode node,
-		List<SimpleEntry<Declaration, PresenceCondition>> declarations,
+		List<DeclarationPCPair> declarations,
 		Pair<?> args,
 		PresenceCondition varPC
 	) {
 		if (
 			declarations.empty
-			|| (declarations.size == 1 && declarations.get(0).value.isTrue)
+			|| (declarations.size == 1 && declarations.get(0).pc.isTrue)
 		) {
 			node.setProperty("HandledByRewriteFunctionCallRule", true)
 			return node
 		} else {
 			var GNode exp = null
-			for (SimpleEntry<Declaration, PresenceCondition> pair : declarations.reverseView) {
-				val funcName = pair.key.name
-				var pc = pair.value.restrict(varPC.not)
-				if (pc.isFalse) pc = pair.value.simplify(varPC)
+			for (DeclarationPCPair pair : declarations.reverseView) {
+				val funcName = pair.declaration.name
+				var pc = pair.pc.restrict(varPC.not)
+				if (pc.isFalse) pc = pair.pc.simplify(varPC)
 				// if the simplification reduced the PC completely to 1/True
 				// then we can use the original PC (pair.value)
-				if (pc.isTrue) pc = pair.value
+				if (pc.isTrue) pc = pair.pc
 				
 				val newCall = GNode::create(
 					"FunctionCall",
@@ -73,7 +72,7 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 			 		GNode::createFromPair("ExpressionList", args))
 			 	newCall.setProperty("HandledByRewriteFunctionCallRule", true)
 				
-				exp = if (exp == null) newCall else
+				exp = if (exp === null) newCall else
 				 GNode::create("PrimaryExpression",
 					new Language<CTag>(CTag.LPAREN),
 			 		GNode::create("ConditionalExpression",
@@ -90,21 +89,21 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 	
 	private def filterDeclarations(String funcName, PresenceCondition callPC) {
 		
-		val declarations = new ArrayList<SimpleEntry<Declaration,PresenceCondition>>
+		val declarations = new ArrayList<DeclarationPCPair>
 		
 		if (!functionDeclarations.containsDeclaration(funcName)) {
 			return declarations
 		}
 		
-		var exactDeclaration = functionDeclarations.declarationList(funcName).findFirst[it.value.is(callPC)]
-		if (exactDeclaration != null) {
+		var exactDeclaration = functionDeclarations.declarationList(funcName).findFirst[it.pc.is(callPC)]
+		if (exactDeclaration !== null) {
 			declarations.add(exactDeclaration)
 			return declarations
 		}
 		
 		var disjunctionPC = Reconfigurator::presenceConditionManager.newPresenceCondition(false)
-		for (SimpleEntry<Declaration, PresenceCondition> pair : functionDeclarations.declarationList(funcName)) {
-			val pc = pair.value
+		for (DeclarationPCPair pair : functionDeclarations.declarationList(funcName)) {
+			val pc = pair.pc
 			if (!callPC.and(pc).isFalse) {
 				declarations.add(pair)
 				disjunctionPC = pc.or(disjunctionPC)
@@ -112,7 +111,7 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 		}
 		
 		if (!callPC.BDD.imp(disjunctionPC.BDD).isOne) {
-			declarations.add(new SimpleEntry<Declaration, PresenceCondition>(
+			declarations.add(new DeclarationPCPair(
 				new FunctionDeclaration(funcName, null),
 				disjunctionPC.not
 			))
@@ -134,7 +133,7 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 			val declarations = filterDeclarations(fcall, varPC)
 			val exp = buildExp(node, declarations, node.toPair.tail, varPC)
 			
-			if(exp != null) {
+			if(exp !== null) {
 				return exp
 			} else {
 				return node

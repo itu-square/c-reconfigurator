@@ -21,6 +21,7 @@ struct s
     #endif
   };
 
+struct s svar;
 
 typedef struct s s_buf[1];
 

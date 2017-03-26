@@ -121,7 +121,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			
 			for(DeclarationPCPair declPair : filtered) {
 				var newDeclarationNode = if(!varType.equals(declPair.declaration.name)) {
-					declarationNode.replaceIdentifierVarName(varType, declPair.declaration.name)
+					declarationNode.replaceIdentifierVarName(varType.replace("struct ", "").replace("union ", ""), declPair.declaration.name.replace("struct ", "").replace("union ", ""))
 					} else {
 						declarationNode
 					}
