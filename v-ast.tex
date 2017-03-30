@@ -1,0 +1,177 @@
+\section{Syntax}
+
+\subsection{V-AST Syntax}
+
+An abstract syntax tree with variability (V-AST) can be represented using the syntax given in (\ref{eq:vastsyntax}). A tree vertex (or an object) \textit{obj} can be either a presence condition (\textit{pc}), a language element (\textit{lang}) or a generic node (\textit{node}). All V-AST types have corresponding types in the Java/XTend code as shown in Tbl.\,\ref{table:vertmap}.
+
+\begin{equation}
+\label{eq:vastsyntax}
+\begin{array}{rcl}
+obj & ::= & pc ~\mid~ lang ~\mid~ node
+\\[0.5mm]
+node & ::= & (name,pair)
+\\[0.5mm]
+pair & ::= & \epsilon ~\mid~ obj::pair
+\end{array}
+\end{equation}
+
+\paragraph{Objects.} Objects are represented only as identifiers \obj{o_1}, \obj{o_2}.
+
+\paragraph{Nodes.} A \type{node} is a tuple of two elements: a string \type{name} and a \type{pair} which contains the children. It can be represented as an identifier \node{n_1},  \node{n_2}, as a tuple (\name{Conditional},\pair{p}) or by using the \type{name} \node{\name{Conditional}}. The \type{name} of the \type{node} can be accessed through the function \func{name} (e.g. \node{\name{Conditional}}.\func{name}). The \type{node} type also has an index accessor for its children (e.g. (\name{Conditional},\pair{p})[i] is accessing child i as ordered in the \type{pair} \pair{p}).
+
+\paragraph{Pair.}  A \textit{pair} can either be empty ($\epsilon$) or it can be formed of a head of type \textit{obj} and a tail of type \textit{pair}. The head and tail can be accessed through their respective functions: \pair{\id{p_1}}.\func{head} and \pair{\id{p_1}}.\func{tail}.
+
+\begin{table}[h]
+\begin{minipage}[t]{0.4\textwidth}
+\centering
+\begin{tabular}{| r | l |}
+	\hline
+	\textbf{V-AST} & \textbf{Java/XTend} \\\hline
+	\type{obj}  & Object \\\hline
+	\type{pc}   & PresenceCondition \\\hline
+	\type{lang} & Language<CTag> \\\hline
+	\type{node} & GNode \\\hline
+	\type{pair} & Pair<Object> \\\hline
+\end{tabular}
+\caption{Mapping from V-AST vertices to Java classes.}
+\label{table:vertmap}
+\end{minipage}
+\hspace*{-\textwidth} \hfill
+\begin{minipage}[t]{0.55\textwidth}
+\centering
+\begin{tabular}{| r | p{5.1cm} |}
+	\hline
+	\textbf{type} & \textbf{representations} \\\hline
+	\type{obj}  & \obj{o_1}, \obj{o_2} \\\hline
+	\type{pc}   & \pc{pc_1}, \pc{pc_2}, \id{\phi_1}, \id{\psi_1}, \pc{\name{true}}, \pc{\name{false}}, $\phi \land \name{false}$ \\\hline
+	\type{lang} & \lang{ln} \\\hline
+	\type{node} & \node{n}, (\name{Conditional},\pair{p}), \node{\name{Conditional}} \\\hline
+	\type{pair} & \pair{p_0} \\\hline
+\end{tabular}
+\caption{Various representations for vertices.}
+\label{table:representations}
+\end{minipage}
+\end{table}
+
+\subsection{Rule Syntax}
+
+A rule has a name, an input pattern, an output patten and an algorithm.
+
+%--- RemOneRule ---%
+\noindent
+\begin{tabular}{| p{.2\textwidth} | p{.2\textwidth} | p{.6\textwidth} |}
+	\hline
+	\multicolumn{3}{|l|}{\textsc{RemOneRule}} \\\hline
+	Input \pair{\id{pair}} & Output \pair{\_} & Algorithm \\\hline
+
+\begin{vastcode}
+/ @\node{\name{Conditional}}@
+| - @\pc{\name{true}}@
+| = @\pair{\id{children}}@
+= @\pair{\id{tail}}@
+\end{vastcode} &
+
+\begin{vastcode}
+/ @\pair{\id{children}}@
+= @\pair{\id{tail}}@
+\end{vastcode} &
+
+\begin{PseudoCode}
+preconditions:
+  @\pair{\id{pair}} != $\epsilon$@
+  @\pair{\id{pair}}.\func{head}@ : (@\name{Conditional}@,@\_@)
+  @\pair{\id{pair}}.\func{head}@.filter(@\type{cond}@).size = 1
+  @\pair{\id{pair}}.\func{head}@[0] = @\pc{\name{true}}@
+
+do:
+  return @\pair{\id{pair}}.\func{head}@
+    @.\func{getChildrenGuardedBy}(\pc{\name{true}})@
+    @.\func{append}(\pair{\id{pair}}.\func{tail})@
+\end{PseudoCode} \\\hline
+\end{tabular}
+
+
+
+
+%--- RemZeroRule ---%
+\noindent
+\begin{tabular}{| p{.2\textwidth} | p{.2\textwidth} | p{.6\textwidth} |}
+	\hline
+	\multicolumn{3}{|l|}{\textsc{RemZeroRule}} \\\hline
+	Input \pair{\id{pair}} & Output \pair{\_} & Algorithm \\\hline
+	
+\begin{vastcode}
+/ @\node{\name{Conditional}}@
+| - @\pc{\name{false}}@
+| = @\pair{\id{children}}@
+= @\pair{\id{tail}}@
+\end{vastcode} &
+
+\begin{vastcode}
+@\pair{\id{tail}}@
+\end{vastcode} &
+	
+\begin{PseudoCode}
+preconditions:
+  @\pair{\id{pair}} != $\epsilon$@
+  @\pair{\id{pair}}.\func{head}@ : (@\name{Conditional}@,@\_@)
+  @\pair{\id{pair}}.\func{head}@.filter(@\type{cond}@).size = 1
+  @\pair{\id{pair}}.\func{head}@[0] = @\pc{\name{false}}@
+	
+do:
+  return @\pair{\id{pair}}.\func{tail}@
+\end{PseudoCode} \\\hline
+\end{tabular}
+
+
+
+
+%--- SplitConditionalRule ---%
+\noindent
+\begin{tabular}{| p{.2\textwidth} | p{.2\textwidth} | p{.6\textwidth} |}
+\hline
+\multicolumn{3}{|l|}{\textsc{SplitConditionalRule}} \\\hline
+Input \pair{\id{pair}} & Output \pair{\_} & Algorithm \\\hline
+
+\begin{vastcode}
+/ @\node{\name{Conditional}}@
+| - @\id{\phi_1}@
+| - @\pair{\id{children_1}}@
+| - @\id{\phi_2}@
+| - @\pair{\id{children_2}}@
+| - @\id{\phi_n}@
+| = @\pair{\id{children_n}}@
+= @\pair{\id{tail}}@
+\end{vastcode} &
+
+\begin{vastcode}
+/ @\node{\name{Conditional}}@
+| - @\id{\phi_1}@
+| = @\pair{\id{children_1}}@
+- @\node{\name{Conditional}}@
+| - @\id{\phi_2}@
+| = @\pair{\id{children_2}}@
+- @\node{\name{Conditional}}@
+| - @\id{\phi_n}@
+| = @\pair{\id{children_n}}@
+= @\pair{\id{tail}}@
+\end{vastcode} &
+
+\begin{PseudoCode}
+preconditions:
+  @\pair{\id{pair}} != $\epsilon$@
+  @\pair{\id{pair}}.\func{head}@ : (@\name{Conditional}@,@\_@)
+  @\pair{\id{pair}}.\func{head}@.filter(@\type{cond}@).size >= 2
+
+do:
+  @\pair{\id{newPair}} = $\epsilon$@
+
+  for @(\id{\phi_i} in [\id{\phi_1}..\id{\phi_n}])@
+    @\pair{\id{newPair}} = \pair{\id{newPair}}.\func{append}(@
+      @(\name{Conditional},@
+      @\id{\phi_i}::\pair{\id{pair}}.\func{head}.\func{getChildrenGuardedBy}(\id{\phi_i})))@
+
+  return @\pair{\id{pair}}.\func{tail}@
+\end{PseudoCode} \\\hline
+\end{tabular}
+
