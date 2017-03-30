@@ -53,6 +53,11 @@ pair & ::= & \epsilon ~\mid~ obj::pair
 \end{minipage}
 \end{table}
 
+
+
+
+
+
 \subsection{Rule Syntax}
 
 A rule has a name, an input pattern, an output patten and an algorithm.
@@ -175,3 +180,25 @@ do:
 \end{PseudoCode} \\\hline
 \end{tabular}
 
+
+
+
+
+
+\subsection{Functions}
+
+% http://gauss.ececs.uc.edu/sbsat_user_manual/node77.html
+\paragraph{Constrain / Generalized cofactor}.
+
+\begin{equation}
+\label{eq:constrain}
+\begin{array}{l}
+\func{models}(\phi) = \{ M \!\mid\! M \implies \phi \}
+\\[0.5mm]
+\func{constrain}(\phi,\psi) = \phi' \bigg|
+	\begin{array}{lr}
+	\phi' \!\land\! \psi \implies \phi & and \\
+	\func{models}(\phi') = \func{models}(\phi) \backslash \func{models}(\psi) & 
+	\end{array}
+\end{array}
+\end{equation}
