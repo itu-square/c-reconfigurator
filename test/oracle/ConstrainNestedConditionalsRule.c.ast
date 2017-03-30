@@ -23,18 +23,27 @@
          |     |  |  |- AttributeSpecifierListOpt
          |     |  |  |- InitializerOpt
          |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
-         |     |- ExpressionStatement
-         |     |  |- AssignmentExpression
+         |     |- SelectionStatement
+         |     |  |- xtc.lang.cpp.Syntax.Language<IF>if  
+         |     |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |     |  |- PrimaryExpression
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
          |     |  |  |- PrimaryIdentifier
-         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
-         |     |  |  |- AssignmentOperator
-         |     |  |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
-         |     |  |  |- FunctionCall
-         |     |  |     |- PrimaryIdentifier
-         |     |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>callA  
-         |     |  |     |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
-         |     |  |     |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
-         |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>_reconfig_ENABLE_C  
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |     |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |     |  |- ExpressionStatement
+         |     |     |- AssignmentExpression
+         |     |     |  |- PrimaryIdentifier
+         |     |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |     |     |  |- AssignmentOperator
+         |     |     |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+         |     |     |  |- FunctionCall
+         |     |     |     |- PrimaryIdentifier
+         |     |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>callA  
+         |     |     |     |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |     |     |     |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
          |     |- ExpressionStatement
          |     |  |- AssignmentExpression
          |     |  |  |- PrimaryIdentifier
