@@ -1,0 +1,55 @@
+|- TranslationUnit
+   |- ExternalDeclarationList
+      |- FunctionDefinition
+         |- FunctionPrototype
+         |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+         |  |- FunctionDeclarator
+         |     |- SimpleDeclarator
+         |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>foo_V1  
+         |     |- PostfixingFunctionDeclarator
+         |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |- ParameterTypeListOpt
+         |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |- CompoundStatement
+         |  |- LocalLabelDeclarationListOpt
+         |  |- DeclarationOrStatementList
+         |     |- Declaration
+         |     |  |- DeclaringList
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+         |     |  |  |- SimpleDeclarator
+         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |     |  |  |- AssemblyExpressionOpt
+         |     |  |  |- AttributeSpecifierListOpt
+         |     |  |  |- InitializerOpt
+         |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |- ExpressionStatement
+         |     |  |- AssignmentExpression
+         |     |  |  |- PrimaryIdentifier
+         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |     |  |  |- AssignmentOperator
+         |     |  |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+         |     |  |  |- FunctionCall
+         |     |  |     |- PrimaryIdentifier
+         |     |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>callA  
+         |     |  |     |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |     |  |     |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |- ExpressionStatement
+         |     |  |- AssignmentExpression
+         |     |  |  |- PrimaryIdentifier
+         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |     |  |  |- AssignmentOperator
+         |     |  |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+         |     |  |  |- FunctionCall
+         |     |  |     |- PrimaryIdentifier
+         |     |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>callB  
+         |     |  |     |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |     |  |     |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |- ReturnStatement
+         |        |- xtc.lang.cpp.Syntax.Language<RETURN>return  
+         |        |- PrimaryIdentifier
+         |        |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
