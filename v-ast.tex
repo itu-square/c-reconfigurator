@@ -85,7 +85,7 @@ A rule has a name, an input pattern, an output patten and an algorithm.
 preconditions:
   @\pair{\id{pair}} != $\epsilon$@
   @\pair{\id{pair}}.\func{head}@ : (@\name{Conditional}@,@\_@)
-  @\pair{\id{pair}}.\func{head}@.filter(@\type{cond}@).size = 1
+  @\pair{\id{pair}}.\func{head}@.filter(@\type{pc}@).size = 1
   @\pair{\id{pair}}.\func{head}@[0] = @\pc{\name{true}}@
 
 do:
@@ -120,7 +120,7 @@ do:
 preconditions:
   @\pair{\id{pair}} != $\epsilon$@
   @\pair{\id{pair}}.\func{head}@ : (@\name{Conditional}@,@\_@)
-  @\pair{\id{pair}}.\func{head}@.filter(@\type{cond}@).size = 1
+  @\pair{\id{pair}}.\func{head}@.filter(@\type{pc}@).size = 1
   @\pair{\id{pair}}.\func{head}@[0] = @\pc{\name{false}}@
 	
 do:
@@ -166,7 +166,7 @@ Input \pair{\id{pair}} & Output \pair{\_} & Algorithm \\\hline
 preconditions:
   @\pair{\id{pair}} != $\epsilon$@
   @\pair{\id{pair}}.\func{head}@ : (@\name{Conditional}@,@\_@)
-  @\pair{\id{pair}}.\func{head}@.filter(@\type{cond}@).size >= 2
+  @\pair{\id{pair}}.\func{head}@.filter(@\type{pc}@).size >= 2
 
 do:
   @\pair{\id{newPair}} = $\epsilon$@
@@ -183,12 +183,54 @@ do:
 
 
 
+%--- ConstrainNestedConditionalsRule ---%
+\noindent
+\begin{tabular}{| p{.2\textwidth} | p{.3\textwidth} | p{.5\textwidth} |}
+\hline
+\multicolumn{3}{|l|}{\textsc{ConstrainNestedConditionalsRule}} \\\hline
+Input \node{\id{node}} & Output \node{\_} & Algorithm \\\hline
+
+\begin{vastcode}
+ancestors:
+@(\name{Conditional},\id{\psi_1}::\pair{\_})@
+@(\name{Conditional},\id{\psi_2}::\pair{\_})@
+@(\name{Conditional},\id{\psi_n}::\pair{\_})@
+
+@\node{\name{Conditional}}@
+- @\id{\phi_1}@
+= @\pair{\id{children}}@
+\end{vastcode} &
+
+\begin{vastcode}
+@\node{\name{Conditional}}@
+- @\func{constrain}(\id{\phi_1}, $\id{\psi_1} \land \id{\psi_2} \land \id{\psi_n}$)@
+= @\pair{\id{children}}@
+\end{vastcode} &
+
+\begin{PseudoCode}
+preconditions:
+@\node{\id{node}}.\func{name} = \name{Conditional}@
+@\node{\id{node}}@.filter(@\type{pc}@).size = 1
+	
+do:
+@\pc{\id{simpl}} = \func{constrain}(\id{\phi}, \node{\id{node}}.\func{presenceCondition})@
+
+if @(\pc{\id{simpl}} != \id{\phi})@
+  return @(\name{Conditional},\pc{\id{simpl}}::\node{\id{node}}.\func{toPair}.\func{tail})@
+else
+  return @\node{\id{node}}@
+\end{PseudoCode} \\\hline
+\end{tabular}
+
+
+
+
 
 
 \subsection{Functions}
 
 % http://gauss.ececs.uc.edu/sbsat_user_manual/node77.html
-\paragraph{Constrain / Generalized cofactor}.
+\paragraph{Constrain / Generalized cofactor.} The \func{constrain} function (\ref{eq:constrain}), a.k.a. the generalized cofactor, constrains a presence condition \id{\phi} by another presence condition \id{\psi} that has already been decided to be true and eliminates any redundant variables.
 
 \begin{equation}
 \label{eq:constrain}
@@ -202,3 +244,7 @@ do:
 	\end{array}
 \end{array}
 \end{equation}
+
+For example, $\func{constrain}(A \land C, A \land B)=C$ shows that, having decided that $A \land B$ holds, $C$ is the minimal proposition required to show that $A \land C$ also holds: $C \land A \land B \to A \land C$.
+
+Another example: $\func{constrain}(B \lor C, A \land B)=\name{true}$ shows that, having decided that $A \land B$ holds, \name{true} is the minimal proposition required to show that $B \lor C$ also holds: $\name{true} \land A \land B \to B \lor C$.
