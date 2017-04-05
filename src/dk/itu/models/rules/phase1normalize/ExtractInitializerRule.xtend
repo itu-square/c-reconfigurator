@@ -111,13 +111,16 @@ class ExtractInitializerRule extends AncestorGuaranteedRule {
 				
 				&& declaringList.getDescendantNode("ArrayAbstractDeclarator") != null
 			) {
-				newPair = newPair.add(
+				val newDeclaration = 
 					GNode::create("Declaration",
 						GNode::create("DeclaringList",
 							new Language<CTag>(CTag::INT),
 							GNode::create("SimpleDeclarator",
 								new Text<CTag>(CTag::IDENTIFIER, '''_reconfig_«varName»_index'''))),
-						new Language<CTag>(CTag::SEMICOLON)))
+						new Language<CTag>(CTag::SEMICOLON))
+				newDeclaration.location = (pair.head as GNode).getDescendantNode[it.location != null].location
+				
+				newPair = newPair.add(newDeclaration)
 						
 				newPair = newPair.add(
 					GNode::createFromPair("IterationStatement",
