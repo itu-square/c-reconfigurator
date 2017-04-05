@@ -64,6 +64,79 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		}
 	}
 	
+//	private def Pair<Object> reconfigureFunctionDeclarationWithSignatureVariability(Pair<Object> pair) {
+//		
+////		if (
+////			!pair.empty
+////			&& (pair.head instanceof GNode)
+//////			&& (pair.head as GNode).isFunctionDeclarationWithSignatureVariability(typeDeclarations)
+////			&& (pair.head as GNode).isFunctionDefinition
+//////			&& (pair.head as GNode).getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).size > 0
+////		) {
+////			
+////			println
+////			println((pair.head as GNode).printCode)
+////			println
+////		}
+//		
+//		if (
+//			!pair.empty
+//			&& (pair.head instanceof GNode)
+//			&& (pair.head as GNode).isFunctionDeclarationWithSignatureVariability(typeDeclarations)
+//		) {
+//			val declarationNode = pair.head as GNode
+//			val funcName = declarationNode.getNameOfFunctionDeclaration
+//			val funcType = declarationNode.getTypeOfFunctionDeclaration
+//			val variableSigType = declarationNode.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head
+//			
+//			println
+//			println('''--- reconfiguring [«funcName»] [«variableSigType»]''')
+//			println
+//			
+//			var funcTypeDeclaration = typeDeclarations.getDeclaration(funcType) as TypeDeclaration
+//			if (funcTypeDeclaration === null)
+//				throw new Exception('''ReconfigureDeclarationRule: type declaration [«funcType»] not found.''')
+//			
+//			var variableSigTypeDeclaration = typeDeclarations.getDeclaration(variableSigType) as TypeDeclaration
+//			if (variableSigTypeDeclaration === null)
+//				throw new Exception('''ReconfigureDeclarationRule: type declaration [«variableSigType»] not found.''')
+//			
+//			var funcDeclaration = functionDeclarations.getDeclaration(funcName) as FunctionDeclaration
+//			if (funcDeclaration === null) {
+//				funcDeclaration = new FunctionDeclaration(funcName, funcTypeDeclaration)
+//				functionDeclarations.put(funcDeclaration)
+//			}
+//			
+//			val filtered = typeDeclarations.declarationList(variableSigType).filterDeclarations(variableSigType, Reconfigurator::presenceConditionManager.newPresenceCondition(true))
+//			
+//			var Pair<Object> newPair = Pair::EMPTY
+//			
+//			for(DeclarationPCPair declPair : filtered) {
+//				var newDeclarationNode = if(!variableSigType.equals(declPair.declaration.name)) {
+//					declarationNode.replaceIdentifierVarName(variableSigType.replace("struct ", "").replace("union ", ""), declPair.declaration.name.replace("struct ", "").replace("union ", ""))
+//					} else {
+//						declarationNode
+//					}
+//					
+//				newDeclarationNode.setProperty("refTypeVariabilityHandled", true)
+//				
+//				val newFuncName = funcName + "_V" + (functionDeclarations.declarationList(funcName).size + 1)
+//				val newFuncDeclaration = new FunctionDeclaration(newFuncName, funcTypeDeclaration)
+//				functionDeclarations.put(funcDeclaration, newFuncDeclaration, declPair.pc)
+//				
+//				newDeclarationNode = newDeclarationNode.replaceIdentifierVarName(funcName, newFuncName)
+//				
+//				newPair = newPair.add(newDeclarationNode)
+//			}
+//			
+//			newPair = newPair.append(pair.tail)
+//			return newPair
+//			
+//		} else {
+//			return pair
+//		}
+//	}
+
 	private def Pair<Object> reconfigureFunctionDeclarationWithVariabilityAndSignatureVariability(Pair<Object> pair) {
 		if (
 			!pair.empty
@@ -184,6 +257,9 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		
 		newPair = reconfigureTypeDeclarationWithVariabilityAndSignatureVariability(pair)
 		if (newPair !== pair) return newPair
+		
+//		newPair = reconfigureFunctionDeclarationWithSignatureVariability(pair)
+//		if (newPair !== pair) return newPair
 		
 		newPair = reconfigureFunctionDeclarationWithVariabilityAndSignatureVariability(pair)
 		if (newPair !== pair) return newPair

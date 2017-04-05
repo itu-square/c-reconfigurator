@@ -1,5 +1,6 @@
 
-// source/typedef_enum1.c:3:1
+
+// source/typedef_enum1.c:1:1
 typedef enum
 {
     P_ALL ,

@@ -1,11 +1,120 @@
 |- TranslationUnit
    |- ExternalDeclarationList
       |- Declaration
+      |  |- DeclaringList
+      |  |  |- BasicDeclarationSpecifier
+      |  |  |  |- DeclarationQualifierList
+      |  |  |  |  |- xtc.lang.cpp.Syntax.Language<TYPEDEF>typedef  
+      |  |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |  |- SimpleDeclarator
+      |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>atype_V1  
+      |  |  |- AssemblyExpressionOpt
+      |  |  |- AttributeSpecifierListOpt
+      |  |  |- InitializerOpt
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- DeclaringList
+      |  |  |- BasicDeclarationSpecifier
+      |  |  |  |- DeclarationQualifierList
+      |  |  |  |  |- xtc.lang.cpp.Syntax.Language<TYPEDEF>typedef  
+      |  |  |  |- xtc.lang.cpp.Syntax.Language<LONG>long  
+      |  |  |- SimpleDeclarator
+      |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>atype_V2  
+      |  |  |- AssemblyExpressionOpt
+      |  |  |- AttributeSpecifierListOpt
+      |  |  |- InitializerOpt
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- DeclaringList
+      |  |  |- TypedefTypeSpecifier
+      |  |  |  |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>atype_V1  
+      |  |  |- SimpleDeclarator
+      |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>avariable_V1  
+      |  |  |- AssemblyExpressionOpt
+      |  |  |- AttributeSpecifierListOpt
+      |  |  |- InitializerOpt
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- DeclaringList
+      |  |  |- TypedefTypeSpecifier
+      |  |  |  |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>atype_V2  
+      |  |  |- SimpleDeclarator
+      |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>avariable_V2  
+      |  |  |- AssemblyExpressionOpt
+      |  |  |- AttributeSpecifierListOpt
+      |  |  |- InitializerOpt
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- FunctionDefinition
+      |  |- FunctionPrototype
+      |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |  |- FunctionDeclarator
+      |  |     |- SimpleDeclarator
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>f  
+      |  |     |- PostfixingFunctionDeclarator
+      |  |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |  |        |- ParameterTypeListOpt
+      |  |        |  |- ParameterTypeList
+      |  |        |     |- ParameterList
+      |  |        |        |- ParameterIdentifierDeclaration
+      |  |        |           |- TypedefTypeSpecifier
+      |  |        |           |  |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>atype  
+      |  |        |           |- SimpleDeclarator
+      |  |        |           |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>p  
+      |  |        |           |- AttributeSpecifierListOpt
+      |  |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |  |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |- CompoundStatement
+      |  |  |- LocalLabelDeclarationListOpt
+      |  |  |- DeclarationOrStatementList
+      |  |     |- ReturnStatement
+      |  |        |- xtc.lang.cpp.Syntax.Language<RETURN>return  
+      |  |        |- PrimaryIdentifier
+      |  |        |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>p  
+      |  |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |- Declaration
       |  |- SUETypeSpecifier
       |  |  |- StructSpecifier
       |  |     |- xtc.lang.cpp.Syntax.Language<STRUCT>struct  
       |  |     |- IdentifierOrTypedefName
-      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>s  
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>s_V1  
+      |  |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |     |- StructDeclarationList
+      |  |     |  |- StructDeclaration
+      |  |     |  |  |- StructDeclaringList
+      |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |     |  |  |  |- StructDeclarator
+      |  |     |  |  |  |  |- SimpleDeclarator
+      |  |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>f1  
+      |  |     |  |  |  |  |- BitFieldSizeOpt
+      |  |     |  |  |  |- AttributeSpecifierListOpt
+      |  |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |     |  |- StructDeclaration
+      |  |     |  |  |- StructDeclaringList
+      |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
+      |  |     |  |  |  |- StructDeclarator
+      |  |     |  |  |  |  |- SimpleDeclarator
+      |  |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>f2  
+      |  |     |  |  |  |  |- BitFieldSizeOpt
+      |  |     |  |  |  |- AttributeSpecifierListOpt
+      |  |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |     |  |- StructDeclaration
+      |  |     |     |- StructDeclaringList
+      |  |     |     |  |- xtc.lang.cpp.Syntax.Language<LONG>long  
+      |  |     |     |  |- StructDeclarator
+      |  |     |     |  |  |- SimpleDeclarator
+      |  |     |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+      |  |     |     |  |  |- BitFieldSizeOpt
+      |  |     |     |  |- AttributeSpecifierListOpt
+      |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- SUETypeSpecifier
+      |  |  |- StructSpecifier
+      |  |     |- xtc.lang.cpp.Syntax.Language<STRUCT>struct  
+      |  |     |- IdentifierOrTypedefName
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>s_V2  
       |  |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
       |  |     |- StructDeclarationList
       |  |     |  |- StructDeclaration
@@ -27,6 +136,32 @@
       |  |     |     |  |- AttributeSpecifierListOpt
       |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- DeclaringList
+      |  |  |- SUETypeSpecifier
+      |  |  |  |- StructSpecifier
+      |  |  |     |- xtc.lang.cpp.Syntax.Language<STRUCT>struct  
+      |  |  |     |- IdentifierOrTypedefName
+      |  |  |        |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>s_V1  
+      |  |  |- SimpleDeclarator
+      |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>svar_V1  
+      |  |  |- AssemblyExpressionOpt
+      |  |  |- AttributeSpecifierListOpt
+      |  |  |- InitializerOpt
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- DeclaringList
+      |  |  |- SUETypeSpecifier
+      |  |  |  |- StructSpecifier
+      |  |  |     |- xtc.lang.cpp.Syntax.Language<STRUCT>struct  
+      |  |  |     |- IdentifierOrTypedefName
+      |  |  |        |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>s_V2  
+      |  |  |- SimpleDeclarator
+      |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>svar_V2  
+      |  |  |- AssemblyExpressionOpt
+      |  |  |- AttributeSpecifierListOpt
+      |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- Declaration
          |- DeclaringList

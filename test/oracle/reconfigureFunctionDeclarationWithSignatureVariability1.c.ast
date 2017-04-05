@@ -1,0 +1,136 @@
+|- TranslationUnit
+   |- ExternalDeclarationList
+      |- FunctionDefinition
+      |  |- FunctionPrototype
+      |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |  |- FunctionDeclarator
+      |  |     |- SimpleDeclarator
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>foo  
+      |  |     |- PostfixingFunctionDeclarator
+      |  |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |  |        |- ParameterTypeListOpt
+      |  |        |  |- ParameterTypeList
+      |  |        |     |- ParameterList
+      |  |        |        |- ParameterIdentifierDeclaration
+      |  |        |        |  |- xtc.lang.cpp.Syntax.Language<LONG>long  
+      |  |        |        |  |- SimpleDeclarator
+      |  |        |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>l  
+      |  |        |        |  |- AttributeSpecifierListOpt
+      |  |        |        |- xtc.lang.cpp.Syntax.Language<COMMA>,  
+      |  |        |        |- ParameterIdentifierDeclaration
+      |  |        |           |- xtc.lang.cpp.Syntax.Language<CHAR>char  
+      |  |        |           |- SimpleDeclarator
+      |  |        |           |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
+      |  |        |           |- AttributeSpecifierListOpt
+      |  |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |  |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |- CompoundStatement
+      |  |  |- LocalLabelDeclarationListOpt
+      |  |  |- DeclarationOrStatementList
+      |  |     |- ReturnStatement
+      |  |        |- xtc.lang.cpp.Syntax.Language<RETURN>return  
+      |  |        |- xtc.lang.cpp.Syntax.Text<OCTALconstant>0  
+      |  |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |- Declaration
+      |  |- DeclaringList
+      |  |  |- BasicDeclarationSpecifier
+      |  |  |  |- DeclarationQualifierList
+      |  |  |  |  |- xtc.lang.cpp.Syntax.Language<TYPEDEF>typedef  
+      |  |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |  |- SimpleDeclarator
+      |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>ttype  
+      |  |  |- AssemblyExpressionOpt
+      |  |  |- AttributeSpecifierListOpt
+      |  |  |- InitializerOpt
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- FunctionDefinition
+      |  |- FunctionPrototype
+      |  |  |- TypedefTypeSpecifier
+      |  |  |  |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>ttype  
+      |  |  |- FunctionDeclarator
+      |  |     |- SimpleDeclarator
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>foo2  
+      |  |     |- PostfixingFunctionDeclarator
+      |  |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+      |  |        |- ParameterTypeListOpt
+      |  |        |  |- ParameterTypeList
+      |  |        |     |- ParameterList
+      |  |        |        |- ParameterIdentifierDeclaration
+      |  |        |        |  |- xtc.lang.cpp.Syntax.Language<LONG>long  
+      |  |        |        |  |- SimpleDeclarator
+      |  |        |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>l  
+      |  |        |        |  |- AttributeSpecifierListOpt
+      |  |        |        |- xtc.lang.cpp.Syntax.Language<COMMA>,  
+      |  |        |        |- ParameterIdentifierDeclaration
+      |  |        |           |- xtc.lang.cpp.Syntax.Language<CHAR>char  
+      |  |        |           |- SimpleDeclarator
+      |  |        |           |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
+      |  |        |           |- AttributeSpecifierListOpt
+      |  |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+      |  |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |- CompoundStatement
+      |  |  |- LocalLabelDeclarationListOpt
+      |  |  |- DeclarationOrStatementList
+      |  |     |- ReturnStatement
+      |  |        |- xtc.lang.cpp.Syntax.Language<RETURN>return  
+      |  |        |- xtc.lang.cpp.Syntax.Text<OCTALconstant>0  
+      |  |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |- Declaration
+      |  |- DeclaringList
+      |  |  |- BasicDeclarationSpecifier
+      |  |  |  |- DeclarationQualifierList
+      |  |  |  |  |- xtc.lang.cpp.Syntax.Language<TYPEDEF>typedef  
+      |  |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |  |- SimpleDeclarator
+      |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>inttype_V1  
+      |  |  |- AssemblyExpressionOpt
+      |  |  |- AttributeSpecifierListOpt
+      |  |  |- InitializerOpt
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- DeclaringList
+      |  |  |- BasicDeclarationSpecifier
+      |  |  |  |- DeclarationQualifierList
+      |  |  |  |  |- xtc.lang.cpp.Syntax.Language<TYPEDEF>typedef  
+      |  |  |  |- xtc.lang.cpp.Syntax.Language<LONG>long  
+      |  |  |- SimpleDeclarator
+      |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>inttype_V2  
+      |  |  |- AssemblyExpressionOpt
+      |  |  |- AttributeSpecifierListOpt
+      |  |  |- InitializerOpt
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- FunctionDefinition
+         |- FunctionPrototype
+         |  |- TypedefTypeSpecifier
+         |  |  |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>inttype  
+         |  |- FunctionDeclarator
+         |     |- SimpleDeclarator
+         |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>foo3  
+         |     |- PostfixingFunctionDeclarator
+         |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |- ParameterTypeListOpt
+         |        |  |- ParameterTypeList
+         |        |     |- ParameterList
+         |        |        |- ParameterIdentifierDeclaration
+         |        |        |  |- xtc.lang.cpp.Syntax.Language<LONG>long  
+         |        |        |  |- SimpleDeclarator
+         |        |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>l  
+         |        |        |  |- AttributeSpecifierListOpt
+         |        |        |- xtc.lang.cpp.Syntax.Language<COMMA>,  
+         |        |        |- ParameterIdentifierDeclaration
+         |        |           |- xtc.lang.cpp.Syntax.Language<CHAR>char  
+         |        |           |- SimpleDeclarator
+         |        |           |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
+         |        |           |- AttributeSpecifierListOpt
+         |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |- CompoundStatement
+         |  |- LocalLabelDeclarationListOpt
+         |  |- DeclarationOrStatementList
+         |     |- ReturnStatement
+         |        |- xtc.lang.cpp.Syntax.Language<RETURN>return  
+         |        |- xtc.lang.cpp.Syntax.Text<OCTALconstant>0  
+         |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
