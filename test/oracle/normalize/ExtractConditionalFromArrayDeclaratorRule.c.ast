@@ -1,0 +1,240 @@
+|- TranslationUnit
+   |- ExternalDeclarationList
+      |- Declaration
+      |  |- DeclaringList
+      |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |  |- ArrayDeclarator
+      |  |  |  |- SimpleDeclarator
+      |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>a_V1  
+      |  |  |  |- ArrayAbstractDeclarator
+      |  |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
+      |  |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>3  
+      |  |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
+      |  |  |- AssemblyExpressionOpt
+      |  |  |- AttributeSpecifierListOpt
+      |  |  |- InitializerOpt
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- DeclaringList
+      |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |  |- ArrayDeclarator
+      |  |  |  |- SimpleDeclarator
+      |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>a_V2  
+      |  |  |  |- ArrayAbstractDeclarator
+      |  |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
+      |  |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>10  
+      |  |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
+      |  |  |- AssemblyExpressionOpt
+      |  |  |- AttributeSpecifierListOpt
+      |  |  |- InitializerOpt
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- DeclaringList
+      |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |  |- ArrayDeclarator
+      |  |  |  |- SimpleDeclarator
+      |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>b_V1  
+      |  |  |  |- ArrayAbstractDeclarator
+      |  |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
+      |  |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>3  
+      |  |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
+      |  |  |- AssemblyExpressionOpt
+      |  |  |- AttributeSpecifierListOpt
+      |  |  |- InitializerOpt
+      |  |     |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+      |  |     |- Initializer
+      |  |        |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |        |- MatchedInitializerList
+      |  |        |  |- Initializer
+      |  |        |  |  |- xtc.lang.cpp.Syntax.Text<OCTALconstant>0  
+      |  |        |  |- xtc.lang.cpp.Syntax.Language<COMMA>,  
+      |  |        |  |- Initializer
+      |  |        |  |  |- xtc.lang.cpp.Syntax.Text<OCTALconstant>0  
+      |  |        |  |- xtc.lang.cpp.Syntax.Language<COMMA>,  
+      |  |        |- Initializer
+      |  |        |  |- xtc.lang.cpp.Syntax.Text<OCTALconstant>0  
+      |  |        |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- DeclaringList
+      |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |  |- ArrayDeclarator
+      |  |  |  |- SimpleDeclarator
+      |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>b_V2  
+      |  |  |  |- ArrayAbstractDeclarator
+      |  |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
+      |  |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>10  
+      |  |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
+      |  |  |- AssemblyExpressionOpt
+      |  |  |- AttributeSpecifierListOpt
+      |  |  |- InitializerOpt
+      |  |     |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+      |  |     |- Initializer
+      |  |        |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |        |- MatchedInitializerList
+      |  |        |  |- Initializer
+      |  |        |  |  |- xtc.lang.cpp.Syntax.Text<OCTALconstant>0  
+      |  |        |  |- xtc.lang.cpp.Syntax.Language<COMMA>,  
+      |  |        |  |- Initializer
+      |  |        |  |  |- xtc.lang.cpp.Syntax.Text<OCTALconstant>0  
+      |  |        |  |- xtc.lang.cpp.Syntax.Language<COMMA>,  
+      |  |        |- Initializer
+      |  |        |  |- xtc.lang.cpp.Syntax.Text<OCTALconstant>0  
+      |  |        |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- FunctionDefinition
+         |- FunctionPrototype
+         |  |- xtc.lang.cpp.Syntax.Language<VOID>void  
+         |  |- FunctionDeclarator
+         |     |- SimpleDeclarator
+         |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>foo  
+         |     |- PostfixingFunctionDeclarator
+         |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |- ParameterTypeListOpt
+         |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |- CompoundStatement
+         |  |- LocalLabelDeclarationListOpt
+         |  |- DeclarationOrStatementList
+         |     |- Declaration
+         |     |  |- DeclaringList
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+         |     |  |  |- ArrayDeclarator
+         |     |  |  |  |- SimpleDeclarator
+         |     |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>a_V3  
+         |     |  |  |  |- ArrayAbstractDeclarator
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>3  
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
+         |     |  |  |- AssemblyExpressionOpt
+         |     |  |  |- AttributeSpecifierListOpt
+         |     |  |  |- InitializerOpt
+         |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |- Declaration
+         |     |  |- DeclaringList
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+         |     |  |  |- ArrayDeclarator
+         |     |  |  |  |- SimpleDeclarator
+         |     |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>b_V3  
+         |     |  |  |  |- ArrayAbstractDeclarator
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>3  
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
+         |     |  |  |- AssemblyExpressionOpt
+         |     |  |  |- AttributeSpecifierListOpt
+         |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |- Declaration
+         |     |  |- DeclaringList
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+         |     |  |  |- ArrayDeclarator
+         |     |  |  |  |- SimpleDeclarator
+         |     |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>a_V4  
+         |     |  |  |  |- ArrayAbstractDeclarator
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>10  
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
+         |     |  |  |- AssemblyExpressionOpt
+         |     |  |  |- AttributeSpecifierListOpt
+         |     |  |  |- InitializerOpt
+         |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |- Declaration
+         |     |  |- DeclaringList
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+         |     |  |  |- ArrayDeclarator
+         |     |  |  |  |- SimpleDeclarator
+         |     |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>b_V4  
+         |     |  |  |  |- ArrayAbstractDeclarator
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>10  
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
+         |     |  |  |- AssemblyExpressionOpt
+         |     |  |  |- AttributeSpecifierListOpt
+         |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |- Declaration
+         |     |  |- DeclaringList
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+         |     |  |  |- SimpleDeclarator
+         |     |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>_reconfig_b_index  
+         |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |- IterationStatement
+         |        |- xtc.lang.cpp.Syntax.Language<FOR>for  
+         |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |- AssignmentExpression
+         |        |  |- PrimaryIdentifier
+         |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>_reconfig_b_index  
+         |        |  |- AssignmentOperator
+         |        |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+         |        |  |- xtc.lang.cpp.Syntax.Text<OCTALconstant>0  
+         |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |- RelationalExpression
+         |        |  |- PrimaryIdentifier
+         |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>_reconfig_b_index  
+         |        |  |- xtc.lang.cpp.Syntax.Language<LT><  
+         |        |  |- PrimaryExpression
+         |        |     |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |     |- ConditionalExpression
+         |        |     |  |- PrimaryExpression
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |     |  |  |- PrimaryIdentifier
+         |        |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>_reconfig_ENABLE_A  
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |        |     |  |- xtc.lang.cpp.Syntax.Language<QUESTION>?  
+         |        |     |  |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>3  
+         |        |     |  |- xtc.lang.cpp.Syntax.Language<COLON>:  
+         |        |     |  |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>10  
+         |        |     |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |- Increment
+         |        |  |- PrimaryIdentifier
+         |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>_reconfig_b_index  
+         |        |  |- xtc.lang.cpp.Syntax.Language<ICR>++  
+         |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |        |- CompoundStatement
+         |           |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |           |- DeclarationOrStatementList
+         |           |  |- ExpressionStatement
+         |           |     |- PrimaryExpression
+         |           |     |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |           |     |  |- ConditionalExpression
+         |           |     |  |  |- PrimaryExpression
+         |           |     |  |  |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |           |     |  |  |  |- UnaryExpression
+         |           |     |  |  |  |  |- Unaryoperator
+         |           |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Language<NOT>!  
+         |           |     |  |  |  |  |- PrimaryIdentifier
+         |           |     |  |  |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>_reconfig_ENABLE_A  
+         |           |     |  |  |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |           |     |  |  |- xtc.lang.cpp.Syntax.Language<QUESTION>?  
+         |           |     |  |  |- PrimaryExpression
+         |           |     |  |  |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |           |     |  |  |  |- AssignmentExpression
+         |           |     |  |  |  |  |- Subscript
+         |           |     |  |  |  |  |  |- PrimaryIdentifier
+         |           |     |  |  |  |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>b_V2  
+         |           |     |  |  |  |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
+         |           |     |  |  |  |  |     |- PrimaryIdentifier
+         |           |     |  |  |  |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>_reconfig_b_index  
+         |           |     |  |  |  |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
+         |           |     |  |  |  |  |- AssignmentOperator
+         |           |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+         |           |     |  |  |  |  |- xtc.lang.cpp.Syntax.Text<OCTALconstant>0  
+         |           |     |  |  |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |           |     |  |  |- xtc.lang.cpp.Syntax.Language<COLON>:  
+         |           |     |  |  |- PrimaryExpression
+         |           |     |  |     |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |           |     |  |     |- AssignmentExpression
+         |           |     |  |     |  |- Subscript
+         |           |     |  |     |  |  |- PrimaryIdentifier
+         |           |     |  |     |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>b_V1  
+         |           |     |  |     |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
+         |           |     |  |     |  |     |- PrimaryIdentifier
+         |           |     |  |     |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>_reconfig_b_index  
+         |           |     |  |     |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
+         |           |     |  |     |  |- AssignmentOperator
+         |           |     |  |     |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+         |           |     |  |     |  |- xtc.lang.cpp.Syntax.Text<OCTALconstant>0  
+         |           |     |  |     |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |           |     |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |           |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |           |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+         |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
