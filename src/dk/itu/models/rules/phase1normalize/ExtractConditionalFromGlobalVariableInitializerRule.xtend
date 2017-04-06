@@ -32,10 +32,9 @@ class ExtractConditionalFromGlobalVariableInitializerRule extends AncestorGuaran
 			node.name.equals("Declaration")
 			&& !ancestors.exists[anc | anc.name.equals("FunctionDefinition")]
 			
-			&& (node.get(0) instanceof GNode)
-			&& (node.get(0) as GNode).name.equals("DeclaringList")
+			&& node.get(0).is_GNode("DeclaringList")
+			&& node.get(0).as_GNode.exists[it.is_GNode("InitializerOpt")]
 			
-			&& (node.get(0) as GNode).filter(GNode).exists[name.equals("InitializerOpt")]
 			&& pcs.size != 0
 			&& !(pcs.size == 1 && pcs.get(0).isTrue)
 		) {
@@ -43,17 +42,17 @@ class ExtractConditionalFromGlobalVariableInitializerRule extends AncestorGuaran
 			
 			var disjPC = Reconfigurator::presenceConditionManager.newPresenceCondition(false)
 			for (PresenceCondition pc : pcs) {
-				newNode = newNode.add(pc).add(GNode::createFromPair("Declaration", node.toPair)) as GNode
+				newNode = newNode.add(pc).add(GNode::createFromPair("Declaration", node.toPair)).as_GNode
 				disjPC = disjPC.or(pc)
 			}
-			newNode = newNode.add(disjPC.not).add(GNode::createFromPair("Declaration", node.toPair)) as GNode
+			newNode = newNode.add(disjPC.not).add(GNode::createFromPair("Declaration", node.toPair)).as_GNode
 			
 			val tdn1 = new TopDownStrategy
 			tdn1.register(new RemOneRule)
 			tdn1.register(new RemZeroRule)
 			tdn1.register(new SplitConditionalRule)
 			tdn1.register(new ConstrainNestedConditionalsRule)
-			newNode = tdn1.transform(newNode) as GNode
+			newNode = tdn1.transform(newNode).as_GNode
 			
 			return newNode
 		}

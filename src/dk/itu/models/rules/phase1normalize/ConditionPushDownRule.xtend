@@ -6,6 +6,8 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
 
+import static extension dk.itu.models.Extensions.*
+
 class ConditionPushDownRule extends dk.itu.models.rules.Rule {
 	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
@@ -18,13 +20,12 @@ class ConditionPushDownRule extends dk.itu.models.rules.Rule {
 
 	override dispatch Pair<Object> transform(Pair<Object> pair) {
 		if (pair.empty) return pair
-		if (!(pair.head instanceof GNode)) return pair
-		if (!(pair.head as GNode).name.equals("Conditional")) return pair
+		if (!pair.head.is_GNode("Conditional")) return pair
 		
-		val cond = pair.head as GNode
+		val cond = pair.head.as_GNode
 		if (!cond.forall[
 			(it instanceof PresenceCondition)
-			|| ((it instanceof GNode) && (it as GNode).name.equals("Conditional"))
+			|| (it.is_GNode("Conditional"))
 			]) return pair
 		
 		var newPair = pair.tail

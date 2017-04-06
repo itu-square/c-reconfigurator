@@ -19,13 +19,12 @@ class RemOneRule extends dk.itu.models.rules.Rule {
 
 	override dispatch Pair<Object> transform(Pair<Object> pair) {
 		if (!pair.empty &&
-			pair.head instanceof GNode &&
-			(pair.head as GNode).name.equals("Conditional") &&
-			(pair.head as GNode).filter(PresenceCondition).size == 1 &&
-			((pair.head as GNode).get(0) as PresenceCondition).isTrue
+			pair.head.is_GNode("Conditional") &&
+			pair.head.as_GNode.filter(PresenceCondition).size == 1 &&
+			(pair.head.as_GNode.get(0) as PresenceCondition).isTrue
 		)
-			return (pair.head as GNode)
-				.getChildrenGuardedBy((pair.head as GNode).get(0) as PresenceCondition)
+			return pair.head.as_GNode
+				.getChildrenGuardedBy(pair.head.as_GNode.get(0) as PresenceCondition)
 				.append(pair.tail)
 		else
 			pair

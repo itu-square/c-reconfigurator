@@ -24,38 +24,37 @@ class ExtractInitializerRule extends AncestorGuaranteedRule {
 		
 		if (
 			!pair.empty
-			&& pair.head instanceof GNode
-			&& (pair.head as GNode).name.equals("Declaration")
+			
+			&& pair.head.is_GNode("Declaration")
 			&& ancestors.exists[anc | anc.name.equals("FunctionDefinition")]
 			
-			&& (pair.head as GNode).get(0) instanceof GNode
-			&& ((pair.head as GNode).get(0) as GNode).name.equals("DeclaringList")
+			&& pair.head.as_GNode.get(0).is_GNode("DeclaringList")
 			
-			&& ((pair.head as GNode).get(0) as GNode).filter(GNode).exists[name.equals("InitializerOpt")]
-			&& ((pair.head as GNode).get(0) as GNode).filter(GNode).findFirst[name.equals("InitializerOpt")].size > 0
+			&& pair.head.as_GNode.get(0).as_GNode.filter(GNode).exists[name.equals("InitializerOpt")]
+			&& pair.head.as_GNode.get(0).as_GNode.filter(GNode).findFirst[name.equals("InitializerOpt")].size > 0
 		) {
 			
-			val declaringList = (pair.head as GNode).get(0) as GNode
+			val declaringList = pair.head.as_GNode.get(0).as_GNode
 						
 			val varName = declaringList.getDescendantNode("SimpleDeclarator").get(0).toString
-			val initializer = declaringList.filter(GNode).findFirst[name.equals("InitializerOpt")].get(1) as GNode
+			val initializer = declaringList.filter(GNode).findFirst[name.equals("InitializerOpt")].get(1).as_GNode
 			
 			var Pair<Object> newPair =
 				new Pair<Object>(
 					GNode::createFromPair(
 						"Declaration",
-						(pair.head as GNode).map[c | 
-							if (!(c instanceof GNode) || !(c as GNode).name.equals("DeclaringList")) c
+						pair.head.as_GNode.map[c | 
+							if (!c.is_GNode || !c.as_GNode.name.equals("DeclaringList")) c
 							else GNode::createFromPair(
 								"DeclaringList",
-								(c as GNode).filter[d | !(d instanceof GNode) || !(d as GNode).name.equals("InitializerOpt")].toPair)
+								c.as_GNode.filter[d | !d.is_GNode || !d.as_GNode.name.equals("InitializerOpt")].toPair)
 						].toPair))
 			
 			if (
-				initializer.get(0) instanceof GNode
-				&& (initializer.get(0) as GNode).name.equals("StringLiteralList")
+				initializer.get(0).is_GNode
+				&& initializer.get(0).as_GNode.name.equals("StringLiteralList")
 			) {
-				val stringLiteralList = initializer.get(0) as GNode
+				val stringLiteralList = initializer.get(0).as_GNode
 				if (
 					stringLiteralList.size == 1
 					&& stringLiteralList.getDescendantNode[
@@ -96,15 +95,13 @@ class ExtractInitializerRule extends AncestorGuaranteedRule {
 				initializer.get(0) instanceof Language<?>
 				&& (initializer.get(0) as Language<CTag>).tag.equals(CTag::LBRACE)
 				
-				&& initializer.get(1) instanceof GNode
-				&& (initializer.get(1) as GNode).name.equals("MatchedInitializerList")
+				&& initializer.get(1).is_GNode("MatchedInitializerList")
 				
-				&& initializer.get(2) instanceof GNode
-				&& (initializer.get(2) as GNode).name.equals("Initializer")
+				&& initializer.get(2).is_GNode("Initializer")
 				
-				&& (initializer.get(2) as GNode).get(0) instanceof Text<?>
-				&& ((initializer.get(2) as GNode).get(0) as Text<CTag>).tag.equals(CTag::OCTALconstant)
-				&& ((initializer.get(2) as GNode).get(0) as Text<CTag>).toString.equals("0")
+				&& initializer.get(2).as_GNode.get(0) instanceof Text<?>
+				&& (initializer.get(2).as_GNode.get(0) as Text<CTag>).tag.equals(CTag::OCTALconstant)
+				&& (initializer.get(2).as_GNode.get(0) as Text<CTag>).toString.equals("0")
 				
 				&& initializer.get(3) instanceof Language<?>
 				&& (initializer.get(3) as Language<CTag>).tag.equals(CTag::RBRACE)
@@ -118,7 +115,7 @@ class ExtractInitializerRule extends AncestorGuaranteedRule {
 							GNode::create("SimpleDeclarator",
 								new Text<CTag>(CTag::IDENTIFIER, '''_reconfig_«varName»_index'''))),
 						new Language<CTag>(CTag::SEMICOLON))
-				newDeclaration.location = (pair.head as GNode).getDescendantNode[it.location != null].location
+				newDeclaration.location = pair.head.as_GNode.getDescendantNode[it.location != null].location
 				
 				newPair = newPair.add(newDeclaration)
 						

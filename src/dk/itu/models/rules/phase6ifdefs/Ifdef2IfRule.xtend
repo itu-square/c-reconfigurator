@@ -111,11 +111,9 @@ class Ifdef2IfRule extends AncestorGuaranteedRule {
 				
 				val branchChildren = node.getChildrenGuardedBy(map.key)
 				val useBraces = branchChildren.size > 1
-					|| (branchChildren.get(0) instanceof GNode && 
-						(
-							(branchChildren.get(0) as GNode).name.equals("SelectionStatement")
-							|| (branchChildren.get(0) as GNode).name.equals("IterationStatement")
-						)
+					|| (
+						branchChildren.get(0).is_GNode("SelectionStatement")
+						|| branchChildren.get(0).is_GNode("IterationStatement")
 					)
 				val Function1<Node, Node> lbrace = [Node n | if (useBraces) n.add(new Language<CTag>(CTag::LBRACE)) else n]
 				val Function1<Node, Node> rbrace = [Node n | if (useBraces) n.add(new Language<CTag>(CTag::RBRACE)) else n]
@@ -129,7 +127,7 @@ class Ifdef2IfRule extends AncestorGuaranteedRule {
 						.add(new Language<CTag>(CTag::RPAREN))
 						.pipe(lbrace)
 						.addAll(branchChildren)
-						.pipe(rbrace) as GNode
+						.pipe(rbrace).as_GNode
 					lastexp = exp
 				} else if (map != pcs.last) {
 					var newexp = GNode::create("SelectionStatement")
@@ -139,7 +137,7 @@ class Ifdef2IfRule extends AncestorGuaranteedRule {
 							.add(new Language<CTag>(CTag::RPAREN))
 							.pipe(lbrace)
 							.addAll(branchChildren)
-							.pipe(rbrace) as GNode
+							.pipe(rbrace).as_GNode
 					lastexp.add(new Language<CTag>(CTag::^ELSE))
 					lastexp.add(newexp)
 					lastexp = newexp
@@ -147,23 +145,19 @@ class Ifdef2IfRule extends AncestorGuaranteedRule {
 					lastexp.add(new Language<CTag>(CTag::^ELSE))
 						.pipe(lbrace)
 						.addAll(branchChildren)
-						.pipe(rbrace) as GNode
+						.pipe(rbrace).as_GNode
 				}
 			}
 			return exp
 		} else if (
 			node.name.equals("Conditional")
 			&& ancestors.last.name.equals("ExternalDeclarationList")
-			&& node.get(1) instanceof GNode
-			&& (node.get(1) as GNode).name.equals("Declaration")
-			&& (node.get(1) as GNode).get(0) instanceof GNode
-			&& ((node.get(1) as GNode).get(0) as GNode).name.equals("DeclaringList")
-			&& ((node.get(1) as GNode).get(0) as GNode).get(1) instanceof GNode
-			&& (((node.get(1) as GNode).get(0) as GNode).get(1) as GNode).name.equals("ArrayDeclarator")
-			&& (((node.get(1) as GNode).get(0) as GNode).get(1) as GNode).get(0) instanceof GNode
-			&& ((((node.get(1) as GNode).get(0) as GNode).get(1) as GNode).get(0) as GNode).name.equals("SimpleDeclarator")
-			&& (((((node.get(1) as GNode).get(0) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString.equals(Settings::reconfiguratorIncludePlaceholder)
-			 || ((((node.get(1) as GNode).get(0) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString.equals(Settings::reconfiguratorIncludePlaceholderEnd)
+			&& node.get(1).is_GNode("Declaration")
+			&& node.get(1).as_GNode.get(0).is_GNode("DeclaringList")
+			&& node.get(1).as_GNode.get(0).as_GNode.get(1).is_GNode("ArrayDeclarator")
+			&& node.get(1).as_GNode.get(0).as_GNode.get(1).as_GNode.get(0).is_GNode("SimpleDeclarator")
+			&& (node.get(1).as_GNode.get(0).as_GNode.get(1).as_GNode.get(0).as_GNode.get(0).toString.equals(Settings::reconfiguratorIncludePlaceholder)
+			 || node.get(1).as_GNode.get(0).as_GNode.get(1).as_GNode.get(0).as_GNode.get(0).toString.equals(Settings::reconfiguratorIncludePlaceholderEnd)
 			 )
 		) {
 			return node

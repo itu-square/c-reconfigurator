@@ -7,6 +7,8 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
 
+import static extension dk.itu.models.Extensions.*
+
 class RemEmptyNodesRule extends Rule {
 	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
@@ -18,8 +20,8 @@ class RemEmptyNodesRule extends Rule {
 	}
 
 	override dispatch Pair<Object> transform(Pair<Object> pair) {
-		if (!pair.empty && pair.head instanceof GNode) {
-			val head = pair.head as GNode
+		if (!pair.empty && pair.head.is_GNode) {
+			val head = pair.head.as_GNode
 			if(head.name.equals("ExpressionOpt") && head.empty) {
 				pair.tail
 			} else {

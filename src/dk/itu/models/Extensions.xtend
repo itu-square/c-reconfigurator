@@ -153,9 +153,9 @@ class Extensions {
 					&& p2.head instanceof Language<?>
 					&& !(p1.head as Language<CTag>).printAST.equals((p2.head as Language<CTag>).printAST) : return false
 				case
-					p1.head instanceof GNode
-					&& p2.head instanceof GNode
-					&& !(p1.head as GNode).printAST.equals((p2.head as GNode).printAST) : return false
+					p1.head.is_GNode
+					&& p2.head.is_GNode
+					&& !p1.head.printAST.equals(p2.head.printAST) : return false
 			}
 			
 			p1 = p1.tail
@@ -476,13 +476,13 @@ class Extensions {
 	public static def replaceDeclaratorTextWithNewId (GNode node, String newId) {
     	val tdn = new TopDownStrategy
     	tdn.register(new ReplaceDeclaratorTextRule(newId))
-    	tdn.transform(node) as GNode
+    	tdn.transform(node).as_GNode
     }
 	
 	public static def renameFunctionWithNewId (GNode node, String newId) {
     	val tdn = new TopDownStrategy
     	tdn.register(new RenameFunctionRule(newId))
-    	tdn.transform(node) as GNode
+    	tdn.transform(node).as_GNode
     }
     
     public static def rewriteVariableUse (
@@ -491,19 +491,19 @@ class Extensions {
 		PresenceCondition pc) {
 			val tdn = new TopDownStrategy
 			tdn.register(new RewriteVariableUseRule(variableDeclarationScopes, pc))
-			tdn.transform(node) as GNode
+			tdn.transform(node).as_GNode
 	}
 
 	public static def replaceIdentifierVarName (GNode node, String oldName, String newName) {
     	val tdn = new TopDownStrategy
     	tdn.register(new ReplaceIdentifierRule(oldName, newName))
-    	tdn.transform(node) as GNode
+    	tdn.transform(node).as_GNode
     }
     
     public static def replaceIdentifierVarName (GNode node, String oldName, String newName, Function1<AncestorGuaranteedRule, Boolean> test) {
     	val tdn = new TopDownStrategy
     	tdn.register(new ReplaceIdentifierRule(oldName, newName, test))
-    	tdn.transform(node) as GNode
+    	tdn.transform(node).as_GNode
     } 
     
     public static def rewriteFunctionCall (
@@ -512,7 +512,7 @@ class Extensions {
 		PresenceCondition pc) {
     		val tdn = new TopDownStrategy
 			tdn.register(new RewriteFunctionCallRule(fmap, pc))
-			tdn.transform(node) as GNode
+			tdn.transform(node).as_GNode
 	}
 	
 	
@@ -528,4 +528,18 @@ class Extensions {
 			return #[]
 		}
 	}
+	
+	public static def GNode as_GNode(Object obj) {
+		obj as GNode
+	}
+
+	public static def boolean is_GNode(Object obj) {
+		obj instanceof GNode
+	}
+
+	public static def boolean is_GNode(Object obj, String name) {
+		obj.is_GNode &&
+		obj.as_GNode.name.equals(name)
+	}
+
 }

@@ -29,8 +29,7 @@ class ExtractConditionalFromSUETypeDeclarationRule extends AncestorGuaranteedRul
 		
 		if (
 			node.name.equals("Declaration")
-			&& (node.get(0) instanceof GNode)
-			&& (node.get(0) as GNode).name.equals("SUETypeSpecifier")
+			&& node.get(0).is_GNode("SUETypeSpecifier")
 		) {
 			
 			val conditional = node.getDescendantNode("Conditional")
@@ -41,18 +40,18 @@ class ExtractConditionalFromSUETypeDeclarationRule extends AncestorGuaranteedRul
 				var newNode = GNode::create("Conditional")
 				var disjPC = Reconfigurator::presenceConditionManager.newPresenceCondition(false)
 				for (PresenceCondition pc : pcs) {
-					newNode = newNode.add(pc).add(GNode::createFromPair("Declaration", node.toPair)) as GNode
+					newNode = newNode.add(pc).add(GNode::createFromPair("Declaration", node.toPair)).as_GNode
 					disjPC = disjPC.or(pc)
 				}
 				
-				newNode = newNode.add(disjPC.not).add(GNode::createFromPair("Declaration", node.toPair)) as GNode
+				newNode = newNode.add(disjPC.not).add(GNode::createFromPair("Declaration", node.toPair)).as_GNode
 				
 				val tdn1 = new TopDownStrategy
 				tdn1.register(new RemOneRule)
 				tdn1.register(new RemZeroRule)
 				tdn1.register(new SplitConditionalRule)
 				tdn1.register(new ConstrainNestedConditionalsRule)
-				newNode = tdn1.transform(newNode) as GNode
+				newNode = tdn1.transform(newNode).as_GNode
 			
 				return newNode
 			}

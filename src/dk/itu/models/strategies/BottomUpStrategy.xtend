@@ -6,6 +6,7 @@ import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
+
 import static extension dk.itu.models.Extensions.*
 
 class BottomUpStrategy extends AncestorGuaranteedStrategy {
@@ -45,14 +46,14 @@ class BottomUpStrategy extends AncestorGuaranteedStrategy {
 		var Object prev = node
 		do {
 			prev = newNode
-			if (newNode instanceof GNode) {
-			ancestors.add(newNode)
-			var Pair<Object> oldPair = newNode.toPair
+			if (newNode.is_GNode) {
+			ancestors.add(newNode.as_GNode)
+			var Pair<Object> oldPair = newNode.as_GNode.toPair
 			var Pair<Object> newPair = transform(oldPair) as Pair<Object>
 			ancestors.remove(newNode)
 			if(!oldPair.equals(newPair)) {
 				newNode =  GNode::create(node.name)
-				(newNode as GNode).addAll(newPair)
+				newNode.as_GNode.addAll(newPair)
 			}
 			
 	//		var Object prev = newNode

@@ -32,14 +32,14 @@ class Patterns {
 		
 		&& (node.get(0) instanceof PresenceCondition)
 		
-		&& (node.get(1) instanceof GNode)
-		&& (node.get(1) as GNode).isStructUnionDeclaration
+		&& node.get(1).is_GNode
+		&& node.get(1).as_GNode.isStructUnionDeclaration
 	} 
 	
 	public static def String getNameOfStructUnionDeclaration(GNode node) {
 		var specifier = node.getDescendantNode[#["StructSpecifier", "UnionSpecifier"].contains(name)]
 		return (specifier.get(0) as Language<?>).toString + " "
-			+ ((specifier.get(1) as GNode).get(0) as Text<?>).toString
+			+ (specifier.get(1).as_GNode.get(0) as Text<?>).toString
 	}
 
 
@@ -64,17 +64,17 @@ class Patterns {
 		
 		&& (node.get(0) instanceof PresenceCondition)
 		
-		&& (node.get(1) instanceof GNode)
-		&& (node.get(1) as GNode).isStructUnionTypeDeclaration
+		&& node.get(1).is_GNode
+		&& node.get(1).as_GNode.isStructUnionTypeDeclaration
 	}
 	
 	public static def String getNameOfStructUnionTypeDeclaration(GNode node) {
-		var declarator = (node.getDescendantNode("DeclaringList")
-			.findFirst[(it instanceof GNode) && #["SimpleDeclarator", "UnaryIdentifierDeclarator", "ArrayDeclarator"].contains((it as GNode).name)] as GNode) as GNode
+		var declarator = node.getDescendantNode("DeclaringList")
+			.findFirst[it.is_GNode && #["SimpleDeclarator", "UnaryIdentifierDeclarator", "ArrayDeclarator"].contains(it.as_GNode.name)].as_GNode
 		if (!declarator.name.equals("SimpleDeclarator"))
-			declarator = declarator.getDescendantNode("SimpleDeclarator") as GNode
+			declarator = declarator.getDescendantNode("SimpleDeclarator").as_GNode
 		
-		(declarator.get(0) as Text<CTag>).toString
+		return (declarator.get(0) as Text<CTag>).toString
 	}
 	
 	public static def String getTypeOfStructUnionTypeDeclaration(GNode node) {
@@ -109,8 +109,8 @@ class Patterns {
 		
 		&& (node.get(0) instanceof PresenceCondition)
 		
-		&& (node.get(1) instanceof GNode)
-		&& (node.get(1) as GNode).isEnumDeclaration
+		&& node.get(1).is_GNode
+		&& node.get(1).as_GNode.isEnumDeclaration
 	}
 	
 	public static def boolean isNamedEnumDeclaration(GNode node) {
@@ -123,11 +123,10 @@ class Patterns {
 		if (
 			enumSpecifier != null
 			&& enumSpecifier.get(0) instanceof Language<?>
-			&& enumSpecifier.get(1) instanceof GNode
-			&& (enumSpecifier.get(1) as GNode).name.equals("IdentifierOrTypedefName")
+			&& enumSpecifier.get(1).is_GNode("IdentifierOrTypedefName")
 		) {
 			return (enumSpecifier.get(0) as Language<CTag>).toString + " "
-				+ ((enumSpecifier.get(1) as GNode).get(0) as Text<?>).toString
+				+ (enumSpecifier.get(1).as_GNode.get(0) as Text<?>).toString
 		} else {
 			println
 			println(node.printCode)
@@ -156,8 +155,8 @@ class Patterns {
 		
 		&& (node.get(0) instanceof PresenceCondition)
 		
-		&& (node.get(1) instanceof GNode)
-		&& (node.get(1) as GNode).isTypeDeclaration
+		&& node.get(1).is_GNode
+		&& node.get(1).as_GNode.isTypeDeclaration
 	}
 	
 	public static def boolean isTypeDeclarationWithTypeVariability(GNode node, DeclarationPCMap typeDeclarations) {
@@ -173,7 +172,7 @@ class Patterns {
 	}
 	
 	public static def String getTypeOfTypeDeclaration(GNode node) {
-		return getTypeByTraversal(node.getDescendantNode("DeclaringList") as GNode)
+		return getTypeByTraversal(node.getDescendantNode("DeclaringList").as_GNode)
 	}
 	
 	
@@ -191,8 +190,8 @@ class Patterns {
 		
 		&& (node.get(0) instanceof PresenceCondition)
 		
-		&& (node.get(1) instanceof GNode)
-		&& (node.get(1) as GNode).isFunctionDeclaration
+		&& node.get(1).is_GNode
+		&& node.get(1).as_GNode.isFunctionDeclaration
 	}
 	
 	public static def boolean isFunctionDeclarationWithSignatureVariability(GNode node, DeclarationPCMap typeDeclarations) {
@@ -206,7 +205,7 @@ class Patterns {
 	}
 	
 	public static def String getTypeOfFunctionDeclaration(GNode node) {
-		val declaringList = node.getDescendantNode("DeclaringList") as GNode
+		val declaringList = node.getDescendantNode("DeclaringList").as_GNode
 		return getTypeByTraversal(declaringList)
 	}
 	
@@ -215,7 +214,7 @@ class Patterns {
 		types.add(node.getTypeOfFunctionDeclaration)
 		val parameterList = node.getDescendantNode("ParameterList")
 		if (parameterList != null) {
-			types.addAll(parameterList.filter[(it instanceof GNode) && (it as GNode).isParameterDeclaration].map[(it as GNode).getTypeOfParameterDeclaration])
+			types.addAll(parameterList.filter[it.is_GNode && it.as_GNode.isParameterDeclaration].map[it.as_GNode.getTypeOfParameterDeclaration])
 		}
 		return types
 	}
@@ -240,8 +239,8 @@ class Patterns {
 		
 		&& (node.get(0) instanceof PresenceCondition)
 		
-		&& (node.get(1) instanceof GNode)
-		&& (node.get(1) as GNode).isFunctionDefinition
+		&& node.get(1).is_GNode
+		&& node.get(1).as_GNode.isFunctionDefinition
 	}
 	
 	public static def String getNameOfFunctionDefinition(GNode node) {
@@ -250,7 +249,7 @@ class Patterns {
 	}
 	
 	public static def String getTypeOfFunctionDefinition(GNode node) {
-		return getTypeByTraversal((node.getDescendantNode("FunctionPrototype") as GNode))
+		return getTypeByTraversal(node.getDescendantNode("FunctionPrototype").as_GNode)
 	}
 		
 
@@ -264,7 +263,7 @@ class Patterns {
 			it instanceof Language<?>
 			&& (it as Language<CTag>).tag.equals(CTag::TYPEDEF)
 		] === null
-		&& !(node.get(0) as GNode).name.equals("SUETypeSpecifier")
+		&& !node.get(0).as_GNode.name.equals("SUETypeSpecifier")
 	}
 	
 	public static def boolean isVariableDeclarationWithVariability(GNode node) {
@@ -273,8 +272,8 @@ class Patterns {
 		
 		&& (node.get(0) instanceof PresenceCondition)
 		
-		&& (node.get(1) instanceof GNode)
-		&& (node.get(1) as GNode).isVariableDeclaration
+		&& node.get(1).is_GNode
+		&& node.get(1).as_GNode.isVariableDeclaration
 	}
 	
 	public static def boolean isVariableDeclarationWithTypeVariability(GNode node, DeclarationPCMap typeDeclarations) {
@@ -310,13 +309,13 @@ class Patterns {
 				}
 			}
 
-			else if (current instanceof GNode) {
-				if (#["SimpleDeclarator", "PostfixIdentifierDeclarator", "ParameterTypedefDeclarator"].contains((current as GNode).name)) {
+			else if (current.is_GNode) {
+				if (#["SimpleDeclarator", "PostfixIdentifierDeclarator", "ParameterTypedefDeclarator"].contains(current.as_GNode.name)) {
 					elements.clear
-				} else if (#["TypeQualifier"].contains((current as GNode).name)) {
+				} else if (#["TypeQualifier"].contains(current.as_GNode.name)) {
 					// do nothing
 				} else {
-					for (Object e : current.toList.reverseView)
+					for (Object e : current.as_GNode.toList.reverseView)
 						elements.addFirst(e)
 				}
 			}
@@ -325,7 +324,7 @@ class Patterns {
 	}
 	
 	public static def String getTypeOfVariableDeclaration(GNode node) {
-		val declaringList = node.getDescendantNode("DeclaringList") as GNode
+		val declaringList = node.getDescendantNode("DeclaringList").as_GNode
 		return getTypeByTraversal(declaringList)
 	}
 	

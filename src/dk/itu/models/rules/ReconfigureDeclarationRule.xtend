@@ -35,13 +35,13 @@ class ReconfigureDeclarationRule extends ScopingRule {
 	private def Pair<Object> reconfigureTypeDeclarationWithVariabilityAndSignatureVariability(Pair<Object> pair) {
 		if (
 			!pair.empty
-			&& (pair.head instanceof GNode)
-			&& (pair.head as GNode).isTypeDeclarationWithVariability
-			&& ((pair.head as GNode).get(1) as GNode).isTypeDeclarationWithTypeVariability(typeDeclarations)
+			&& pair.head.is_GNode
+			&& pair.head.as_GNode.isTypeDeclarationWithVariability
+			&& pair.head.as_GNode.get(1).as_GNode.isTypeDeclarationWithTypeVariability(typeDeclarations)
 		) {
-			val node = pair.head as GNode
+			val node = pair.head.as_GNode
 			val pc = node.get(0) as PresenceCondition
-			val declarationNode = node.get(1) as GNode
+			val declarationNode = node.get(1).as_GNode
 			val refTypeName = declarationNode.getTypeOfTypeDeclaration
 			
 			val filtered = typeDeclarations.declarationList(refTypeName).filterDeclarations(refTypeName, pc)
@@ -68,23 +68,23 @@ class ReconfigureDeclarationRule extends ScopingRule {
 //		
 ////		if (
 ////			!pair.empty
-////			&& (pair.head instanceof GNode)
-//////			&& (pair.head as GNode).isFunctionDeclarationWithSignatureVariability(typeDeclarations)
-////			&& (pair.head as GNode).isFunctionDefinition
-//////			&& (pair.head as GNode).getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).size > 0
+////			&& pair.head.is_GNode
+//////			&& pair.head.as_GNode.isFunctionDeclarationWithSignatureVariability(typeDeclarations)
+////			&& pair.head.as_GNode.isFunctionDefinition
+//////			&& pair.head.as_GNode.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).size > 0
 ////		) {
 ////			
 ////			println
-////			println((pair.head as GNode).printCode)
+////			println(pair.head.printCode)
 ////			println
 ////		}
 //		
 //		if (
 //			!pair.empty
-//			&& (pair.head instanceof GNode)
-//			&& (pair.head as GNode).isFunctionDeclarationWithSignatureVariability(typeDeclarations)
+//			&& pair.head.is_GNode
+//			&& pair.head.as_GNode.isFunctionDeclarationWithSignatureVariability(typeDeclarations)
 //		) {
-//			val declarationNode = pair.head as GNode
+//			val declarationNode = pair.head.as_GNode
 //			val funcName = declarationNode.getNameOfFunctionDeclaration
 //			val funcType = declarationNode.getTypeOfFunctionDeclaration
 //			val variableSigType = declarationNode.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head
@@ -140,13 +140,13 @@ class ReconfigureDeclarationRule extends ScopingRule {
 	private def Pair<Object> reconfigureFunctionDeclarationWithVariabilityAndSignatureVariability(Pair<Object> pair) {
 		if (
 			!pair.empty
-			&& (pair.head instanceof GNode)
-			&& (pair.head as GNode).isFunctionDeclarationWithVariability
-			&& ((pair.head as GNode).get(1) as GNode).isFunctionDeclarationWithSignatureVariability(typeDeclarations)
+			&& pair.head.is_GNode
+			&& pair.head.as_GNode.isFunctionDeclarationWithVariability
+			&& pair.head.as_GNode.get(1).as_GNode.isFunctionDeclarationWithSignatureVariability(typeDeclarations)
 		) {
-			val node = pair.head as GNode
+			val node = pair.head.as_GNode
 			val pc = node.get(0) as PresenceCondition
-			val declarationNode = node.get(1) as GNode
+			val declarationNode = node.get(1).as_GNode
 			val type = declarationNode.getTypeOfFunctionDeclaration
 			
 			val varType = declarationNode.getVariableSignatureTypesOfFunctionDeclaration(typeDeclarations).head
@@ -170,10 +170,10 @@ class ReconfigureDeclarationRule extends ScopingRule {
 	private def Pair<Object> reconfigureVariableDeclarationWithTypeVariability(Pair<Object> pair) {
 		if (
 			!pair.empty
-			&& (pair.head instanceof GNode)
-			&& (pair.head as GNode).isVariableDeclarationWithTypeVariability(typeDeclarations)
+			&& pair.head.is_GNode
+			&& pair.head.as_GNode.isVariableDeclarationWithTypeVariability(typeDeclarations)
 		) {
-			val node = pair.head as GNode
+			val node = pair.head.as_GNode
 			val declarationNode = node
 			val varName = declarationNode.getNameOfVariableDeclaration
 			val varType = declarationNode.getTypeOfVariableDeclaration
@@ -221,13 +221,13 @@ class ReconfigureDeclarationRule extends ScopingRule {
 	private def Pair<Object> reconfigureVariableDeclarationWithVariabilityAndTypeVariability(Pair<Object> pair) {
 		if (
 			!pair.empty
-			&& (pair.head instanceof GNode)
-			&& (pair.head as GNode).isVariableDeclarationWithVariability
-			&& ((pair.head as GNode).get(1) as GNode).isVariableDeclarationWithTypeVariability(typeDeclarations)
+			&& pair.head.is_GNode
+			&& pair.head.as_GNode.isVariableDeclarationWithVariability
+			&& pair.head.as_GNode.get(1).as_GNode.isVariableDeclarationWithTypeVariability(typeDeclarations)
 		) {
-			val node = pair.head as GNode
+			val node = pair.head.as_GNode
 			val pc = node.get(0) as PresenceCondition
-			val declarationNode = node.get(1) as GNode
+			val declarationNode = node.get(1).as_GNode
 			val refTypeName = declarationNode.getTypeOfVariableDeclaration
 			
 			val filtered = typeDeclarations.declarationList(refTypeName).filterDeclarations(refTypeName, pc)
@@ -284,7 +284,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			node.isTypeDeclarationWithVariability
 		) {
 			val pc = node.get(0) as PresenceCondition
-			val declarationNode = node.get(1) as GNode
+			val declarationNode = node.get(1).as_GNode
 			val typeName = declarationNode.getNameOfTypeDeclaration
 			val refTypeName = declarationNode.getTypeOfTypeDeclaration
 			
@@ -315,7 +315,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			node.isStructUnionTypeDeclarationWithVariability
 		) {
 			val pc = node.get(0) as PresenceCondition
-			val declarationNode = node.get(1) as GNode
+			val declarationNode = node.get(1).as_GNode
 			val typeName = declarationNode.getNameOfStructUnionTypeDeclaration
 			val refTypeName = declarationNode.getTypeOfStructUnionTypeDeclaration
 			
@@ -347,7 +347,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			node.isStructUnionDeclarationWithVariability
 		) {
 			val pc = node.get(0) as PresenceCondition
-			val declarationNode = node.get(1) as GNode
+			val declarationNode = node.get(1).as_GNode
 			val type = declarationNode.getNameOfStructUnionDeclaration
 			val name = type.replace("struct ", "").replace("union ", "")
 			
@@ -376,9 +376,9 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			node.isEnumDeclarationWithVariability
 		) {
 			val pc = node.get(0) as PresenceCondition
-			var newNode = node.get(1) as GNode
+			var newNode = node.get(1).as_GNode
 			
-			for (String enumerator : node.getDescendantNode("EnumeratorList").filter[(it instanceof GNode) && (it as GNode).name.equals("Enumerator")].map[(it as GNode).get(0).toString]) {
+			for (String enumerator : node.getDescendantNode("EnumeratorList").filter[it.is_GNode("Enumerator")].map[it.as_GNode.get(0).toString]) {
 				var enumeratorDeclaration = variableDeclarations.getDeclaration(enumerator)
 				if (enumeratorDeclaration === null) {
 					enumeratorDeclaration = new VariableDeclaration(enumerator, typeDeclarations.getDeclaration("int") as TypeDeclaration)
@@ -401,7 +401,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			node.isFunctionDeclarationWithVariability
 		) {
 			val pc = node.get(0) as PresenceCondition
-			val declarationNode = node.get(1) as GNode
+			val declarationNode = node.get(1).as_GNode
 			val funcName = declarationNode.getNameOfFunctionDeclaration
 			val funcType = declarationNode.getTypeOfFunctionDeclaration
 			
@@ -432,7 +432,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			node.isFunctionDefinitionWithVariability
 		) {
 			val pc = node.get(0) as PresenceCondition
-			val definitionNode = node.get(1) as GNode
+			val definitionNode = node.get(1).as_GNode
 			val funcName = definitionNode.getNameOfFunctionDefinition
 			val funcType = definitionNode.getTypeOfFunctionDefinition
 			
@@ -472,17 +472,16 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			
 			var newpair = Pair.EMPTY
 			for (Object child : node.toList) {
-				if ((
-						(child instanceof GNode)
-						&& (child as GNode).name.equals("FunctionPrototype")
-					) || (
+				if (
+						child.is_GNode("FunctionPrototype")
+						||
 						(child instanceof Language<?>)
-				)) {
+				) {
 					newpair = newpair.add(child)
 				} else {
 					val nodepc = node.presenceCondition
-					var newnode = (child as GNode).rewriteVariableUse(variableDeclarations, nodepc)
-					newnode = (child as GNode).rewriteFunctionCall(functionDeclarations, nodepc)
+					var newnode = child.as_GNode.rewriteVariableUse(variableDeclarations, nodepc)
+					newnode = child.as_GNode.rewriteFunctionCall(functionDeclarations, nodepc)
 					newpair = newpair.add(newnode)
 				}
 			}
@@ -504,7 +503,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			node.isVariableDeclarationWithVariability
 		) {
 			val pc = node.get(0) as PresenceCondition
-			val declarationNode = node.get(1) as GNode
+			val declarationNode = node.get(1).as_GNode
 			val varName = declarationNode.nameOfVariableDeclaration
 			val varType = declarationNode.typeOfVariableDeclaration
 			
@@ -538,7 +537,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			debug
 			debug("   other rewrites", true)
 			debug("   - " + node.name)
-			val tempNode = (node.get(2) as GNode).rewriteVariableUse(variableDeclarations, node.presenceCondition)
+			val tempNode = node.get(2).as_GNode.rewriteVariableUse(variableDeclarations, node.presenceCondition)
 			
 			if (!tempNode.printAST.equals(node.get(2).printAST)) {
 				return GNode::createFromPair(
@@ -666,7 +665,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			println('''------------------------------''')
 			ancestors.forEach[
 				println('''- «it.name»''')]
-			println((node as GNode).printAST)
+			println(node.printAST)
 			println
 			throw new Exception("ReconfigureDeclarationRule: unknown declaration : " + node.name + ".")
 		}

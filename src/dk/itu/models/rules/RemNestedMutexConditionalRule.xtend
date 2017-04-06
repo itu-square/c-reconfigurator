@@ -6,6 +6,8 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
 
+import static extension dk.itu.models.Extensions.*
+
 class RemNestedMutexConditionalRule extends AncestorGuaranteedRule {
 
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
@@ -20,11 +22,10 @@ class RemNestedMutexConditionalRule extends AncestorGuaranteedRule {
 		if(
 			!pair.empty &&
 			
-			(pair.head instanceof GNode) &&
-			(pair.head as GNode).name.equals("Conditional") &&
-			(pair.head as GNode).filter(PresenceCondition).size == 1 &&
+			pair.head.is_GNode("Conditional") &&
+			pair.head.as_GNode.filter(PresenceCondition).size == 1 &&
 			
-			((pair.head as GNode).guard as PresenceCondition).isMutuallyExclusive((pair.head as GNode).get(0) as PresenceCondition)
+			(pair.head.as_GNode.guard as PresenceCondition).isMutuallyExclusive(pair.head.as_GNode.get(0) as PresenceCondition)
 		)
 			pair.tail
 		else		

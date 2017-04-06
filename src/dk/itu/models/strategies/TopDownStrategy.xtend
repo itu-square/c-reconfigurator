@@ -44,8 +44,8 @@ class TopDownStrategy extends AncestorGuaranteedStrategy {
 				val oldHead = newPair.head
 				val Object newHead = transform(oldHead)
 				
-				if (oldHead instanceof GNode && newHead instanceof GNode && (oldHead as GNode).location != null)
-					(newHead as GNode).location = (oldHead as GNode).location
+				if (oldHead.is_GNode && newHead.is_GNode && oldHead.as_GNode.location != null)
+					newHead.as_GNode.location = oldHead.as_GNode.location
 				
 				val oldTail = newPair.tail
 				val Pair<Object> newTail = transform(oldTail) as Pair<Object>
@@ -76,7 +76,7 @@ class TopDownStrategy extends AncestorGuaranteedStrategy {
 		var Object newNode = node
 		
 		do {
-			prev = newNode as GNode
+			prev = newNode.as_GNode
 			for (Rule rule : rules) {
 				newNode = rule.transform(newNode)
 			}
@@ -95,7 +95,7 @@ class TopDownStrategy extends AncestorGuaranteedStrategy {
 						newNode.properties.toInvertedMap[p | newNodeConst.getProperty(p.toString)]
 				)
 				if (newNodeConst.location != null)
-					(newNode as GNode).location = newNodeConst.location
+					newNode.as_GNode.location = newNodeConst.location
 				ancestors.remove(ancestor)
 				if(newNode != ancestor && ancestors.size != 0)
 					return newNode

@@ -22,29 +22,18 @@ class SplitMultipleVariablesRule extends AncestorGuaranteedRule {
 	override dispatch Pair<Object> transform(Pair<Object> pair) {
 		
 		if (!pair.empty
-			&& pair.head instanceof GNode
-			&& (pair.head as GNode).name.equals("Declaration")
-			
-			&& (pair.head as GNode).get(0) instanceof GNode
-			&& ((pair.head as GNode).get(0) as GNode).name.equals("DeclaringList")
-			
-			&& ((pair.head as GNode).get(0) as GNode).get(0) instanceof GNode
-			&& (((pair.head as GNode).get(0) as GNode).get(0) as GNode).name.equals("DeclaringList")
+			&& pair.head.is_GNode("Declaration")
+			&& pair.head.as_GNode.get(0).is_GNode("DeclaringList")
+			&& pair.head.as_GNode.get(0).as_GNode.get(0).is_GNode("DeclaringList")
 		) {
-			val innermostDeclaringList = getInnermostDeclaringList((pair.head as GNode)) as GNode
-			val declaringList = (pair.head as GNode).get(0) as GNode
+			val innermostDeclaringList = getInnermostDeclaringList(pair.head.as_GNode).as_GNode
+			val declaringList = pair.head.as_GNode.get(0).as_GNode
 			
-			val arrayDeclarator = declaringList.findFirst[
-				it instanceof GNode
-				&& (it as GNode).name.equals("ArrayDeclarator")]
+			val arrayDeclarator = declaringList.findFirst[it.is_GNode("ArrayDeclarator")]
 				
-			val unaryIdentifierDeclarator = declaringList.findFirst[
-				it instanceof GNode
-				&& (it as GNode).name.equals("UnaryIdentifierDeclarator")]
+			val unaryIdentifierDeclarator = declaringList.findFirst[it.is_GNode("UnaryIdentifierDeclarator")]
 				
-			val simpleDeclarator = declaringList.findFirst[
-				it instanceof GNode
-				&& (it as GNode).name.equals("SimpleDeclarator")]
+			val simpleDeclarator = declaringList.findFirst[it.is_GNode("SimpleDeclarator")]
 			
 			val declarator =
 				if (arrayDeclarator != null)
@@ -56,7 +45,7 @@ class SplitMultipleVariablesRule extends AncestorGuaranteedRule {
 				else {
 					println
 					println("----- SplitMultipleVariablesRule -----------------")
-					println(((pair.head as GNode)).printAST)
+					println(pair.head.as_GNode.printAST)
 					throw new Exception("SplitMultipleVariableRule: unknown variable name.")
 				}
 			return
@@ -96,10 +85,8 @@ class SplitMultipleVariablesRule extends AncestorGuaranteedRule {
 		
 		var innermost = node
 		
-		while(!innermost.empty && innermost.get(0) instanceof GNode 
-			&& (innermost.get(0) as GNode).name.equals("DeclaringList")
-		) {
-			innermost = innermost.get(0) as GNode
+		while(!innermost.empty && innermost.get(0).is_GNode("DeclaringList")) {
+			innermost = innermost.get(0).as_GNode
 		}
 		innermost
 	}

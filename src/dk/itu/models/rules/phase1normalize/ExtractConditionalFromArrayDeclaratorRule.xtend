@@ -42,17 +42,17 @@ class ExtractConditionalFromArrayDeclaratorRule extends AncestorGuaranteedRule {
 			var disjPC = Reconfigurator::presenceConditionManager.newPresenceCondition(false)
 			
 			for (PresenceCondition pc : pcs) {
-				newNode = newNode.add(pc).add(GNode::createFromPair("Declaration", node.toPair)) as GNode
+				newNode = newNode.add(pc).add(GNode::createFromPair("Declaration", node.toPair)).as_GNode
 				disjPC = disjPC.or(pc)
 			}
-			newNode = newNode.add(disjPC.not).add(GNode::createFromPair("Declaration", node.toPair)) as GNode
+			newNode = newNode.add(disjPC.not).add(GNode::createFromPair("Declaration", node.toPair)).as_GNode
 				
 			val tdn1 = new TopDownStrategy
 			tdn1.register(new RemOneRule)
 			tdn1.register(new RemZeroRule)
 			tdn1.register(new SplitConditionalRule)
 			tdn1.register(new ConstrainNestedConditionalsRule)
-			newNode = tdn1.transform(newNode) as GNode
+			newNode = tdn1.transform(newNode).as_GNode
 			
 			newNode
 		} else {

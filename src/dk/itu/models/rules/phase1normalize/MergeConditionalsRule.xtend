@@ -21,23 +21,21 @@ class MergeConditionalsRule extends dk.itu.models.rules.Rule {
 		if(
 			pair.size >= 2
 			
-			&& pair.head instanceof GNode
-			&& (pair.head as GNode).name.equals("Conditional")
-			&& (pair.head as GNode).filter(PresenceCondition).size == 1
+			&& pair.head.is_GNode("Conditional")
+			&& pair.head.as_GNode.filter(PresenceCondition).size == 1
 			
-			&& pair.tail.head instanceof GNode
-			&& (pair.tail.head as GNode).name.equals("Conditional")
-			&& (pair.tail.head as GNode).filter(PresenceCondition).size == 1
+			&& pair.tail.head.is_GNode("Conditional")
+			&& pair.tail.head.as_GNode.filter(PresenceCondition).size == 1
 			
-			&& ((pair.head as GNode).get(0) as PresenceCondition)
-				.is((pair.tail.head as GNode).get(0) as PresenceCondition)
+			&& (pair.head.as_GNode.get(0) as PresenceCondition)
+				.is(pair.tail.head.as_GNode.get(0) as PresenceCondition)
 		) {
 			val newPair = new Pair(
 				GNode::createFromPair(
 					"Conditional",
-					(pair.head as GNode).get(0),
-					(pair.head as GNode).toPair.tail
-						.append((pair.tail.head as GNode).toPair.tail)	
+					pair.head.as_GNode.get(0),
+					pair.head.as_GNode.toPair.tail
+						.append(pair.tail.head.as_GNode.toPair.tail)	
 				),
 				pair.tail.tail
 			)

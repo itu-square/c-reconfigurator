@@ -7,6 +7,8 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
 
+import static extension dk.itu.models.Extensions.*
+
 class RemActionRule extends Rule {
 	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
@@ -20,8 +22,8 @@ class RemActionRule extends Rule {
 	override dispatch Pair<Object> transform(Pair<Object> pair) {
 		
 		if (!pair.empty &&
-			pair.head instanceof GNode &&
-			(pair.head as GNode).name.startsWith("$@")
+			pair.head.is_GNode &&
+			pair.head.as_GNode.name.startsWith("$@")
 		) {
 			return pair.tail
 		}

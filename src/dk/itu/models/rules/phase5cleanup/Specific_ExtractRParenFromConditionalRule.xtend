@@ -34,14 +34,12 @@ class Specific_ExtractRParenFromConditionalRule extends Rule {
 			&& node.get(1) instanceof Language<?>
 			&& (node.get(1) as Language<CTag>).tag.equals(CTag::LPAREN)
 			
-			&& node.get(2) instanceof GNode
-			&& (node.get(2) as GNode).name.equals("Conditional")
-			&& (node.get(2) as GNode).filter(PresenceCondition).reduce[pc1, pc2| pc1.or(pc2)].isTrue
+			&& node.get(2).is_GNode("Conditional")
+			&& node.get(2).as_GNode.filter(PresenceCondition).reduce[pc1, pc2| pc1.or(pc2)].isTrue
 			
-			&& node.get(3) instanceof GNode
-			&& (node.get(3) as GNode).name.equals("CompoundStatement") 
+			&& node.get(3).is_GNode("CompoundStatement") 
 		) {
-			val cond = node.get(2) as GNode
+			val cond = node.get(2).as_GNode
 			
 			var update = true
 			val newCond = GNode::create("Conditional", true)

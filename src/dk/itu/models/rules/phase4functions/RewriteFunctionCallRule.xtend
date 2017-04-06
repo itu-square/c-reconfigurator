@@ -122,11 +122,11 @@ class RewriteFunctionCallRule extends AncestorGuaranteedRule {
 	
 	override dispatch Object transform(GNode node) {
 		if (node.name.equals("FunctionCall")
-			&& functionDeclarations.containsDeclaration((node.get(0) as GNode).get(0).toString)
+			&& functionDeclarations.containsDeclaration(node.get(0).as_GNode.get(0).toString)
 			&& !node.getBooleanProperty("HandledByRewriteFunctionCallRule")
 		) {
 			debug("RewriteFunctionCallRule", true)
-			val fcall = (node.get(0) as GNode).get(0).toString
+			val fcall = node.get(0).as_GNode.get(0).toString
 			
 			val varPC = externalGuard.and(node.presenceCondition)
 			

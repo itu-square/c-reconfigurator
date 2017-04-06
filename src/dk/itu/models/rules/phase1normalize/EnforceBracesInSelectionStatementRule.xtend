@@ -39,10 +39,8 @@ class EnforceBracesInSelectionStatementRule extends Rule {
 				if (
 					(
 						branchChildren.size == 1
-						&& (branchChildren.head instanceof GNode)
-						&& ((branchChildren.head as GNode).name.equals("SelectionStatement")
-							|| (branchChildren.head as GNode).name.equals("Conditional")))
-					|| (
+						&& (branchChildren.head.is_GNode("SelectionStatement") || branchChildren.head.is_GNode("Conditional"))
+					) || (
 						branchChildren.size > 1
 						&& (!(branchChildren.head instanceof Language<?>)
 							|| (branchChildren.head as Language<CTag>).tag.equals(CTag::LBRACE)))
@@ -69,10 +67,8 @@ class EnforceBracesInSelectionStatementRule extends Rule {
 			if (
 				(
 					branchChildren.size == 1
-					&& (branchChildren.head instanceof GNode)
-					&& ((branchChildren.head as GNode).name.equals("SelectionStatement")
-						|| (branchChildren.head as GNode).name.equals("Conditional")))
-				|| (
+					&& (branchChildren.head.is_GNode("SelectionStatement") || branchChildren.head.is_GNode("Conditional"))
+				) || (
 					branchChildren.size > 1
 					&& (!(branchChildren.head instanceof Language<?>)
 						|| (branchChildren.head as Language<CTag>).tag.equals(CTag::LBRACE)))

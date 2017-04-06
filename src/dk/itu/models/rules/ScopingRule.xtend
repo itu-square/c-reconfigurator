@@ -128,7 +128,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			println('''---------------''')
 			ancestors.forEach[
 				println('''- «it.name»''')]
-			println((node as GNode).printAST)
+			println(node.printAST)
 			println
 			throw new Exception("ScopingRule: possible scope : " + node.name + ".")
 		}
@@ -294,7 +294,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			 "UnionSpecifier",
 			 	"VarArgDeclarationSpecifier", "VarArgTypeName", "VolatileQualifier",
 				"Word"].contains(node.name)
-			|| (node.name.equals("ParameterDeclaration") && (node.size == 1 || !(node instanceof GNode)))
+			|| (node.name.equals("ParameterDeclaration") && (node.size == 1 || !node.is_GNode))
 			|| (node.name.equals("ParameterDeclaration") && node.getDescendantNode("EnumSpecifier") != null )
 			|| (node.name.equals("Declaration") && node.getDescendantNode("EnumSpecifier") != null )
 			|| (node.name.equals("Declaration") && node.getDescendantNode("StructOrUnionSpecifier") != null )
@@ -311,7 +311,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			println('''---------------''')
 			ancestors.forEach[
 				println('''- «it.name»''')]
-			println((node as GNode).printAST)
+			println(node.printAST)
 			println
 			throw new Exception("ScopingRule: possible declaration : " + node.name + ".")
 		}

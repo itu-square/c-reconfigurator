@@ -8,6 +8,8 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
 
+import static extension dk.itu.models.Extensions.*
+
 class OptimizeAssignmentExpressionRule extends Rule {
 	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
@@ -23,18 +25,17 @@ class OptimizeAssignmentExpressionRule extends Rule {
 		if (
 			!pair.empty
 			
-			&& pair.head instanceof GNode
-			&& (pair.head as GNode).name.equals("AssignmentExpression")
+			&& pair.head.is_GNode("AssignmentExpression")
 		) {
-			val asgnExp = pair.head as GNode
-			val opIndex = asgnExp.indexOf(asgnExp.findFirst[c | c instanceof GNode && (c as GNode).name.equals("AssignmentOperator")])
+			val asgnExp = pair.head.as_GNode
+			val opIndex = asgnExp.indexOf(asgnExp.findFirst[it.is_GNode("AssignmentOperator")])
 			val PCs =
 				if (opIndex != -1)
-					asgnExp.filter[c | c instanceof GNode && (c as GNode).name.equals("Conditional")]
-						.map[node | (node as GNode).get(0) as PresenceCondition]
+					asgnExp.filter[it.is_GNode("Conditional")]
+						.map[node | node.as_GNode.get(0) as PresenceCondition]
 				else
-					asgnExp.filter[c | c instanceof GNode && (c as GNode).name.equals("Conditional") && asgnExp.indexOf(c) < opIndex]
-						.map[node | (node as GNode).get(0) as PresenceCondition]
+					asgnExp.filter[it.is_GNode("Conditional") && asgnExp.indexOf(it) < opIndex]
+						.map[node | node.as_GNode.get(0) as PresenceCondition]
 			
 			// compute the disjunction of all declaration PCs
 			var PresenceCondition disjunctionPC = null

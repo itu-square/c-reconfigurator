@@ -7,6 +7,8 @@ import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
 
+import static extension dk.itu.models.Extensions.*
+
 class ReorderSequentialMutexConditionalRule extends AncestorGuaranteedRule {
 	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
@@ -25,18 +27,16 @@ class ReorderSequentialMutexConditionalRule extends AncestorGuaranteedRule {
 			
 			&& !ancestors.last.name.equals("ExternalDeclarationList")
 			
-			&& (pair.head instanceof GNode)
-			&& (pair.head as GNode).name.equals("Conditional")
-			&& (pair.head as GNode).filter(PresenceCondition).size.equals(1)
+			&& pair.head.is_GNode("Conditional")
+			&& pair.head.as_GNode.filter(PresenceCondition).size.equals(1)
 			
-			&& (pair.tail.head instanceof GNode)
-			&& (pair.tail.head as GNode).name.equals("Conditional")
-			&& (pair.tail.head as GNode).filter(PresenceCondition).size.equals(1)
+			&& pair.tail.head.is_GNode("Conditional")
+			&& pair.tail.head.as_GNode.filter(PresenceCondition).size.equals(1)
 			
-			&& (pair.head as GNode).filter(PresenceCondition).get(0)
-				.isMutuallyExclusive((pair.tail.head as GNode).filter(PresenceCondition).get(0))
-			&& (pair.head as GNode).filter(PresenceCondition).get(0).toString.length >
-				(pair.tail.head as GNode).filter(PresenceCondition).get(0).toString.length
+			&& pair.head.as_GNode.filter(PresenceCondition).get(0)
+				.isMutuallyExclusive(pair.tail.head.as_GNode.filter(PresenceCondition).get(0))
+			&& pair.head.as_GNode.filter(PresenceCondition).get(0).toString.length >
+				pair.tail.head.as_GNode.filter(PresenceCondition).get(0).toString.length
 		) {
 			return new Pair<Object>(pair.tail.head).add(pair.head).append(pair.tail.tail)
 		}

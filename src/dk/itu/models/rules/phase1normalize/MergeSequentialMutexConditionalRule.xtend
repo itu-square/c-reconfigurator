@@ -22,25 +22,23 @@ class MergeSequentialMutexConditionalRule extends dk.itu.models.rules.Rule {
 			!pair.empty
 			&& pair.size >= 2
 			
-			&& (pair.head instanceof GNode)
-			&& (pair.head as GNode).name.equals("Conditional")
-			&& (pair.head as GNode).filter(PresenceCondition).size.equals(1)
+			&& pair.head.is_GNode("Conditional")
+			&& pair.head.as_GNode.filter(PresenceCondition).size.equals(1)
 			
-			&& (pair.tail.head instanceof GNode)
-			&& (pair.tail.head as GNode).name.equals("Conditional")
-			&& (pair.tail.head as GNode).filter(PresenceCondition).size.equals(1)
+			&& pair.tail.head.is_GNode("Conditional")
+			&& pair.tail.head.as_GNode.filter(PresenceCondition).size.equals(1)
 			
-			&& (pair.head as GNode).filter(PresenceCondition).get(0)
-				.isMutuallyExclusive((pair.tail.head as GNode).filter(PresenceCondition).get(0))
-			&& (pair.head as GNode).toPair.tail.structurallyEquals((pair.tail.head as GNode).toPair.tail)
+			&& pair.head.as_GNode.filter(PresenceCondition).get(0)
+				.isMutuallyExclusive(pair.tail.head.as_GNode.filter(PresenceCondition).get(0))
+			&& pair.head.as_GNode.toPair.tail.structurallyEquals(pair.tail.head.as_GNode.toPair.tail)
 		) {
 			
 			return new Pair<Object>(
 				GNode::createFromPair(
 					"Conditional",
-					(pair.head as GNode).filter(PresenceCondition).get(0)
-						.or((pair.tail.head as GNode).filter(PresenceCondition).get(0)),
-					(pair.head as GNode).toPair.tail
+					pair.head.as_GNode.filter(PresenceCondition).get(0)
+						.or(pair.tail.head.as_GNode.filter(PresenceCondition).get(0)),
+					pair.head.as_GNode.toPair.tail
 				)).append(pair.tail.tail)
 		}
 		

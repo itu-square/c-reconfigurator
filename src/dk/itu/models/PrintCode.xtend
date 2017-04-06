@@ -158,7 +158,7 @@ class PrintCode extends PrintMethod {
 		
 		if(
 			#["Declaration", "DeclarationExtension", "FunctionDefinition"].contains(node.name)
-			&& !ancestors.exists[c | c instanceof GNode && c.name.equals("FunctionDefinition")]
+			&& !ancestors.exists[it.is_GNode("FunctionDefinition")]
 			&& (!last_line.startsWith("#") || last_line.startsWith("#include")) && !last_line.empty
 		) {
 			output.println
@@ -168,7 +168,7 @@ class PrintCode extends PrintMethod {
 		
 		if(
 			#["Declaration", "DeclarationExtension", "FunctionDefinition"].contains(node.name)
-			&& !ancestors.exists[c | c instanceof GNode && c.name.equals("DeclarationExtension")]
+			&& !ancestors.exists[it.is_GNode("DeclarationExtension")]
 		) {
 			if (node.location != null) {
 				output.println
@@ -298,39 +298,31 @@ class PrintCode extends PrintMethod {
 			}
 			ancestors.remove(node)
 		} else if (
-			       node.name.equals("Declaration")
+			   node.name.equals("Declaration")
 			
-			&&    (node.get(0) instanceof GNode)
-			&&    (node.get(0) as GNode).name.equals("DeclaringList")
+			&& node.get(0).is_GNode("DeclaringList")
 			
-			&&    (node.get(0) as GNode).get(0).toString.equals("char")
+			&& node.get(0).as_GNode.get(0).toString.equals("char")
 			
-			&&   ((node.get(0) as GNode).get(1) instanceof GNode)
-			&&   ((node.get(0) as GNode).get(1) as GNode).name.equals("ArrayDeclarator")
+			&& node.get(0).as_GNode.get(1).is_GNode("ArrayDeclarator")
 			
-			&&  (((node.get(0) as GNode).get(1) as GNode).get(0) instanceof GNode)
-			&&  (((node.get(0) as GNode).get(1) as GNode).get(0) as GNode).name.equals("SimpleDeclarator")
-			&&  (((node.get(0) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString.startsWith(Settings::reconfiguratorIncludePlaceholder)
+			&& node.get(0).as_GNode.get(1).as_GNode.get(0).is_GNode("SimpleDeclarator")
+			&& node.get(0).as_GNode.get(1).as_GNode.get(0).as_GNode.get(0).toString.startsWith(Settings::reconfiguratorIncludePlaceholder)
 			
-			&&   ((node.get(0) as GNode).get(4) instanceof GNode)
-			&&   ((node.get(0) as GNode).get(4) as GNode).name.equals("InitializerOpt")
-			&&   ((node.get(0) as GNode).get(4) as GNode).get(1) instanceof GNode
+			&& node.get(0).as_GNode.get(4).is_GNode("InitializerOpt")
+			&& node.get(0).as_GNode.get(4).as_GNode.get(1).is_GNode("Initializer")
 			
-			&&  (((node.get(0) as GNode).get(4) as GNode).get(1) as GNode).name.equals("Initializer")
-			
-			&& ((((node.get(0) as GNode).get(4) as GNode).get(1) as GNode).get(0) instanceof GNode)
-			&& ((((node.get(0) as GNode).get(4) as GNode).get(1) as GNode).get(0) as GNode).name.equals("StringLiteralList")
-			&& ((((node.get(0) as GNode).get(4) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString.startsWith("\"#include")
+			&& node.get(0).as_GNode.get(4).as_GNode.get(1).as_GNode.get(0).is_GNode("StringLiteralList")
+			&& node.get(0).as_GNode.get(4).as_GNode.get(1).as_GNode.get(0).as_GNode.get(0).toString.startsWith("\"#include")
 		) {
-			var includeStrLit = ((((node.get(0) as GNode).get(4) as GNode).get(1) as GNode)
-				.get(0) as GNode).get(0).toString
+			var includeStrLit = node.get(0).as_GNode.get(4).as_GNode.get(1).as_GNode.get(0).as_GNode.get(0).toString
 			includeStrLit = includeStrLit.subSequence(1, includeStrLit.length-1).toString
 			
 			if (!last_line.startsWith("#include")) {
 				output.println
 			}
 			
-			if ((((node.get(0) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString.equals(Settings::reconfiguratorIncludePlaceholder)) {
+			if (node.get(0).as_GNode.get(1).as_GNode.get(0).as_GNode.get(0).toString.equals(Settings::reconfiguratorIncludePlaceholder)) {
 				if (node.properties != null && node.hasProperty("OriginalPC")) {
 					output.println
 					output.println('''#if «(node.getProperty("OriginalPC") as PresenceCondition).PCtoCPPexp»''')
@@ -344,7 +336,7 @@ class PrintCode extends PrintMethod {
 					output.print(includeStrLit.replace("\\\"", "\""))
 					last_line = includeStrLit
 				}
-			} else if ((((node.get(0) as GNode).get(1) as GNode).get(0) as GNode).get(0).toString.equals(Settings::reconfiguratorIncludePlaceholderEnd)) {
+			} else if (node.get(0).as_GNode.get(1).as_GNode.get(0).as_GNode.get(0).toString.equals(Settings::reconfiguratorIncludePlaceholderEnd)) {
 				if (node.properties != null && node.hasProperty("OriginalPC")) {
 					output.println
 //					output.println('''#if «(node.getProperty("OriginalPC") as PresenceCondition).PCtoCPPexp»''')
@@ -363,11 +355,10 @@ class PrintCode extends PrintMethod {
 			ancestors.add(node)
 			for (Object it : node) {
 				if (
-					it instanceof GNode
-					&& (it as GNode).name.equals("Conditional")
-					&& (it as GNode).filter(PresenceCondition).size == 1
+					it.is_GNode("Conditional")
+					&& it.as_GNode.filter(PresenceCondition).size == 1
 				) {
-					val pc = (it as GNode).get(0) as PresenceCondition
+					val pc = it.as_GNode.get(0) as PresenceCondition
 					if (lastPC == null) {
 						lastPC = pc
 					} else if (lastPC.isMutuallyExclusive(pc)) {

@@ -5,6 +5,7 @@ import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
+
 import static extension dk.itu.models.Extensions.*
 
 class SplitConditionalRule extends dk.itu.models.rules.Rule {
@@ -20,15 +21,13 @@ class SplitConditionalRule extends dk.itu.models.rules.Rule {
 	override dispatch Pair<Object> transform(Pair<Object> pair) {
 		if(
 			!pair.empty &&
-			pair.head instanceof GNode &&
-			
-			(pair.head as GNode).name == "Conditional" &&
-			(pair.head as GNode).filter(PresenceCondition).size >= 2
+			pair.head.is_GNode("Conditional") &&
+			pair.head.as_GNode.filter(PresenceCondition).size >= 2
 		) {
 			var Pair<Object> newPair = Pair.EMPTY
-			for (PresenceCondition pc : (pair.head as GNode).filter(PresenceCondition)) {
+			for (PresenceCondition pc : pair.head.as_GNode.filter(PresenceCondition)) {
 				newPair = newPair.append(new Pair<Object>(
-					GNode::createFromPair("Conditional", pc, (pair.head as GNode).getChildrenGuardedBy(pc))))
+					GNode::createFromPair("Conditional", pc, pair.head.as_GNode.getChildrenGuardedBy(pc))))
 			}
 			newPair.append(pair.tail)
 		} else
