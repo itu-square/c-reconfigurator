@@ -1,0 +1,109 @@
+|- TranslationUnit
+   |- ExternalDeclarationList
+      |- Declaration
+      |  |- DeclaringList
+      |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |  |- SimpleDeclarator
+      |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>i_V1  
+      |  |  |- AssemblyExpressionOpt
+      |  |  |- AttributeSpecifierListOpt
+      |  |  |- InitializerOpt
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- DeclaringList
+      |  |  |- BasicDeclarationSpecifier
+      |  |  |  |- DeclarationQualifierList
+      |  |  |  |  |- xtc.lang.cpp.Syntax.Language<TYPEDEF>typedef  
+      |  |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |  |- SimpleDeclarator
+      |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>t_V1  
+      |  |  |- AssemblyExpressionOpt
+      |  |  |- AttributeSpecifierListOpt
+      |  |  |- InitializerOpt
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- SUETypeSpecifier
+      |  |  |- StructSpecifier
+      |  |     |- xtc.lang.cpp.Syntax.Language<STRUCT>struct  
+      |  |     |- IdentifierOrTypedefName
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>s_V1  
+      |  |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |     |- StructDeclarationList
+      |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- SUETypeSpecifier
+      |  |  |- UnionSpecifier
+      |  |     |- xtc.lang.cpp.Syntax.Language<UNION>union  
+      |  |     |- IdentifierOrTypedefName
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>u_V1  
+      |  |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |     |- StructDeclarationList
+      |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- SUETypeSpecifier
+      |  |  |- EnumSpecifier
+      |  |     |- xtc.lang.cpp.Syntax.Language<ENUM>enum  
+      |  |     |- IdentifierOrTypedefName
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>e  
+      |  |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |     |- EnumeratorList
+      |  |     |  |- Enumerator
+      |  |     |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>FIRST_V1  
+      |  |     |     |- EnumeratorValueOpt
+      |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- FunctionDefinition
+         |- FunctionPrototype
+         |  |- xtc.lang.cpp.Syntax.Language<VOID>void  
+         |  |- FunctionDeclarator
+         |     |- SimpleDeclarator
+         |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>foo_V1  
+         |     |- PostfixingFunctionDeclarator
+         |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |- ParameterTypeListOpt
+         |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |- CompoundStatement
+         |  |- LocalLabelDeclarationListOpt
+         |  |- DeclarationOrStatementList
+         |     |- Declaration
+         |     |  |- DeclaringList
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+         |     |  |  |- SimpleDeclarator
+         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>i_V2  
+         |     |  |  |- AssemblyExpressionOpt
+         |     |  |  |- AttributeSpecifierListOpt
+         |     |  |  |- InitializerOpt
+         |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |- Declaration
+         |     |  |- DeclaringList
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<LONG>long  
+         |     |  |  |- SimpleDeclarator
+         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>l_V1  
+         |     |  |  |- AssemblyExpressionOpt
+         |     |  |  |- AttributeSpecifierListOpt
+         |     |  |  |- InitializerOpt
+         |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |- Declaration
+         |     |  |- DeclaringList
+         |     |  |  |- TypedefTypeSpecifier
+         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>t_V1  
+         |     |  |  |- SimpleDeclarator
+         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>tvar_V1  
+         |     |  |  |- AssemblyExpressionOpt
+         |     |  |  |- AttributeSpecifierListOpt
+         |     |  |  |- InitializerOpt
+         |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |- Declaration
+         |        |- DeclaringList
+         |        |  |- TypedefTypeSpecifier
+         |        |  |  |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>t  
+         |        |  |- SimpleDeclarator
+         |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>tvar_V2  
+         |        |  |- AssemblyExpressionOpt
+         |        |  |- AttributeSpecifierListOpt
+         |        |  |- InitializerOpt
+         |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
