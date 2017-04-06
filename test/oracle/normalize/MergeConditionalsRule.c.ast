@@ -1,0 +1,54 @@
+|- TranslationUnit
+   |- ExternalDeclarationList
+      |- FunctionDefinition
+         |- FunctionPrototype
+         |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+         |  |- FunctionDeclarator
+         |     |- SimpleDeclarator
+         |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>foo  
+         |     |- PostfixingFunctionDeclarator
+         |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |- ParameterTypeListOpt
+         |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |- CompoundStatement
+         |  |- LocalLabelDeclarationListOpt
+         |  |- DeclarationOrStatementList
+         |     |- Declaration
+         |     |  |- DeclaringList
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+         |     |  |  |- SimpleDeclarator
+         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |     |  |  |- AssemblyExpressionOpt
+         |     |  |  |- AttributeSpecifierListOpt
+         |     |  |  |- InitializerOpt
+         |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |- SelectionStatement
+         |     |  |- xtc.lang.cpp.Syntax.Language<IF>if  
+         |     |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |     |  |- PrimaryExpression
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |     |  |  |- PrimaryIdentifier
+         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>_reconfig_ENABLE_A  
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |     |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |     |  |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |     |  |- ExpressionStatement
+         |     |  |  |- Increment
+         |     |  |  |  |- PrimaryIdentifier
+         |     |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |     |  |  |  |- xtc.lang.cpp.Syntax.Language<ICR>++  
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |  |- ExpressionStatement
+         |     |  |  |- Decrement
+         |     |  |  |  |- PrimaryIdentifier
+         |     |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |     |  |  |  |- xtc.lang.cpp.Syntax.Language<DECR>--  
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |  |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+         |     |- ReturnStatement
+         |        |- xtc.lang.cpp.Syntax.Language<RETURN>return  
+         |        |- PrimaryIdentifier
+         |        |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |- xtc.lang.cpp.Syntax.Language<RBRACE>}  

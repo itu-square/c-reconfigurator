@@ -1,0 +1,83 @@
+|- TranslationUnit
+   |- ExternalDeclarationList
+      |- FunctionDefinition
+         |- FunctionPrototype
+         |  |- xtc.lang.cpp.Syntax.Language<VOID>void  
+         |  |- FunctionDeclarator
+         |     |- SimpleDeclarator
+         |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>foo  
+         |     |- PostfixingFunctionDeclarator
+         |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |- ParameterTypeListOpt
+         |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |- CompoundStatement
+         |  |- LocalLabelDeclarationListOpt
+         |  |- DeclarationOrStatementList
+         |     |- Declaration
+         |     |  |- DeclaringList
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+         |     |  |  |- SimpleDeclarator
+         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |     |  |  |- AssemblyExpressionOpt
+         |     |  |  |- AttributeSpecifierListOpt
+         |     |  |  |- InitializerOpt
+         |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |- Declaration
+         |     |  |- DeclaringList
+         |     |     |- xtc.lang.cpp.Syntax.Language<INT>int  
+         |     |     |- SimpleDeclarator
+         |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>y  
+         |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |- SelectionStatement
+         |     |  |- xtc.lang.cpp.Syntax.Language<IF>if  
+         |     |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |     |  |- PrimaryExpression
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |     |  |  |- PrimaryIdentifier
+         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>_reconfig_ENABLE_A  
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |     |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |     |  |- ExpressionStatement
+         |     |  |  |- AssignmentExpression
+         |     |  |  |  |- PrimaryIdentifier
+         |     |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |     |  |  |  |- AssignmentOperator
+         |     |  |  |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>1  
+         |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |  |- xtc.lang.cpp.Syntax.Language<ELSE>else  
+         |     |  |- ExpressionStatement
+         |     |     |- AssignmentExpression
+         |     |     |  |- PrimaryIdentifier
+         |     |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |     |     |  |- AssignmentOperator
+         |     |     |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+         |     |     |  |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>2  
+         |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |     |- ExpressionStatement
+         |        |- PrimaryExpression
+         |        |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |  |- ConditionalExpression
+         |        |  |  |- PrimaryExpression
+         |        |  |  |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |  |  |  |- PrimaryIdentifier
+         |        |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>_reconfig_ENABLE_B  
+         |        |  |  |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |        |  |  |- xtc.lang.cpp.Syntax.Language<QUESTION>?  
+         |        |  |  |- AssignmentExpression
+         |        |  |  |  |- PrimaryIdentifier
+         |        |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |  |  |  |- AssignmentOperator
+         |        |  |  |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+         |        |  |  |  |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>3  
+         |        |  |  |- xtc.lang.cpp.Syntax.Language<COLON>:  
+         |        |  |  |- AssignmentExpression
+         |        |  |     |- PrimaryIdentifier
+         |        |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>y  
+         |        |  |     |- AssignmentOperator
+         |        |  |     |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+         |        |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>3  
+         |        |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
