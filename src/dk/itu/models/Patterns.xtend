@@ -30,7 +30,7 @@ class Patterns {
 		node.name.equals("Conditional")
 		&& node.size == 2
 		
-		&& (node.get(0) instanceof PresenceCondition)
+		&& node.get(0).is_PresenceCondition
 		
 		&& node.get(1).is_GNode
 		&& node.get(1).as_GNode.isStructUnionDeclaration
@@ -62,7 +62,7 @@ class Patterns {
 		node.name.equals("Conditional")
 		&& node.size == 2
 		
-		&& (node.get(0) instanceof PresenceCondition)
+		&& node.get(0).is_PresenceCondition
 		
 		&& node.get(1).is_GNode
 		&& node.get(1).as_GNode.isStructUnionTypeDeclaration
@@ -107,7 +107,7 @@ class Patterns {
 		node.name.equals("Conditional")
 		&& node.size == 2
 		
-		&& (node.get(0) instanceof PresenceCondition)
+		&& node.get(0).is_PresenceCondition
 		
 		&& node.get(1).is_GNode
 		&& node.get(1).as_GNode.isEnumDeclaration
@@ -153,7 +153,7 @@ class Patterns {
 		node.name.equals("Conditional")
 		&& node.size == 2
 		
-		&& (node.get(0) instanceof PresenceCondition)
+		&& node.get(0).is_PresenceCondition
 		
 		&& node.get(1).is_GNode
 		&& node.get(1).as_GNode.isTypeDeclaration
@@ -188,7 +188,7 @@ class Patterns {
 		node.name.equals("Conditional")
 		&& node.size == 2
 		
-		&& (node.get(0) instanceof PresenceCondition)
+		&& node.get(0).is_PresenceCondition
 		
 		&& node.get(1).is_GNode
 		&& node.get(1).as_GNode.isFunctionDeclaration
@@ -237,7 +237,7 @@ class Patterns {
 		node.name.equals("Conditional")
 		&& node.size == 2
 		
-		&& (node.get(0) instanceof PresenceCondition)
+		&& node.get(0).is_PresenceCondition
 		
 		&& node.get(1).is_GNode
 		&& node.get(1).as_GNode.isFunctionDefinition
@@ -270,7 +270,7 @@ class Patterns {
 		node.name.equals("Conditional")
 		&& node.size == 2
 		
-		&& (node.get(0) instanceof PresenceCondition)
+		&& node.get(0).is_PresenceCondition
 		
 		&& node.get(1).is_GNode
 		&& node.get(1).as_GNode.isVariableDeclaration

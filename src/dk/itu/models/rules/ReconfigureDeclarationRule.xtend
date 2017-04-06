@@ -40,7 +40,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			&& pair.head.as_GNode.get(1).as_GNode.isTypeDeclarationWithTypeVariability(typeDeclarations)
 		) {
 			val node = pair.head.as_GNode
-			val pc = node.get(0) as PresenceCondition
+			val pc = node.get(0).as_PresenceCondition
 			val declarationNode = node.get(1).as_GNode
 			val refTypeName = declarationNode.getTypeOfTypeDeclaration
 			
@@ -145,7 +145,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			&& pair.head.as_GNode.get(1).as_GNode.isFunctionDeclarationWithSignatureVariability(typeDeclarations)
 		) {
 			val node = pair.head.as_GNode
-			val pc = node.get(0) as PresenceCondition
+			val pc = node.get(0).as_PresenceCondition
 			val declarationNode = node.get(1).as_GNode
 			val type = declarationNode.getTypeOfFunctionDeclaration
 			
@@ -226,7 +226,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 			&& pair.head.as_GNode.get(1).as_GNode.isVariableDeclarationWithTypeVariability(typeDeclarations)
 		) {
 			val node = pair.head.as_GNode
-			val pc = node.get(0) as PresenceCondition
+			val pc = node.get(0).as_PresenceCondition
 			val declarationNode = node.get(1).as_GNode
 			val refTypeName = declarationNode.getTypeOfVariableDeclaration
 			
@@ -283,7 +283,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		if (
 			node.isTypeDeclarationWithVariability
 		) {
-			val pc = node.get(0) as PresenceCondition
+			val pc = node.get(0).as_PresenceCondition
 			val declarationNode = node.get(1).as_GNode
 			val typeName = declarationNode.getNameOfTypeDeclaration
 			val refTypeName = declarationNode.getTypeOfTypeDeclaration
@@ -314,7 +314,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		if (
 			node.isStructUnionTypeDeclarationWithVariability
 		) {
-			val pc = node.get(0) as PresenceCondition
+			val pc = node.get(0).as_PresenceCondition
 			val declarationNode = node.get(1).as_GNode
 			val typeName = declarationNode.getNameOfStructUnionTypeDeclaration
 			val refTypeName = declarationNode.getTypeOfStructUnionTypeDeclaration
@@ -346,7 +346,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		if (
 			node.isStructUnionDeclarationWithVariability
 		) {
-			val pc = node.get(0) as PresenceCondition
+			val pc = node.get(0).as_PresenceCondition
 			val declarationNode = node.get(1).as_GNode
 			val type = declarationNode.getNameOfStructUnionDeclaration
 			val name = type.replace("struct ", "").replace("union ", "")
@@ -375,7 +375,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		if (
 			node.isEnumDeclarationWithVariability
 		) {
-			val pc = node.get(0) as PresenceCondition
+			val pc = node.get(0).as_PresenceCondition
 			var newNode = node.get(1).as_GNode
 			
 			for (String enumerator : node.getDescendantNode("EnumeratorList").filter[it.is_GNode("Enumerator")].map[it.as_GNode.get(0).toString]) {
@@ -400,7 +400,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		if (
 			node.isFunctionDeclarationWithVariability
 		) {
-			val pc = node.get(0) as PresenceCondition
+			val pc = node.get(0).as_PresenceCondition
 			val declarationNode = node.get(1).as_GNode
 			val funcName = declarationNode.getNameOfFunctionDeclaration
 			val funcType = declarationNode.getTypeOfFunctionDeclaration
@@ -431,7 +431,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		if (
 			node.isFunctionDefinitionWithVariability
 		) {
-			val pc = node.get(0) as PresenceCondition
+			val pc = node.get(0).as_PresenceCondition
 			val definitionNode = node.get(1).as_GNode
 			val funcName = definitionNode.getNameOfFunctionDefinition
 			val funcType = definitionNode.getTypeOfFunctionDefinition
@@ -502,7 +502,7 @@ class ReconfigureDeclarationRule extends ScopingRule {
 		if (
 			node.isVariableDeclarationWithVariability
 		) {
-			val pc = node.get(0) as PresenceCondition
+			val pc = node.get(0).as_PresenceCondition
 			val declarationNode = node.get(1).as_GNode
 			val varName = declarationNode.nameOfVariableDeclaration
 			val varType = declarationNode.typeOfVariableDeclaration

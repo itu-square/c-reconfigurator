@@ -15,7 +15,7 @@ class TopDownStrategy extends AncestorGuaranteedStrategy {
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
 		var PresenceCondition newCond = cond
 		for (Rule rule : rules) {
-			newCond = rule.transform(newCond) as PresenceCondition
+			newCond = rule.transform(newCond).as_PresenceCondition
 		}
 		newCond
 	}

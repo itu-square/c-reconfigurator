@@ -30,7 +30,7 @@ class RemergeConditionalsRule extends dk.itu.models.rules.AncestorGuaranteedRule
 			&& pair.tail.head.as_GNode.filter(PresenceCondition).size == 1
 			
 			&& pair.head.as_GNode.filter(PresenceCondition).forall[
-				it.isMutuallyExclusive(pair.tail.head.as_GNode.get(0) as PresenceCondition)]
+				it.isMutuallyExclusive(pair.tail.head.as_GNode.get(0).as_PresenceCondition)]
 		) {
 			return new Pair<Object>(
 				GNode::create("Conditional").addAll(

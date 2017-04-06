@@ -29,7 +29,7 @@ class ConstrainNestedConditionalsRule extends dk.itu.models.rules.AncestorGuaran
 		if  (  node.name.equals("Conditional")
 			&& node.filter(PresenceCondition).size == 1
 		) {
-			val currentPC = node.get(0) as PresenceCondition
+			val currentPC = node.get(0).as_PresenceCondition
 			val ancestorPC = node.presenceCondition
 			val simplifiedPC = Reconfigurator::presenceConditionManager.newPresenceCondition(currentPC.getBDD.constrain(ancestorPC.getBDD))
 			

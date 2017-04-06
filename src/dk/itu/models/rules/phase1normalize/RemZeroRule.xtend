@@ -24,7 +24,7 @@ class RemZeroRule extends Rule {
 		if (!pair.empty &&
 			pair.head.is_GNode("Conditional") &&
 			pair.head.as_GNode.filter(PresenceCondition).size == 1 &&
-			(pair.head.as_GNode.get(0) as PresenceCondition).isFalse
+			pair.head.as_GNode.get(0).as_PresenceCondition.isFalse
 		) {
 			return pair.tail
 		}

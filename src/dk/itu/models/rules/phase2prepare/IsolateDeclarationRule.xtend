@@ -65,7 +65,7 @@ class IsolateDeclarationRule extends AncestorGuaranteedRule {
 				.add(
 					if (decl.name.equals("Conditional")) {
 						GNode::create("Conditional",
-							(pair.head.as_GNode.get(0) as PresenceCondition).and(decl.get(0) as PresenceCondition),
+							pair.head.as_GNode.get(0).as_PresenceCondition.and(decl.get(0).as_PresenceCondition),
 							decl.get(1)
 						)}
 					else

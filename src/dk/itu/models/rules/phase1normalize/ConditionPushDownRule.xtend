@@ -24,17 +24,17 @@ class ConditionPushDownRule extends dk.itu.models.rules.Rule {
 		
 		val cond = pair.head.as_GNode
 		if (!cond.forall[
-			(it instanceof PresenceCondition)
+			(it.is_PresenceCondition)
 			|| (it.is_GNode("Conditional"))
 			]) return pair
 		
 		var newPair = pair.tail
 		for(GNode node : cond.toList.reverseView.filter(GNode)) {
-			val pc = cond.findLast[ it instanceof PresenceCondition && cond.indexOf(it) < cond.indexOf(node)] as PresenceCondition
+			val pc = cond.findLast[ it.is_PresenceCondition && cond.indexOf(it) < cond.indexOf(node)].as_PresenceCondition
 			val newNode = GNode::create("Conditional")
 			node.forEach[child |
-				if(child instanceof PresenceCondition) {
-					newNode.add(pc.and(child))
+				if(child.is_PresenceCondition) {
+					newNode.add(pc.and(child.as_PresenceCondition))
 				} else {
 					newNode.add(child)
 				}]

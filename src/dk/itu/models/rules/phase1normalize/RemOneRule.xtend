@@ -5,6 +5,7 @@ import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
+
 import static extension dk.itu.models.Extensions.*
 
 class RemOneRule extends dk.itu.models.rules.Rule {
@@ -21,10 +22,10 @@ class RemOneRule extends dk.itu.models.rules.Rule {
 		if (!pair.empty &&
 			pair.head.is_GNode("Conditional") &&
 			pair.head.as_GNode.filter(PresenceCondition).size == 1 &&
-			(pair.head.as_GNode.get(0) as PresenceCondition).isTrue
+			pair.head.as_GNode.get(0).as_PresenceCondition.isTrue
 		)
 			return pair.head.as_GNode
-				.getChildrenGuardedBy(pair.head.as_GNode.get(0) as PresenceCondition)
+				.getChildrenGuardedBy(pair.head.as_GNode.get(0).as_PresenceCondition)
 				.append(pair.tail)
 		else
 			pair

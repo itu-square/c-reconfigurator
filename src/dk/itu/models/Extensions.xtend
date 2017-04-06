@@ -145,9 +145,9 @@ class Extensions {
 				case
 					p1.head.class != p2.head.class : return false
 				case
-					p1.head instanceof PresenceCondition
-					&& p2.head instanceof PresenceCondition
-					&& !(p1.head as PresenceCondition).is(p2.head as PresenceCondition) : return false
+					p1.head.is_PresenceCondition
+					&& p2.head.is_PresenceCondition
+					&& !p1.head.as_PresenceCondition.is(p2.head.as_PresenceCondition) : return false
 				case
 					p1.head instanceof Language<?>
 					&& p2.head instanceof Language<?>
@@ -256,7 +256,7 @@ class Extensions {
 	public static def Pair<Object> getChildrenGuardedBy(GNode node, PresenceCondition pc) {
 		var Pair<Object> p = Pair.EMPTY
 		var index = node.indexOf(pc) + 1
-		while (index < node.size && !(node.get(index) instanceof PresenceCondition)) {
+		while (index < node.size && !node.get(index).is_PresenceCondition) {
 			p = p.add(node.get(index++))
 		}
 		p
@@ -529,6 +529,9 @@ class Extensions {
 		}
 	}
 	
+	
+	
+	
 	public static def GNode as_GNode(Object obj) {
 		obj as GNode
 	}
@@ -541,5 +544,15 @@ class Extensions {
 		obj.is_GNode &&
 		obj.as_GNode.name.equals(name)
 	}
+	
+	public static def PresenceCondition as_PresenceCondition(Object obj) {
+		obj as PresenceCondition
+	}
+
+	public static def boolean is_PresenceCondition(Object obj) {
+		obj instanceof PresenceCondition
+	}
+
+	
 
 }

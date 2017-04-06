@@ -179,7 +179,7 @@ class PrintCode extends PrintMethod {
 			
 			if (node.properties !== null && node.hasProperty("OriginalPC")) {
 				output.println
-				output.print('''// «(node.getProperty("OriginalPC") as PresenceCondition).PCtoCPPexp»''')
+				output.print('''// «node.getProperty("OriginalPC").as_PresenceCondition.PCtoCPPexp»''')
 				if(last_line.empty)
 					output.println
 			}
@@ -250,14 +250,14 @@ class PrintCode extends PrintMethod {
 			
 			ancestors.add(node)
 			for (Object it : node) {
-				if (it instanceof PresenceCondition) {
+				if (it.is_PresenceCondition) {
 					if (lastPC === null) {
-						lastPC = it
-					} else if (lastPC.isMutuallyExclusive(it)) {
-						lastPC = lastPC.or(it)
+						lastPC = it.as_PresenceCondition
+					} else if (lastPC.isMutuallyExclusive(it.as_PresenceCondition)) {
+						lastPC = lastPC.or(it.as_PresenceCondition)
 						last_C_line = preconditional_C_line
 					} else {
-						lastPC = it
+						lastPC = it.as_PresenceCondition
 					}
 				}
 				t(it)
@@ -325,7 +325,7 @@ class PrintCode extends PrintMethod {
 			if (node.get(0).as_GNode.get(1).as_GNode.get(0).as_GNode.get(0).toString.equals(Settings::reconfiguratorIncludePlaceholder)) {
 				if (node.properties !== null && node.hasProperty("OriginalPC")) {
 					output.println
-					output.println('''#if «(node.getProperty("OriginalPC") as PresenceCondition).PCtoCPPexp»''')
+					output.println('''#if «node.getProperty("OriginalPC").as_PresenceCondition.PCtoCPPexp»''')
 					if (Settings::printIncludes) output.print("// BEGIN ")
 					output.println(includeStrLit.replace("\\\"", "\""))
 //					output.println('''#endif''')
@@ -339,7 +339,7 @@ class PrintCode extends PrintMethod {
 			} else if (node.get(0).as_GNode.get(1).as_GNode.get(0).as_GNode.get(0).toString.equals(Settings::reconfiguratorIncludePlaceholderEnd)) {
 				if (node.properties !== null && node.hasProperty("OriginalPC")) {
 					output.println
-//					output.println('''#if «(node.getProperty("OriginalPC") as PresenceCondition).PCtoCPPexp»''')
+//					output.println('''#if «node.getProperty("OriginalPC").as_PresenceCondition.PCtoCPPexp»''')
 					if (Settings::printIncludes) output.print("// END ")
 					output.println(includeStrLit.replace("\\\"", "\""))
 					output.println('''#endif''')
@@ -358,7 +358,7 @@ class PrintCode extends PrintMethod {
 					it.is_GNode("Conditional")
 					&& it.as_GNode.filter(PresenceCondition).size == 1
 				) {
-					val pc = it.as_GNode.get(0) as PresenceCondition
+					val pc = it.as_GNode.get(0).as_PresenceCondition
 					if (lastPC === null) {
 						lastPC = pc
 					} else if (lastPC.isMutuallyExclusive(pc)) {

@@ -25,7 +25,7 @@ class RemNestedMutexConditionalRule extends AncestorGuaranteedRule {
 			pair.head.is_GNode("Conditional") &&
 			pair.head.as_GNode.filter(PresenceCondition).size == 1 &&
 			
-			(pair.head.as_GNode.guard as PresenceCondition).isMutuallyExclusive(pair.head.as_GNode.get(0) as PresenceCondition)
+			pair.head.as_GNode.guard.as_PresenceCondition.isMutuallyExclusive(pair.head.as_GNode.get(0).as_PresenceCondition)
 		)
 			pair.tail
 		else		

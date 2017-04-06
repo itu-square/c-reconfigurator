@@ -9,6 +9,8 @@ import xtc.tree.GNode
 import xtc.tree.Node
 import xtc.util.Pair
 
+import static extension dk.itu.models.Extensions.*
+
 abstract class AncestorGuaranteedRule extends Rule {
 	
 	protected var ArrayList<GNode> ancestors
@@ -27,7 +29,7 @@ abstract class AncestorGuaranteedRule extends Rule {
 				ancestors.get(ancestors.indexOf(lastGuard) + 1)
 				else node
 			val condition = lastGuard.findLast [
-				it instanceof PresenceCondition && lastGuard.indexOf(it) < lastGuard.indexOf(child)
+				it.is_PresenceCondition && lastGuard.indexOf(it) < lastGuard.indexOf(child)
 			]
 			
 //			println(ancestors.indexOf(lastGuard) < ancestors.size-1)
@@ -36,7 +38,7 @@ abstract class AncestorGuaranteedRule extends Rule {
 //			println("gurd :> " + lastGuard.printCode)
 //			println
 			
-			return condition as PresenceCondition
+			return condition.as_PresenceCondition
 		}
 	}
 	
@@ -52,15 +54,15 @@ abstract class AncestorGuaranteedRule extends Rule {
 				
 				val child = ancestors.get(i+1)
 				result = result.and(ancestor.findLast[
-					it instanceof PresenceCondition && ancestor.indexOf(it) < ancestor.indexOf(child)
-				] as PresenceCondition ?: Reconfigurator::presenceConditionManager.newPresenceCondition(true))	
+					it.is_PresenceCondition && ancestor.indexOf(it) < ancestor.indexOf(child)
+				].as_PresenceCondition ?: Reconfigurator::presenceConditionManager.newPresenceCondition(true))	
 			}
 		}
 		
 		if(ancestors.size > 0 && ancestors.last.name.equals("Conditional")) {		
 			result = result.and(ancestors.last.findLast[
-				it instanceof PresenceCondition && ancestors.last.indexOf(it) < ancestors.last.indexOf(node)
-			] as PresenceCondition ?: Reconfigurator::presenceConditionManager.newPresenceCondition(true))	
+				it.is_PresenceCondition && ancestors.last.indexOf(it) < ancestors.last.indexOf(node)
+			].as_PresenceCondition ?: Reconfigurator::presenceConditionManager.newPresenceCondition(true))	
 		}
 		
 		result

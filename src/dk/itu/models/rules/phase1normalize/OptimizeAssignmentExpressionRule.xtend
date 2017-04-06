@@ -32,10 +32,10 @@ class OptimizeAssignmentExpressionRule extends Rule {
 			val PCs =
 				if (opIndex != -1)
 					asgnExp.filter[it.is_GNode("Conditional")]
-						.map[node | node.as_GNode.get(0) as PresenceCondition]
+						.map[node | node.as_GNode.get(0).as_PresenceCondition]
 				else
 					asgnExp.filter[it.is_GNode("Conditional") && asgnExp.indexOf(it) < opIndex]
-						.map[node | node.as_GNode.get(0) as PresenceCondition]
+						.map[node | node.as_GNode.get(0).as_PresenceCondition]
 			
 			// compute the disjunction of all declaration PCs
 			var PresenceCondition disjunctionPC = null
