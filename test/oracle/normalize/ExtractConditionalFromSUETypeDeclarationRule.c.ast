@@ -1,0 +1,284 @@
+|- TranslationUnit
+   |- ExternalDeclarationList
+      |- Declaration
+      |  |- SUETypeSpecifier
+      |  |  |- StructSpecifier
+      |  |     |- xtc.lang.cpp.Syntax.Language<STRUCT>struct  
+      |  |     |- IdentifierOrTypedefName
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>s_V1  
+      |  |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |     |- StructDeclarationList
+      |  |     |  |- StructDeclaration
+      |  |     |  |  |- StructDeclaringList
+      |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
+      |  |     |  |  |  |- StructDeclarator
+      |  |     |  |  |  |  |- SimpleDeclarator
+      |  |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
+      |  |     |  |  |  |  |- BitFieldSizeOpt
+      |  |     |  |  |  |- AttributeSpecifierListOpt
+      |  |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |     |  |- StructDeclaration
+      |  |     |     |- StructDeclaringList
+      |  |     |     |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |     |     |  |- StructDeclarator
+      |  |     |     |  |  |- SimpleDeclarator
+      |  |     |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>a  
+      |  |     |     |  |  |- BitFieldSizeOpt
+      |  |     |     |  |- AttributeSpecifierListOpt
+      |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- SUETypeSpecifier
+      |  |  |- StructSpecifier
+      |  |     |- xtc.lang.cpp.Syntax.Language<STRUCT>struct  
+      |  |     |- IdentifierOrTypedefName
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>s_V2  
+      |  |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |     |- StructDeclarationList
+      |  |     |  |- StructDeclaration
+      |  |     |     |- StructDeclaringList
+      |  |     |     |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
+      |  |     |     |  |- StructDeclarator
+      |  |     |     |  |  |- SimpleDeclarator
+      |  |     |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
+      |  |     |     |  |  |- BitFieldSizeOpt
+      |  |     |     |  |- AttributeSpecifierListOpt
+      |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- SUETypeSpecifier
+      |  |  |- StructSpecifier
+      |  |     |- xtc.lang.cpp.Syntax.Language<STRUCT>struct  
+      |  |     |- IdentifierOrTypedefName
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>s1_V1  
+      |  |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |     |- StructDeclarationList
+      |  |     |  |- StructDeclaration
+      |  |     |  |  |- StructDeclaringList
+      |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
+      |  |     |  |  |  |- StructDeclarator
+      |  |     |  |  |  |  |- SimpleDeclarator
+      |  |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>bb  
+      |  |     |  |  |  |  |- BitFieldSizeOpt
+      |  |     |  |  |  |- AttributeSpecifierListOpt
+      |  |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |     |  |- StructDeclaration
+      |  |     |     |- StructDeclaringList
+      |  |     |     |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |     |     |  |- StructDeclarator
+      |  |     |     |  |  |- SimpleDeclarator
+      |  |     |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>bbb  
+      |  |     |     |  |  |- BitFieldSizeOpt
+      |  |     |     |  |- AttributeSpecifierListOpt
+      |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- SUETypeSpecifier
+      |  |  |- StructSpecifier
+      |  |     |- xtc.lang.cpp.Syntax.Language<STRUCT>struct  
+      |  |     |- IdentifierOrTypedefName
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>s1_V2  
+      |  |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |     |- StructDeclarationList
+      |  |     |  |- StructDeclaration
+      |  |     |  |  |- StructDeclaringList
+      |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
+      |  |     |  |  |  |- StructDeclarator
+      |  |     |  |  |  |  |- SimpleDeclarator
+      |  |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>cc  
+      |  |     |  |  |  |  |- BitFieldSizeOpt
+      |  |     |  |  |  |- AttributeSpecifierListOpt
+      |  |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |     |  |- StructDeclaration
+      |  |     |     |- StructDeclaringList
+      |  |     |     |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |     |     |  |- StructDeclarator
+      |  |     |     |  |  |- SimpleDeclarator
+      |  |     |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>ccc  
+      |  |     |     |  |  |- BitFieldSizeOpt
+      |  |     |     |  |- AttributeSpecifierListOpt
+      |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- SUETypeSpecifier
+      |  |  |- UnionSpecifier
+      |  |     |- xtc.lang.cpp.Syntax.Language<UNION>union  
+      |  |     |- IdentifierOrTypedefName
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>u_V1  
+      |  |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |     |- StructDeclarationList
+      |  |     |  |- StructDeclaration
+      |  |     |  |  |- StructDeclaringList
+      |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
+      |  |     |  |  |  |- StructDeclarator
+      |  |     |  |  |  |  |- SimpleDeclarator
+      |  |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
+      |  |     |  |  |  |  |- BitFieldSizeOpt
+      |  |     |  |  |  |- AttributeSpecifierListOpt
+      |  |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |     |  |- StructDeclaration
+      |  |     |     |- StructDeclaringList
+      |  |     |     |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |     |     |  |- StructDeclarator
+      |  |     |     |  |  |- SimpleDeclarator
+      |  |     |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>a  
+      |  |     |     |  |  |- BitFieldSizeOpt
+      |  |     |     |  |- AttributeSpecifierListOpt
+      |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- SUETypeSpecifier
+      |  |  |- UnionSpecifier
+      |  |     |- xtc.lang.cpp.Syntax.Language<UNION>union  
+      |  |     |- IdentifierOrTypedefName
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>u_V2  
+      |  |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |     |- StructDeclarationList
+      |  |     |  |- StructDeclaration
+      |  |     |     |- StructDeclaringList
+      |  |     |     |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
+      |  |     |     |  |- StructDeclarator
+      |  |     |     |  |  |- SimpleDeclarator
+      |  |     |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
+      |  |     |     |  |  |- BitFieldSizeOpt
+      |  |     |     |  |- AttributeSpecifierListOpt
+      |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- SUETypeSpecifier
+      |  |  |- StructSpecifier
+      |  |     |- xtc.lang.cpp.Syntax.Language<STRUCT>struct  
+      |  |     |- IdentifierOrTypedefName
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>u1_V1  
+      |  |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |     |- StructDeclarationList
+      |  |     |  |- StructDeclaration
+      |  |     |  |  |- StructDeclaringList
+      |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
+      |  |     |  |  |  |- StructDeclarator
+      |  |     |  |  |  |  |- SimpleDeclarator
+      |  |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>bb  
+      |  |     |  |  |  |  |- BitFieldSizeOpt
+      |  |     |  |  |  |- AttributeSpecifierListOpt
+      |  |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |     |  |- StructDeclaration
+      |  |     |     |- StructDeclaringList
+      |  |     |     |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |     |     |  |- StructDeclarator
+      |  |     |     |  |  |- SimpleDeclarator
+      |  |     |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>bbb  
+      |  |     |     |  |  |- BitFieldSizeOpt
+      |  |     |     |  |- AttributeSpecifierListOpt
+      |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- SUETypeSpecifier
+      |  |  |- StructSpecifier
+      |  |     |- xtc.lang.cpp.Syntax.Language<STRUCT>struct  
+      |  |     |- IdentifierOrTypedefName
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>u1_V2  
+      |  |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |     |- StructDeclarationList
+      |  |     |  |- StructDeclaration
+      |  |     |  |  |- StructDeclaringList
+      |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
+      |  |     |  |  |  |- StructDeclarator
+      |  |     |  |  |  |  |- SimpleDeclarator
+      |  |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>cc  
+      |  |     |  |  |  |  |- BitFieldSizeOpt
+      |  |     |  |  |  |- AttributeSpecifierListOpt
+      |  |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |     |  |- StructDeclaration
+      |  |     |     |- StructDeclaringList
+      |  |     |     |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |     |     |  |- StructDeclarator
+      |  |     |     |  |  |- SimpleDeclarator
+      |  |     |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>ccc  
+      |  |     |     |  |  |- BitFieldSizeOpt
+      |  |     |     |  |- AttributeSpecifierListOpt
+      |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- SUETypeSpecifier
+      |  |  |- EnumSpecifier
+      |  |     |- xtc.lang.cpp.Syntax.Language<ENUM>enum  
+      |  |     |- IdentifierOrTypedefName
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>e  
+      |  |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |     |- EnumeratorList
+      |  |     |  |- Enumerator
+      |  |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>FIRST_V1  
+      |  |     |  |  |- EnumeratorValueOpt
+      |  |     |  |- xtc.lang.cpp.Syntax.Language<COMMA>,  
+      |  |     |  |- Enumerator
+      |  |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>SECOND_V1  
+      |  |     |  |  |- EnumeratorValueOpt
+      |  |     |  |- xtc.lang.cpp.Syntax.Language<COMMA>,  
+      |  |     |  |- Enumerator
+      |  |     |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>THIRD_V1  
+      |  |     |     |- EnumeratorValueOpt
+      |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- SUETypeSpecifier
+      |  |  |- EnumSpecifier
+      |  |     |- xtc.lang.cpp.Syntax.Language<ENUM>enum  
+      |  |     |- IdentifierOrTypedefName
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>e  
+      |  |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |     |- EnumeratorList
+      |  |     |  |- Enumerator
+      |  |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>FIRST_V1  
+      |  |     |  |  |- EnumeratorValueOpt
+      |  |     |  |- xtc.lang.cpp.Syntax.Language<COMMA>,  
+      |  |     |  |- Enumerator
+      |  |     |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>THIRD_V1  
+      |  |     |     |- EnumeratorValueOpt
+      |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- SUETypeSpecifier
+      |  |  |- EnumSpecifier
+      |  |     |- xtc.lang.cpp.Syntax.Language<ENUM>enum  
+      |  |     |- IdentifierOrTypedefName
+      |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>e1  
+      |  |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+      |  |     |- EnumeratorList
+      |  |     |  |- Enumerator
+      |  |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>FIRST_V1  
+      |  |     |  |  |- EnumeratorValueOpt
+      |  |     |  |- xtc.lang.cpp.Syntax.Language<COMMA>,  
+      |  |     |  |- Enumerator
+      |  |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>SECOND_V1  
+      |  |     |  |  |- EnumeratorValueOpt
+      |  |     |  |- xtc.lang.cpp.Syntax.Language<COMMA>,  
+      |  |     |  |- Enumerator
+      |  |     |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>THIRD_V1  
+      |  |     |     |- EnumeratorValueOpt
+      |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+         |- SUETypeSpecifier
+         |  |- EnumSpecifier
+         |     |- xtc.lang.cpp.Syntax.Language<ENUM>enum  
+         |     |- IdentifierOrTypedefName
+         |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>e1  
+         |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |     |- EnumeratorList
+         |     |  |- Enumerator
+         |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>FOURTH_V1  
+         |     |  |  |- EnumeratorValueOpt
+         |     |  |- xtc.lang.cpp.Syntax.Language<COMMA>,  
+         |     |  |- Enumerator
+         |     |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>FIFTH_V1  
+         |     |     |- EnumeratorValueOpt
+         |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+         |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  

@@ -1,0 +1,344 @@
+|- TranslationUnit
+   |- ExternalDeclarationList
+      |- FunctionDefinition
+         |- FunctionPrototype
+         |  |- xtc.lang.cpp.Syntax.Language<VOID>void  
+         |  |- FunctionDeclarator
+         |     |- SimpleDeclarator
+         |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>foo  
+         |     |- PostfixingFunctionDeclarator
+         |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |- ParameterTypeListOpt
+         |        |  |- ParameterTypeList
+         |        |     |- ParameterList
+         |        |        |- ParameterIdentifierDeclaration
+         |        |           |- xtc.lang.cpp.Syntax.Language<INT>int  
+         |        |           |- SimpleDeclarator
+         |        |           |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |           |- AttributeSpecifierListOpt
+         |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |- CompoundStatement
+         |  |- LocalLabelDeclarationListOpt
+         |  |- DeclarationOrStatementList
+         |     |- SelectionStatement
+         |        |- xtc.lang.cpp.Syntax.Language<IF>if  
+         |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |- PrimaryExpression
+         |        |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |  |- PrimaryIdentifier
+         |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>_reconfig_ENABLE_B  
+         |        |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |        |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |        |- SelectionStatement
+         |        |  |- xtc.lang.cpp.Syntax.Language<SWITCH>switch  
+         |        |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |  |- PrimaryIdentifier
+         |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |        |  |- CompoundStatement
+         |        |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |        |     |- LocalLabelDeclarationListOpt
+         |        |     |- DeclarationOrStatementList
+         |        |     |  |- LabeledStatement
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<CASE>case  
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Text<OCTALconstant>0  
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<COLON>:  
+         |        |     |  |  |- SelectionStatement
+         |        |     |  |     |- xtc.lang.cpp.Syntax.Language<IF>if  
+         |        |     |  |     |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |     |  |     |- PrimaryExpression
+         |        |     |  |     |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |     |  |     |  |- PrimaryIdentifier
+         |        |     |  |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>_reconfig_ENABLE_A  
+         |        |     |  |     |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |        |     |  |     |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |        |     |  |     |- CompoundStatement
+         |        |     |  |     |  |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |        |     |  |     |  |- LocalLabelDeclarationListOpt
+         |        |     |  |     |  |- DeclarationOrStatementList
+         |        |     |  |     |  |  |- ExpressionStatement
+         |        |     |  |     |  |  |  |- Increment
+         |        |     |  |     |  |  |  |  |- PrimaryIdentifier
+         |        |     |  |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |  |     |  |  |  |  |- xtc.lang.cpp.Syntax.Language<ICR>++  
+         |        |     |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |     |  |     |  |  |- ExpressionStatement
+         |        |     |  |     |  |     |- Decrement
+         |        |     |  |     |  |     |  |- PrimaryIdentifier
+         |        |     |  |     |  |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |  |     |  |     |  |- xtc.lang.cpp.Syntax.Language<DECR>--  
+         |        |     |  |     |  |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |     |  |     |  |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+         |        |     |  |     |- xtc.lang.cpp.Syntax.Language<ELSE>else  
+         |        |     |  |     |- CompoundStatement
+         |        |     |  |        |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |        |     |  |        |- LocalLabelDeclarationListOpt
+         |        |     |  |        |- DeclarationOrStatementList
+         |        |     |  |        |  |- ExpressionStatement
+         |        |     |  |        |     |- Increment
+         |        |     |  |        |     |  |- PrimaryIdentifier
+         |        |     |  |        |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |  |        |     |  |- xtc.lang.cpp.Syntax.Language<ICR>++  
+         |        |     |  |        |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |     |  |        |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+         |        |     |  |- BreakStatement
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<BREAK>break  
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |     |  |- LabeledStatement
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<CASE>case  
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>1  
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<COLON>:  
+         |        |     |  |  |- LabeledStatement
+         |        |     |  |     |- xtc.lang.cpp.Syntax.Language<CASE>case  
+         |        |     |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>2  
+         |        |     |  |     |- xtc.lang.cpp.Syntax.Language<COLON>:  
+         |        |     |  |     |- SelectionStatement
+         |        |     |  |        |- xtc.lang.cpp.Syntax.Language<IF>if  
+         |        |     |  |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |     |  |        |- PrimaryExpression
+         |        |     |  |        |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |     |  |        |  |- PrimaryIdentifier
+         |        |     |  |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>_reconfig_ENABLE_A  
+         |        |     |  |        |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |        |     |  |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |        |     |  |        |- CompoundStatement
+         |        |     |  |        |  |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |        |     |  |        |  |- LocalLabelDeclarationListOpt
+         |        |     |  |        |  |- DeclarationOrStatementList
+         |        |     |  |        |  |  |- ExpressionStatement
+         |        |     |  |        |  |  |  |- AssignmentExpression
+         |        |     |  |        |  |  |  |  |- PrimaryIdentifier
+         |        |     |  |        |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |  |        |  |  |  |  |- AssignmentOperator
+         |        |     |  |        |  |  |  |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+         |        |     |  |        |  |  |  |  |- AdditiveExpression
+         |        |     |  |        |  |  |  |     |- PrimaryIdentifier
+         |        |     |  |        |  |  |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |  |        |  |  |  |     |- xtc.lang.cpp.Syntax.Language<PLUS>+  
+         |        |     |  |        |  |  |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>2  
+         |        |     |  |        |  |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |     |  |        |  |  |- ExpressionStatement
+         |        |     |  |        |  |     |- AssignmentExpression
+         |        |     |  |        |  |     |  |- PrimaryIdentifier
+         |        |     |  |        |  |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |  |        |  |     |  |- AssignmentOperator
+         |        |     |  |        |  |     |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+         |        |     |  |        |  |     |  |- AdditiveExpression
+         |        |     |  |        |  |     |     |- PrimaryIdentifier
+         |        |     |  |        |  |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |  |        |  |     |     |- xtc.lang.cpp.Syntax.Language<PLUS>+  
+         |        |     |  |        |  |     |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>3  
+         |        |     |  |        |  |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |     |  |        |  |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+         |        |     |  |        |- xtc.lang.cpp.Syntax.Language<ELSE>else  
+         |        |     |  |        |- CompoundStatement
+         |        |     |  |           |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |        |     |  |           |- LocalLabelDeclarationListOpt
+         |        |     |  |           |- DeclarationOrStatementList
+         |        |     |  |           |  |- ExpressionStatement
+         |        |     |  |           |     |- AssignmentExpression
+         |        |     |  |           |     |  |- PrimaryIdentifier
+         |        |     |  |           |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |  |           |     |  |- AssignmentOperator
+         |        |     |  |           |     |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+         |        |     |  |           |     |  |- AdditiveExpression
+         |        |     |  |           |     |     |- PrimaryIdentifier
+         |        |     |  |           |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |  |           |     |     |- xtc.lang.cpp.Syntax.Language<PLUS>+  
+         |        |     |  |           |     |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>2  
+         |        |     |  |           |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |     |  |           |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+         |        |     |  |- BreakStatement
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<BREAK>break  
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |     |  |- LabeledStatement
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<CASE>case  
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>3  
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<COLON>:  
+         |        |     |  |  |- CompoundStatement
+         |        |     |  |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |        |     |  |     |- LocalLabelDeclarationListOpt
+         |        |     |  |     |- DeclarationOrStatementList
+         |        |     |  |     |  |- ExpressionStatement
+         |        |     |  |     |     |- AssignmentExpression
+         |        |     |  |     |     |  |- PrimaryIdentifier
+         |        |     |  |     |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |  |     |     |  |- AssignmentOperator
+         |        |     |  |     |     |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+         |        |     |  |     |     |  |- AdditiveExpression
+         |        |     |  |     |     |     |- PrimaryIdentifier
+         |        |     |  |     |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |  |     |     |     |- xtc.lang.cpp.Syntax.Language<MINUS>-  
+         |        |     |  |     |     |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>10  
+         |        |     |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |     |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+         |        |     |  |- BreakStatement
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<BREAK>break  
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |     |  |- LabeledStatement
+         |        |     |     |- xtc.lang.cpp.Syntax.Language<CASE>case  
+         |        |     |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>4  
+         |        |     |     |- xtc.lang.cpp.Syntax.Language<COLON>:  
+         |        |     |     |- ExpressionStatement
+         |        |     |        |- AssignmentExpression
+         |        |     |        |  |- PrimaryIdentifier
+         |        |     |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |        |  |- AssignmentOperator
+         |        |     |        |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+         |        |     |        |  |- AdditiveExpression
+         |        |     |        |     |- PrimaryIdentifier
+         |        |     |        |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |        |     |- xtc.lang.cpp.Syntax.Language<PLUS>+  
+         |        |     |        |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>9  
+         |        |     |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+         |        |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+         |        |- xtc.lang.cpp.Syntax.Language<ELSE>else  
+         |        |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |        |- SelectionStatement
+         |        |  |- xtc.lang.cpp.Syntax.Language<SWITCH>switch  
+         |        |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |  |- PrimaryIdentifier
+         |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |        |  |- CompoundStatement
+         |        |     |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |        |     |- LocalLabelDeclarationListOpt
+         |        |     |- DeclarationOrStatementList
+         |        |     |  |- LabeledStatement
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<CASE>case  
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Text<OCTALconstant>0  
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<COLON>:  
+         |        |     |  |  |- SelectionStatement
+         |        |     |  |     |- xtc.lang.cpp.Syntax.Language<IF>if  
+         |        |     |  |     |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |     |  |     |- PrimaryExpression
+         |        |     |  |     |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |     |  |     |  |- PrimaryIdentifier
+         |        |     |  |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>_reconfig_ENABLE_A  
+         |        |     |  |     |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |        |     |  |     |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |        |     |  |     |- CompoundStatement
+         |        |     |  |     |  |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |        |     |  |     |  |- LocalLabelDeclarationListOpt
+         |        |     |  |     |  |- DeclarationOrStatementList
+         |        |     |  |     |  |  |- ExpressionStatement
+         |        |     |  |     |  |  |  |- Increment
+         |        |     |  |     |  |  |  |  |- PrimaryIdentifier
+         |        |     |  |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |  |     |  |  |  |  |- xtc.lang.cpp.Syntax.Language<ICR>++  
+         |        |     |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |     |  |     |  |  |- ExpressionStatement
+         |        |     |  |     |  |     |- Decrement
+         |        |     |  |     |  |     |  |- PrimaryIdentifier
+         |        |     |  |     |  |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |  |     |  |     |  |- xtc.lang.cpp.Syntax.Language<DECR>--  
+         |        |     |  |     |  |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |     |  |     |  |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+         |        |     |  |     |- xtc.lang.cpp.Syntax.Language<ELSE>else  
+         |        |     |  |     |- CompoundStatement
+         |        |     |  |        |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |        |     |  |        |- LocalLabelDeclarationListOpt
+         |        |     |  |        |- DeclarationOrStatementList
+         |        |     |  |        |  |- ExpressionStatement
+         |        |     |  |        |     |- Increment
+         |        |     |  |        |     |  |- PrimaryIdentifier
+         |        |     |  |        |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |  |        |     |  |- xtc.lang.cpp.Syntax.Language<ICR>++  
+         |        |     |  |        |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |     |  |        |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+         |        |     |  |- BreakStatement
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<BREAK>break  
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |     |  |- LabeledStatement
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<CASE>case  
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>1  
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<COLON>:  
+         |        |     |  |  |- LabeledStatement
+         |        |     |  |     |- xtc.lang.cpp.Syntax.Language<CASE>case  
+         |        |     |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>2  
+         |        |     |  |     |- xtc.lang.cpp.Syntax.Language<COLON>:  
+         |        |     |  |     |- SelectionStatement
+         |        |     |  |        |- xtc.lang.cpp.Syntax.Language<IF>if  
+         |        |     |  |        |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |     |  |        |- PrimaryExpression
+         |        |     |  |        |  |- xtc.lang.cpp.Syntax.Language<LPAREN>(  
+         |        |     |  |        |  |- PrimaryIdentifier
+         |        |     |  |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>_reconfig_ENABLE_A  
+         |        |     |  |        |  |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |        |     |  |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
+         |        |     |  |        |- CompoundStatement
+         |        |     |  |        |  |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |        |     |  |        |  |- LocalLabelDeclarationListOpt
+         |        |     |  |        |  |- DeclarationOrStatementList
+         |        |     |  |        |  |  |- ExpressionStatement
+         |        |     |  |        |  |  |  |- AssignmentExpression
+         |        |     |  |        |  |  |  |  |- PrimaryIdentifier
+         |        |     |  |        |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |  |        |  |  |  |  |- AssignmentOperator
+         |        |     |  |        |  |  |  |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+         |        |     |  |        |  |  |  |  |- AdditiveExpression
+         |        |     |  |        |  |  |  |     |- PrimaryIdentifier
+         |        |     |  |        |  |  |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |  |        |  |  |  |     |- xtc.lang.cpp.Syntax.Language<PLUS>+  
+         |        |     |  |        |  |  |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>2  
+         |        |     |  |        |  |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |     |  |        |  |  |- ExpressionStatement
+         |        |     |  |        |  |     |- AssignmentExpression
+         |        |     |  |        |  |     |  |- PrimaryIdentifier
+         |        |     |  |        |  |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |  |        |  |     |  |- AssignmentOperator
+         |        |     |  |        |  |     |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+         |        |     |  |        |  |     |  |- AdditiveExpression
+         |        |     |  |        |  |     |     |- PrimaryIdentifier
+         |        |     |  |        |  |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |  |        |  |     |     |- xtc.lang.cpp.Syntax.Language<PLUS>+  
+         |        |     |  |        |  |     |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>3  
+         |        |     |  |        |  |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |     |  |        |  |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+         |        |     |  |        |- xtc.lang.cpp.Syntax.Language<ELSE>else  
+         |        |     |  |        |- CompoundStatement
+         |        |     |  |           |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
+         |        |     |  |           |- LocalLabelDeclarationListOpt
+         |        |     |  |           |- DeclarationOrStatementList
+         |        |     |  |           |  |- ExpressionStatement
+         |        |     |  |           |     |- AssignmentExpression
+         |        |     |  |           |     |  |- PrimaryIdentifier
+         |        |     |  |           |     |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |  |           |     |  |- AssignmentOperator
+         |        |     |  |           |     |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+         |        |     |  |           |     |  |- AdditiveExpression
+         |        |     |  |           |     |     |- PrimaryIdentifier
+         |        |     |  |           |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |  |           |     |     |- xtc.lang.cpp.Syntax.Language<PLUS>+  
+         |        |     |  |           |     |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>2  
+         |        |     |  |           |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |     |  |           |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+         |        |     |  |- BreakStatement
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<BREAK>break  
+         |        |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |     |  |- LabeledStatement
+         |        |     |     |- xtc.lang.cpp.Syntax.Language<CASE>case  
+         |        |     |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>3  
+         |        |     |     |- xtc.lang.cpp.Syntax.Language<COLON>:  
+         |        |     |     |- LabeledStatement
+         |        |     |        |- xtc.lang.cpp.Syntax.Language<CASE>case  
+         |        |     |        |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>4  
+         |        |     |        |- xtc.lang.cpp.Syntax.Language<COLON>:  
+         |        |     |        |- ExpressionStatement
+         |        |     |           |- AssignmentExpression
+         |        |     |           |  |- PrimaryIdentifier
+         |        |     |           |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |           |  |- AssignmentOperator
+         |        |     |           |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
+         |        |     |           |  |- AdditiveExpression
+         |        |     |           |     |- PrimaryIdentifier
+         |        |     |           |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |        |     |           |     |- xtc.lang.cpp.Syntax.Language<PLUS>+  
+         |        |     |           |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>9  
+         |        |     |           |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+         |        |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+         |        |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
+         |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
