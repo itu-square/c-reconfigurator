@@ -26,9 +26,9 @@ class SetLocationOnDeclarationRule extends Rule {
 		
 		if (
 			#["Declaration", "DeclarationExtension", "FunctionDefinition"].contains(node.name)
-			&& node.location == null
+			&& node.location === null
 		) {
-			node.location = node.getDescendantNode[it.location != null].location
+			node.location = node.getDescendantNode[it.location !== null].location
 		}
 		node
 	}

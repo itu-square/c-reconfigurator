@@ -35,7 +35,7 @@ class ExtractConditionalFromSwitchStatementRule extends AncestorGuaranteedRule {
 			val declarationOrStatementList = node.getDescendantNode("DeclarationOrStatementList").as_GNode
 			
 			if (
-				declarationOrStatementList != null
+				declarationOrStatementList !== null
 				&& declarationOrStatementList.filter[it.is_GNode("Conditional")].size > 0
 			) {
 				

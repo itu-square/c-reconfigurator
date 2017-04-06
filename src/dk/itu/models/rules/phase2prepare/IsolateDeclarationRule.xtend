@@ -51,7 +51,7 @@ class IsolateDeclarationRule extends AncestorGuaranteedRule {
 			&& pair.head.is_GNode("Conditional")
 			&& pair.head.as_GNode.size >= 3
 			
-			&& decl != null
+			&& decl !== null
 		){
 			val  declIndex = pair.head.as_GNode.indexOf(decl)
 			

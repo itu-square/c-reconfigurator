@@ -31,10 +31,10 @@ class ExtractConditionalFromArrayDeclaratorRule extends AncestorGuaranteedRule {
 		
 		if (
 			node.name.equals("Declaration")
-			&& arrayDeclarator != null
+			&& arrayDeclarator !== null
 			&& (
 				!ancestors.exists[anc | anc.name.equals("FunctionDefinition")]
-				|| node.getDescendantNode("InitializerOpt") == null)
+				|| node.getDescendantNode("InitializerOpt") === null)
 			&& pcs.size != 0
 			&& !(pcs.size == 1 && pcs.get(0).isTrue)
 		) {

@@ -96,7 +96,7 @@ class Extensions {
 	        val StringBuilder sb = new StringBuilder();
 	        var String line = br.readLine();
 	
-	        while (line != null) {
+	        while (line !== null) {
 	            sb.append(line);
 	            sb.append("\n");
 	            line = br.readLine();
@@ -167,8 +167,8 @@ class Extensions {
 	
 	
 	private static def <T> UnmodifiableIterator<T> filterIndexedHelper(Iterable<T> unfiltered, Function2<? super T, Integer, Boolean> predicate) {
-		if (unfiltered == null) throw new NullPointerException();
-		if (predicate == null) throw new NullPointerException();
+		if (unfiltered === null) throw new NullPointerException();
+		if (predicate === null) throw new NullPointerException();
 		return new AbstractIterator<T>() {
 			val iterator = unfiltered.iterator
 			private var index = 0
@@ -185,7 +185,7 @@ class Extensions {
   	}
 	
 	public static def <T> Iterable<T> filterIndexed (Iterable<T> unfiltered, Function2<? super T, Integer, Boolean> predicate) {
-		if (unfiltered == null) throw new NullPointerException();
+		if (unfiltered === null) throw new NullPointerException();
 		return new FluentIterable<T>() {
 			override public Iterator<T> iterator() {
 				return filterIndexedHelper(unfiltered, predicate);
@@ -196,8 +196,8 @@ class Extensions {
 	
 	
 	private static def <T> UnmodifiableIterator<T> filterFixedHelper(Iterable<T> unfiltered, Function2<? super T, Iterable<T>, Boolean> predicate) {
-		if (unfiltered == null) throw new NullPointerException();
-		if (predicate == null) throw new NullPointerException();
+		if (unfiltered === null) throw new NullPointerException();
+		if (predicate === null) throw new NullPointerException();
 		return new AbstractIterator<T>() {
 			val iterator = unfiltered.iterator
 			override protected T computeNext() {
@@ -213,7 +213,7 @@ class Extensions {
   	}
 	
 	public static def <T> Iterable<T> filterFixed (Iterable<T> unfiltered, Function2<? super T, Iterable<T>, Boolean> predicate) {
-		if (unfiltered == null) throw new NullPointerException();
+		if (unfiltered === null) throw new NullPointerException();
 		return new FluentIterable<T>() {
 			override public Iterator<T> iterator() {
 				return filterFixedHelper(unfiltered, predicate);
@@ -223,8 +223,8 @@ class Extensions {
 	
 	
 	private static def filterFixedHelper(Node unfiltered, Function2<Object, Node, Boolean> predicate) {
-		if (unfiltered == null) throw new NullPointerException();
-		if (predicate == null) throw new NullPointerException();
+		if (unfiltered === null) throw new NullPointerException();
+		if (predicate === null) throw new NullPointerException();
 		return new AbstractIterator<Object>() {
 			val iterator = unfiltered.iterator
 			override protected computeNext() {
@@ -240,7 +240,7 @@ class Extensions {
   	}
 	
 	public static def filterFixed (Node unfiltered, Function2<Object, Node, Boolean> predicate) {
-		if (unfiltered == null) throw new NullPointerException();
+		if (unfiltered === null) throw new NullPointerException();
 		return new FluentIterable<Object>() {
 			override public Iterator<Object> iterator() {
 				return filterFixedHelper(unfiltered, predicate);
@@ -374,7 +374,7 @@ class Extensions {
 			val current = input.get(i)
 			
 			if ((current.toString).equals("+")) {
-				if(disj == null) { disj = conj }
+				if(disj === null) { disj = conj }
 				else { disj = GNode::create("LogicalORExpression", disj, new Language<CTag>(CTag.OROR), conj) }
         		conj = null;
 			} else if (!(current.toString).equals("'") && !(current.toString).equals(" ")) {
@@ -394,12 +394,12 @@ class Extensions {
 							GNode::create("Unaryoperator", new Language<CTag>(CTag.NOT)),
 							term)
 					
-				if(conj == null) { conj = term }
+				if(conj === null) { conj = term }
 				else { conj = GNode::create("LogicalAndExpression", conj, new Language<CTag>(CTag.ANDAND), term) }
 			}
 		}
 		
-		if(disj == null) { disj = conj }
+		if(disj === null) { disj = conj }
 		else { disj = GNode::create("LogicalORExpression", disj, new Language<CTag>(CTag.OROR), conj) }
 
 		GNode::create("PrimaryExpression",
@@ -432,7 +432,7 @@ class Extensions {
 		for(Object child : node) {
 			if (child instanceof Node) {
 				val location = (child as Node).location
-				if (location != null && !locations.contains(location.file))
+				if (location !== null && !locations.contains(location.file))
 					locations.add(location.file)
 				getNestedNodesLocations(child as Node, locations)
 			}
@@ -442,7 +442,7 @@ class Extensions {
 	public static def List<String> getNestedNodesLocations(Node node)
 	{
 		val ArrayList<String> locations = new ArrayList<String>
-		if (node.location != null)
+		if (node.location !== null)
 			locations.add(node.location.file)
 		getNestedNodesLocations(node, locations)
 		return locations
@@ -455,7 +455,7 @@ class Extensions {
 					return child
 				else {
 					val r = (child as Node).getDescendantNode(test)
-					if (r != null) return r
+					if (r !== null) return r
 				}
 			}
 		}
@@ -470,7 +470,7 @@ class Extensions {
 		node.getDescendantNode[
 			it instanceof Language<?>
 			&& (it as Language<CTag>).tag.equals(CTag::TYPEDEF)
-		] != null
+		] !== null
 	}
 	
 	public static def replaceDeclaratorTextWithNewId (GNode node, String newId) {

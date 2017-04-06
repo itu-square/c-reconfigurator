@@ -34,7 +34,7 @@ class ExtractConditionalFromSUETypeDeclarationRule extends AncestorGuaranteedRul
 			
 			val conditional = node.getDescendantNode("Conditional")
 			
-			if (conditional != null) {
+			if (conditional !== null) {
 				val pcs = conditional.filter(PresenceCondition)
 				
 				var newNode = GNode::create("Conditional")

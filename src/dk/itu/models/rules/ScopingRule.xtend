@@ -146,7 +146,7 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			val type = node.typeOfFunctionDefinition
 			
 			var typeDeclaration = typeDeclarations.getDeclaration(type) as TypeDeclaration
-			if (typeDeclaration == null)
+			if (typeDeclaration === null)
 				throw new Exception('''ScopingRule: type declaration [«type»] of [«name»] not found.''')
 
 			var newFuncDeclaration = new FunctionDeclaration(name, typeDeclaration)
@@ -295,10 +295,10 @@ abstract class ScopingRule extends AncestorGuaranteedRule {
 			 	"VarArgDeclarationSpecifier", "VarArgTypeName", "VolatileQualifier",
 				"Word"].contains(node.name)
 			|| (node.name.equals("ParameterDeclaration") && (node.size == 1 || !node.is_GNode))
-			|| (node.name.equals("ParameterDeclaration") && node.getDescendantNode("EnumSpecifier") != null )
-			|| (node.name.equals("Declaration") && node.getDescendantNode("EnumSpecifier") != null )
-			|| (node.name.equals("Declaration") && node.getDescendantNode("StructOrUnionSpecifier") != null )
-			|| (node.name.equals("ParameterDeclaration") && node.getDescendantNode("SimpleDeclarator") == null)
+			|| (node.name.equals("ParameterDeclaration") && node.getDescendantNode("EnumSpecifier") !== null )
+			|| (node.name.equals("Declaration") && node.getDescendantNode("EnumSpecifier") !== null )
+			|| (node.name.equals("Declaration") && node.getDescendantNode("StructOrUnionSpecifier") !== null )
+			|| (node.name.equals("ParameterDeclaration") && node.getDescendantNode("SimpleDeclarator") === null)
 			|| (node.name.equals("ParameterAbstractDeclaration") && node.size == 1)
 			|| (node.isVariableDeclaration
 				&& node.getNameOfVariableDeclaration.startsWith(Settings::reconfiguratorIncludePlaceholder))

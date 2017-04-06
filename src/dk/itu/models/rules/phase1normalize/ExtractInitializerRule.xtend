@@ -59,7 +59,7 @@ class ExtractInitializerRule extends AncestorGuaranteedRule {
 					stringLiteralList.size == 1
 					&& stringLiteralList.getDescendantNode[
 						it instanceof Text<?> && (it as Text<CTag>).tag.equals(CTag::STRINGliteral)
-					] != null
+					] !== null
 				) {
 					var str = stringLiteralList.getDescendantNode[
 						it instanceof Text<?> && (it as Text<CTag>).tag.equals(CTag::STRINGliteral)].toString
@@ -106,7 +106,7 @@ class ExtractInitializerRule extends AncestorGuaranteedRule {
 				&& initializer.get(3) instanceof Language<?>
 				&& (initializer.get(3) as Language<CTag>).tag.equals(CTag::RBRACE)
 				
-				&& declaringList.getDescendantNode("ArrayAbstractDeclarator") != null
+				&& declaringList.getDescendantNode("ArrayAbstractDeclarator") !== null
 			) {
 				val newDeclaration = 
 					GNode::create("Declaration",
@@ -115,7 +115,7 @@ class ExtractInitializerRule extends AncestorGuaranteedRule {
 							GNode::create("SimpleDeclarator",
 								new Text<CTag>(CTag::IDENTIFIER, '''_reconfig_«varName»_index'''))),
 						new Language<CTag>(CTag::SEMICOLON))
-				newDeclaration.location = pair.head.as_GNode.getDescendantNode[it.location != null].location
+				newDeclaration.location = pair.head.as_GNode.getDescendantNode[it.location !== null].location
 				
 				newPair = newPair.add(newDeclaration)
 						

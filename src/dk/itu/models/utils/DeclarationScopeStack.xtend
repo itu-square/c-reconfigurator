@@ -32,7 +32,7 @@ class DeclarationScopeStack {
 		
 		for (DeclarationScope scope : stack) {
 			declaration = scope.getDeclaration(name)
-			if (declaration != null)
+			if (declaration !== null)
 				return declaration
 		}
 		

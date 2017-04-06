@@ -90,8 +90,8 @@ class LibSSHTest {
 		
 		val passes = report.fileRecords.filter[
 			!folder
-			&& errors.findFirst[it.error.startsWith("Exception: ")] == null
-			&& errors.findFirst[it.error.startsWith("oracle: ")] == null
+			&& errors.findFirst[it.error.startsWith("Exception: ")] === null
+			&& errors.findFirst[it.error.startsWith("oracle: ")] === null
 		].size
 		val files = report.fileRecords.filter[!folder].size
 		println

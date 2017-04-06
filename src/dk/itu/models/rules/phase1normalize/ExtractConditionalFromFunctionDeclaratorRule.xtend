@@ -32,7 +32,7 @@ class ExtractConditionalFromFunctionDeclaratorRule extends AncestorGuaranteedRul
 		if (
 			node.name.equals("Declaration")
 			&& !ancestors.exists[anc | anc.name.equals("FunctionDefinition")]
-			&& functionDeclarator != null
+			&& functionDeclarator !== null
 			&& pcs.size != 0
 			&& !(pcs.size == 1 && pcs.get(0).isTrue)
 		) {

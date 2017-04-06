@@ -20,7 +20,7 @@ class DeclarationPCMap {
 				&& name.split(" ").size == declaration.name.split(" ").size
 				&& declaration.name.split(" ").toSet.equals(name.split(" ").toSet)
 			]
-			if (n != null)
+			if (n !== null)
 				return n.name
 		}
 		return name
@@ -34,7 +34,7 @@ class DeclarationPCMap {
 		if (!map.keySet.exists[it.name.equals(declaration.name)])
 			map.put(declaration, new ArrayList<DeclarationPCPair>)
 		
-		if (variant != null)
+		if (variant !== null)
 			map.get(declaration).add(new DeclarationPCPair(variant, pc))
 	}
 	
@@ -46,7 +46,7 @@ class DeclarationPCMap {
 		val fixedName = fix(name)
 		if (map.containsKey(fixedName)) {
 			val variant = map.get(fixedName).findFirst[declaration.name.equals(variantName)]
-			if (variant != null) {
+			if (variant !== null) {
 				map.get(fixedName).remove(variant)
 			}
 			

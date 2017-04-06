@@ -75,17 +75,17 @@ class PrintCode extends PrintMethod {
 		
 		
 		val Node iter = ancestors.findLast[name.equals("IterationStatement")]
-		val int chld_idx = if (iter == null) -1 else {
+		val int chld_idx = if (iter === null) -1 else {
 			if (iter.equals(ancestors.last)) iter.indexOf(language) else iter.indexOf(ancestors.get(ancestors.indexOf(iter) +1))}
-		val Node lpar = if (iter == null) null else iter.findFirst[toString.equals("(")] as Node
-		val int lpar_idx = if (lpar == null) -1 else iter.indexOf(lpar)
-		val Node rpar = if (iter == null) null else iter.findFirst[toString.equals(")")] as Node
-		val int rpar_idx = if (rpar == null) -1 else iter.indexOf(rpar)
+		val Node lpar = if (iter === null) null else iter.findFirst[toString.equals("(")] as Node
+		val int lpar_idx = if (lpar === null) -1 else iter.indexOf(lpar)
+		val Node rpar = if (iter === null) null else iter.findFirst[toString.equals(")")] as Node
+		val int rpar_idx = if (rpar === null) -1 else iter.indexOf(rpar)
 		val boolean iterationExpression =
 			chld_idx != -1 && lpar_idx != -1 && rpar_idx != -1
 			&& lpar_idx < chld_idx && chld_idx < rpar_idx
 		
-		if(language.toString == null) {
+		if(language.toString === null) {
 			ancestors.forEach[println("- " + it.name)]
 			println(ancestors.findFirst[it.name.equals("FunctionCall")].printAST)
 		}
@@ -170,14 +170,14 @@ class PrintCode extends PrintMethod {
 			#["Declaration", "DeclarationExtension", "FunctionDefinition"].contains(node.name)
 			&& !ancestors.exists[it.is_GNode("DeclarationExtension")]
 		) {
-			if (node.location != null) {
+			if (node.location !== null) {
 				output.println
 				output.print('''// «Settings::sourceRoot.parentFile.toPath.relativize(new File(node.location.file).toPath) »:«node.location.line»:«node.location.column»''')
-				if(last_line.empty && !(node.properties != null && node.hasProperty("OriginalPC")))
+				if(last_line.empty && !(node.properties !== null && node.hasProperty("OriginalPC")))
 					output.println
 			}
 			
-			if (node.properties != null && node.hasProperty("OriginalPC")) {
+			if (node.properties !== null && node.hasProperty("OriginalPC")) {
 				output.println
 				output.print('''// «(node.getProperty("OriginalPC") as PresenceCondition).PCtoCPPexp»''')
 				if(last_line.empty)
@@ -187,7 +187,7 @@ class PrintCode extends PrintMethod {
 		
 		// IF or ELSE with a single statement
 		if(
-			ancestors.last != null
+			ancestors.last !== null
 			&& ancestors.last.name.equals("SelectionStatement")
 			&& ancestors.last.indexOf(node) > 0
 			&& ancestors.last.get(ancestors.last.indexOf(node)-1) instanceof Language<?>
@@ -203,7 +203,7 @@ class PrintCode extends PrintMethod {
 		
 		// FOR with a single statement
 		if(
-			ancestors.last != null
+			ancestors.last !== null
 			&& ancestors.last.name.equals("IterationStatement")
 			&& ancestors.last.indexOf(node) > 0
 			&& ancestors.last.get(ancestors.last.indexOf(node)-1) instanceof Language<?>
@@ -251,7 +251,7 @@ class PrintCode extends PrintMethod {
 			ancestors.add(node)
 			for (Object it : node) {
 				if (it instanceof PresenceCondition) {
-					if (lastPC == null) {
+					if (lastPC === null) {
 						lastPC = it
 					} else if (lastPC.isMutuallyExclusive(it)) {
 						lastPC = lastPC.or(it)
@@ -323,7 +323,7 @@ class PrintCode extends PrintMethod {
 			}
 			
 			if (node.get(0).as_GNode.get(1).as_GNode.get(0).as_GNode.get(0).toString.equals(Settings::reconfiguratorIncludePlaceholder)) {
-				if (node.properties != null && node.hasProperty("OriginalPC")) {
+				if (node.properties !== null && node.hasProperty("OriginalPC")) {
 					output.println
 					output.println('''#if «(node.getProperty("OriginalPC") as PresenceCondition).PCtoCPPexp»''')
 					if (Settings::printIncludes) output.print("// BEGIN ")
@@ -337,7 +337,7 @@ class PrintCode extends PrintMethod {
 					last_line = includeStrLit
 				}
 			} else if (node.get(0).as_GNode.get(1).as_GNode.get(0).as_GNode.get(0).toString.equals(Settings::reconfiguratorIncludePlaceholderEnd)) {
-				if (node.properties != null && node.hasProperty("OriginalPC")) {
+				if (node.properties !== null && node.hasProperty("OriginalPC")) {
 					output.println
 //					output.println('''#if «(node.getProperty("OriginalPC") as PresenceCondition).PCtoCPPexp»''')
 					if (Settings::printIncludes) output.print("// END ")
@@ -359,7 +359,7 @@ class PrintCode extends PrintMethod {
 					&& it.as_GNode.filter(PresenceCondition).size == 1
 				) {
 					val pc = it.as_GNode.get(0) as PresenceCondition
-					if (lastPC == null) {
+					if (lastPC === null) {
 						lastPC = pc
 					} else if (lastPC.isMutuallyExclusive(pc)) {
 						lastPC = lastPC.or(pc)

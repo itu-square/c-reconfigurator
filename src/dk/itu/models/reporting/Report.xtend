@@ -129,11 +129,11 @@ class Report {
 				if (!errnos.equals("err()")) print(StringUtils::rightPad(errnos, 10)) else print("          ")
 				
 				val exception = errors.findFirst[it.error.startsWith("Exception: ")]
-				if (exception != null) print("excpt     ") else print("          ")
+				if (exception !== null) print("excpt     ") else print("          ")
 
-				if (exception == null) {
+				if (exception === null) {
 					val oracle = errors.findFirst[it.error.startsWith("oracle: ")]
-					if (oracle != null) print(oracle.error) else print("oracle: pass")
+					if (oracle !== null) print(oracle.error) else print("oracle: pass")
 				}
 			}
 			println

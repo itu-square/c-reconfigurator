@@ -1,12 +1,10 @@
 package dk.itu.models.reporting
 
-import dk.itu.models.Settings
 import java.io.ByteArrayOutputStream
 import java.io.PrintStream
 import java.util.ArrayList
 
 import static extension dk.itu.models.Extensions.*
-import java.io.File
 
 class FileRecord {
 	

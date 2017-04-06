@@ -73,7 +73,7 @@ class Ifdef2IfRule extends AncestorGuaranteedRule {
 					throw new Exception("Ifdef2IfRule: PresenceCondition guarding multiple children.")
 				}
 				
-				if (exp == null) { // and pc.isTrue because of previous check
+				if (exp === null) { // and pc.isTrue because of previous check
 					exp = node.getChildrenGuardedBy(map.key).get(0) as Node
 				} else {
 					exp = GNode::create("PrimaryExpression",

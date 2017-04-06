@@ -1,14 +1,13 @@
 package dk.itu.models.rules
 
-import java.util.ArrayList
-import xtc.tree.GNode
-import xtc.tree.Node
 import dk.itu.models.Reconfigurator
+import java.util.ArrayList
+import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
-import xtc.lang.cpp.CTag
+import xtc.tree.GNode
+import xtc.tree.Node
 import xtc.util.Pair
-import static extension dk.itu.models.Extensions.*
 
 abstract class AncestorGuaranteedRule extends Rule {
 	
@@ -21,7 +20,7 @@ abstract class AncestorGuaranteedRule extends Rule {
 
 	def protected PresenceCondition guard(Node node) {
 		val lastGuard = ancestors.findLast[it.name == "Conditional"]
-		if (lastGuard == null) {
+		if (lastGuard === null) {
 			return Reconfigurator.presenceConditionManager.newPresenceCondition(true)
 		} else {
 			val child = if (ancestors.indexOf(lastGuard) < ancestors.size-1)

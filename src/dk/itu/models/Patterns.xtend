@@ -99,8 +99,8 @@ class Patterns {
 	
 	public static def boolean isEnumDeclaration(GNode node) {
 		node.name.equals("Declaration")
-		&& node.getDescendantNode("EnumSpecifier") != null
-		&& node.getDescendantNode("EnumeratorList") != null
+		&& node.getDescendantNode("EnumSpecifier") !== null
+		&& node.getDescendantNode("EnumeratorList") !== null
 	}
 	
 	public static def boolean isEnumDeclarationWithVariability(GNode node) {
@@ -115,13 +115,13 @@ class Patterns {
 	
 	public static def boolean isNamedEnumDeclaration(GNode node) {
 		node.isEnumDeclaration
-		&& node.getDescendantNode("IdentifierOrTypedefName") != null
+		&& node.getDescendantNode("IdentifierOrTypedefName") !== null
 	}
 	
 	public static def String getNameOfEnumDeclaration(GNode node) {
 		val enumSpecifier = node.getDescendantNode("EnumSpecifier")
 		if (
-			enumSpecifier != null
+			enumSpecifier !== null
 			&& enumSpecifier.get(0) instanceof Language<?>
 			&& enumSpecifier.get(1).is_GNode("IdentifierOrTypedefName")
 		) {
@@ -181,7 +181,7 @@ class Patterns {
 	
 	public static def boolean isFunctionDeclaration(GNode node) {
 		node.name.equals("Declaration")
-		&& node.getDescendantNode("FunctionDeclarator") != null
+		&& node.getDescendantNode("FunctionDeclarator") !== null
 	} 
 	
 	public static def boolean isFunctionDeclarationWithVariability(GNode node) {
@@ -213,7 +213,7 @@ class Patterns {
 		val types = new ArrayList<String>
 		types.add(node.getTypeOfFunctionDeclaration)
 		val parameterList = node.getDescendantNode("ParameterList")
-		if (parameterList != null) {
+		if (parameterList !== null) {
 			types.addAll(parameterList.filter[it.is_GNode && it.as_GNode.isParameterDeclaration].map[it.as_GNode.getTypeOfParameterDeclaration])
 		}
 		return types

@@ -40,7 +40,7 @@ class OptimizeAssignmentExpressionRule extends Rule {
 			// compute the disjunction of all declaration PCs
 			var PresenceCondition disjunctionPC = null
 			for (PresenceCondition pc : PCs) {
-				disjunctionPC = if (disjunctionPC == null) pc else pc.or(disjunctionPC)
+				disjunctionPC = if (disjunctionPC === null) pc else pc.or(disjunctionPC)
 			}
 			
 			if (PCs.size > 0) {

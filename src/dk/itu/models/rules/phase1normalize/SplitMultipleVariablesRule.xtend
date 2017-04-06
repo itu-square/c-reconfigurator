@@ -36,11 +36,11 @@ class SplitMultipleVariablesRule extends AncestorGuaranteedRule {
 			val simpleDeclarator = declaringList.findFirst[it.is_GNode("SimpleDeclarator")]
 			
 			val declarator =
-				if (arrayDeclarator != null)
+				if (arrayDeclarator !== null)
 					arrayDeclarator
-				else if (unaryIdentifierDeclarator != null)
+				else if (unaryIdentifierDeclarator !== null)
 					unaryIdentifierDeclarator
-				else if (simpleDeclarator != null)
+				else if (simpleDeclarator !== null)
 					simpleDeclarator
 				else {
 					println
