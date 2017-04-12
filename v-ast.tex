@@ -225,6 +225,72 @@ else
 
 
 
+%--- ConditionPushDownRule ---%
+\noindent
+\begin{tabular}{| p{.25\textwidth} | p{.2\textwidth} | p{.55\textwidth} |}
+\hline
+\multicolumn{3}{|l|}{\textsc{ConditionPushDownRule}} \\\hline
+Input \pair{\id{pair}} & Output \pair{\_} & Algorithm \\\hline
+
+\begin{vastcode}
+/ @\node{\name{Conditional}}@
+| - @\id{\psi_1}@
+| - @\node{\name{Conditional}}@
+| | - @\id{\phi_{11}}@
+| | = @\pair{\id{children_{11}}}@
+| - @\id{\psi_2}@
+| - @\node{\name{Conditional}}@
+| | - @\id{\phi_{21}}@
+| | - @\pair{\id{children_{21}}}@
+| | - @\id{\phi_{22}}@
+| | = @\pair{\id{children_{22}}}@
+| - @\node{\name{Conditional}}@
+| | - @\id{\phi_{31}}@
+| | = @\pair{\id{children_{31}}}@
+| - @\id{\psi_n}@
+| = @\node{\name{Conditional}}@
+|   - @\id{\phi_{n1}}@
+|   = @\pair{\id{children_{n1}}}@
+= @\pair{\id{tail}}@
+\end{vastcode} &
+
+\begin{vastcode}
+/ @\node{\name{Conditional}}@
+| - @$\id{\phi_{11}} \land \id{\psi_1}$@
+| = @\pair{\id{children_{11}}}@
+- @\node{\name{Conditional}}@
+| - @$\id{\phi_{21}} \land \id{\psi_2}$@
+| - @\pair{\id{children_{21}}}@
+| - @$\id{\phi_{22}} \land \id{\psi_2}$@
+| = @\pair{\id{children_{22}}}@
+- @\node{\name{Conditional}}@
+| - @$\id{\phi_{31}} \land \id{\psi_2}$@
+| = @\pair{\id{children_{31}}}@
+- @\node{\name{Conditional}}@
+| - @$\id{\phi_{n1}} \land \id{\psi_n}$@
+| = @\pair{\id{children_{n1}}}@
+= @\pair{\id{tail}}@
+\end{vastcode} &
+
+\begin{PseudoCode}
+preconditions:
+@\pair{\id{pair}} != $\epsilon$@
+@\pair{\id{pair}}.\func{head}@ : @(\name{Conditional},\_)@
+@\pair{\id{pair}}.\func{head}@.forall[it:@\pc{\_} $\lor$ @it:@(\name{Conditional},\_)@]
+
+do:
+@\pair{\id{pair}}.\func{head}@.filter(@\type{cond}@).map[@\node{node}@ | 
+  (@\name{Conditional},\node{node}@.map[@\obj{child}@ |
+    if (@\obj{child}@ : @\pc{\_}@) @\pc{child} $\land$ \func{pcOf}(\node{node})@
+    else @\obj{child}@
+  ])
+].@\func{append}(\pair{\id{tail}})@
+\end{PseudoCode} \\\hline
+\end{tabular}
+
+
+
+
 
 
 \subsection{Functions}
