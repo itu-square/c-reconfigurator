@@ -1,15 +1,22 @@
-package dk.itu.models.rules
+package dk.itu.models.rules.phase1normalize
 
+import dk.itu.models.rules.Rule
+import org.eclipse.xtext.xbase.lib.Functions.Function1
 import xtc.lang.cpp.CTag
 import xtc.lang.cpp.PresenceConditionManager.PresenceCondition
 import xtc.lang.cpp.Syntax.Language
 import xtc.tree.GNode
 import xtc.util.Pair
 
-import static extension dk.itu.models.Extensions.*
-
-class RemNestedMutexConditionalRule extends AncestorGuaranteedRule {
-
+class ParametricRemNodesRule extends Rule {
+	
+	Function1<Object, Boolean> test
+	
+	new (Function1<Object, Boolean> test) {
+		super()
+		this.test = test
+	}
+	
 	override dispatch PresenceCondition transform(PresenceCondition cond) {
 		cond
 	}
@@ -19,20 +26,18 @@ class RemNestedMutexConditionalRule extends AncestorGuaranteedRule {
 	}
 
 	override dispatch Pair<Object> transform(Pair<Object> pair) {
-		if(
-			!pair.empty &&
-			
-			pair.head.is_GNode("Conditional") &&
-			pair.head.as_GNode.filter(PresenceCondition).size == 1 &&
-			
-			pair.head.as_GNode.guard.as_PresenceCondition.isMutuallyExclusive(pair.head.as_GNode.get(0).as_PresenceCondition)
-		)
-			pair.tail
-		else		
-			pair
+		if (
+			!pair.empty
+			&& test.apply(pair.head)
+		) {
+			return pair.tail
+		} else {
+			return pair
+		}
 	}
-
+	
 	override dispatch Object transform(GNode node) {
 		node
 	}
+	
 }

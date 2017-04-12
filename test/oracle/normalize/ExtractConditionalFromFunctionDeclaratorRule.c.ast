@@ -13,11 +13,6 @@
       |  |  |     |     |- ParameterList
       |  |  |     |        |- ParameterList
       |  |  |     |        |  |- ParameterIdentifierDeclaration
-      |  |  |     |        |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
-      |  |  |     |        |  |  |- SimpleDeclarator
-      |  |  |     |        |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
-      |  |  |     |        |  |- xtc.lang.cpp.Syntax.Language<COMMA>,  
-      |  |  |     |        |  |- ParameterIdentifierDeclaration
       |  |  |     |        |     |- xtc.lang.cpp.Syntax.Language<CHAR>char  
       |  |  |     |        |     |- SimpleDeclarator
       |  |  |     |        |        |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
@@ -41,6 +36,11 @@
       |  |  |     |  |- ParameterTypeList
       |  |  |     |     |- ParameterList
       |  |  |     |        |- ParameterList
+      |  |  |     |        |  |- ParameterIdentifierDeclaration
+      |  |  |     |        |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |  |     |        |  |  |- SimpleDeclarator
+      |  |  |     |        |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+      |  |  |     |        |  |- xtc.lang.cpp.Syntax.Language<COMMA>,  
       |  |  |     |        |  |- ParameterIdentifierDeclaration
       |  |  |     |        |     |- xtc.lang.cpp.Syntax.Language<CHAR>char  
       |  |  |     |        |     |- SimpleDeclarator
@@ -66,11 +66,6 @@
       |  |  |     |     |- ParameterList
       |  |  |     |        |- ParameterList
       |  |  |     |        |  |- ParameterIdentifierDeclaration
-      |  |  |     |        |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
-      |  |  |     |        |  |  |- SimpleDeclarator
-      |  |  |     |        |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
-      |  |  |     |        |  |- xtc.lang.cpp.Syntax.Language<COMMA>,  
-      |  |  |     |        |  |- ParameterIdentifierDeclaration
       |  |  |     |        |     |- xtc.lang.cpp.Syntax.Language<CHAR>char  
       |  |  |     |        |     |- SimpleDeclarator
       |  |  |     |        |        |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>cc  
@@ -94,6 +89,11 @@
          |  |     |  |- ParameterTypeList
          |  |     |     |- ParameterList
          |  |     |        |- ParameterList
+         |  |     |        |  |- ParameterIdentifierDeclaration
+         |  |     |        |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+         |  |     |        |  |  |- SimpleDeclarator
+         |  |     |        |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+         |  |     |        |  |- xtc.lang.cpp.Syntax.Language<COMMA>,  
          |  |     |        |  |- ParameterIdentifierDeclaration
          |  |     |        |     |- xtc.lang.cpp.Syntax.Language<CHAR>char  
          |  |     |        |     |- SimpleDeclarator

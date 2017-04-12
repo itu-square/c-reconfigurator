@@ -5,6 +5,7 @@ import com.google.common.collect.FluentIterable
 import com.google.common.collect.UnmodifiableIterator
 import com.google.common.io.Files
 import dk.itu.models.checks.CheckContainsIf1
+import dk.itu.models.rules.AncestorGuaranteedRule
 import dk.itu.models.rules.phase3variables.ReplaceDeclaratorTextRule
 import dk.itu.models.rules.phase3variables.ReplaceIdentifierRule
 import dk.itu.models.rules.phase3variables.RewriteVariableUseRule
@@ -25,6 +26,7 @@ import java.util.ArrayList
 import java.util.HashMap
 import java.util.Iterator
 import java.util.List
+import org.eclipse.xtext.xbase.lib.Functions.Function0
 import org.eclipse.xtext.xbase.lib.Functions.Function1
 import org.eclipse.xtext.xbase.lib.Functions.Function2
 import us.cuny.qc.cs.babbage.Minimize
@@ -35,7 +37,7 @@ import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 import xtc.tree.Node
 import xtc.util.Pair
-import dk.itu.models.rules.AncestorGuaranteedRule
+import dk.itu.models.rules.phase1normalize.ParametricRemNodesRule
 
 class Extensions {
 
@@ -528,6 +530,12 @@ class Extensions {
 			return #[]
 		}
 	}
+
+	public static def removeNode (GNode node, Function1<Object, Boolean> test) {
+    	val tdn = new TopDownStrategy
+    	tdn.register(new ParametricRemNodesRule(test))
+    	tdn.transform(node).as_GNode
+    }
 	
 	
 	
@@ -552,7 +560,27 @@ class Extensions {
 	public static def boolean is_PresenceCondition(Object obj) {
 		obj instanceof PresenceCondition
 	}
+	
+	
+	
+	
+	public static def PresenceCondition bindCond(Function0<PresenceCondition> exp) {
+		try { return exp.apply } catch (Exception exception) { return null }
+	}
 
+	public static def Language<CTag> bindLang(Function0<Language<CTag>> exp) {
+		try { return exp.apply } catch (Exception exception) { return null }
+	}
+
+	public static def Pair<Object> bindPair(Function0<Pair<Object>> exp) {
+		try { return exp.apply } catch (Exception exception) { return null }
+	}
+
+	public static def GNode bindNode(Function0<GNode> exp) {
+		try { return exp.apply } catch (Exception exception) { return null }
+	}
+	
+	
 	
 
 }

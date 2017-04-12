@@ -39,20 +39,16 @@ class ExtractInitializerRule extends AncestorGuaranteedRule {
 			val varName = declaringList.getDescendantNode("SimpleDeclarator").get(0).toString
 			val initializer = declaringList.filter(GNode).findFirst[name.equals("InitializerOpt")].get(1).as_GNode
 			
-			var Pair<Object> newPair =
-				new Pair<Object>(
-					GNode::createFromPair(
-						"Declaration",
-						pair.head.as_GNode.map[c | 
-							if (!c.is_GNode || !c.as_GNode.name.equals("DeclaringList")) c
-							else GNode::createFromPair(
-								"DeclaringList",
-								c.as_GNode.filter[d | !d.is_GNode || !d.as_GNode.name.equals("InitializerOpt")].toPair)
-						].toPair))
+			println
+			println("----------")
+			println(pair.head.printCode)
+			println(pair.head.printAST)
+			println("----------")
+			
+			var Pair<Object> newPair = Pair::EMPTY.add(pair.head.as_GNode.removeNode[ it.is_GNode("InitializerOpt") ])
 			
 			if (
-				initializer.get(0).is_GNode
-				&& initializer.get(0).as_GNode.name.equals("StringLiteralList")
+				initializer.get(0).is_GNode("StringLiteralList")
 			) {
 				val stringLiteralList = initializer.get(0).as_GNode
 				if (
@@ -178,9 +174,9 @@ class ExtractInitializerRule extends AncestorGuaranteedRule {
 			newPair = newPair.append(pair.tail)
 			
 			return newPair
+		} else {
+			return pair
 		}
-		
-		pair
 	}
 	
 	override dispatch Object transform(GNode node) {		
