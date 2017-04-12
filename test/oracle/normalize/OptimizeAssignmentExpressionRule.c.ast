@@ -19,8 +19,6 @@
          |     |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
          |     |  |  |- SimpleDeclarator
          |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
-         |     |  |  |- AssemblyExpressionOpt
-         |     |  |  |- AttributeSpecifierListOpt
          |     |  |  |- InitializerOpt
          |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
          |     |- Declaration

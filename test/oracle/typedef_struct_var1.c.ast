@@ -8,8 +8,6 @@
       |  |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |  |- SimpleDeclarator
       |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>atype_V1  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- Declaration
@@ -20,8 +18,6 @@
       |  |  |  |- xtc.lang.cpp.Syntax.Language<LONG>long  
       |  |  |- SimpleDeclarator
       |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>atype_V2  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- Declaration
@@ -30,8 +26,6 @@
       |  |  |  |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>atype_V1  
       |  |  |- SimpleDeclarator
       |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>avariable_V1  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- Declaration
@@ -40,8 +34,6 @@
       |  |  |  |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>atype_V2  
       |  |  |- SimpleDeclarator
       |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>avariable_V2  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- FunctionDefinition
@@ -59,8 +51,7 @@
       |  |        |           |- TypedefTypeSpecifier
       |  |        |           |  |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>atype  
       |  |        |           |- SimpleDeclarator
-      |  |        |           |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>p  
-      |  |        |           |- AttributeSpecifierListOpt
+      |  |        |              |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>p  
       |  |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
       |  |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
       |  |- CompoundStatement
@@ -84,28 +75,25 @@
       |  |     |  |  |- StructDeclaringList
       |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |     |  |  |  |- StructDeclarator
-      |  |     |  |  |  |  |- SimpleDeclarator
-      |  |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>f1  
-      |  |     |  |  |  |  |- BitFieldSizeOpt
-      |  |     |  |  |  |- AttributeSpecifierListOpt
+      |  |     |  |  |     |- SimpleDeclarator
+      |  |     |  |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>f1  
+      |  |     |  |  |     |- BitFieldSizeOpt
       |  |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |  |     |  |- StructDeclaration
       |  |     |  |  |- StructDeclaringList
       |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
       |  |     |  |  |  |- StructDeclarator
-      |  |     |  |  |  |  |- SimpleDeclarator
-      |  |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>f2  
-      |  |     |  |  |  |  |- BitFieldSizeOpt
-      |  |     |  |  |  |- AttributeSpecifierListOpt
+      |  |     |  |  |     |- SimpleDeclarator
+      |  |     |  |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>f2  
+      |  |     |  |  |     |- BitFieldSizeOpt
       |  |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |  |     |  |- StructDeclaration
       |  |     |     |- StructDeclaringList
       |  |     |     |  |- xtc.lang.cpp.Syntax.Language<LONG>long  
       |  |     |     |  |- StructDeclarator
-      |  |     |     |  |  |- SimpleDeclarator
-      |  |     |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
-      |  |     |     |  |  |- BitFieldSizeOpt
-      |  |     |     |  |- AttributeSpecifierListOpt
+      |  |     |     |     |- SimpleDeclarator
+      |  |     |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+      |  |     |     |     |- BitFieldSizeOpt
       |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
@@ -121,19 +109,17 @@
       |  |     |  |  |- StructDeclaringList
       |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |     |  |  |  |- StructDeclarator
-      |  |     |  |  |  |  |- SimpleDeclarator
-      |  |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>f1  
-      |  |     |  |  |  |  |- BitFieldSizeOpt
-      |  |     |  |  |  |- AttributeSpecifierListOpt
+      |  |     |  |  |     |- SimpleDeclarator
+      |  |     |  |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>f1  
+      |  |     |  |  |     |- BitFieldSizeOpt
       |  |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |  |     |  |- StructDeclaration
       |  |     |     |- StructDeclaringList
       |  |     |     |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
       |  |     |     |  |- StructDeclarator
-      |  |     |     |  |  |- SimpleDeclarator
-      |  |     |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>f2  
-      |  |     |     |  |  |- BitFieldSizeOpt
-      |  |     |     |  |- AttributeSpecifierListOpt
+      |  |     |     |     |- SimpleDeclarator
+      |  |     |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>f2  
+      |  |     |     |     |- BitFieldSizeOpt
       |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
@@ -146,8 +132,6 @@
       |  |  |        |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>s_V1  
       |  |  |- SimpleDeclarator
       |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>svar_V1  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- Declaration
@@ -159,8 +143,6 @@
       |  |  |        |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>s_V2  
       |  |  |- SimpleDeclarator
       |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>svar_V2  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- Declaration
@@ -179,7 +161,5 @@
          |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
          |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>1  
          |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
-         |  |- AssemblyExpressionOpt
-         |  |- AttributeSpecifierListOpt
          |  |- InitializerOpt
          |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  

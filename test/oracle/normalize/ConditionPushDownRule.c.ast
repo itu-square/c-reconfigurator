@@ -4,18 +4,7 @@
       |  |- DeclaringList
       |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |  |- SimpleDeclarator
-      |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>none_V1  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
-      |  |  |- InitializerOpt
-      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
-      |- Declaration
-      |  |- DeclaringList
-      |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
-      |  |  |- SimpleDeclarator
       |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>ab_V1  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- Declaration
@@ -23,8 +12,13 @@
       |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |  |- SimpleDeclarator
       |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>a_V1  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
+      |  |  |- InitializerOpt
+      |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
+      |- Declaration
+      |  |- DeclaringList
+      |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |  |- SimpleDeclarator
+      |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>none_V1  
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- Declaration
@@ -32,7 +26,5 @@
          |  |- xtc.lang.cpp.Syntax.Language<INT>int  
          |  |- SimpleDeclarator
          |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>b_V1  
-         |  |- AssemblyExpressionOpt
-         |  |- AttributeSpecifierListOpt
          |  |- InitializerOpt
          |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  

@@ -23,7 +23,5 @@
          |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
          |  |- SimpleDeclarator
          |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>idtype_t  
-         |  |- AssemblyExpressionOpt
-         |  |- AttributeSpecifierListOpt
          |  |- InitializerOpt
          |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  

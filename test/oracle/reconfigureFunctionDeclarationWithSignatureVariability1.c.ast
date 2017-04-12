@@ -14,14 +14,12 @@
       |  |        |        |- ParameterIdentifierDeclaration
       |  |        |        |  |- xtc.lang.cpp.Syntax.Language<LONG>long  
       |  |        |        |  |- SimpleDeclarator
-      |  |        |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>l  
-      |  |        |        |  |- AttributeSpecifierListOpt
+      |  |        |        |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>l  
       |  |        |        |- xtc.lang.cpp.Syntax.Language<COMMA>,  
       |  |        |        |- ParameterIdentifierDeclaration
       |  |        |           |- xtc.lang.cpp.Syntax.Language<CHAR>char  
       |  |        |           |- SimpleDeclarator
-      |  |        |           |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
-      |  |        |           |- AttributeSpecifierListOpt
+      |  |        |              |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
       |  |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
       |  |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
       |  |- CompoundStatement
@@ -40,8 +38,6 @@
       |  |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |  |- SimpleDeclarator
       |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>ttype  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- FunctionDefinition
@@ -59,14 +55,12 @@
       |  |        |        |- ParameterIdentifierDeclaration
       |  |        |        |  |- xtc.lang.cpp.Syntax.Language<LONG>long  
       |  |        |        |  |- SimpleDeclarator
-      |  |        |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>l  
-      |  |        |        |  |- AttributeSpecifierListOpt
+      |  |        |        |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>l  
       |  |        |        |- xtc.lang.cpp.Syntax.Language<COMMA>,  
       |  |        |        |- ParameterIdentifierDeclaration
       |  |        |           |- xtc.lang.cpp.Syntax.Language<CHAR>char  
       |  |        |           |- SimpleDeclarator
-      |  |        |           |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
-      |  |        |           |- AttributeSpecifierListOpt
+      |  |        |              |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
       |  |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
       |  |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
       |  |- CompoundStatement
@@ -85,8 +79,6 @@
       |  |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |  |- SimpleDeclarator
       |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>inttype_V1  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- Declaration
@@ -97,8 +89,6 @@
       |  |  |  |- xtc.lang.cpp.Syntax.Language<LONG>long  
       |  |  |- SimpleDeclarator
       |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>inttype_V2  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- FunctionDefinition
@@ -116,14 +106,12 @@
          |        |        |- ParameterIdentifierDeclaration
          |        |        |  |- xtc.lang.cpp.Syntax.Language<LONG>long  
          |        |        |  |- SimpleDeclarator
-         |        |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>l  
-         |        |        |  |- AttributeSpecifierListOpt
+         |        |        |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>l  
          |        |        |- xtc.lang.cpp.Syntax.Language<COMMA>,  
          |        |        |- ParameterIdentifierDeclaration
          |        |           |- xtc.lang.cpp.Syntax.Language<CHAR>char  
          |        |           |- SimpleDeclarator
-         |        |           |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
-         |        |           |- AttributeSpecifierListOpt
+         |        |              |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
          |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
          |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
          |- CompoundStatement

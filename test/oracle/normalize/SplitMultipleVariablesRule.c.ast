@@ -5,8 +5,6 @@
       |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |  |- SimpleDeclarator
       |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>a  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- Declaration
@@ -31,8 +29,6 @@
       |  |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
       |  |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>2  
       |  |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |     |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
       |  |     |- Initializer
@@ -63,8 +59,6 @@
       |  |  |  |- xtc.lang.cpp.Syntax.Language<STAR>*  
       |  |  |  |- SimpleDeclarator
       |  |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>s  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- Declaration
@@ -80,8 +74,6 @@
       |  |  |  |- xtc.lang.cpp.Syntax.Language<STAR>*  
       |  |  |  |- SimpleDeclarator
       |  |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- Declaration
@@ -111,8 +103,6 @@
          |     |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
          |     |  |  |- SimpleDeclarator
          |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>a  
-         |     |  |  |- AssemblyExpressionOpt
-         |     |  |  |- AttributeSpecifierListOpt
          |     |  |  |- InitializerOpt
          |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
          |     |- Declaration
@@ -131,14 +121,12 @@
          |     |  |- DeclaringList
          |     |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
          |     |  |  |- ArrayDeclarator
-         |     |  |  |  |- SimpleDeclarator
-         |     |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>d  
-         |     |  |  |  |- ArrayAbstractDeclarator
-         |     |  |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
-         |     |  |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>2  
-         |     |  |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
-         |     |  |  |- AssemblyExpressionOpt
-         |     |  |  |- AttributeSpecifierListOpt
+         |     |  |     |- SimpleDeclarator
+         |     |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>d  
+         |     |  |     |- ArrayAbstractDeclarator
+         |     |  |        |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
+         |     |  |        |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>2  
+         |     |  |        |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
          |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
          |     |- Declaration
          |     |  |- DeclaringList
@@ -202,8 +190,6 @@
          |     |  |  |  |- xtc.lang.cpp.Syntax.Language<STAR>*  
          |     |  |  |  |- SimpleDeclarator
          |     |  |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>s  
-         |     |  |  |- AssemblyExpressionOpt
-         |     |  |  |- AttributeSpecifierListOpt
          |     |  |  |- InitializerOpt
          |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
          |     |- Declaration
@@ -219,8 +205,6 @@
          |     |  |  |  |- xtc.lang.cpp.Syntax.Language<STAR>*  
          |     |  |  |  |- SimpleDeclarator
          |     |  |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
-         |     |  |  |- AssemblyExpressionOpt
-         |     |  |  |- AttributeSpecifierListOpt
          |     |  |  |- InitializerOpt
          |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
          |     |- Declaration

@@ -20,15 +20,15 @@ class RemEmptyNodesRule extends Rule {
 	}
 
 	override dispatch Pair<Object> transform(Pair<Object> pair) {
-		if (!pair.empty && pair.head.is_GNode) {
-			val head = pair.head.as_GNode
-			if(head.name.equals("ExpressionOpt") && head.empty) {
-				pair.tail
-			} else {
-				pair
-			}
+		if (
+			!pair.empty
+			&& pair.head.is_GNode
+			&& #["ExpressionOpt", "AssemblyExpressionOpt", "AttributeSpecifierListOpt"].contains(pair.head.as_GNode.name)
+			&& pair.head.as_GNode.empty
+		) {
+			return pair.tail
 		} else {
-			pair
+			return pair
 		}
 	}
 	

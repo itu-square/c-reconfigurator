@@ -13,19 +13,20 @@
       |  |  |     |     |- ParameterList
       |  |  |     |        |- ParameterList
       |  |  |     |        |  |- ParameterIdentifierDeclaration
+      |  |  |     |        |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |  |     |        |  |  |- SimpleDeclarator
+      |  |  |     |        |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+      |  |  |     |        |  |- xtc.lang.cpp.Syntax.Language<COMMA>,  
+      |  |  |     |        |  |- ParameterIdentifierDeclaration
       |  |  |     |        |     |- xtc.lang.cpp.Syntax.Language<CHAR>char  
       |  |  |     |        |     |- SimpleDeclarator
-      |  |  |     |        |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
-      |  |  |     |        |     |- AttributeSpecifierListOpt
+      |  |  |     |        |        |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
       |  |  |     |        |- xtc.lang.cpp.Syntax.Language<COMMA>,  
       |  |  |     |        |- ParameterIdentifierDeclaration
       |  |  |     |           |- xtc.lang.cpp.Syntax.Language<LONG>long  
       |  |  |     |           |- SimpleDeclarator
-      |  |  |     |           |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>g  
-      |  |  |     |           |- AttributeSpecifierListOpt
+      |  |  |     |              |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>g  
       |  |  |     |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- Declaration
@@ -41,25 +42,15 @@
       |  |  |     |     |- ParameterList
       |  |  |     |        |- ParameterList
       |  |  |     |        |  |- ParameterIdentifierDeclaration
-      |  |  |     |        |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
-      |  |  |     |        |  |  |- SimpleDeclarator
-      |  |  |     |        |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
-      |  |  |     |        |  |  |- AttributeSpecifierListOpt
-      |  |  |     |        |  |- xtc.lang.cpp.Syntax.Language<COMMA>,  
-      |  |  |     |        |  |- ParameterIdentifierDeclaration
       |  |  |     |        |     |- xtc.lang.cpp.Syntax.Language<CHAR>char  
       |  |  |     |        |     |- SimpleDeclarator
-      |  |  |     |        |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
-      |  |  |     |        |     |- AttributeSpecifierListOpt
+      |  |  |     |        |        |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
       |  |  |     |        |- xtc.lang.cpp.Syntax.Language<COMMA>,  
       |  |  |     |        |- ParameterIdentifierDeclaration
       |  |  |     |           |- xtc.lang.cpp.Syntax.Language<LONG>long  
       |  |  |     |           |- SimpleDeclarator
-      |  |  |     |           |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>g  
-      |  |  |     |           |- AttributeSpecifierListOpt
+      |  |  |     |              |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>g  
       |  |  |     |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- Declaration
@@ -75,19 +66,20 @@
       |  |  |     |     |- ParameterList
       |  |  |     |        |- ParameterList
       |  |  |     |        |  |- ParameterIdentifierDeclaration
+      |  |  |     |        |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
+      |  |  |     |        |  |  |- SimpleDeclarator
+      |  |  |     |        |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
+      |  |  |     |        |  |- xtc.lang.cpp.Syntax.Language<COMMA>,  
+      |  |  |     |        |  |- ParameterIdentifierDeclaration
       |  |  |     |        |     |- xtc.lang.cpp.Syntax.Language<CHAR>char  
       |  |  |     |        |     |- SimpleDeclarator
-      |  |  |     |        |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>cc  
-      |  |  |     |        |     |- AttributeSpecifierListOpt
+      |  |  |     |        |        |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>cc  
       |  |  |     |        |- xtc.lang.cpp.Syntax.Language<COMMA>,  
       |  |  |     |        |- ParameterIdentifierDeclaration
       |  |  |     |           |- xtc.lang.cpp.Syntax.Language<LONG>long  
       |  |  |     |           |- SimpleDeclarator
-      |  |  |     |           |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>g  
-      |  |  |     |           |- AttributeSpecifierListOpt
+      |  |  |     |              |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>g  
       |  |  |     |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- Declaration
@@ -103,24 +95,14 @@
          |  |     |     |- ParameterList
          |  |     |        |- ParameterList
          |  |     |        |  |- ParameterIdentifierDeclaration
-         |  |     |        |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
-         |  |     |        |  |  |- SimpleDeclarator
-         |  |     |        |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
-         |  |     |        |  |  |- AttributeSpecifierListOpt
-         |  |     |        |  |- xtc.lang.cpp.Syntax.Language<COMMA>,  
-         |  |     |        |  |- ParameterIdentifierDeclaration
          |  |     |        |     |- xtc.lang.cpp.Syntax.Language<CHAR>char  
          |  |     |        |     |- SimpleDeclarator
-         |  |     |        |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>cc  
-         |  |     |        |     |- AttributeSpecifierListOpt
+         |  |     |        |        |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>cc  
          |  |     |        |- xtc.lang.cpp.Syntax.Language<COMMA>,  
          |  |     |        |- ParameterIdentifierDeclaration
          |  |     |           |- xtc.lang.cpp.Syntax.Language<LONG>long  
          |  |     |           |- SimpleDeclarator
-         |  |     |           |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>g  
-         |  |     |           |- AttributeSpecifierListOpt
+         |  |     |              |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>g  
          |  |     |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
-         |  |- AssemblyExpressionOpt
-         |  |- AttributeSpecifierListOpt
          |  |- InitializerOpt
          |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  

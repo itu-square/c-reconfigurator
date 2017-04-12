@@ -14,8 +14,7 @@
          |        |        |- ParameterIdentifierDeclaration
          |        |           |- xtc.lang.cpp.Syntax.Language<INT>int  
          |        |           |- SimpleDeclarator
-         |        |           |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
-         |        |           |- AttributeSpecifierListOpt
+         |        |              |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
          |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
          |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
          |- CompoundStatement

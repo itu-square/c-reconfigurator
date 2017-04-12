@@ -12,19 +12,17 @@
       |  |     |  |  |- StructDeclaringList
       |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
       |  |     |  |  |  |- StructDeclarator
-      |  |     |  |  |  |  |- SimpleDeclarator
-      |  |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
-      |  |     |  |  |  |  |- BitFieldSizeOpt
-      |  |     |  |  |  |- AttributeSpecifierListOpt
+      |  |     |  |  |     |- SimpleDeclarator
+      |  |     |  |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
+      |  |     |  |  |     |- BitFieldSizeOpt
       |  |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |  |     |  |- StructDeclaration
       |  |     |     |- StructDeclaringList
       |  |     |     |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |     |     |  |- StructDeclarator
-      |  |     |     |  |  |- SimpleDeclarator
-      |  |     |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>a  
-      |  |     |     |  |  |- BitFieldSizeOpt
-      |  |     |     |  |- AttributeSpecifierListOpt
+      |  |     |     |     |- SimpleDeclarator
+      |  |     |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>a  
+      |  |     |     |     |- BitFieldSizeOpt
       |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
@@ -40,10 +38,9 @@
       |  |     |     |- StructDeclaringList
       |  |     |     |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
       |  |     |     |  |- StructDeclarator
-      |  |     |     |  |  |- SimpleDeclarator
-      |  |     |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
-      |  |     |     |  |  |- BitFieldSizeOpt
-      |  |     |     |  |- AttributeSpecifierListOpt
+      |  |     |     |     |- SimpleDeclarator
+      |  |     |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
+      |  |     |     |     |- BitFieldSizeOpt
       |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
@@ -59,19 +56,17 @@
       |  |     |  |  |- StructDeclaringList
       |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
       |  |     |  |  |  |- StructDeclarator
-      |  |     |  |  |  |  |- SimpleDeclarator
-      |  |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>bb  
-      |  |     |  |  |  |  |- BitFieldSizeOpt
-      |  |     |  |  |  |- AttributeSpecifierListOpt
+      |  |     |  |  |     |- SimpleDeclarator
+      |  |     |  |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>bb  
+      |  |     |  |  |     |- BitFieldSizeOpt
       |  |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |  |     |  |- StructDeclaration
       |  |     |     |- StructDeclaringList
       |  |     |     |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |     |     |  |- StructDeclarator
-      |  |     |     |  |  |- SimpleDeclarator
-      |  |     |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>bbb  
-      |  |     |     |  |  |- BitFieldSizeOpt
-      |  |     |     |  |- AttributeSpecifierListOpt
+      |  |     |     |     |- SimpleDeclarator
+      |  |     |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>bbb  
+      |  |     |     |     |- BitFieldSizeOpt
       |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
@@ -87,19 +82,17 @@
       |  |     |  |  |- StructDeclaringList
       |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
       |  |     |  |  |  |- StructDeclarator
-      |  |     |  |  |  |  |- SimpleDeclarator
-      |  |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>cc  
-      |  |     |  |  |  |  |- BitFieldSizeOpt
-      |  |     |  |  |  |- AttributeSpecifierListOpt
+      |  |     |  |  |     |- SimpleDeclarator
+      |  |     |  |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>cc  
+      |  |     |  |  |     |- BitFieldSizeOpt
       |  |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |  |     |  |- StructDeclaration
       |  |     |     |- StructDeclaringList
       |  |     |     |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |     |     |  |- StructDeclarator
-      |  |     |     |  |  |- SimpleDeclarator
-      |  |     |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>ccc  
-      |  |     |     |  |  |- BitFieldSizeOpt
-      |  |     |     |  |- AttributeSpecifierListOpt
+      |  |     |     |     |- SimpleDeclarator
+      |  |     |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>ccc  
+      |  |     |     |     |- BitFieldSizeOpt
       |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
@@ -115,19 +108,17 @@
       |  |     |  |  |- StructDeclaringList
       |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
       |  |     |  |  |  |- StructDeclarator
-      |  |     |  |  |  |  |- SimpleDeclarator
-      |  |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
-      |  |     |  |  |  |  |- BitFieldSizeOpt
-      |  |     |  |  |  |- AttributeSpecifierListOpt
+      |  |     |  |  |     |- SimpleDeclarator
+      |  |     |  |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
+      |  |     |  |  |     |- BitFieldSizeOpt
       |  |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |  |     |  |- StructDeclaration
       |  |     |     |- StructDeclaringList
       |  |     |     |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |     |     |  |- StructDeclarator
-      |  |     |     |  |  |- SimpleDeclarator
-      |  |     |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>a  
-      |  |     |     |  |  |- BitFieldSizeOpt
-      |  |     |     |  |- AttributeSpecifierListOpt
+      |  |     |     |     |- SimpleDeclarator
+      |  |     |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>a  
+      |  |     |     |     |- BitFieldSizeOpt
       |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
@@ -143,10 +134,9 @@
       |  |     |     |- StructDeclaringList
       |  |     |     |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
       |  |     |     |  |- StructDeclarator
-      |  |     |     |  |  |- SimpleDeclarator
-      |  |     |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
-      |  |     |     |  |  |- BitFieldSizeOpt
-      |  |     |     |  |- AttributeSpecifierListOpt
+      |  |     |     |     |- SimpleDeclarator
+      |  |     |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
+      |  |     |     |     |- BitFieldSizeOpt
       |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
@@ -162,19 +152,17 @@
       |  |     |  |  |- StructDeclaringList
       |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
       |  |     |  |  |  |- StructDeclarator
-      |  |     |  |  |  |  |- SimpleDeclarator
-      |  |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>bb  
-      |  |     |  |  |  |  |- BitFieldSizeOpt
-      |  |     |  |  |  |- AttributeSpecifierListOpt
+      |  |     |  |  |     |- SimpleDeclarator
+      |  |     |  |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>bb  
+      |  |     |  |  |     |- BitFieldSizeOpt
       |  |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |  |     |  |- StructDeclaration
       |  |     |     |- StructDeclaringList
       |  |     |     |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |     |     |  |- StructDeclarator
-      |  |     |     |  |  |- SimpleDeclarator
-      |  |     |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>bbb  
-      |  |     |     |  |  |- BitFieldSizeOpt
-      |  |     |     |  |- AttributeSpecifierListOpt
+      |  |     |     |     |- SimpleDeclarator
+      |  |     |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>bbb  
+      |  |     |     |     |- BitFieldSizeOpt
       |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
@@ -190,19 +178,17 @@
       |  |     |  |  |- StructDeclaringList
       |  |     |  |  |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
       |  |     |  |  |  |- StructDeclarator
-      |  |     |  |  |  |  |- SimpleDeclarator
-      |  |     |  |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>cc  
-      |  |     |  |  |  |  |- BitFieldSizeOpt
-      |  |     |  |  |  |- AttributeSpecifierListOpt
+      |  |     |  |  |     |- SimpleDeclarator
+      |  |     |  |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>cc  
+      |  |     |  |  |     |- BitFieldSizeOpt
       |  |     |  |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |  |     |  |- StructDeclaration
       |  |     |     |- StructDeclaringList
       |  |     |     |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |     |     |  |- StructDeclarator
-      |  |     |     |  |  |- SimpleDeclarator
-      |  |     |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>ccc  
-      |  |     |     |  |  |- BitFieldSizeOpt
-      |  |     |     |  |- AttributeSpecifierListOpt
+      |  |     |     |     |- SimpleDeclarator
+      |  |     |     |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>ccc  
+      |  |     |     |     |- BitFieldSizeOpt
       |  |     |     |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |  |     |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  

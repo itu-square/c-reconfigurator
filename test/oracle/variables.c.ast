@@ -5,8 +5,6 @@
       |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |  |- SimpleDeclarator
       |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>a  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- Declaration
@@ -14,8 +12,6 @@
       |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |  |- SimpleDeclarator
       |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>x  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- Declaration
@@ -23,8 +19,6 @@
       |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |  |- SimpleDeclarator
       |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>b_V1  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- Declaration
@@ -32,8 +26,6 @@
       |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |  |- SimpleDeclarator
       |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c_V1  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |     |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
       |  |     |- Initializer
@@ -44,8 +36,6 @@
       |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |  |- SimpleDeclarator
       |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c_V2  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |     |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
       |  |     |- Initializer
@@ -65,8 +55,7 @@
          |        |        |- ParameterIdentifierDeclaration
          |        |        |  |- xtc.lang.cpp.Syntax.Language<INT>int  
          |        |        |  |- SimpleDeclarator
-         |        |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>argc  
-         |        |        |  |- AttributeSpecifierListOpt
+         |        |        |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>argc  
          |        |        |- xtc.lang.cpp.Syntax.Language<COMMA>,  
          |        |        |- ParameterIdentifierDeclaration
          |        |           |- BasicTypeSpecifier
@@ -75,14 +64,13 @@
          |        |           |     |- ConstQualifier
          |        |           |        |- xtc.lang.cpp.Syntax.Language<CONST>const  
          |        |           |- UnaryIdentifierDeclarator
-         |        |           |  |- xtc.lang.cpp.Syntax.Language<STAR>*  
-         |        |           |  |- ArrayDeclarator
-         |        |           |     |- SimpleDeclarator
-         |        |           |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>argv  
-         |        |           |     |- ArrayAbstractDeclarator
-         |        |           |        |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
-         |        |           |        |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
-         |        |           |- AttributeSpecifierListOpt
+         |        |              |- xtc.lang.cpp.Syntax.Language<STAR>*  
+         |        |              |- ArrayDeclarator
+         |        |                 |- SimpleDeclarator
+         |        |                 |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>argv  
+         |        |                 |- ArrayAbstractDeclarator
+         |        |                    |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
+         |        |                    |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
          |        |- xtc.lang.cpp.Syntax.Language<RPAREN>)  
          |- xtc.lang.cpp.Syntax.Language<LBRACE>{  
          |- CompoundStatement
@@ -92,9 +80,7 @@
          |     |  |- DeclaringList
          |     |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
          |     |  |  |- SimpleDeclarator
-         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>d_V1  
-         |     |  |  |- AssemblyExpressionOpt
-         |     |  |  |- AttributeSpecifierListOpt
+         |     |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>d_V1  
          |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
          |     |- SelectionStatement
          |     |  |- xtc.lang.cpp.Syntax.Language<IF>if  
@@ -117,9 +103,7 @@
          |     |  |- DeclaringList
          |     |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
          |     |  |  |- SimpleDeclarator
-         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>d_V2  
-         |     |  |  |- AssemblyExpressionOpt
-         |     |  |  |- AttributeSpecifierListOpt
+         |     |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>d_V2  
          |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
          |     |- SelectionStatement
          |     |  |- xtc.lang.cpp.Syntax.Language<IF>if  

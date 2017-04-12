@@ -5,7 +5,5 @@
          |  |- xtc.lang.cpp.Syntax.Language<INT>int  
          |  |- SimpleDeclarator
          |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>a  
-         |  |- AssemblyExpressionOpt
-         |  |- AttributeSpecifierListOpt
          |  |- InitializerOpt
          |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  

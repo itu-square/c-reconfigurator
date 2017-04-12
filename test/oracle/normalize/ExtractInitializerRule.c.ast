@@ -10,8 +10,6 @@
       |  |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
       |  |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>3  
       |  |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |     |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
       |  |     |- Initializer
@@ -28,8 +26,6 @@
       |  |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
       |  |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>5  
       |  |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |     |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
       |  |     |- Initializer
@@ -56,8 +52,6 @@
       |  |  |- xtc.lang.cpp.Syntax.Language<LONG>long  
       |  |  |- SimpleDeclarator
       |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>l  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |     |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
       |  |     |- Initializer
@@ -81,14 +75,12 @@
          |     |  |- DeclaringList
          |     |  |  |- xtc.lang.cpp.Syntax.Language<CHAR>char  
          |     |  |  |- ArrayDeclarator
-         |     |  |  |  |- SimpleDeclarator
-         |     |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
-         |     |  |  |  |- ArrayAbstractDeclarator
-         |     |  |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
-         |     |  |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>3  
-         |     |  |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
-         |     |  |  |- AssemblyExpressionOpt
-         |     |  |  |- AttributeSpecifierListOpt
+         |     |  |     |- SimpleDeclarator
+         |     |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
+         |     |  |     |- ArrayAbstractDeclarator
+         |     |  |        |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
+         |     |  |        |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>3  
+         |     |  |        |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
          |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
          |     |- ExpressionStatement
          |     |  |- AssignmentExpression
@@ -130,14 +122,12 @@
          |     |  |- DeclaringList
          |     |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
          |     |  |  |- ArrayDeclarator
-         |     |  |  |  |- SimpleDeclarator
-         |     |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>data  
-         |     |  |  |  |- ArrayAbstractDeclarator
-         |     |  |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
-         |     |  |  |     |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>5  
-         |     |  |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
-         |     |  |  |- AssemblyExpressionOpt
-         |     |  |  |- AttributeSpecifierListOpt
+         |     |  |     |- SimpleDeclarator
+         |     |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>data  
+         |     |  |     |- ArrayAbstractDeclarator
+         |     |  |        |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
+         |     |  |        |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>5  
+         |     |  |        |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
          |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
          |     |- Declaration
          |     |  |- DeclaringList
@@ -187,9 +177,7 @@
          |     |  |- DeclaringList
          |     |  |  |- xtc.lang.cpp.Syntax.Language<LONG>long  
          |     |  |  |- SimpleDeclarator
-         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>l  
-         |     |  |  |- AssemblyExpressionOpt
-         |     |  |  |- AttributeSpecifierListOpt
+         |     |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>l  
          |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
          |     |- ExpressionStatement
          |        |- AssignmentExpression

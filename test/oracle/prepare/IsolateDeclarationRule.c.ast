@@ -5,8 +5,6 @@
       |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |  |- SimpleDeclarator
       |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>i_V1  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- Declaration
@@ -17,8 +15,6 @@
       |  |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
       |  |  |- SimpleDeclarator
       |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>t_V1  
-      |  |  |- AssemblyExpressionOpt
-      |  |  |- AttributeSpecifierListOpt
       |  |  |- InitializerOpt
       |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
       |- Declaration
@@ -73,8 +69,6 @@
          |     |  |  |- xtc.lang.cpp.Syntax.Language<INT>int  
          |     |  |  |- SimpleDeclarator
          |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>i_V2  
-         |     |  |  |- AssemblyExpressionOpt
-         |     |  |  |- AttributeSpecifierListOpt
          |     |  |  |- InitializerOpt
          |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
          |     |- Declaration
@@ -82,8 +76,6 @@
          |     |  |  |- xtc.lang.cpp.Syntax.Language<LONG>long  
          |     |  |  |- SimpleDeclarator
          |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>l_V1  
-         |     |  |  |- AssemblyExpressionOpt
-         |     |  |  |- AttributeSpecifierListOpt
          |     |  |  |- InitializerOpt
          |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
          |     |- Declaration
@@ -92,8 +84,6 @@
          |     |  |  |  |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>t_V1  
          |     |  |  |- SimpleDeclarator
          |     |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>tvar_V1  
-         |     |  |  |- AssemblyExpressionOpt
-         |     |  |  |- AttributeSpecifierListOpt
          |     |  |  |- InitializerOpt
          |     |  |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
          |     |- Declaration
@@ -102,8 +92,6 @@
          |        |  |  |- xtc.lang.cpp.Syntax.Text<TYPEDEFname>t  
          |        |  |- SimpleDeclarator
          |        |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>tvar_V2  
-         |        |  |- AssemblyExpressionOpt
-         |        |  |- AttributeSpecifierListOpt
          |        |  |- InitializerOpt
          |        |- xtc.lang.cpp.Syntax.Language<SEMICOLON>;  
          |- xtc.lang.cpp.Syntax.Language<RBRACE>}  
