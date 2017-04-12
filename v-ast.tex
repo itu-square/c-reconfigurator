@@ -291,6 +291,49 @@ do:
 
 
 
+%--- MergeSequentialMutexConditionalRule ---%
+\noindent
+\begin{tabular}{| p{.2\textwidth} | p{.2\textwidth} | p{.6\textwidth} |}
+\hline
+\multicolumn{3}{|l|}{\textsc{MergeSequentialMutexConditionalRule}} \\\hline
+Input \pair{\id{pair}} & Output \pair{\_} & Algorithm \\\hline
+
+\begin{vastcode}
+/ @\node{\name{Conditional}}@
+| - @\id{\phi_1}@
+| = @\pair{\id{children_1}}@
+- @\node{\name{Conditional}}@
+| - @\id{\phi_2}@
+| = @\pair{\id{children_2}}@
+= @\pair{\id{tail}}@
+\end{vastcode} &
+
+\begin{vastcode}
+/ @\node{\name{Conditional}}@
+| - @\id{\phi_1} $\lor$ \id{\phi_2}@
+| = @\pair{\id{children_1}}@
+= @\pair{\id{tail}}@
+\end{vastcode} &
+
+\begin{PseudoCode}
+preconditions:
+  @\pair{\id{pair}} != $\epsilon$@
+  @\pair{\id{pair}}.\func{size} >= 2@
+  @\pair{\id{pair}}.\func{head}@ : @(\name{Conditional},\_)@
+  @\pair{\id{pair}}.\func{head}@.filter(@\type{cond}@).@\func{size}@ == 1
+  @\pair{\id{pair}}.\func{tail}.\func{head}@ : @(\name{Conditional},\_)@
+  @\pair{\id{pair}}.\func{tail}.\func{head}@.filter(@\type{cond}@).@\func{size}@ == 1
+  @\func{areMutex}(\id{\phi_1},\id{\phi_2})@
+  @\func{structurallyEquals}(\pair{\id{children_1}},\pair{\id{children_2}})@
+
+do:
+  @(\name{Conditional}, \id{\phi_1} $\lor$ \id{\phi_2} :: \pair{\id{children_1}}) :: \pair{\id{tail}}@
+\end{PseudoCode} \\\hline
+\end{tabular}
+
+
+
+
 
 
 \subsection{Functions}
