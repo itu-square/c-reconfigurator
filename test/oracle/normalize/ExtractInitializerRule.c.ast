@@ -86,10 +86,11 @@
          |     |  |- AssignmentExpression
          |     |  |  |- Subscript
          |     |  |  |  |- PrimaryIdentifier
-         |     |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
-         |     |  |  |  |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
-         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>0  
-         |     |  |  |  |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
+         |     |  |  |     |- PrimaryIdentifier
+         |     |  |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>0  
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
          |     |  |  |- AssignmentOperator
          |     |  |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
          |     |  |  |- xtc.lang.cpp.Syntax.Text<CHARACTERconstant>'a'  
@@ -98,10 +99,11 @@
          |     |  |- AssignmentExpression
          |     |  |  |- Subscript
          |     |  |  |  |- PrimaryIdentifier
-         |     |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
-         |     |  |  |  |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
-         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>1  
-         |     |  |  |  |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
+         |     |  |  |     |- PrimaryIdentifier
+         |     |  |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>1  
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
          |     |  |  |- AssignmentOperator
          |     |  |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
          |     |  |  |- xtc.lang.cpp.Syntax.Text<CHARACTERconstant>'b'  
@@ -110,10 +112,11 @@
          |     |  |- AssignmentExpression
          |     |  |  |- Subscript
          |     |  |  |  |- PrimaryIdentifier
-         |     |  |  |  |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
-         |     |  |  |  |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
-         |     |  |  |  |- xtc.lang.cpp.Syntax.Text<INTEGERconstant>2  
-         |     |  |  |  |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>c  
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Language<LBRACK>[  
+         |     |  |  |     |- PrimaryIdentifier
+         |     |  |  |     |  |- xtc.lang.cpp.Syntax.Text<IDENTIFIER>2  
+         |     |  |  |     |- xtc.lang.cpp.Syntax.Language<RBRACK>]  
          |     |  |  |- AssignmentOperator
          |     |  |  |  |- xtc.lang.cpp.Syntax.Language<ASSIGN>=  
          |     |  |  |- xtc.lang.cpp.Syntax.Text<CHARACTERconstant>'c'  

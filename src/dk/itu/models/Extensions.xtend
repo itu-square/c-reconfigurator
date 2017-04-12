@@ -6,6 +6,7 @@ import com.google.common.collect.UnmodifiableIterator
 import com.google.common.io.Files
 import dk.itu.models.checks.CheckContainsIf1
 import dk.itu.models.rules.AncestorGuaranteedRule
+import dk.itu.models.rules.phase1normalize.ParametricRemNodesRule
 import dk.itu.models.rules.phase3variables.ReplaceDeclaratorTextRule
 import dk.itu.models.rules.phase3variables.ReplaceIdentifierRule
 import dk.itu.models.rules.phase3variables.RewriteVariableUseRule
@@ -37,7 +38,6 @@ import xtc.lang.cpp.Syntax.Text
 import xtc.tree.GNode
 import xtc.tree.Node
 import xtc.util.Pair
-import dk.itu.models.rules.phase1normalize.ParametricRemNodesRule
 
 class Extensions {
 
@@ -561,6 +561,19 @@ class Extensions {
 		obj instanceof PresenceCondition
 	}
 	
+	public static def Text<CTag> as_Text(Object obj) {
+		obj as Text<CTag>
+	}
+	
+	public static def boolean is_Text(Object obj) {
+		obj instanceof Text<?>
+	}
+	
+	public static def boolean is_Text(Object obj, CTag tag) {
+		obj.is_Text &&
+		obj.as_Text.tag.equals(tag)
+	}
+
 	
 	
 	
@@ -578,6 +591,26 @@ class Extensions {
 
 	public static def GNode bindNode(Function0<GNode> exp) {
 		try { return exp.apply } catch (Exception exception) { return null }
+	}
+
+	
+	
+	
+	public static def GNode buildAssignment(String varName, String index, Text<CTag> value) {
+		GNode::create("ExpressionStatement",
+			GNode::create("AssignmentExpression",
+				GNode::create("Subscript",
+					GNode::create("PrimaryIdentifier",
+						new Text<CTag>(CTag::IDENTIFIER, varName),
+						new Language<CTag>(CTag::LBRACK),
+						GNode::create("PrimaryIdentifier", new Text<CTag>(CTag::IDENTIFIER, index)),
+						new Language<CTag>(CTag::RBRACK)
+					)
+				),
+				GNode::create("AssignmentOperator", new Language<CTag>(CTag::ASSIGN)),
+			value),
+			new Language<CTag>(CTag::SEMICOLON)
+		)
 	}
 	
 	
