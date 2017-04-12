@@ -19,32 +19,29 @@ class ConditionPushDownRule extends dk.itu.models.rules.Rule {
 	}
 
 	override dispatch Pair<Object> transform(Pair<Object> pair) {
-		if (pair.empty) return pair
-		if (!pair.head.is_GNode("Conditional")) return pair
-		
-		val cond = pair.head.as_GNode
-		if (!cond.forall[
-			(it.is_PresenceCondition)
-			|| (it.is_GNode("Conditional"))
-			]) return pair
-		
-		var newPair = pair.tail
-		for(GNode node : cond.toList.reverseView.filter(GNode)) {
-			val pc = cond.findLast[ it.is_PresenceCondition && cond.indexOf(it) < cond.indexOf(node)].as_PresenceCondition
-			val newNode = GNode::create("Conditional")
-			node.forEach[child |
-				if(child.is_PresenceCondition) {
-					newNode.add(pc.and(child.as_PresenceCondition))
-				} else {
-					newNode.add(child)
-				}]
-			newPair = new Pair(newNode, newPair)
+		if (
+			!pair.empty
+			&& pair.head.is_GNode("Conditional")
+			&& pair.head.as_GNode.forall[ (it.is_PresenceCondition) || (it.is_GNode("Conditional")) ]
+		) {
+			pair.head.as_GNode.toList.filter(GNode).map[node |
+				GNode::createFromPair(
+					"Conditional",
+					node.map[child |
+						if(child.is_PresenceCondition) { pair.head.as_GNode.pcOf(node).and(child.as_PresenceCondition) }
+						else { child }].toPair) as Object
+			].toPair.append(pair.tail)
+		} else {
+			return pair
 		}
-		newPair
 	}
 	
 	override dispatch Object transform(GNode node) {
 		node
+	}
+	
+	private def pcOf(GNode cond, GNode node) {
+		cond.findLast[ it.is_PresenceCondition && cond.indexOf(it) < cond.indexOf(node)].as_PresenceCondition
 	}
 
 }
