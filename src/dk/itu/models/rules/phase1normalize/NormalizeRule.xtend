@@ -30,7 +30,6 @@ class NormalizeRule extends Rule  {
 		tdn1.register(new SetLocationOnDeclarationRule)
 		tdn1.register(new RemOneRule)
 		tdn1.register(new RemZeroRule)
-		tdn1.register(new RemEmptyNodesRule)
 		tdn1.register(new SplitConditionalRule)
 		tdn1.register(new ConstrainNestedConditionalsRule)
 		tdn1.register(new ConditionPushDownRule)
