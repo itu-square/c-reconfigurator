@@ -61,7 +61,7 @@
 
 \lstnewenvironment{vastcode}
 {\lstset{
-		basicstyle=\fontsize{7}{11}\sffamily,
+		basicstyle=\fontsize{6}{10}\sffamily,
 		escapechar=@,
 		% http://tug.ctan.org/info/symbols/comprehensive/symbols-a4.pdf
 		literate =
@@ -468,6 +468,290 @@ class TopDownStrategy extends AncestorGuaranteedStrategy {
 	
 \end{columns}
 
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
+\begin{frame}[fragile]
+\frametitle{RemOneRule}
+
+\noindent
+\begin{tabular}{| p{.2\textwidth} | p{.2\textwidth} | p{.6\textwidth} |}
+	\hline
+	Input \lst{\id{list}} & Output \lst{\_} & Algorithm \\\hline
+
+\begin{vastcode}
+/ @\node{\name{Conditional}}@
+| - @\pc{\name{true}}@
+| = @\lst{\id{children}}@
+= @\lst{\id{tail}}@
+\end{vastcode} &
+
+\begin{vastcode}
+/ @\lst{\id{children}}@
+= @\lst{\id{tail}}@
+\end{vastcode} &
+
+\begin{PseudoCode}
+preconditions:
+  @\lst{\id{list}} != $\epsilon$@
+  @\lst{\id{list}}.\func{head}@ : (@\name{Conditional}@,@\_@)
+  @\lst{\id{list}}.\func{head}@.filter(@\type{pc}@).size = 1
+  @\lst{\id{list}}.\func{head}@[0] = @\pc{\name{true}}@
+
+do:
+  return @\lst{\id{list}}.\func{head}@
+    @.\func{getChildrenGuardedBy}(\pc{\name{true}})@
+    @.\func{append}(\lst{\id{list}}.\func{tail})@
+\end{PseudoCode} \\\hline
+\end{tabular}
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
+\begin{frame}[fragile]
+\frametitle{RemZeroRule}
+
+\noindent
+\begin{tabular}{| p{.2\textwidth} | p{.2\textwidth} | p{.6\textwidth} |}
+	\hline
+	Input \lst{\id{list}} & Output \lst{\_} & Algorithm \\\hline
+	
+\begin{vastcode}
+/ @\node{\name{Conditional}}@
+| - @\pc{\name{false}}@
+| = @\lst{\id{children}}@
+= @\lst{\id{tail}}@
+\end{vastcode} &
+
+\begin{vastcode}
+@\lst{\id{tail}}@
+\end{vastcode} &
+	
+\begin{PseudoCode}
+preconditions:
+  @\lst{\id{list}} != $\epsilon$@
+  @\lst{\id{list}}.\func{head}@ : (@\name{Conditional}@,@\_@)
+  @\lst{\id{list}}.\func{head}@.filter(@\type{pc}@).size = 1
+  @\lst{\id{list}}.\func{head}@[0] = @\pc{\name{false}}@
+	
+do:
+  return @\lst{\id{list}}.\func{tail}@
+\end{PseudoCode} \\\hline
+\end{tabular}
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
+\begin{frame}[fragile]
+\frametitle{SplitConditionalRule}
+
+\noindent
+\begin{tabular}{| p{.2\textwidth} | p{.2\textwidth} | p{.6\textwidth} |}
+\hline
+Input \lst{\id{list}} & Output \lst{\_} & Algorithm \\\hline
+
+\begin{vastcode}
+/ @\node{\name{Conditional}}@
+| - @\id{\phi_1}@
+| - @\lst{\id{children_1}}@
+| - @\id{\phi_2}@
+| - @\lst{\id{children_2}}@
+| - @\id{\phi_n}@
+| = @\lst{\id{children_n}}@
+= @\lst{\id{tail}}@
+\end{vastcode} &
+
+\begin{vastcode}
+/ @\node{\name{Conditional}}@
+| - @\id{\phi_1}@
+| = @\lst{\id{children_1}}@
+- @\node{\name{Conditional}}@
+| - @\id{\phi_2}@
+| = @\lst{\id{children_2}}@
+- @\node{\name{Conditional}}@
+| - @\id{\phi_n}@
+| = @\lst{\id{children_n}}@
+= @\lst{\id{tail}}@
+\end{vastcode} &
+
+\begin{PseudoCode}
+preconditions:
+  @\lst{\id{list}} != $\epsilon$@
+  @\lst{\id{list}}.\func{head}@ : (@\name{Conditional}@,@\_@)
+  @\lst{\id{list}}.\func{head}@.filter(@\type{pc}@).size >= 2
+
+do:
+  @\lst{\id{newList}} = $\epsilon$@
+
+  for @(\id{\phi_i} in [\id{\phi_1}..\id{\phi_n}])@
+    @\lst{\id{newList}} = \lst{\id{newList}}.\func{append}(@
+      @(\name{Conditional},@
+      @\id{\phi_i}::\lst{\id{list}}.\func{head}.\func{getChildrenGuardedBy}(\id{\phi_i})))@
+
+  return @\lst{\id{list}}.\func{tail}@
+\end{PseudoCode} \\\hline
+\end{tabular}
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
+\begin{frame}[fragile]
+\frametitle{ConstrainNestedConditionalsRule}
+
+\noindent
+\begin{tabular}{| p{.2\textwidth} | p{.3\textwidth} | p{.5\textwidth} |}
+\hline
+Input \node{\id{node}} & Output \node{\_} & Algorithm \\\hline
+
+\begin{vastcode}
+ancestors:
+@(\name{Conditional},\id{\psi_1}::\lst{\_})@
+@(\name{Conditional},\id{\psi_2}::\lst{\_})@
+@(\name{Conditional},\id{\psi_n}::\lst{\_})@
+
+@\node{\name{Conditional}}@
+- @\id{\phi_1}@
+= @\lst{\id{children}}@
+\end{vastcode} &
+
+\begin{vastcode}
+@\node{\name{Conditional}}@
+- @\func{constrain}(\id{\phi_1}, $\id{\psi_1} \land \id{\psi_2} \land \id{\psi_n}$)@
+= @\lst{\id{children}}@
+\end{vastcode} &
+
+\begin{PseudoCode}
+preconditions:
+@\node{\id{node}}.\func{name} = \name{Conditional}@
+@\node{\id{node}}@.filter(@\type{pc}@).size = 1
+	
+do:
+@\pc{\id{simpl}} = \func{constrain}(\id{\phi}, \node{\id{node}}.\func{presenceCondition})@
+
+if @(\pc{\id{simpl}} != \id{\phi})@
+  return @(\name{Conditional},\pc{\id{simpl}}::\node{\id{node}}.\func{toList}.\func{tail})@
+else
+  return @\node{\id{node}}@
+\end{PseudoCode} \\\hline
+\end{tabular}
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
+\begin{frame}[fragile]
+\frametitle{ConditionPushDownRule}
+
+\noindent
+\begin{tabular}{| p{.25\textwidth} | p{.2\textwidth} | p{.55\textwidth} |}
+\hline
+Input \lst{\id{list}} & Output \lst{\_} & Algorithm \\\hline
+
+\begin{vastcode}
+/ @\node{\name{Conditional}}@
+| - @\id{\psi_1}@
+| - @\node{\name{Conditional}}@
+| | - @\id{\phi_{11}}@
+| | = @\lst{\id{children_{11}}}@
+| - @\id{\psi_2}@
+| - @\node{\name{Conditional}}@
+| | - @\id{\phi_{21}}@
+| | - @\lst{\id{children_{21}}}@
+| | - @\id{\phi_{22}}@
+| | = @\lst{\id{children_{22}}}@
+| - @\node{\name{Conditional}}@
+| | - @\id{\phi_{31}}@
+| | = @\lst{\id{children_{31}}}@
+| - @\id{\psi_n}@
+| = @\node{\name{Conditional}}@
+|   - @\id{\phi_{n1}}@
+|   = @\lst{\id{children_{n1}}}@
+= @\lst{\id{tail}}@
+\end{vastcode} &
+
+\begin{vastcode}
+/ @\node{\name{Conditional}}@
+| - @$\id{\phi_{11}} \land \id{\psi_1}$@
+| = @\lst{\id{children_{11}}}@
+- @\node{\name{Conditional}}@
+| - @$\id{\phi_{21}} \land \id{\psi_2}$@
+| - @\lst{\id{children_{21}}}@
+| - @$\id{\phi_{22}} \land \id{\psi_2}$@
+| = @\lst{\id{children_{22}}}@
+- @\node{\name{Conditional}}@
+| - @$\id{\phi_{31}} \land \id{\psi_2}$@
+| = @\lst{\id{children_{31}}}@
+- @\node{\name{Conditional}}@
+| - @$\id{\phi_{n1}} \land \id{\psi_n}$@
+| = @\lst{\id{children_{n1}}}@
+= @\lst{\id{tail}}@
+\end{vastcode} &
+
+\begin{PseudoCode}
+preconditions:
+@\lst{\id{list}} != $\epsilon$@
+@\lst{\id{list}}.\func{head}@ : @(\name{Conditional},\_)@
+@\lst{\id{list}}.\func{head}@.forall[it:@\pc{\_} $\lor$ @it:@(\name{Conditional},\_)@]
+
+do:
+@\lst{\id{list}}.\func{head}@.filter(@\type{cond}@).map[@\node{node}@ | 
+  (@\name{Conditional},\node{node}@.map[@\obj{child}@ |
+    if (@\obj{child}@ : @\pc{\_}@) @\pc{child} $\land$ \func{pcOf}(\node{node})@
+    else @\obj{child}@
+  ])
+].@\func{append}(\lst{\id{tail}})@
+\end{PseudoCode} \\\hline
+\end{tabular}
+\end{frame}
+
+
+%----------------------------------------------------------------------------------------------------------------------%
+%----------------------------------------------------------------------------------------------------------------------%
+\begin{frame}[fragile]
+\frametitle{MergeSequentialMutexConditionalRule}
+
+\noindent
+\begin{tabular}{| p{.2\textwidth} | p{.2\textwidth} | p{.6\textwidth} |}
+\hline
+Input \lst{\id{list}} & Output \lst{\_} & Algorithm \\\hline
+
+\begin{vastcode}
+/ @\node{\name{Conditional}}@
+| - @\id{\phi_1}@
+| = @\lst{\id{children_1}}@
+- @\node{\name{Conditional}}@
+| - @\id{\phi_2}@
+| = @\lst{\id{children_2}}@
+= @\lst{\id{tail}}@
+\end{vastcode} &
+
+\begin{vastcode}
+/ @\node{\name{Conditional}}@
+| - @\id{\phi_1} $\lor$ \id{\phi_2}@
+| = @\lst{\id{children_1}}@
+= @\lst{\id{tail}}@
+\end{vastcode} &
+
+\begin{PseudoCode}
+preconditions:
+  @\lst{\id{list}} != $\epsilon$@
+  @\lst{\id{list}}.\func{size} >= 2@
+  @\lst{\id{list}}.\func{head}@ : @(\name{Conditional},\_)@
+  @\lst{\id{list}}.\func{head}@.filter(@\type{cond}@).@\func{size}@ == 1
+  @\lst{\id{list}}.\func{tail}.\func{head}@ : @(\name{Conditional},\_)@
+  @\lst{\id{list}}.\func{tail}.\func{head}@.filter(@\type{cond}@).@\func{size}@ == 1
+  @\func{areMutex}(\id{\phi_1},\id{\phi_2})@
+  @\func{structurallyEquals}(\lst{\id{children_1}},\lst{\id{children_2}})@
+
+do:
+  @(\name{Conditional}, \id{\phi_1} $\lor$ \id{\phi_2} :: \lst{\id{children_1}}) :: \lst{\id{tail}}@
+\end{PseudoCode} \\\hline
+\end{tabular}
 \end{frame}
 	
 \end{document}
