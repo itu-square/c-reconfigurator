@@ -1,0 +1,72 @@
+\documentclass{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{pmboxdraw}
+\usepackage{mathtools,amsmath,proof,amsfonts,amsthm,stmaryrd}
+
+\usepackage{color}
+\definecolor{darkblue}{rgb}{0,0,.75}
+
+\usepackage{listings}
+
+
+\lstnewenvironment{vastcode}
+{\lstset{
+	basicstyle=\fontsize{7}{11}\sffamily,
+	escapechar=@,
+% http://tug.ctan.org/info/symbols/comprehensive/symbols-a4.pdf
+	literate =
+		{/}{{$\textSFi$}}1
+		{-}{{$\textSFviii$}}1
+		{=}{{$\textSFii$}}1
+		{|}{{$\textSFxi$}}1
+	}
+}
+{}
+
+\lstloadlanguages{Matlab} %use listings with Matlab for Pseudocode
+\lstnewenvironment{PseudoCode}
+{\lstset{
+		language=Matlab,
+		basicstyle=\scriptsize,
+		keywordstyle=\color{darkblue},
+		morekeywords={is,forall,it,map},
+		escapechar=@
+	}
+}
+{}
+
+%\lstloadlanguages{Matlab} %use listings with Matlab for Pseudocode
+%\lstnewenvironment{PseudoCode}
+%{\lstset{
+%	language=Matlab,
+%	basicstyle=\scriptsize,
+%	keywordstyle=\color{darkblue},
+%	numbers=left,
+%	xleftmargin=.04\textwidth
+%	}
+%}
+%{}
+
+
+\newcommand{\id}[1]{\ensuremath{#1}}
+
+\newcommand{\type}[1]{\id{#1}}
+
+\newcommand{\func}[1]{\textsf{#1}}
+
+
+\newcommand{\obj} [1]{\ensuremath{{\id{#1}}_?}}
+\newcommand{\pc}  [1]{\ensuremath{{\id{#1}}_\phi}}
+\newcommand{\lang}[1]{\ensuremath{{\id{#1}}_@}}
+\newcommand{\node}[1]{\ensuremath{{\id{#1}}_\circ}}
+\newcommand{\name}[1]{\textsf{#1}}
+\newcommand{\pair}[1]{\ensuremath{{\id{#1}}_{()}}}
+
+\begin{document}
+
+\include{v-ast}
+
+\end{document}
