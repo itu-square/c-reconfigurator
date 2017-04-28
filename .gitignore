@@ -2,5 +2,5 @@
 test/target/*
 *.aux
 *.log
-*.pdf
+main.pdf
 *.synctex.gz
