@@ -1,0 +1,9 @@
+*.aux
+*.log
+main.pdf
+*.synctex.gz
+**/*.nav
+**/*.out
+**/*.snm
+**/*.toc
+**/*.vrb
